@@ -1,20 +1,37 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Aye Player
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+> “The computer was born to solve problems that did not exist before.”
+> — Bill Gates
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Idee
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- Electron basierter YouTube Musik Player
+- React, TypeScript, MobX
+- i18n
+- Features
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+  - Downloads / Offline Funktion --> youtube-dl Integration
+  - Cloud Sync für Likes und Playlists
+  - Listen together --> Zwei Leute hören gemeinsam Songs / Playlists
+  - Party Mode --> Jeder kann Lieder in die Queue einpflegen.
+    Zugriffsmöglichkeit über einfachen HTTP Link / Aye Player Mobile App.
+  - DJ Mode --> Ein DJ "mixt" Musik aus dem riesigen YT Fundus zusammen und erstellt somit einen DJ Room. Andere User können diesen finden und sich anhören. Der DJ hat hier die alleinge kontrolle als Abgrenzung zum Party Mode.
+  - Anschluss an Discord RPC
+    - Is listening to XXX on AYE Player
+    - Listen on YouTube Knopf
+  - Ui Kit --> [Material UI Kit](https://material-ui.com/)
+  - Vernünftige Settings
+  - Dark Mode
+
+- Backend
+  - TypeScript auf Node 10.16 LTS
+  - Docker mit pm2
+  - VPS bei [netcup](https://netcup.de)
+  - Microservice Architektur
+    - Authentication Service
+    - Sync Service
+    - Party-Mode Service
+    - Listen-Together Service
+      - Listen-Together-API mit Dokumentation (Ablaufdiagramme)
+
+![Planung](./erste_planung.png)
