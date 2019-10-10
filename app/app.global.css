@@ -11,7 +11,8 @@ body {
   background-color: #232c39 !important;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
-  width: 100vh;
+  overflow-x: hidden;
+  width: 100vw;
 }
 
 h2 {
