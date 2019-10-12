@@ -1,7 +1,9 @@
-import * as React from "react";
-import { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import PlaylistEntity from "./PlaylistEntity";
+import { RootStoreModel } from "../../../app/store/RootStore";
+import useInject from "../../../app/hooks/useInject";
+import { observer } from "mobx-react-lite";
 
 interface IProps {}
 
@@ -9,18 +11,25 @@ const Container = styled.div`
   margin: 10px 10px;
 `;
 
-export default class Playlist extends Component<IProps> {
-  props: IProps;
+const Playlist: React.FunctionComponent<IProps> = props => {
+  const PlaylistStore = ({ playlist }: RootStoreModel) => ({
+    playlist: playlist
+  });
 
-  render() {
-    return (
-      <Container>
-        <PlaylistEntity title="NIghtcore" duration="2:22"></PlaylistEntity>
-        <PlaylistEntity title="NIghtcore" duration="2:22"></PlaylistEntity>
-        <PlaylistEntity title="NIghtcore" duration="2:22"></PlaylistEntity>
-        <PlaylistEntity title="NIghtcore" duration="2:22"></PlaylistEntity>
-        <PlaylistEntity title="NIghtcore" duration="2:22"></PlaylistEntity>
-      </Container>
-    );
-  }
-}
+  const { playlist } = useInject(PlaylistStore);
+
+  return (
+    <Container>
+      {playlist.Tracks.map(Track => (
+        <PlaylistEntity
+        title={Track.title}
+        duration={Track.formattedDuration}
+        videoId={Track.id}
+        key={Track.id}
+      />
+      ))}
+    </Container>
+  );
+};
+
+export default observer(Playlist);

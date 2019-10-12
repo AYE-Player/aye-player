@@ -1,11 +1,10 @@
-import * as React from "react";
+import React from "react";
 import { Component } from "react";
 //import { Link } from "react-router-dom";
 import Player from "./Player/Player";
 import Playlist from "./Playlist/Playlist";
 //const routes = require("../constants/routes.json");
 import { Grid, Paper } from "@material-ui/core";
-import PlayerControls from "./Player/PlayerControls";
 
 interface IProps {}
 
@@ -23,15 +22,14 @@ export default class Home extends Component<IProps> {
         <Grid
           container
           direction="column"
-          xs={3}
           justify="center"
           style={{ height: "100%" }}
+          xs={2}
         >
-          <Grid item xs>
+          <Grid item xs={2}>
             <Playlist />
           </Grid>
-          <Grid item xs={1}>
-            <PlayerControls />
+          <Grid item xs={2}>
             <Player />
           </Grid>
         </Grid>

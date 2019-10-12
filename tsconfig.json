@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "pretty": true,
     "sourceMap": true,
     "resolveJsonModule": true,
