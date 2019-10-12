@@ -1,10 +1,13 @@
-import * as React from "react";
-import { Component } from "react";
+import React from "react";
 import styled from "styled-components";
+
+import useInject from "../../hooks/useInject";
+import { RootStoreModel } from "../../store/RootStore";
 
 interface IProps {
   title: string;
   duration: string;
+  videoId: string;
 }
 
 const Container = styled.div`
@@ -12,14 +15,25 @@ const Container = styled.div`
   width: 200px;
 `;
 
-export default class PlaylistEntity extends Component<IProps> {
-  props: IProps;
+const Title = styled.div``;
 
-  render() {
-    return (
-      <Container>
-        {this.props.title} {this.props.duration}
-      </Container>
-    );
-  }
-}
+const Duration = styled.div`
+  font-size: 12px;
+`;
+
+const PlaylistEntity: React.FunctionComponent<IProps> = props => {
+  const PlayerStore = ({ player }: RootStoreModel) => ({
+    player: player
+  });
+
+  const { player } = useInject(PlayerStore);
+
+  return (
+    <Container onClick={() => player.playTrack(props.videoId)}>
+      <Title>{props.title}</Title>
+      <Duration>{props.duration}</Duration>
+    </Container>
+  );
+};
+
+export default PlaylistEntity;
