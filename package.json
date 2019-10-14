@@ -257,11 +257,11 @@
     "mobx-react-lite": "^1.4.1",
     "mobx-state-tree": "^3.14.1",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react-dom": "^16.10.2",
     "react-hot-loader": "^4.6.3",
+    "react-player": "^1.13.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-youtube": "^7.9.0",
     "source-map-support": "^0.5.9",
     "styled-components": "^4.3.2"
   },

@@ -3,11 +3,12 @@ import styled from "styled-components";
 
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../store/RootStore";
+import { TrackModel } from "app/store/Track";
 
 interface IProps {
   title: string;
   duration: string;
-  videoId: string;
+  track: TrackModel;
 }
 
 const Container = styled.div`
@@ -29,7 +30,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { player } = useInject(PlayerStore);
 
   return (
-    <Container onClick={() => player.playTrack(props.videoId)}>
+    <Container onClick={() => player.playTrack(props.track)}>
       <Title>{props.title}</Title>
       <Duration>{props.duration}</Duration>
     </Container>

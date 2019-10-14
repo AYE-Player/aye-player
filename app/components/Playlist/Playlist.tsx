@@ -24,7 +24,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
         <PlaylistEntity
         title={Track.title}
         duration={Track.formattedDuration}
-        videoId={Track.id}
+        track={Track}
         key={Track.id}
       />
       ))}

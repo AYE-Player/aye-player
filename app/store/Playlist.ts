@@ -19,6 +19,12 @@ const Playlist = types
     },
     get getNextTrack() {
       return self.Tracks[1];
+    },
+    get getRandomTrack() {
+      const idx = Math.floor(Math.random() * self.Tracks.length);
+      const track = self.Tracks[idx];
+      self.Tracks.splice(idx, 1);
+      return track;
     }
   }))
   .actions(self => ({
@@ -28,6 +34,12 @@ const Playlist = types
 
     removeTrack() {
       self.Tracks.pop();
+    },
+
+    nextTrack() {
+      self.Tracks.shift();
+      if (self.Tracks.length === 0) return null;
+      return self.Tracks[0];
     },
 
     shuffelPlaylist() {
