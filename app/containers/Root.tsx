@@ -9,25 +9,32 @@ import Track from "../../app/store/Track";
 const rootStore = createStore();
 rootStore.playlist.addTrack(
   Track.create({
-    id: "K6FjvOTkxKY",
-    title: "Long ass Nightcore comp",
-    duration: 2222222,
+    id: "iqoNoU-rm14",
+    title: "Cyberpunk",
+    duration: 215,
   })
 );
 rootStore.playlist.addTrack(
   Track.create({
-    id: "Ee-iDzc9vc0",
-    title: "In Your Head",
-    duration: 1234,
+    id: "bzehQ60b3XI",
+    title: "Close - Brooks Remix",
+    duration: 231
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "z_m0wtLMfdU",
+    title: "Earthquake",
+    duration: 178,
   })
 );
 rootStore.playlist.addTrack(
   Track.create({
     id: "xkIytYlDD_o",
     title: "Dollhouse",
-    duration: 165
+    duration: 123
   })
-);
+)
 
 export default class Root extends Component {
   render() {
