@@ -1,10 +1,9 @@
 import React from "react";
 import { Component } from "react";
-//import { Link } from "react-router-dom";
 import Player from "./Player/Player";
 import Playlist from "./Playlist/Playlist";
-//const routes = require("../constants/routes.json");
 import { Grid, Paper } from "@material-ui/core";
+import DebugAddTrack from "./Debug/DebugAddTrack";
 
 interface IProps {}
 
@@ -39,6 +38,7 @@ export default class Home extends Component<IProps> {
           </Grid>
           <Grid item xs>
             <Paper>TEST</Paper>
+            <DebugAddTrack />
           </Grid>
         </Grid>
       </Grid>
