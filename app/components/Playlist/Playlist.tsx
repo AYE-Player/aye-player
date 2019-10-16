@@ -10,9 +10,11 @@ interface IProps {}
 const Container = styled.div`
   margin: 10px 5px;
   position: absolute;
+  display: flex;
+  flex-direction: column;
   top: 0;
-  height: 60%;
   overflow: auto;
+  width: 310px;
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {

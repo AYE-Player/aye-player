@@ -23,7 +23,7 @@ export default class Home extends Component<IProps> {
           direction="column"
           justify="center"
           style={{ height: "100%" }}
-          xs={2}
+          xs={3}
         >
           <Playlist />
           <Player />

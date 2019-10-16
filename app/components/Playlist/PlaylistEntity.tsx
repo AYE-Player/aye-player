@@ -14,7 +14,7 @@ interface IProps {
 
 const Container = styled.div<any>`
   height: 50px;
-  width: 200px;
+  width: 310px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #565f6c;

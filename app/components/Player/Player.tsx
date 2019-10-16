@@ -17,7 +17,7 @@ interface IPlayerState {
 }
 
 const Container = styled.div`
-  width: 216px;
+  width: 320px;
   height: 296px;
   display: flex;
   flex-direction: column;
@@ -28,8 +28,8 @@ const Container = styled.div`
 `;
 
 const PlayerOverlay = styled.img`
-  width: 216px;
-  height: 200px;
+  width: 320px;
+  height: 210px;
   background-color: #000;
   position: absolute;
   margin-top: 42px;
@@ -132,7 +132,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       <ReactPlayer
         ref={_getPlayerElement}
         url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
-        width="216px"
+        width="320px"
         height="200px"
         playing={player.isPlaying}
         loop={player.loopTrack}

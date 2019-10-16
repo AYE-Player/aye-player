@@ -31,7 +31,7 @@ interface IProps {
 }
 
 const Container = styled.div`
-  width: 216px;
+  width: 320px;
   height: 78px;
   display: flex;
   flex-direction: column;
@@ -46,47 +46,52 @@ const Control = styled.div`
 
 const PlaybackControl = styled.div`
   position: absolute;
-  display: inline-block;
-  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 265px;
-  width: 196px;
+  width: 320px;
 `;
 
 const Divider = styled.div`
   height: 15px;
+  color: #fbfbfb;
+`;
+
+const Time = styled.span`
 `;
 
 const PrettoSlider = withStyles({
   root: {
-    color: '#3f51b5',
+    color: "#3f51b5",
     height: 8,
+    width: 200
   },
   thumb: {
     height: 12,
     width: 12,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
     marginTop: -2,
-    '&:focus,&:hover,&$active': {
-      boxShadow: 'inherit',
-    },
+    "&:focus,&:hover,&$active": {
+      boxShadow: "inherit"
+    }
   },
   active: {},
   valueLabel: {
-    left: 'calc(-50% + 4px)',
+    left: "calc(-50% + 4px)"
   },
   track: {
     height: 8,
-    borderRadius: 4,
+    borderRadius: 4
   },
   rail: {
     height: 8,
-    borderRadius: 4,
-  },
+    borderRadius: 4
+  }
 })(Slider);
 
 const PlayerControls: React.FunctionComponent<IProps> = props => {
-
   const Store = ({ player, playlist }: RootStoreModel) => ({
     player,
     playlist
@@ -105,11 +110,11 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
 
   const _handlePlaybackChange = (event: any, newValue: number) => {
     debounce(player.setPlaybackPosition(newValue), 500);
-  }
+  };
 
   const _handleSeekingStop = (event: any) => {
     props.seekingStop(player.playbackPosition);
-  }
+  };
 
   return (
     <Container>
