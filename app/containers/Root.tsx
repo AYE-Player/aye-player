@@ -9,6 +9,13 @@ import Track from "../../app/store/Track";
 const rootStore = createStore();
 rootStore.playlist.addTrack(
   Track.create({
+    id: "armte0mUnDw",
+    title: "Kimi no sei",
+    duration: 259
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
     id: "iqoNoU-rm14",
     title: "Cyberpunk",
     duration: 215
@@ -28,14 +35,9 @@ rootStore.playlist.addTrack(
     duration: 178
   })
 );
-rootStore.playlist.addTrack(
-  Track.create({
-    id: "xkIytYlDD_o",
-    title: "Dollhouse",
-    duration: 123
-  })
-);
-rootStore.player.setCurrentTrack(rootStore.playlist.Tracks[0].id);
+
+rootStore.queue.addTracks(rootStore.playlist.tracks);
+rootStore.player.setCurrentTrack(rootStore.playlist.tracks[0].id);
 
 export default class Root extends Component {
   render() {

@@ -8,9 +8,11 @@ import { observer } from "mobx-react-lite";
 interface IProps {}
 
 const Container = styled.div`
-  margin: 10px 10px;
+  margin: 10px 5px;
   position: absolute;
   top: 0;
+  height: 60%;
+  overflow: auto;
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
@@ -22,13 +24,12 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   return (
     <Container>
-      {playlist.Tracks.map(Track => (
+      {playlist.tracks.map(Track => (
         <PlaylistEntity
-        title={Track.title}
-        duration={Track.formattedDuration}
-        track={Track}
-        key={Track.id}
-      />
+          duration={Track.formattedDuration}
+          track={Track}
+          key={Track.id}
+        />
       ))}
     </Container>
   );

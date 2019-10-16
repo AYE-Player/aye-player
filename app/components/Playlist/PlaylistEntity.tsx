@@ -4,37 +4,64 @@ import styled from "styled-components";
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../store/RootStore";
 import { TrackModel } from "app/store/Track";
+import PlaylistEntityMenu from "./PlaylistEntityMenu";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
-  title: string;
   duration: string;
   track: TrackModel;
 }
 
-const Container = styled.div`
+const Container = styled.div<any>`
   height: 50px;
   width: 200px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #565f6c;
+`;
+const TrackInfoContainer = styled.div<any>`
+  display: inline-block;
+  cursor: pointer;
+  width: 164px;
+  margin: 10px 0;
+  color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
 
-const Title = styled.div``;
+const Title = styled.div<any>``;
 
 const Duration = styled.div`
   font-size: 12px;
 `;
 
 const PlaylistEntity: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player }: RootStoreModel) => ({
-    player: player
+  const Store = ({ player, playlist, queue }: RootStoreModel) => ({
+    player: player,
+    playlist: playlist,
+    queue: queue
   });
 
-  const { player } = useInject(Store);
+  const { player, playlist, queue } = useInject(Store);
+
+  const _handleClick = (track: TrackModel) => {
+    const idx = playlist.getIndexOfTrack(track);
+
+    queue.clear();
+    queue.addTracks(playlist.getTracksStartingFrom(idx));
+    player.playTrack(queue.currentTrack);
+  };
 
   return (
-    <Container onClick={() => player.playTrack(props.track)}>
-      <Title>{props.title}</Title>
-      <Duration>{props.duration}</Duration>
+    <Container>
+      <TrackInfoContainer
+        active={player.currentTrackId === props.track.id}
+        onClick={() => _handleClick(props.track)}
+      >
+        <Title>{props.track.title}</Title>
+        <Duration>{props.duration}</Duration>
+      </TrackInfoContainer>
+      <PlaylistEntityMenu id={props.track.id} />
     </Container>
   );
 };
 
-export default PlaylistEntity;
+export default observer(PlaylistEntity);

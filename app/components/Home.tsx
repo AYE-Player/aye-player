@@ -2,7 +2,7 @@ import React from "react";
 import { Component } from "react";
 import Player from "./Player/Player";
 import Playlist from "./Playlist/Playlist";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import DebugAddTrack from "./Debug/DebugAddTrack";
 
 interface IProps {}
@@ -25,19 +25,13 @@ export default class Home extends Component<IProps> {
           style={{ height: "100%" }}
           xs={2}
         >
-          <Grid item xs={2}>
-            <Playlist />
-          </Grid>
-          <Grid item xs={2}>
-            <Player />
-          </Grid>
+          <Playlist />
+          <Player />
         </Grid>
         <Grid container direction="row" xs={9} justify="center">
           <Grid item xs>
-            <Paper>TEST</Paper>
           </Grid>
           <Grid item xs>
-            <Paper>TEST</Paper>
             <DebugAddTrack />
           </Grid>
         </Grid>

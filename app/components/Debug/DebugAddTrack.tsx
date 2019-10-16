@@ -5,12 +5,12 @@ import { TextField } from "@material-ui/core";
 import Track from "../../../app/store/Track";
 
 const DebugAddTrack: React.FunctionComponent = () => {
-  const Store = ({ player, playlist }: RootStoreModel) => ({
+  const Store = ({ player, queue }: RootStoreModel) => ({
     player: player,
-    playlist: playlist
+    queue: queue
   });
 
-  const { player, playlist } = useInject(Store);
+  const { player, queue } = useInject(Store);
   let videoId;
 
   const _handleChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,14 +18,13 @@ const DebugAddTrack: React.FunctionComponent = () => {
   };
 
   const _addTrack = () => {
-    playlist.addPrivilegedTrack(
-      Track.create({
-        id: videoId,
-        title: "DEMO TRACK",
-        duration: 231
-      })
-    );
-    setTimeout(() => player.playTrack(playlist.getTrackById(videoId)), 1000);
+    const track = Track.create({
+      id: videoId,
+      title: "DEMO TRACK",
+      duration: 231
+    });
+    queue.addPrivilegedTrack(track);
+    setTimeout(() => player.playTrack(track), 1000);
   };
 
   return (

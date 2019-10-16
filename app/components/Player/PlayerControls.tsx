@@ -12,12 +12,12 @@ import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import ShuffleIcon from "@material-ui/icons/Shuffle";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import RepeatOneIcon from "@material-ui/icons/RepeatOne";
+import { observer } from "mobx-react-lite";
 
-import { debounce } from "../../helpers/debounce";
+import debounce from "../../helpers/debounce";
 
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../store/RootStore";
-import { observer } from "mobx-react-lite";
 
 interface IProps {
   play: Function;
@@ -171,7 +171,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
       <PlaybackControl>
         <PrettoSlider
           min={0}
-          max={player.currentTrack.duration}
+          max={player.currentTrack ? player.currentTrack.duration : 0}
           value={player.playbackPosition}
           onChange={_handlePlaybackChange}
           onMouseUp={_handleSeekingStop}

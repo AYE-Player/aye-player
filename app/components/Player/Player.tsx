@@ -39,12 +39,13 @@ const PlayerOverlay = styled.img`
 let playerElement: any;
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const Store = ({ player, playlist }: RootStoreModel) => ({
+  const Store = ({ player, playlist, queue }: RootStoreModel) => ({
     player: player,
+    queue: queue,
     playlist: playlist
   });
 
-  const { player, playlist } = useInject(Store);
+  const { player, playlist, queue } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -55,9 +56,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onStart = () => {
-    playlist
-      .getTrackById(player.currentTrackId)
-      .setDuration(playerElement.getDuration());
+    if (playerElement.getDuration() === 0) _playNextTrack();
+    player.currentTrack.setDuration(playerElement.getDuration());
   };
 
   const _playVideo = () => {
@@ -73,15 +73,15 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playNextTrack = () => {
-    const nextTrack = playlist.previewNextTrack;
+    const trackId = queue.nextTrack();
 
-    if (!nextTrack) {
+    if (!trackId) {
       player.togglePlayingState();
       return;
     }
 
-    player.playTrack(nextTrack);
-    playlist.removeTrack(player.currentTrack);
+    const track = playlist.getTrackById(trackId);
+    player.playTrack(track);
   };
 
   const _toggleRepeat = () => {
@@ -124,9 +124,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.currentTrackId && <PlayerOverlay
-        src={`https://img.youtube.com/vi/${player.currentTrackId}/hqdefault.jpg`}
-      />}
+      {player.currentTrackId && (
+        <PlayerOverlay
+          src={`https://img.youtube.com/vi/${player.currentTrackId}/hqdefault.jpg`}
+        />
+      )}
       <ReactPlayer
         ref={_getPlayerElement}
         url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}

@@ -19,13 +19,15 @@ const Player = types
   .views(self => ({
     get currentTrack() {
       const root = getRoot(self);
+      if (!self.currentTrackId) return null;
       return resolveIdentifier(Track, root, self.currentTrackId);
     }
   }))
   .actions(self => ({
     playTrack(track: TrackModel) {
+      self.playbackPosition = 0;
       self.currentTrackId = track.id;
-      self.isPlaying = true;
+      if (!self.isPlaying) self.isPlaying = true;
     },
 
     setRepeatPlaylist(state: boolean) {
