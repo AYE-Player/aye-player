@@ -13,6 +13,7 @@ const Queue = types
       if (!self.tracks) return null;
       return resolveIdentifier(Track, root, self.tracks[0]);
     },
+
     get randomTrack() {
       const idx = Math.floor(Math.random() * self.tracks.length);
       const track = self.tracks[idx];
@@ -26,15 +27,22 @@ const Queue = types
         self.tracks.push(track.id);
       }
     },
+
     addPrivilegedTrack(track: TrackModel) {
       self.tracks.unshift(track.id);
     },
+
+    addNextTrack(id: string) {
+      self.tracks.splice(1, 0, id);
+    },
+
     nextTrack() {
-      self.tracks.shift()
+      self.tracks.shift();
       if (self.tracks.length === 0) return null;
 
       return self.tracks[0];
     },
+
     clear() {
       self.tracks.length = 0;
     },

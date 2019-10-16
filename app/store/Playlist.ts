@@ -11,9 +11,11 @@ const Playlist = types
     getTrackById(id: string) {
       return self.tracks.find(track => track.id === id);
     },
+
     getIndexOfTrack(track: TrackModel) {
       return self.tracks.indexOf(track);
     },
+
     getTracksStartingFrom(idx: number) {
       return self.tracks.slice(idx);
     }
