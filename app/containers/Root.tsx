@@ -11,7 +11,7 @@ rootStore.playlist.addTrack(
   Track.create({
     id: "iqoNoU-rm14",
     title: "Cyberpunk",
-    duration: 215,
+    duration: 215
   })
 );
 rootStore.playlist.addTrack(
@@ -25,7 +25,7 @@ rootStore.playlist.addTrack(
   Track.create({
     id: "z_m0wtLMfdU",
     title: "Earthquake",
-    duration: 178,
+    duration: 178
   })
 );
 rootStore.playlist.addTrack(
@@ -34,7 +34,8 @@ rootStore.playlist.addTrack(
     title: "Dollhouse",
     duration: 123
   })
-)
+);
+rootStore.player.setCurrentTrack(rootStore.playlist.Tracks[0].id);
 
 export default class Root extends Component {
   render() {
