@@ -28,6 +28,10 @@ const Player = types
       self.playbackPosition = 0;
       self.currentTrackId = track.id;
       if (!self.isPlaying) self.isPlaying = true;
+
+      new Notification(`Now Playing: ${track.title}`, {
+        icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`
+      });
     },
 
     setRepeatPlaylist(state: boolean) {
