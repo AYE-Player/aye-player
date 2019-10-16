@@ -18,6 +18,7 @@ import debounce from "../../helpers/debounce";
 
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../store/RootStore";
+import formattedDuration from "../../../app/helpers/formattedDuration";
 
 interface IProps {
   play: Function;
@@ -174,6 +175,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         </Grid>
       </Grid>
       <PlaybackControl>
+        <Time>{formattedDuration(player.playbackPosition)}</Time>
         <PrettoSlider
           min={0}
           max={player.currentTrack ? player.currentTrack.duration : 0}
@@ -181,6 +183,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           onChange={_handlePlaybackChange}
           onMouseUp={_handleSeekingStop}
         />
+        <Time>{formattedDuration(player.currentTrack.duration)}</Time>
       </PlaybackControl>
     </Container>
   );
