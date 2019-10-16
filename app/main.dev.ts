@@ -66,6 +66,7 @@ app.on("ready", async () => {
   }
 
   mainWindow = new BrowserWindow({
+    title: 'AYE-Player',
     show: false,
     width: 1280,
     height: 728
