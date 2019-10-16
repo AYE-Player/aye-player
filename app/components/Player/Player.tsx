@@ -9,6 +9,13 @@ import PlayerControls from "./PlayerControls";
 
 interface IPlayerProps {}
 
+interface IPlayerState {
+  playedSeconds: number;
+  played: number;
+  loadedSeconds: number;
+  loaded: number;
+}
+
 const Container = styled.div`
   width: 216px;
   height: 296px;
@@ -16,6 +23,8 @@ const Container = styled.div`
   flex-direction: column;
   margin-bottom: 10px;
   justify-content: center;
+  position: absolute;
+  bottom: 35px;
 `;
 
 const PlayerOverlay = styled.img`
@@ -26,16 +35,6 @@ const PlayerOverlay = styled.img`
   margin-top: 42px;
   z-index: 999;
 `;
-
-/*const opts = {
-  height: "200",
-  width: "216",
-  playerVars: {
-    // https://developers.google.com/youtube/player_parameters
-    autoplay: 0,
-    controls: 0
-  }
-};*/
 
 let playerElement: any;
 

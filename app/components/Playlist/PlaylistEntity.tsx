@@ -23,11 +23,11 @@ const Duration = styled.div`
 `;
 
 const PlaylistEntity: React.FunctionComponent<IProps> = props => {
-  const PlayerStore = ({ player }: RootStoreModel) => ({
+  const Store = ({ player }: RootStoreModel) => ({
     player: player
   });
 
-  const { player } = useInject(PlayerStore);
+  const { player } = useInject(Store);
 
   return (
     <Container onClick={() => player.playTrack(props.track)}>

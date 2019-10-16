@@ -9,6 +9,8 @@ interface IProps {}
 
 const Container = styled.div`
   margin: 10px 10px;
+  position: absolute;
+  top: 0;
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
