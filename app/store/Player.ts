@@ -30,7 +30,8 @@ const Player = types
       if (!self.isPlaying) self.isPlaying = true;
 
       new Notification(`Now Playing: ${track.title}`, {
-        icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`
+        icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`,
+        silent: true
       });
     },
 
