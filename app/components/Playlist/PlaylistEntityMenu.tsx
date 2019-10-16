@@ -17,6 +17,7 @@ const Container = styled.div`
   height: 24px;
   width: 24px;
   position: absolute;
+  display: block;
   right: 0;
   cursor: pointer;
   margin-right: 12px;
