@@ -1,107 +1,81 @@
-import { types, Instance } from "mobx-state-tree";
-import { TrackModel } from "./Track";
+import { types, Instance, getRoot, resolveIdentifier } from "mobx-state-tree";
+import Track, { TrackModel } from "./Track";
 
 export type PlayerModel = Instance<typeof Player>;
 
 const Player = types
   .model({
     volume: types.optional(types.number, 0.2),
-    videoId: types.optional(types.string, "XeGsq5yQOXw"),
-    repeat: types.optional(types.boolean, false),
-    repeatOne: types.optional(types.boolean, false),
-    shuffle: types.optional(types.boolean, false),
-    ready: types.optional(types.boolean, false),
-    playing: types.optional(types.boolean, false),
-    muted: types.optional(types.boolean, false),
-    seeking: types.optional(types.boolean, false),
+    repeatPlaylist: types.optional(types.boolean, false),
+    loopTrack: types.optional(types.boolean, false),
+    isShuffling: types.optional(types.boolean, false),
+    isReady: types.optional(types.boolean, false),
+    isPlaying: types.optional(types.boolean, false),
+    isMuted: types.optional(types.boolean, false),
+    isSeeking: types.optional(types.boolean, false),
     playbackPosition: types.optional(types.number, 0),
-    duration: types.optional(types.number, 0)
+    currentTrackId: types.maybe(types.string)
   })
   .views(self => ({
-    get getVolume() {
-      return self.volume;
-    },
-    get getVideoId() {
-      return self.videoId;
-    },
-    get repeatStatus() {
-      return self.repeat;
-    },
-    get repeatOneStatus() {
-      return self.repeatOne;
-    },
-    get shuffleStatus() {
-      return self.shuffle;
-    },
-    get readyState() {
-      return self.ready;
-    },
-    get isPlaying() {
-      return self.playing;
-    },
-    get isMuted() {
-      return self.muted;
-    },
-    get isSeeking() {
-      return self.seeking;
-    },
-    get trackDuration() {
-      return self.duration;
-    },
-    get getPlaybackPosition() {
-      return self.playbackPosition;
+    get currentTrack() {
+      const root = getRoot(self);
+      return resolveIdentifier(Track, root, self.currentTrackId);
     }
   }))
   .actions(self => ({
     playTrack(track: TrackModel) {
-      self.playing = true;
-      self.videoId = track.id;
+      self.currentTrackId = track.id;
+      self.isPlaying = true;
     },
 
-    setRepeat(state: boolean) {
-      if (self.shuffle) {
-        self.shuffle = false;
+    setRepeatPlaylist(state: boolean) {
+      if (self.isShuffling) {
+        self.isShuffling = false;
       }
-      self.repeat = state;
+      self.repeatPlaylist = state;
     },
 
-    setRepeatOne(state: boolean) {
-      if (self.shuffle) {
-        self.shuffle = false;
+    setLoopTrack(state: boolean) {
+      if (self.isShuffling) {
+        self.isShuffling = false;
       }
-      self.repeatOne = state;
+      self.loopTrack = state;
     },
 
     setVolume(vol: number) {
       self.volume = vol;
     },
 
+    setCurrentTrack(id: string) {
+      self.currentTrackId = id;
+    },
+
     setReadyState() {
-      self.ready = true;
+      self.isReady = true;
     },
 
     togglePlayingState() {
-      self.playing = !self.playing;
+      self.isPlaying = !self.isPlaying;
     },
 
     toggleShuffleState() {
-      if (self.repeatOne || self.repeat) {
-        self.repeatOne = false;
-        self.repeat = false;
+      if (self.loopTrack || self.repeatPlaylist) {
+        self.loopTrack = false;
+        self.repeatPlaylist = false;
       }
-      self.shuffle = !self.shuffle;
+      self.isShuffling = !self.isShuffling;
     },
 
-    toggleMute(val: boolean) {
-      self.muted = val;
+    mute() {
+      self.isMuted = true;
     },
 
-    setSeeking(val: boolean) {
-      self.seeking = val;
+    unmute() {
+      self.isMuted = false;
     },
 
-    setDuration(dur: number) {
-      self.duration = dur;
+    setSeeking(state: boolean) {
+      self.isSeeking = state;
     },
 
     setPlaybackPosition(pos: number) {

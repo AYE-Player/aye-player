@@ -40,14 +40,14 @@ const PlayerOverlay = styled.img`
 let playerElement: any;
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const PlayerStore = ({ player, playlist }: RootStoreModel) => ({
+  const Store = ({ player, playlist }: RootStoreModel) => ({
     player: player,
     playlist: playlist
   });
 
-  const { player, playlist } = useInject(PlayerStore);
+  const { player, playlist } = useInject(Store);
 
-  const _getPlayerElement = player => {
+  const _getPlayerElement = (player: any) => {
     playerElement = player;
   };
 
@@ -56,8 +56,10 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onStart = () => {
-    player.setDuration(playerElement.getDuration());
-  }
+    playlist
+      .getTrackById(player.currentTrackId)
+      .setDuration(playerElement.getDuration());
+  };
 
   const _playVideo = () => {
     player.togglePlayingState();
@@ -71,25 +73,27 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.togglePlayingState();
   };
 
-  const _playNextSong = () => {
-    const nextTrack = playlist.nextTrack();
+  const _playNextTrack = () => {
+    const nextTrack = playlist.previewNextTrack;
+
     if (!nextTrack) {
       player.togglePlayingState();
       return;
     }
 
     player.playTrack(nextTrack);
+    playlist.removeTrack(player.currentTrack);
   };
 
   const _toggleRepeat = () => {
-    if (player.repeatOneStatus) {
-      player.setRepeatOne(false);
-      player.setRepeat(false);
-    } else if (player.repeat) {
-      player.setRepeat(false);
-      player.setRepeatOne(true);
+    if (player.loopTrack) {
+      player.setLoopTrack(false);
+      player.setRepeatPlaylist(false);
+    } else if (player.repeatPlaylist) {
+      player.setRepeatPlaylist(false);
+      player.setLoopTrack(true);
     } else {
-      player.setRepeat(true);
+      player.setRepeatPlaylist(true);
     }
   };
 
@@ -97,7 +101,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.toggleShuffleState();
   };
 
-  const _playPreviousSong = () => {
+  const _playPreviousTrack = () => {
     console.log("NOT IMPLEMENTED YET");
   };
 
@@ -105,8 +109,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     playerElement.seekTo(value);
   };
 
-  const _handleProgress = state => {
-    player.setPlaybackPosition(parseInt(state.playedSeconds));
+  const _handleProgress = (state: IPlayerState) => {
+    player.setPlaybackPosition(Math.trunc(state.playedSeconds));
   };
 
   return (
@@ -117,26 +121,26 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         pause={() => _pauseVideo()}
         toggleRepeat={() => _toggleRepeat()}
         shuffle={() => _toggleShuffle()}
-        skip={() => _playNextSong()}
-        previous={() => _playPreviousSong()}
+        skip={() => _playNextTrack()}
+        previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      <PlayerOverlay
-        src={`https://img.youtube.com/vi/${player.videoId}/hqdefault.jpg`}
-      />
+      {player.currentTrackId && <PlayerOverlay
+        src={`https://img.youtube.com/vi/${player.currentTrackId}/hqdefault.jpg`}
+      />}
       <ReactPlayer
         ref={_getPlayerElement}
-        url={`https://www.youtube.com/watch?v=${player.videoId}`}
+        url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
         width="216px"
         height="200px"
         playing={player.isPlaying}
-        loop={player.repeatOneStatus}
-        volume={player.getVolume}
+        loop={player.loopTrack}
+        volume={player.volume}
         muted={player.isMuted}
         onReady={() => _onReady()}
         onStart={() => _onStart()}
         onProgress={_handleProgress}
-        onEnded={() => _playNextSong()}
+        onEnded={() => _playNextTrack()}
       />
     </Container>
   );

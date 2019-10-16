@@ -4,15 +4,15 @@ import Playlist from "./Playlist";
 
 // could possibly accept some initial state
 export const createStore = (): RootStoreModel => {
-  const player = Player.create();
   const playlist = Playlist.create();
+  const player = Player.create();
 
   const env: RootStoreEnv = { player: player, playlist: playlist };
 
   const rootStore = RootStore.create(
     {
-      player,
-      playlist
+      player: player,
+      playlist: playlist
     },
     env
   );

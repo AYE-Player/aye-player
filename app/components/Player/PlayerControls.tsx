@@ -36,6 +36,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #232c39;
 `;
 
 const Control = styled.div`
@@ -52,7 +53,7 @@ const PlaybackControl = styled.div`
 `;
 
 const Divider = styled.div`
-  height: 10px;
+  height: 15px;
 `;
 
 const PrettoSlider = withStyles({
@@ -86,18 +87,19 @@ const PrettoSlider = withStyles({
 
 const PlayerControls: React.FunctionComponent<IProps> = props => {
 
-  const PlayerStore = ({ player }: RootStoreModel) => ({
-    player: player
+  const Store = ({ player, playlist }: RootStoreModel) => ({
+    player,
+    playlist
   });
 
-  const { player } = useInject(PlayerStore);
+  const { player } = useInject(Store);
 
   const _handleVolumeChange = (event: any, newValue: number) => {
     debounce(player.setVolume(newValue / 100), 500);
     if (newValue === 0) {
-      player.toggleMute(true);
+      player.mute();
     } else {
-      player.toggleMute(false);
+      player.unmute();
     }
   };
 
@@ -106,19 +108,19 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
   }
 
   const _handleSeekingStop = (event: any) => {
-    props.seekingStop(player.getPlaybackPosition);
+    props.seekingStop(player.playbackPosition);
   }
 
   return (
     <Container>
       <Grid container justify="center" spacing={2}>
-        {player.repeatOneStatus ? (
+        {player.loopTrack ? (
           <Control onClick={props.toggleRepeat}>
             <RepeatOneIcon color="primary" />
           </Control>
         ) : (
           <Control onClick={props.toggleRepeat}>
-            {player.repeatStatus ? (
+            {player.repeatPlaylist ? (
               <RepeatIcon color="primary" />
             ) : (
               <RepeatIcon />
@@ -141,7 +143,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           <SkipNextIcon />
         </Control>
         <Control onClick={props.shuffle}>
-          {player.shuffleStatus ? (
+          {player.isShuffling ? (
             <ShuffleIcon color="primary" />
           ) : (
             <ShuffleIcon />
@@ -157,7 +159,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           <Slider
             min={0}
             max={100}
-            value={player.getVolume * 100}
+            value={player.volume * 100}
             onChange={_handleVolumeChange}
             aria-labelledby="continuous-slider"
           />
@@ -169,8 +171,8 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
       <PlaybackControl>
         <PrettoSlider
           min={0}
-          max={player.trackDuration}
-          value={player.getPlaybackPosition}
+          max={player.currentTrack.duration}
+          value={player.playbackPosition}
           onChange={_handlePlaybackChange}
           onMouseUp={_handleSeekingStop}
         />

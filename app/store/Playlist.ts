@@ -5,22 +5,17 @@ export type PlaylistModel = Instance<typeof Playlist>;
 
 const Playlist = types
   .model({
-    Tracks: types.optional(types.array(Track), [])
+    Tracks: types.array(Track)
   })
   .views(self => ({
-    get getPlaylist() {
-      return self.Tracks;
+    getTrackById(id: string) {
+      return self.Tracks.find(track => track.id === id);
     },
-    getTrackFromIndex(idx: number) {
-      return self.Tracks[idx];
-    },
-    get getCurrentTrack() {
-      return self.Tracks[0];
-    },
-    get getNextTrack() {
+    get previewNextTrack() {
+      if (self.Tracks.length <= 1) return null;
       return self.Tracks[1];
     },
-    get getRandomTrack() {
+    get randomTrack() {
       const idx = Math.floor(Math.random() * self.Tracks.length);
       const track = self.Tracks[idx];
       self.Tracks.splice(idx, 1);
@@ -32,8 +27,14 @@ const Playlist = types
       self.Tracks.push(track);
     },
 
-    removeTrack() {
-      self.Tracks.pop();
+    addPrivilegedTrack(track: TrackModel) {
+      self.Tracks.unshift(track);
+    },
+
+    removeTrack(track: TrackModel) {
+      const foundTrack = self.Tracks.find(trk => trk.id === track.id);
+      const idx = self.Tracks.indexOf(foundTrack);
+      self.Tracks.splice(idx, 1);
     },
 
     nextTrack() {
