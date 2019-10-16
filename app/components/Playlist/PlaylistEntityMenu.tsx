@@ -45,11 +45,12 @@ const StyledMenu = withStyles({
 ));
 
 const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
-  const Store = ({ playlist }: RootStoreModel) => ({
-    playlist: playlist
+  const Store = ({ playlist, queue }: RootStoreModel) => ({
+    playlist: playlist,
+    queue: queue
   });
 
-  const { playlist } = useInject(Store);
+  const { playlist, queue } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -66,6 +67,11 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
     setAnchorEl(null);
   };
 
+  const _handlePlayNextTrack = (id: string) => {
+    queue.addNextTrack(id);
+    setAnchorEl(null);
+  }
+
   return (
     <Container onClick={_handleClick}>
       <MoreHorizIcon />
@@ -77,6 +83,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
         onClose={_handleClose}
       >
         <MenuItem onClick={() => _handleRemoveTrack(props.id)}>Remove</MenuItem>
+        <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>Play next</MenuItem>
       </StyledMenu>
     </Container>
   );
