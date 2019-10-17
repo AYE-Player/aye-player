@@ -9,9 +9,65 @@ import Track from "../../app/store/Track";
 const rootStore = createStore();
 rootStore.playlist.addTrack(
   Track.create({
-    id: "armte0mUnDw",
-    title: "Kimi no sei",
+    id: "j2QXZD5tk8c",
+    title: "Neovaii - Take It Back",
+    duration: 214
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "7bD_r5u3znQ",
+    title: "Neovaii - Your Eyes",
+    duration: 212
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "VSdgdjMnw1k",
+    title: "Neovaii - Feel You",
+    duration: 203
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "mXah1eQBUFs",
+    title: "Neovaii - Serenity",
+    duration: 197
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "_8mwWhyjOS0",
+    title: "Neovaii - Feel Better",
     duration: 259
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "UWzRZ0LgiWc",
+    title: "Neovaii - Heart Shaped Box",
+    duration: 291
+  })
+)
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "4Q46xYqUwZQ",
+    title: "Legends Never Die",
+    duration: 235
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "UOxkGD8qRB4",
+    title: "POP/STARS",
+    duration: 202
+  })
+);
+rootStore.playlist.addTrack(
+  Track.create({
+    id: "RG_DLoKkGsg",
+    title: "Phoenix",
+    duration: 175
   })
 );
 rootStore.playlist.addTrack(
