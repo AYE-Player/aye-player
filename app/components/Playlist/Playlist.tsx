@@ -9,12 +9,20 @@ interface IProps {}
 
 const Container = styled.div`
   margin: 10px 5px;
-  position: absolute;
+  width: 320px;
+  top: 0;
   display: flex;
   flex-direction: column;
-  top: 0;
+  flex: 1;
+`;
+
+const ScrollContainer = styled.div`
   overflow: auto;
-  width: 310px;
+  height: calc(100% - 356px);
+`;
+
+const Header = styled.div`
+  font-size: 24px;
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
@@ -26,13 +34,17 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   return (
     <Container>
-      {playlist.tracks.map(Track => (
-        <PlaylistEntity
-          duration={Track.formattedDuration}
-          track={Track}
-          key={Track.id}
-        />
-      ))}
+      <Header>Playlist</Header>
+
+      <ScrollContainer>
+        {playlist.tracks.map(Track => (
+          <PlaylistEntity
+            duration={Track.formattedDuration}
+            track={Track}
+            key={Track.id}
+          />
+        ))}
+      </ScrollContainer>
     </Container>
   );
 };

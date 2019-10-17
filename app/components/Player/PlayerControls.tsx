@@ -33,7 +33,7 @@ interface IProps {
 
 const Container = styled.div`
   width: 320px;
-  height: 78px;
+  height: 90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,6 +52,7 @@ const PlaybackControl = styled.div`
   justify-content: space-between;
   margin-top: 265px;
   width: 320px;
+  background-color: #232c39;
 `;
 
 const Divider = styled.div`
@@ -183,7 +184,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           onChange={_handlePlaybackChange}
           onMouseUp={_handleSeekingStop}
         />
-        <Time>{formattedDuration(player.currentTrack.duration)}</Time>
+        <Time>{formattedDuration(player.currentTrack ? player.currentTrack.duration : 0)}</Time>
       </PlaybackControl>
     </Container>
   );

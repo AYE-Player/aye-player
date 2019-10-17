@@ -14,15 +14,19 @@ interface IProps {
 
 const Container = styled.div<any>`
   height: 50px;
-  width: 310px;
+  width: 307px;
   display: flex;
+  position: relative;
   align-items: center;
   border-bottom: 1px solid #565f6c;
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
   cursor: pointer;
-  width: 275px;
+  width: 260px;
   padding: 10px 0;
   color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
