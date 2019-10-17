@@ -1,6 +1,8 @@
 import { types, Instance, getRoot, resolveIdentifier } from "mobx-state-tree";
 import Track, { TrackModel } from "./Track";
 
+import { ipcRenderer } from "electron";
+
 export type PlayerModel = Instance<typeof Player>;
 
 const Player = types
@@ -32,6 +34,11 @@ const Player = types
       new Notification(`Now Playing: ${track.title}`, {
         icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`,
         silent: true
+      });
+      ipcRenderer.send("setDiscordActivity", {
+        endTime: track.duration,
+        details: track.title,
+        state: track.title
       });
     },
 

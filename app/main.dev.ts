@@ -8,10 +8,11 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
+import RPCClient from "./rpcClient";
 
 export default class AppUpdater {
   constructor() {
@@ -20,8 +21,6 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
-let mainWindow = null;
 
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
@@ -45,6 +44,73 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
+let mainWindow = null;
+let loadingScreen = null;
+let rpc = new RPCClient("621726681140297728");
+
+ipcMain.on('setDiscordActivity', (event: any, arg: any) => {
+  rpc.setActivity(arg.endTime, arg.state, arg.details);
+});
+
+const createLoadingScreen = () => {
+  /// create a browser window
+  loadingScreen = new BrowserWindow({
+    /// define width and height for the window
+    width: 1280,
+    height: 728,
+    /// remove the window frame, so it will become a frameless window
+    frame: false,
+    /// and set the transparency, to remove any window background color
+    transparent: true
+  });
+
+  loadingScreen.setResizable(false);
+
+  loadingScreen.loadURL(`file://${__dirname}/loading.html`);
+
+  loadingScreen.on("closed", () => (loadingScreen = null));
+
+  loadingScreen.webContents.on("did-finish-load", () => {
+    loadingScreen.show();
+  });
+};
+
+const createAppScreen = () => {
+  mainWindow = new BrowserWindow({
+    title: "AYE-Player",
+    show: false,
+    width: 1280,
+    height: 728
+  });
+
+  mainWindow.loadURL(`file://${__dirname}/app.html`);
+  rpc.login();
+
+  mainWindow.on("ready-to-show", () => {
+    if (process.env.START_MINIMIZED) {
+      mainWindow.minimize();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+
+  mainWindow.webContents.on("did-finish-load", () => {
+    /// when the content has loaded, hide the loading screen and show the main window
+    if (loadingScreen) {
+      loadingScreen.close();
+    }
+    mainWindow.show();
+  });
+
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
+};
+
 /**
  * Add event listeners...
  */
@@ -65,30 +131,9 @@ app.on("ready", async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
-    title: 'AYE-Player',
-    show: false,
-    width: 1280,
-    height: 728
-  });
-
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
-
-  mainWindow.on("ready-to-show", () => {
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-      mainWindow.focus();
-    }
-  })
-
-  mainWindow.on("closed", () => {
-    mainWindow = null;
-  });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // Create our screens
+  createLoadingScreen();
+  createAppScreen();
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
