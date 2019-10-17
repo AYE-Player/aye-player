@@ -35,10 +35,19 @@ const Player = types
         icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`,
         silent: true
       });
+      this.notifyRPC({track});
+    },
+    notifyRPC({track, state}: { track?: TrackModel, state?: string}) {
+      if (!track) {
+        const root = getRoot(self);
+        track = resolveIdentifier(Track, root, self.currentTrackId);
+      }
+
       ipcRenderer.send("setDiscordActivity", {
-        endTime: track.duration,
+        playbackPosition: self.playbackPosition,
+        endTime: state ? null : track.duration,
         details: track.title,
-        state: track.title
+        state: state ? state : null
       });
     },
 
@@ -70,6 +79,7 @@ const Player = types
 
     togglePlayingState() {
       self.isPlaying = !self.isPlaying;
+      this.notifyRPC({state: "Paused"});
     },
 
     toggleShuffleState() {

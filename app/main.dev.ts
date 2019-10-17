@@ -48,8 +48,8 @@ let mainWindow = null;
 let loadingScreen = null;
 let rpc = new RPCClient("621726681140297728");
 
-ipcMain.on('setDiscordActivity', (event: any, arg: any) => {
-  rpc.setActivity(arg.endTime, arg.state, arg.details);
+ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
+  rpc.setActivity(arg.playbackPosition, arg.endTime, arg.state, arg.details);
 });
 
 const createLoadingScreen = () => {

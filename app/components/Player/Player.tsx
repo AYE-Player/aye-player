@@ -62,6 +62,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playVideo = () => {
     player.togglePlayingState();
+    player.notifyRPC({});
   };
 
   const _stopVideo = () => {
@@ -76,7 +77,12 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     const trackId = queue.nextTrack();
 
     if (!trackId) {
-      player.togglePlayingState();
+      if (player.repeatPlaylist) {
+        queue.addTracks(playlist.tracks);
+        player.playTrack(playlist.tracks[0]);
+      } else {
+        player.togglePlayingState();
+      }
       return;
     }
 
