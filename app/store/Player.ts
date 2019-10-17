@@ -35,9 +35,9 @@ const Player = types
         icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`,
         silent: true
       });
-      this.notifyRPC({track});
+      this.notifyRPC({ track });
     },
-    notifyRPC({track, state}: { track?: TrackModel, state?: string}) {
+    notifyRPC({ track, state }: { track?: TrackModel; state?: string }) {
       if (!track) {
         const root = getRoot(self);
         track = resolveIdentifier(Track, root, self.currentTrackId);
@@ -78,8 +78,8 @@ const Player = types
     },
 
     togglePlayingState() {
+      if (self.isPlaying) this.notifyRPC({ state: "Paused" });
       self.isPlaying = !self.isPlaying;
-      this.notifyRPC({state: "Paused"});
     },
 
     toggleShuffleState() {
