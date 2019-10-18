@@ -56,7 +56,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onStart = () => {
-    if (playerElement.getDuration() === 0) _playNextTrack();
+    if (playerElement.getDuration() === player.currentTrack.duration) return;
+    if (playerElement.getDuration() === 0) return _playNextTrack();
     player.currentTrack.setDuration(playerElement.getDuration());
   };
 
