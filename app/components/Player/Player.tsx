@@ -108,6 +108,16 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _toggleShuffle = () => {
     player.toggleShuffleState();
+    if (player.isShuffling) {
+      queue.clear();
+      queue.addTracks(playlist.tracks);
+      queue.shuffel();
+    } else {
+      const idx = playlist.getIndexOfTrack(player.currentTrack);
+
+      queue.clear();
+      queue.addTracks(playlist.getTracksStartingFrom(idx));
+    }
   };
 
   const _playPreviousTrack = () => {
