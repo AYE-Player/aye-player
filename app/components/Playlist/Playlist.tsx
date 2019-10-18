@@ -10,6 +10,7 @@ interface IProps {}
 const Container = styled.div`
   margin: 10px 5px;
   width: calc(100% - 5px);
+  height: 100%;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -36,7 +37,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   return (
     <Container>
       <Header>Playlist</Header>
-
       <ScrollContainer>
         {playlist.tracks.map(Track => (
           <PlaylistEntity
