@@ -62,7 +62,10 @@ const createLoadingScreen = () => {
     /// remove the window frame, so it will become a frameless window
     frame: false,
     /// and set the transparency, to remove any window background color
-    transparent: true
+    transparent: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   loadingScreen.setResizable(false);
@@ -82,7 +85,10 @@ const createAppScreen = () => {
     show: false,
     width: 1280,
     height: 728,
-    titleBarStyle: "hidden"
+    titleBarStyle: "hidden",
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
