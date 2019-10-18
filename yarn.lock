@@ -2252,6 +2252,11 @@ async-foreach@^0.1.3:
   version "0.1.3"
   resolved "https://registry.npmjs.org/async-foreach/-/async-foreach-0.1.3.tgz#36121f845c0578172de419a97dbeb1d16ec34542"
 
+async-limiter@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
+  integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
+
 async-limiter@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
@@ -3068,6 +3073,13 @@ bin-v8-flags-filter@^1.1.2:
 binary-extensions@^1.0.0:
   version "1.12.0"
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-1.12.0.tgz#c2d780f53d45bba8317a8902d4ceeaf3a6385b14"
+
+bindings@^1.3.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
+  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
+  dependencies:
+    file-uri-to-path "1.0.0"
 
 bl@^1.0.0:
   version "1.2.2"
@@ -4495,7 +4507,7 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@2.6.9, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
+debug@2.6.9, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   dependencies:
@@ -4749,6 +4761,14 @@ dir-glob@^2.2.2:
 discontinuous-range@1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"
+
+discord-rpc@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/discord-rpc/-/discord-rpc-3.1.0.tgz#dcdc68224f92878897b0be8e334435c220d55d10"
+  integrity sha512-/j0yLDBsuGX/QmxDIbbmKl5hqOQMy57O+KUJJdti6fcpVygn7gCJNPuNNHO6ZebPqGU8qFcCs09crIRljShTWQ==
+  dependencies:
+    node-fetch "2.6.0"
+    ws "7.1.2"
 
 dmg-builder@6.7.2:
   version "6.7.2"
@@ -5911,6 +5931,11 @@ file-loader@^3.0.1:
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^1.0.0"
+
+file-uri-to-path@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
+  integrity sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==
 
 filename-regex@^2.0.0:
   version "2.0.1"
@@ -9160,6 +9185,16 @@ nise@^1.5.2:
     lolex "^4.1.0"
     path-to-regexp "^1.7.0"
 
+node-addon-api@^1.3.0:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.1.tgz#cf813cd69bb8d9100f6bdca6755fc268f54ac492"
+  integrity sha512-2+DuKodWvwRTrCfKOeR24KIc5unKjOh8mz17NCzVnHWfjAdDqbfbjqh7gUT+BkXBRQM52+xCHciKWonJ3CbJMQ==
+
+node-fetch@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+
 node-forge@0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.8.2.tgz#b4bcc59fb12ce77a8825fc6a783dfe3182499c5a"
@@ -10573,7 +10608,7 @@ prop-types-exact@^1.2.0:
     object.assign "^4.1.0"
     reflect.ownkeys "^0.2.0"
 
-prop-types@^15.5.10, prop-types@^15.5.3, prop-types@^15.5.4, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -10783,20 +10818,20 @@ rc@^1.2.1, rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.7.0:
-  version "16.9.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.9.0.tgz#5e65527a5e26f22ae3701131bcccaee9fb0d3962"
-  integrity sha512-YFT2rxO9hM70ewk9jq0y6sQk8cL02xm4+IzYBz75CQGlClQQ1Bxq0nhHF6OtSbit+AIahujJgb/CPRibFkMNJQ==
+react-dom@^16.10.2:
+  version "16.10.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.10.2.tgz#4840bce5409176bc3a1f2bd8cb10b92db452fda6"
+  integrity sha512-kWGDcH3ItJK4+6Pl9DZB16BXYAZyrYQItU4OMy0jAkv5aNqc+mAKb4TpFtAteI6TJZu+9ZlNhaeNQSVQDHJzkw==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.15.0"
+    scheduler "^0.16.2"
 
-react-hot-loader@^4.6.3:
-  version "4.12.13"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.13.tgz#78dcb55f49f88ce3d4316c7c86a8c01fdd196cd2"
-  integrity sha512-4Byk3aVQhcmTnVCBvDHOEOUnMFMj81r2yRKZQSfLOG2yd/4hm/A3oK15AnCZilQExqSFSsHcK64lIIU+dU2zQQ==
+react-hot-loader@^4.12.15:
+  version "4.12.15"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.15.tgz#6bf3984e52edbdf02ea8952777f53da1b3c68c95"
+  integrity sha512-sgkN6g+tgPE6xZzD0Ysqll7KUFYJbMX0DrczT5OxD6S7hZlSnmqSC3ceudwCkiDd65ZTtm+Ayk4Y9k5xxCvpOw==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -10820,6 +10855,15 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-player@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/react-player/-/react-player-1.13.0.tgz#074c19195aadd413eb1243e953f6562c7e04b911"
+  integrity sha512-3Ti5ncYCPZ/Xqtm2KH+FadQtTZXwOguKypjYxYvu2EmYRECCoXutbC/He2Z7uBrb/7tzNEvqoHfZLj/1RPNTKg==
+  dependencies:
+    deepmerge "^4.0.0"
+    load-script "^1.0.0"
+    prop-types "^15.7.2"
 
 react-router-dom@^4.3.1:
   version "4.3.1"
@@ -10872,15 +10916,6 @@ react-transition-group@^4.0.0:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
-
-react-youtube@^7.9.0:
-  version "7.9.0"
-  resolved "https://registry.yarnpkg.com/react-youtube/-/react-youtube-7.9.0.tgz#cf513c253581e1e45aa412a77d03420dfd7f7ba7"
-  integrity sha512-2+nBF4qP8nStYEILIO1/SylKOCnnJUxuZm+qCeWA0eeZxnWZIIixfAeAqbzblwx5L1n/26ACocy3epm9Glox8w==
-  dependencies:
-    fast-deep-equal "^2.0.1"
-    prop-types "^15.5.3"
-    youtube-player "^5.5.1"
 
 react@^16.7.0:
   version "16.9.0"
@@ -11116,6 +11151,14 @@ regexpu-core@^4.5.4:
     regjsparser "^0.6.0"
     unicode-match-property-ecmascript "^1.0.4"
     unicode-match-property-value-ecmascript "^1.1.0"
+
+register-scheme@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/register-scheme/-/register-scheme-0.0.2.tgz#c91a61c735a9f14b2c9f0c2c27d707c0b06615e8"
+  integrity sha512-tMExba6xoLEZVtNnue+oSgnVLs489Df5toLlYThHLC4rsWcf/o+VGDK3VXSqEb8GzQ3NMmkHSMNIzI/Qm2j6Hw==
+  dependencies:
+    bindings "^1.3.0"
+    node-addon-api "^1.3.0"
 
 registry-auth-token@^4.0.0:
   version "4.0.0"
@@ -11543,6 +11586,14 @@ scheduler@^0.15.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
+scheduler@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.16.2.tgz#f74cd9d33eff6fc554edfb79864868e4819132c1"
+  integrity sha512-BqYVWqwz6s1wZMhjFvLfVR5WXP7ZY32M/wYPo04CcuPM7XZEbV2TBNW7Z0UkguPTl0dWMA59VbNXxK6q+pHItg==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
 schema-utils@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/schema-utils/-/schema-utils-1.0.0.tgz#0b79a93204d7b600d4b2850d1f66c2a34951c770"
@@ -11778,11 +11829,6 @@ sinon@^7.2.2:
     lolex "^4.2.0"
     nise "^1.5.2"
     supports-color "^5.5.0"
-
-sister@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/sister/-/sister-3.0.2.tgz#bb3e39f07b1f75bbe1945f29a27ff1e5a2f26be4"
-  integrity sha512-p19rtTs+NksBRKW9qn0UhZ8/TUI9BPw9lmtHny+Y3TinWlOa9jWh9xB0AtPSdmOy49NJJJSSe0Ey4C7h0TrcYA==
 
 sisteransi@^0.1.1:
   version "0.1.1"
@@ -13710,6 +13756,13 @@ ws@3.3.x:
     safe-buffer "~5.1.0"
     ultron "~1.1.0"
 
+ws@7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.1.2.tgz#c672d1629de8bb27a9699eb599be47aeeedd8f73"
+  integrity sha512-gftXq3XI81cJCgkUiAVixA0raD9IVmXqsylCrjRygw4+UOOGzPoxnQ6r/CnVL9i+mDncJo94tSkyrtuuQVBmrg==
+  dependencies:
+    async-limiter "^1.0.0"
+
 ws@^5.2.0:
   version "5.2.2"
   resolved "https://registry.npmjs.org/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
@@ -13921,15 +13974,6 @@ yauzl@2.4.1:
   resolved "https://registry.npmjs.org/yauzl/-/yauzl-2.4.1.tgz#9528f442dab1b2284e58b4379bb194e22e0c4005"
   dependencies:
     fd-slicer "~1.0.1"
-
-youtube-player@^5.5.1:
-  version "5.5.2"
-  resolved "https://registry.yarnpkg.com/youtube-player/-/youtube-player-5.5.2.tgz#052b86b1eabe21ff331095ffffeae285fa7f7cb5"
-  integrity sha512-ZGtsemSpXnDky2AUYWgxjaopgB+shFHgXVpiJFeNB5nWEugpW1KWYDaHKuLqh2b67r24GtP6HoSW5swvf0fFIQ==
-  dependencies:
-    debug "^2.6.6"
-    load-script "^1.0.0"
-    sister "^3.0.0"
 
 zip-stream@^1.2.0:
   version "1.2.0"

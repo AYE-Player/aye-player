@@ -1,10 +1,10 @@
 import React from "react";
 import { Component } from "react";
-//import { Link } from "react-router-dom";
 import Player from "./Player/Player";
 import Playlist from "./Playlist/Playlist";
-//const routes = require("../constants/routes.json");
-import { Grid, Paper } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
+import Navigation from "./Navigation/Navigation";
+import DragBar from "./DragBar/DragBar";
 
 interface IProps {}
 
@@ -13,35 +13,31 @@ export default class Home extends Component<IProps> {
 
   render() {
     return (
-      <Grid
-        container
-        direction="row"
-        data-tid="container"
-        style={{ height: "100vh" }}
-      >
+      <>
+        <DragBar />
         <Grid
           container
-          direction="column"
-          justify="center"
-          style={{ height: "100%" }}
-          xs={2}
+          direction="row"
+          data-tid="container"
+          style={{ height: "100vh" }}
         >
-          <Grid item xs={2}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            style={{ height: "100%" }}
+            xs={3}
+          >
             <Playlist />
-          </Grid>
-          <Grid item xs={2}>
             <Player />
           </Grid>
-        </Grid>
-        <Grid container direction="row" xs={9} justify="center">
-          <Grid item xs>
-            <Paper>TEST</Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper>TEST</Paper>
+          <Grid container direction="row" xs={9} justify="center">
+            <Grid item xs>
+              <Navigation />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </>
     );
   }
 }

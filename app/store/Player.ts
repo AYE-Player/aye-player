@@ -1,57 +1,109 @@
-import { types, Instance } from "mobx-state-tree";
+import { types, Instance, getRoot, resolveIdentifier } from "mobx-state-tree";
 import Track, { TrackModel } from "./Track";
+
+import { ipcRenderer } from "electron";
 
 export type PlayerModel = Instance<typeof Player>;
 
 const Player = types
   .model({
-    volume: types.optional(types.number, 20),
-    videoId: types.optional(types.string, "U6C2oCyTJ9s"),
-    repeat: types.optional(types.boolean, false),
-    ready: types.optional(types.boolean, false),
-    autoPlay: types.optional(types.number, 0),
-    currentTrack: types.maybe(Track)
+    volume: types.optional(types.number, 0.2),
+    loopPlaylist: types.optional(types.boolean, false),
+    loopTrack: types.optional(types.boolean, false),
+    isShuffling: types.optional(types.boolean, false),
+    isReady: types.optional(types.boolean, false),
+    isPlaying: types.optional(types.boolean, false),
+    isMuted: types.optional(types.boolean, false),
+    isSeeking: types.optional(types.boolean, false),
+    playbackPosition: types.optional(types.number, 0),
+    currentTrackId: types.maybe(types.string)
   })
   .views(self => ({
-    get getVolume() {
-      return self.volume;
-    },
-    get getVideoId() {
-      return self.videoId;
-    },
-    get getRepeatStatus() {
-      return self.repeat;
-    },
-    get getReadyState() {
-      return self.ready;
-    },
-    get getAutoplayState() {
-      return self.autoPlay;
-    },
-    get getCurrentTrack() {
-      return self.currentTrack;
+    get currentTrack() {
+      const root = getRoot(self);
+      if (!self.currentTrackId) return null;
+      return resolveIdentifier(Track, root, self.currentTrackId);
     }
   }))
   .actions(self => ({
-    playTrack(id: string) {
-      self.autoPlay = 1;
-      self.videoId = id;
+    playTrack(track: TrackModel) {
+      self.playbackPosition = 0;
+      self.currentTrackId = track.id;
+      if (!self.isPlaying) self.isPlaying = true;
+
+      new Notification(`Now Playing: ${track.title}`, {
+        icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`,
+        silent: true
+      });
+      this.notifyRPC({ track });
+    },
+    notifyRPC({ track, state }: { track?: TrackModel; state?: string }) {
+      if (!track) {
+        const root = getRoot(self);
+        track = resolveIdentifier(Track, root, self.currentTrackId);
+      }
+
+      ipcRenderer.send("setDiscordActivity", {
+        playbackPosition: self.playbackPosition,
+        endTime: state ? null : track.duration,
+        details: track.title,
+        state: state ? state : null
+      });
     },
 
-    toggleRepeat() {
-      self.repeat = !self.repeat;
+    setLoopPlaylist(state: boolean) {
+      if (self.isShuffling) {
+        self.isShuffling = false;
+      }
+      self.loopPlaylist = state;
+    },
+
+    setLoopTrack(state: boolean) {
+      if (self.isShuffling) {
+        self.isShuffling = false;
+      }
+      self.loopTrack = state;
     },
 
     setVolume(vol: number) {
       self.volume = vol;
     },
 
-    setReadyState() {
-      self.ready = true;
+    setCurrentTrack(id: string) {
+      self.currentTrackId = id;
     },
 
-    setCurrentTrack(track: TrackModel) {
-      self.currentTrack = track;
+    setReadyState() {
+      self.isReady = true;
+    },
+
+    togglePlayingState() {
+      if (self.isPlaying) this.notifyRPC({ state: "Paused" });
+      self.isPlaying = !self.isPlaying;
+    },
+
+    toggleShuffleState() {
+      if (self.loopTrack || self.loopPlaylist) {
+        self.loopTrack = false;
+        self.loopPlaylist = false;
+      }
+      self.isShuffling = !self.isShuffling;
+    },
+
+    mute() {
+      self.isMuted = true;
+    },
+
+    unmute() {
+      self.isMuted = false;
+    },
+
+    setSeeking(state: boolean) {
+      self.isSeeking = state;
+    },
+
+    setPlaybackPosition(pos: number) {
+      self.playbackPosition = pos;
     }
   }));
 
