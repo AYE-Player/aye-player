@@ -64,17 +64,22 @@ export default class RPCClient {
     if (this._rpc) return;
     this._rpc = new Client({ transport: "ipc" });
     console.log("Logging into RPC.");
-    this._rpc.once("ready", async () => {
-      console.log("Successfully connected to Discord.");
 
-      await this.setActivity(0, 0, null, "Idle");
-    });
+    try {
+      this._rpc.once("ready", async () => {
+        console.log("Successfully connected to Discord.");
 
-    this._rpc.transport.once("close", async () => {
-      await this.dispose();
-    });
+        await this.setActivity(0, 0, null, "Idle");
+      });
 
-    await this._rpc.login({ clientId: this._clientId });
+      this._rpc.transport.once("close", async () => {
+        await this.dispose();
+      });
+
+      await this._rpc.login({ clientId: this._clientId }); 
+    } catch (error) {
+      console.log("Cannot connect to Discord, is it running?");
+    }
   }
 
   public async dispose() {
