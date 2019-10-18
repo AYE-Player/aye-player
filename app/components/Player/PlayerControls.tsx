@@ -49,7 +49,7 @@ const PlaybackControl = styled.div`
   position: absolute;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 265px;
   width: 320px;
   background-color: #232c39;
@@ -61,6 +61,7 @@ const Divider = styled.div`
 `;
 
 const Time = styled.span`
+  font-size: 14px;
 `;
 
 const PrettoSlider = withStyles({
