@@ -56,6 +56,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onStart = () => {
+    if (player.loopTrack) {
+      player.notifyRPC({});
+    }
     if (playerElement.getDuration() === player.currentTrack.duration) return;
     if (playerElement.getDuration() === 0) return _playNextTrack();
     player.currentTrack.setDuration(playerElement.getDuration());
