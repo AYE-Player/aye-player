@@ -55,14 +55,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     console.log("READY");
   };
 
-  const _onStart = () => {
-    if (player.loopTrack) {
-      player.notifyRPC({});
-    }
-    if (playerElement.getDuration() === player.currentTrack.duration) return;
-    if (playerElement.getDuration() === 0) return _playNextTrack();
-    player.currentTrack.setDuration(playerElement.getDuration());
-  };
+  const _onStart = () => {};
 
   const _playVideo = () => {
     player.togglePlayingState();
@@ -90,8 +83,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
-    const track = playlist.getTrackById(trackId);
-    player.playTrack(track);
+    player.playTrack(playlist.getTrackById(trackId));
   };
 
   const _toggleRepeat = () => {
@@ -132,6 +124,16 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.setPlaybackPosition(Math.trunc(state.playedSeconds));
   };
 
+  const _setDuration = (duration: number) => {
+    if (duration === player.currentTrack.duration) return;
+    player.currentTrack.setDuration(duration);
+  };
+
+  const _onError = () => {
+    console.log("error playing track, skipping");
+    _playNextTrack();
+  };
+
   return (
     <Container>
       <PlayerControls
@@ -160,6 +162,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         muted={player.isMuted}
         onReady={() => _onReady()}
         onStart={() => _onStart()}
+        onError={() => _onError()}
+        onDuration={_setDuration}
         onProgress={_handleProgress}
         onEnded={() => _playNextTrack()}
       />
