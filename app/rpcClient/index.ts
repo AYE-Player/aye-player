@@ -1,5 +1,13 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
 
+interface IActivityParameters {
+  details: string;
+  state?: string;
+  endTimestamp?: number;
+  largeImageKey: string;
+  instance: boolean;
+}
+
 export default class RPCClient {
   private _rpc: any;
 
@@ -21,13 +29,7 @@ export default class RPCClient {
   ) {
     if (!this._rpc) return;
 
-    let activityParameters: {
-      details: string;
-      state?: string;
-      endTimestamp?: number;
-      largeImageKey: string;
-      instance: boolean;
-    };
+    let activityParameters: IActivityParameters;
 
     if (endTimestamp) {
       activityParameters = {
@@ -76,7 +78,7 @@ export default class RPCClient {
         await this.dispose();
       });
 
-      await this._rpc.login({ clientId: this._clientId }); 
+      await this._rpc.login({ clientId: this._clientId });
     } catch (error) {
       console.log("Cannot connect to Discord, is it running?");
     }
