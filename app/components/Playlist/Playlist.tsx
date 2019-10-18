@@ -9,7 +9,7 @@ interface IProps {}
 
 const Container = styled.div`
   margin: 10px 5px;
-  width: 320px;
+  width: calc(100% - 5px);
   top: 0;
   display: flex;
   flex-direction: column;
@@ -18,11 +18,12 @@ const Container = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 356px);
+  height: calc(100% - 364px);
 `;
 
 const Header = styled.div`
   font-size: 24px;
+  margin-bottom: 8px;
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {

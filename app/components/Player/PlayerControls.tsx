@@ -37,12 +37,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   background-color: #232c39;
 `;
 
 const Control = styled.div`
   display: inline-block;
   margin: 0 10px;
+  width: 24px;
+  height: 24px
 `;
 
 const PlaybackControl = styled.div`
@@ -121,7 +124,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
 
   return (
     <Container>
-      <Grid container justify="center" spacing={2}>
+      <Grid container justify="center" alignItems="center" spacing={2}>
         {player.loopTrack ? (
           <Control onClick={props.toggleRepeat}>
             <RepeatOneIcon color="primary" />
