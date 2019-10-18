@@ -17,7 +17,7 @@ import { observer } from "mobx-react-lite";
 import debounce from "../../helpers/debounce";
 
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../store/RootStore";
+import { RootStoreModel } from "../../stores/RootStore";
 import formattedDuration from "../../../app/helpers/formattedDuration";
 
 interface IProps {
@@ -59,7 +59,7 @@ const PlaybackControl = styled.div`
 `;
 
 const Divider = styled.div`
-  height: 15px;
+  height: 16px;
   color: #fbfbfb;
 `;
 

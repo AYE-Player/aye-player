@@ -1,8 +1,8 @@
 import React from "react";
-import { RootStoreModel } from "../../../app/store/RootStore";
+import { RootStoreModel } from "../../stores/RootStore";
 import useInject from "../../../app/hooks/useInject";
 import { TextField } from "@material-ui/core";
-import Track from "../../../app/store/Track";
+import Track from "../../stores/Track";
 
 const DebugAddTrack: React.FunctionComponent = () => {
   const Store = ({ player, queue }: RootStoreModel) => ({

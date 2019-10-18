@@ -1,8 +1,9 @@
 import React from "react";
-import { Component } from "react";
 import styled from "styled-components";
-
-interface IProps {}
+import { NavLink } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import useInject from "../../hooks/useInject";
+import { RootStoreModel } from "../../stores/RootStore";
 
 const Container = styled.div`
   width: calc(100% - 320px);
@@ -26,16 +27,51 @@ const MenuItem = styled.div`
   }
 `;
 
-export default class Navigation extends Component<IProps> {
-  props: IProps;
+const Navigation: React.FunctionComponent<any> = props => {
+  const Store = ({ user }: RootStoreModel) => ({
+    user
+  });
 
-  render() {
-    return (
-      <Container>
-        <MenuItem>Search</MenuItem>
-        <MenuItem>Playlist</MenuItem>
-        <MenuItem>Account</MenuItem>
-      </Container>
-    );
+  const { user } = useInject(Store);
+  const test = () => {
+    console.log("bla", window.location)
+    console.log("user", user.isAuthenticated);
   }
-}
+
+  return (
+    <Container>
+      <MenuItem>
+        <NavLink exact activeClassName="activeLink" to="/">
+          Search
+        </NavLink>
+      </MenuItem>
+      <MenuItem>
+        <NavLink exact activeClassName="activeLink" to="/playlist">
+          Playlist
+        </NavLink>
+      </MenuItem>
+      <MenuItem>
+        {user.isAuthenticated ? (
+          <NavLink
+            exact
+            activeClassName="activeLink"
+            to="/account"
+            onClick={test}
+          >
+            Account
+          </NavLink>
+        ) : (
+          <NavLink
+            exact
+            activeClassName="activeLink"
+            to="/login"
+          >
+            Login
+          </NavLink>
+        )}
+      </MenuItem>
+    </Container>
+  );
+};
+
+export default observer(Navigation);

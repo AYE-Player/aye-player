@@ -6,7 +6,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../store/RootStore";
+import { RootStoreModel } from "../../stores/RootStore";
 import withStyles from "@material-ui/styles/withStyles";
 // import { TrackModel } from "app/store/Track";
 

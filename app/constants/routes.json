@@ -1,3 +1,6 @@
 {
-  "HOME": "/"
+  "SEARCH": "/",
+  "ACCOUNT": "/account",
+  "PLAYLIST": "/playlist",
+  "LOGIN": "/login"
 }

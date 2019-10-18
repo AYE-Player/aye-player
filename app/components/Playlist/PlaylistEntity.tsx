@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { observer } from "mobx-react-lite";
 
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../store/RootStore";
-import { TrackModel } from "app/store/Track";
+import { RootStoreModel } from "../../stores/RootStore";
+import { TrackModel } from "app/stores/Track";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
-import { observer } from "mobx-react-lite";
 
 interface IProps {
   duration: string;

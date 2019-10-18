@@ -5,6 +5,7 @@ export type PlaylistModel = Instance<typeof Playlist>;
 
 const Playlist = types
   .model({
+    id: types.identifier,
     tracks: types.array(Track)
   })
   .views(self => ({

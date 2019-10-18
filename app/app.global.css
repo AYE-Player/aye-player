@@ -37,6 +37,11 @@ a {
   text-decoration: none;
 }
 
+.activeLink {
+  color: #9cf;
+  opacity: 1;
+}
+
 a:hover {
   opacity: 1;
   text-decoration: none;
