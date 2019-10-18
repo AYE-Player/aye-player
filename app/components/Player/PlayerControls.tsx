@@ -128,7 +128,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           </Control>
         ) : (
           <Control onClick={props.toggleRepeat}>
-            {player.repeatPlaylist ? (
+            {player.loopPlaylist ? (
               <RepeatIcon color="primary" />
             ) : (
               <RepeatIcon />

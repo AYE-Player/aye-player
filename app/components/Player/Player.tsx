@@ -78,7 +78,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     const trackId = queue.nextTrack();
 
     if (!trackId) {
-      if (player.repeatPlaylist) {
+      if (player.loopPlaylist) {
         queue.addTracks(playlist.tracks);
         player.playTrack(playlist.tracks[0]);
       } else {
@@ -94,12 +94,12 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   const _toggleRepeat = () => {
     if (player.loopTrack) {
       player.setLoopTrack(false);
-      player.setRepeatPlaylist(false);
-    } else if (player.repeatPlaylist) {
-      player.setRepeatPlaylist(false);
+      player.setLoopPlaylist(false);
+    } else if (player.loopPlaylist) {
+      player.setLoopPlaylist(false);
       player.setLoopTrack(true);
     } else {
-      player.setRepeatPlaylist(true);
+      player.setLoopPlaylist(true);
     }
   };
 

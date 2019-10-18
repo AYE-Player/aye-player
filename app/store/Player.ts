@@ -8,7 +8,7 @@ export type PlayerModel = Instance<typeof Player>;
 const Player = types
   .model({
     volume: types.optional(types.number, 0.2),
-    repeatPlaylist: types.optional(types.boolean, false),
+    loopPlaylist: types.optional(types.boolean, false),
     loopTrack: types.optional(types.boolean, false),
     isShuffling: types.optional(types.boolean, false),
     isReady: types.optional(types.boolean, false),
@@ -51,11 +51,11 @@ const Player = types
       });
     },
 
-    setRepeatPlaylist(state: boolean) {
+    setLoopPlaylist(state: boolean) {
       if (self.isShuffling) {
         self.isShuffling = false;
       }
-      self.repeatPlaylist = state;
+      self.loopPlaylist = state;
     },
 
     setLoopTrack(state: boolean) {
@@ -83,9 +83,9 @@ const Player = types
     },
 
     toggleShuffleState() {
-      if (self.loopTrack || self.repeatPlaylist) {
+      if (self.loopTrack || self.loopPlaylist) {
         self.loopTrack = false;
-        self.repeatPlaylist = false;
+        self.loopPlaylist = false;
       }
       self.isShuffling = !self.isShuffling;
     },
