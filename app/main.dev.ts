@@ -49,6 +49,7 @@ let loadingScreen = null;
 let rpc = new RPCClient("621726681140297728");
 
 ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
+  if (!rpc) return;
   rpc.setActivity(arg.playbackPosition, arg.endTime, arg.state, arg.details);
 });
 
@@ -80,7 +81,8 @@ const createAppScreen = () => {
     title: "AYE-Player",
     show: false,
     width: 1280,
-    height: 728
+    height: 728,
+    titleBarStyle: "hidden"
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
