@@ -52,7 +52,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onReady = () => {
-    console.log("READY");
+    console.log("PLAYER READY");
   };
 
   const _onStart = () => {};
@@ -118,10 +118,19 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _handleSeekMouseUp = (value: number) => {
     playerElement.seekTo(value);
+    player.notifyRPC({});
   };
 
   const _handleProgress = (state: IPlayerState) => {
-    player.setPlaybackPosition(Math.trunc(state.playedSeconds));
+    player.setPlaybackPosition(Math.round(state.playedSeconds));
+    if (
+      Math.round(state.playedSeconds) >= player.currentTrack.duration - 2 &&
+      player.loopTrack
+    ) {
+      player.setPlaybackPosition(0);
+      player.notifyRPC({});
+      return;
+    }
   };
 
   const _setDuration = (duration: number) => {
