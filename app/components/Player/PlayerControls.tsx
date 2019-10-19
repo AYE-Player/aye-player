@@ -19,6 +19,7 @@ import debounce from "../../helpers/debounce";
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../stores/RootStore";
 import formattedDuration from "../../../app/helpers/formattedDuration";
+import Divider from "../Divider/Divider";
 
 interface IProps {
   play: Function;
@@ -48,6 +49,13 @@ const Control = styled.div`
   height: 24px
 `;
 
+const PlayControl = styled.div`
+display: inline-block;
+margin: 0 10px;
+width: 32px;
+height: 32px
+`;
+
 const PlaybackControl = styled.div`
   position: absolute;
   display: flex;
@@ -56,11 +64,6 @@ const PlaybackControl = styled.div`
   margin-top: 265px;
   width: 320px;
   background-color: #232c39;
-`;
-
-const Divider = styled.div`
-  height: 16px;
-  color: #fbfbfb;
 `;
 
 const Time = styled.span`
@@ -142,13 +145,13 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           <SkipPreviousIcon />
         </Control>
         {player.isPlaying ? (
-          <Control onClick={props.pause}>
-            <PauseCircleOutlineIcon />
-          </Control>
+          <PlayControl onClick={props.pause}>
+            <PauseCircleOutlineIcon fontSize="large" />
+          </PlayControl>
         ) : (
-          <Control onClick={props.play}>
-            <PlayCircleOutlineIcon />
-          </Control>
+          <PlayControl onClick={props.play}>
+            <PlayCircleOutlineIcon fontSize="large"/>
+          </PlayControl>
         )}
         <Control onClick={props.skip}>
           <SkipNextIcon />

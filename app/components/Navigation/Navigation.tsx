@@ -9,7 +9,7 @@ const Container = styled.div`
   width: calc(100% - 320px);
   display: flex;
   position: absolute;
-  margin: 10px;
+  padding: 10px 0;
   bottom: 0;
   right: 0;
 `;
@@ -33,42 +33,56 @@ const Navigation: React.FunctionComponent<any> = props => {
   });
 
   const { user } = useInject(Store);
-  const test = () => {
-    console.log("bla", window.location)
-    console.log("user", user.isAuthenticated);
-  }
 
   return (
     <Container>
       <MenuItem>
-        <NavLink exact activeClassName="activeLink" to="/">
+        <NavLink
+          exact
+          activeClassName="activeLink"
+          to="/"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
           Search
         </NavLink>
       </MenuItem>
       <MenuItem>
-        <NavLink exact activeClassName="activeLink" to="/playlist">
+        <NavLink
+          exact
+          activeClassName="activeLink"
+          to="/playlist"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
           Playlist
         </NavLink>
       </MenuItem>
       <MenuItem>
-        {user.isAuthenticated ? (
-          <NavLink
-            exact
-            activeClassName="activeLink"
-            to="/account"
-            onClick={test}
-          >
-            Account
-          </NavLink>
-        ) : (
-          <NavLink
-            exact
-            activeClassName="activeLink"
-            to="/login"
-          >
-            Login
-          </NavLink>
-        )}
+        <NavLink
+          exact
+          activeClassName="activeLink"
+          to="/account"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          {user.isAuthenticated ? "Account" : "Login"}
+        </NavLink>
       </MenuItem>
     </Container>
   );

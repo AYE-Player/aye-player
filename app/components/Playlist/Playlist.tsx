@@ -8,8 +8,8 @@ import { observer } from "mobx-react-lite";
 interface IProps {}
 
 const Container = styled.div`
-  margin: 10px 5px;
-  width: calc(100% - 5px);
+  margin: 8px 5px;
+  width: calc(320px - 5px);
   height: 100%;
   top: 0;
   display: flex;
