@@ -84,7 +84,9 @@ const createAppScreen = () => {
     title: "AYE-Player",
     show: false,
     width: 1280,
+    minWidth: 1280,
     height: 728,
+    minHeight: 728,
     titleBarStyle: "hidden",
     webPreferences: {
       nodeIntegration: true
