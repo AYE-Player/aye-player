@@ -13,11 +13,7 @@ export const createStore = (): RootStoreModel => {
   const queue = Queue.create({
     tracks: []
   });
-  const user = User.create({
-    id: "1",
-    name: "MajesNix",
-    email: "majesnix@majesnix.org"
-  });
+  const user = User.create();
 
   const env: RootStoreEnv = {
     player: player,
