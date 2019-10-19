@@ -17,6 +17,8 @@ const Header = styled.div`
   margin-bottom: 16px;
 `;
 
+const Container = styled.div``;
+
 const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,7 +26,7 @@ const SettingsContainer = styled.div`
   padding: 40px;
 `;
 
-const Container = styled.div`
+const SettingsAligner = styled.div`
   width: 400px;
 `;
 
@@ -72,19 +74,19 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   return user.isAuthenticated ? (
-    <>
+    <Container>
       <Header>Account Settings</Header>
       <SettingsContainer>
         <AvatarUpload avatar={avatar} setAvatar={setAvatar} />
         <Divider />
-        <Container>
+        <SettingsAligner>
           <NewPassword
             handlePasswordChange={_handlePasswordChange}
             handlePasswordChange2={_handlePasswordChange2}
           />
           <Divider />
           <CustomButton onClick={() => _updateUser()} name="Update" />
-        </Container>
+        </SettingsAligner>
         <Divider />
         <CustomizedDialogs
           confirmButtonText="Confirm Delete"
@@ -112,7 +114,7 @@ const AccountPage: React.FunctionComponent = () => {
           </Button>
         </CustomizedDialogs>
       </SettingsContainer>
-    </>
+    </Container>
   ) : (
     <LoginPage />
   );
