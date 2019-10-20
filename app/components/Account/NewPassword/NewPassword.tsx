@@ -24,7 +24,7 @@ const NewPassword: React.FunctionComponent<INewPasswordProps> = props => {
         label="New Password"
         onChange={props.handlePasswordChange}
       />
-      <Divider />
+      <Divider size={2} />
       <CustomTextField
         type="password"
         id="password2"

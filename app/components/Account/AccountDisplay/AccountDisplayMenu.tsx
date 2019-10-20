@@ -5,8 +5,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import withStyles from "@material-ui/styles/withStyles";
 
-import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
+import useInject from "../../../hooks/useInject";
+import { RootStoreModel } from "../../../stores/RootStore";
 import { NavLink } from "react-router-dom";
 
 interface IAccountDisplayMenuProps {

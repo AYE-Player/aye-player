@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { Grid } from "@material-ui/core";
 
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
 import Divider from "../components/Divider/Divider";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import { RootStoreModel } from "../stores/RootStore";
 import useInject from "../hooks/useInject";
-import { Grid } from "@material-ui/core";
+import SmallLink from "../components/Link/SmallLink";
 
 const Header = styled.div`
   font-size: 24px;
@@ -46,7 +47,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
       style={{ height: "100%" }}
     >
       <Header>Login</Header>
-      <Divider />
+      <Divider size={2} />
       <CustomTextField
         label="Username"
         id="username"
@@ -54,7 +55,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
         key="username"
         type="text"
       />
-      <Divider />
+      <Divider size={2} />
       <CustomTextField
         label="Password"
         id="password"
@@ -62,8 +63,12 @@ const LoginPage: React.FunctionComponent<any> = () => {
         key="password"
         type="password"
       />
-      <Divider />
+      <Divider size={3} />
       <CustomButton onClick={_handleOnClick} name="Login" />
+      <Divider size={3} />
+      <SmallLink name="Need an account?" to="/register" />
+      <Divider />
+      <SmallLink name="Forgot password?" to="/passwordForgotten" />
     </Grid>
   );
 };

@@ -1,13 +1,13 @@
-import React from "react";
-import { observer } from "mobx-react-lite";
-import styled from "styled-components";
-
-import Routes from "../Routes";
-import Navigation from "../components/Navigation/Navigation";
-import AccountDisplay from "../components/AccountDisplay/AccountDisplay";
-import { RootStoreModel } from "../stores/RootStore";
-import useInject from "../hooks/useInject";
 import { Grid } from "@material-ui/core";
+import { observer } from "mobx-react-lite";
+import React from "react";
+import styled from "styled-components";
+import AccountDisplay from "../components/Account/AccountDisplay/AccountDisplay";
+import Navigation from "../components/Navigation/Navigation";
+import useInject from "../hooks/useInject";
+import Routes from "../Routes";
+import { RootStoreModel } from "../stores/RootStore";
+
 
 const StyledGrid = styled(Grid)`
   height: calc(100% - 47px);
