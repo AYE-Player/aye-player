@@ -28,11 +28,11 @@ const Header = styled.div`
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
-  const PlaylistStore = ({ playlist }: RootStoreModel) => ({
+  const Store = ({ playlist }: RootStoreModel) => ({
     playlist: playlist
   });
 
-  const { playlist } = useInject(PlaylistStore);
+  const { playlist } = useInject(Store);
 
   return (
     <Container>
