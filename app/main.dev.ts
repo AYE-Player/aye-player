@@ -87,7 +87,7 @@ const createAppScreen = () => {
     minWidth: 1280,
     height: 728,
     minHeight: 728,
-    titleBarStyle: "hidden",
+    frame: false,
     webPreferences: {
       nodeIntegration: true
     }

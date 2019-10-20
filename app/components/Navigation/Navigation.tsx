@@ -9,14 +9,13 @@ const Container = styled.div`
   width: calc(100% - 320px);
   display: flex;
   position: absolute;
-  padding: 10px 0;
   bottom: 0;
   right: 0;
 `;
 
 const MenuItem = styled.div`
   border-top: 1px solid #565f6c;
-  height: 36px;
+  height: 46px;
   justify-content: center;
   align-items: center;
   display: flex;

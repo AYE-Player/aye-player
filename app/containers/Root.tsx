@@ -4,7 +4,6 @@ import { HashRouter } from "react-router-dom";
 import { StoreProvider } from "../components/StoreProvider";
 import { createStore } from "../stores/createStore";
 import Track from "../stores/Track";
-import DragBar from "../components/DragBar/DragBar";
 import { Grid } from "@material-ui/core";
 import Player from "../components/Player/Player";
 import Playlist from "../components/Playlist/Playlist";
@@ -169,12 +168,11 @@ export default class Root extends Component {
   render() {
     return (
       <StoreProvider value={rootStore}>
-        <DragBar />
         <Grid
           container
           direction="row"
           data-tid="container"
-          style={{ height: "100vh" }}
+          style={{ height: "100%", padding: "8px 8px 0 8px" }}
         >
           <Grid
             container

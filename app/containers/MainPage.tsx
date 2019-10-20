@@ -11,7 +11,7 @@ import { Grid } from "@material-ui/core";
 
 const StyledGrid = styled(Grid)`
   height: calc(100% - 47px);
-  padding: 8px;
+  padding: 8px 0 0 24px;
   width: 100%;
 `;
 
