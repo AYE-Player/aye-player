@@ -1,25 +1,20 @@
-import React from "react";
-import styled from "styled-components";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-
-import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
 import withStyles from "@material-ui/styles/withStyles";
-// import { TrackModel } from "app/store/Track";
+import React from "react";
+import styled from "styled-components";
+import useInject from "../../../hooks/useInject";
+import { RootStoreModel } from "../../../stores/RootStore";
 
-interface IPlaylistEntityMenuProps {
-  id: string;
-}
+interface IAccountDisplayMenuProps {}
 
 const Container = styled.div`
-  height: 24px;
-  width: 24px;
-  display: block;
+  height: 30px;
   right: 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
 
 const StyledMenu = withStyles({
@@ -45,15 +40,14 @@ const StyledMenu = withStyles({
   />
 ));
 
-const PlaylistEntityMenu: React.FunctionComponent<
-  IPlaylistEntityMenuProps
+const AccountDisplayMenu: React.FunctionComponent<
+  IAccountDisplayMenuProps
 > = props => {
-  const Store = ({ playlist, queue }: RootStoreModel) => ({
-    playlist: playlist,
-    queue: queue
+  const Store = ({ user }: RootStoreModel) => ({
+    user: user
   });
 
-  const { playlist, queue } = useInject(Store);
+  const { user } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -65,37 +59,33 @@ const PlaylistEntityMenu: React.FunctionComponent<
     setAnchorEl(null);
   };
 
-  const _handleRemoveTrack = (id: string) => {
-    playlist.removeTrackById(id);
+  const _handleLogoutClick = () => {
+    user.logout();
     setAnchorEl(null);
   };
 
-  const _handlePlayNextTrack = (id: string) => {
-    queue.addNextTrack(id);
+  const _handleProfileClick = () => {
+    // navigate to the account page AND close the menu
     setAnchorEl(null);
+    window.location.href = `${window.location.href.split("#/")[0]}#/account`;
   };
 
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
-        <MoreHorizIcon />
+        {props.children}
         <StyledMenu
-          id="simple-menu"
+          id="account-menu"
           anchorEl={anchorEl}
-          keepMounted
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
-            Remove
-          </MenuItem>
-          <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-            Play next
-          </MenuItem>
+          <MenuItem onClick={() => _handleProfileClick()}>Profile</MenuItem>
+          <MenuItem onClick={() => _handleLogoutClick()}>Logout</MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>
   );
 };
 
-export default PlaylistEntityMenu;
+export default AccountDisplayMenu;

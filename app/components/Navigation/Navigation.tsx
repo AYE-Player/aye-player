@@ -1,21 +1,21 @@
 import React from "react";
-import { Component } from "react";
 import styled from "styled-components";
-
-interface IProps {}
+import { NavLink } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import useInject from "../../hooks/useInject";
+import { RootStoreModel } from "../../stores/RootStore";
 
 const Container = styled.div`
   width: calc(100% - 320px);
   display: flex;
   position: absolute;
-  margin: 10px;
   bottom: 0;
   right: 0;
 `;
 
 const MenuItem = styled.div`
   border-top: 1px solid #565f6c;
-  height: 36px;
+  height: 46px;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -26,16 +26,65 @@ const MenuItem = styled.div`
   }
 `;
 
-export default class Navigation extends Component<IProps> {
-  props: IProps;
+const Navigation: React.FunctionComponent<any> = props => {
+  const Store = ({ user }: RootStoreModel) => ({
+    user
+  });
 
-  render() {
-    return (
-      <Container>
-        <MenuItem>Search</MenuItem>
-        <MenuItem>Playlist</MenuItem>
-        <MenuItem>Account</MenuItem>
-      </Container>
-    );
-  }
-}
+  const { user } = useInject(Store);
+
+  return (
+    <Container>
+      <MenuItem>
+        <NavLink
+          exact
+          activeClassName="activeLink"
+          to="/"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          Search
+        </NavLink>
+      </MenuItem>
+      <MenuItem>
+        <NavLink
+          exact
+          activeClassName="activeLink"
+          to="/playlist"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          Playlist
+        </NavLink>
+      </MenuItem>
+      <MenuItem>
+        <NavLink
+          exact
+          activeClassName="activeLink"
+          to="/account"
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          {user.isAuthenticated ? "Account" : "Login"}
+        </NavLink>
+      </MenuItem>
+    </Container>
+  );
+};
+
+export default observer(Navigation);

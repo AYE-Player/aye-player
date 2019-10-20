@@ -1,5 +1,5 @@
 import { useStore } from "../components/StoreProvider";
-import { RootStoreModel } from "../store/RootStore";
+import { RootStoreModel } from "../stores/RootStore";
 
 export type MapStore<T> = (store: RootStoreModel) => T;
 

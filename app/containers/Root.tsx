@@ -1,10 +1,13 @@
 import React from "react";
 import { Component } from "react";
 import { HashRouter } from "react-router-dom";
-import Routes from "../Routes";
 import { StoreProvider } from "../components/StoreProvider";
-import { createStore } from "../../app/store/createStore";
-import Track from "../../app/store/Track";
+import { createStore } from "../stores/createStore";
+import Track from "../stores/Track";
+import { Grid } from "@material-ui/core";
+import Player from "../components/Player/Player";
+import Playlist from "../components/Playlist/Playlist";
+import MainPage from "./MainPage";
 
 const rootStore = createStore();
 
@@ -165,9 +168,28 @@ export default class Root extends Component {
   render() {
     return (
       <StoreProvider value={rootStore}>
-        <HashRouter>
-          <Routes />
-        </HashRouter>
+        <Grid
+          container
+          direction="row"
+          data-tid="container"
+          style={{ height: "100%", padding: "8px 8px 0 8px" }}
+        >
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            style={{ height: "100%" }}
+            xs={3}
+          >
+            <Playlist />
+            <Player />
+          </Grid>
+          <Grid container direction="row" xs={9} justify="center">
+            <HashRouter>
+              <MainPage/>
+            </HashRouter>
+          </Grid>
+        </Grid>
       </StoreProvider>
     );
   }

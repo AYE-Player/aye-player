@@ -1,24 +1,23 @@
-import React from "react";
-import styled from "styled-components";
-import Slider from "@material-ui/core/Slider";
-import VolumeDown from "@material-ui/icons/VolumeDown";
-import VolumeUp from "@material-ui/icons/VolumeUp";
 import { Grid } from "@material-ui/core";
+import Slider from "@material-ui/core/Slider";
 import { withStyles } from "@material-ui/core/styles";
-import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import ShuffleIcon from "@material-ui/icons/Shuffle";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import RepeatOneIcon from "@material-ui/icons/RepeatOne";
+import ShuffleIcon from "@material-ui/icons/Shuffle";
+import SkipNextIcon from "@material-ui/icons/SkipNext";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
+import VolumeDown from "@material-ui/icons/VolumeDown";
+import VolumeUp from "@material-ui/icons/VolumeUp";
 import { observer } from "mobx-react-lite";
-
-import debounce from "../../helpers/debounce";
-
-import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../store/RootStore";
+import React from "react";
+import styled from "styled-components";
 import formattedDuration from "../../../app/helpers/formattedDuration";
+import { debounce } from "../../helpers/";
+import useInject from "../../hooks/useInject";
+import { RootStoreModel } from "../../stores/RootStore";
+import Divider from "../Divider/Divider";
 
 interface IProps {
   play: Function;
@@ -45,7 +44,14 @@ const Control = styled.div`
   display: inline-block;
   margin: 0 10px;
   width: 24px;
-  height: 24px
+  height: 24px;
+`;
+
+const PlayControl = styled.div`
+  display: inline-block;
+  margin: 0 10px;
+  width: 32px;
+  height: 32px;
 `;
 
 const PlaybackControl = styled.div`
@@ -53,14 +59,9 @@ const PlaybackControl = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-top: 265px;
+  margin-top: 268px;
   width: 320px;
   background-color: #232c39;
-`;
-
-const Divider = styled.div`
-  height: 15px;
-  color: #fbfbfb;
 `;
 
 const Time = styled.span`
@@ -142,13 +143,13 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           <SkipPreviousIcon />
         </Control>
         {player.isPlaying ? (
-          <Control onClick={props.pause}>
-            <PauseCircleOutlineIcon />
-          </Control>
+          <PlayControl onClick={props.pause}>
+            <PauseCircleOutlineIcon fontSize="large" />
+          </PlayControl>
         ) : (
-          <Control onClick={props.play}>
-            <PlayCircleOutlineIcon />
-          </Control>
+          <PlayControl onClick={props.play}>
+            <PlayCircleOutlineIcon fontSize="large" />
+          </PlayControl>
         )}
         <Control onClick={props.skip}>
           <SkipNextIcon />
@@ -161,7 +162,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           )}
         </Control>
       </Grid>
-      <Divider />
+      <Divider size={2} />
       <Grid container spacing={1}>
         <Grid item>
           <VolumeDown onClick={() => _handleVolumeChange(null, 0)} />
@@ -188,7 +189,11 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           onChange={_handlePlaybackChange}
           onMouseUp={_handleSeekingStop}
         />
-        <Time>{formattedDuration(player.currentTrack ? player.currentTrack.duration : 0)}</Time>
+        <Time>
+          {formattedDuration(
+            player.currentTrack ? player.currentTrack.duration : 0
+          )}
+        </Time>
       </PlaybackControl>
     </Container>
   );

@@ -1,15 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import PlaylistEntity from "./PlaylistEntity";
-import { RootStoreModel } from "../../../app/store/RootStore";
+import { RootStoreModel } from "../../stores/RootStore";
 import useInject from "../../../app/hooks/useInject";
 import { observer } from "mobx-react-lite";
 
 interface IProps {}
 
 const Container = styled.div`
-  margin: 10px 5px;
-  width: calc(100% - 5px);
+  margin: 8px 5px;
+  width: calc(320px - 5px);
+  height: 100%;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -27,16 +28,15 @@ const Header = styled.div`
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
-  const PlaylistStore = ({ playlist }: RootStoreModel) => ({
+  const Store = ({ playlist }: RootStoreModel) => ({
     playlist: playlist
   });
 
-  const { playlist } = useInject(PlaylistStore);
+  const { playlist } = useInject(Store);
 
   return (
     <Container>
       <Header>Playlist</Header>
-
       <ScrollContainer>
         {playlist.tracks.map(Track => (
           <PlaylistEntity

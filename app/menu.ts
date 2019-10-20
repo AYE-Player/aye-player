@@ -206,15 +206,6 @@ export default class MenuBuilder {
                   }
                 },
                 {
-                  label: "Toggle &Full Screen",
-                  accelerator: "F11",
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
-                },
-                {
                   label: "Toggle &Developer Tools",
                   accelerator: "Alt+Ctrl+I",
                   click: () => {
@@ -222,17 +213,7 @@ export default class MenuBuilder {
                   }
                 }
               ]
-            : [
-                {
-                  label: "Toggle &Full Screen",
-                  accelerator: "F11",
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
-                }
-              ]
+            : []
       },
       {
         label: "Help",
@@ -264,13 +245,7 @@ export default class MenuBuilder {
             }
           }
         ]
-      },
-      /*{
-        label: "MajesNix",
-        click() {
-          shell.openExternal("https://majesnix.com");
-        }
-      }*/
+      }
     ];
 
     return templateDefault;

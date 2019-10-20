@@ -12,7 +12,6 @@ body {
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
   overflow-x: hidden;
-  width: 100vw;
 }
 
 h2 {
@@ -35,6 +34,11 @@ a {
   color: white;
   opacity: 0.75;
   text-decoration: none;
+}
+
+.activeLink {
+  color: #9cf;
+  opacity: 1;
 }
 
 a:hover {

@@ -57,29 +57,46 @@
   <body>
     <div id="root" style="width: 100%; height: 100%;"></div>
     <script>
-      {
-        const scripts = [];
+      const customTitlebar = require("pj-custom-electron-titlebar");
 
-        // Dynamically insert the DLL script in development env in the
-        // renderer process
-        if (process.env.NODE_ENV === "development") {
-          scripts.push("../dll/renderer.dev.dll.js");
-        }
+      // 2. Create the custom titlebar with your own settings
+      //    To make it work, we just need to provide the backgroundColor property
+      //    Other properties are optional.
+      const AyeTitleBar = new customTitlebar.Titlebar({
+        backgroundColor: customTitlebar.Color.fromHex("#3D4653"),
+        shadow: false,
+        iconsTheme: process.env.darwin
+          ? customTitlebar.Themebar.mac
+          : customTitlebar.Themebar.win,
+        maximizable: false,
+        overflow: "hidden",
+        icon: "./images/Aniaugen.svg"
+      });
 
-        // Dynamically insert the bundled app script in the renderer process
-        const port = process.env.PORT || 1212;
-        scripts.push(
-          process.env.HOT
-            ? "http://localhost:" + port + "/dist/renderer.dev.js"
-            : "./dist/renderer.prod.js"
-        );
+      // 3. Update Titlebar text
+      AyeTitleBar.updateTitle("AYE-Player");
 
-        document.write(
-          scripts
-            .map(script => `<script defer src="${script}"><\/script>`)
-            .join("")
-        );
+      const scripts = [];
+
+      // Dynamically insert the DLL script in development env in the
+      // renderer process
+      if (process.env.NODE_ENV === "development") {
+        scripts.push("../dll/renderer.dev.dll.js");
       }
+
+      // Dynamically insert the bundled app script in the renderer process
+      const port = process.env.PORT || 1212;
+      scripts.push(
+        process.env.HOT
+          ? "http://localhost:" + port + "/dist/renderer.dev.js"
+          : "./dist/renderer.prod.js"
+      );
+
+      document.write(
+        scripts
+          .map(script => `<script defer src="${script}"><\/script>`)
+          .join("")
+      );
     </script>
   </body>
 </html>

@@ -1,13 +1,18 @@
 import React from "react";
 import { Switch, Route } from "react-router";
-const routes = require("./constants/routes.json");
-import App from "./containers/App";
-import HomePage from "./containers/Home";
+import routes from "./constants/routes.json";
+import SearchPage from "./containers/SearchPage";
+import AccountPage from "./containers/AccountPage";
+import PlaylistPage from "./containers/PlaylistPage";
+import RegisterPage from "./containers/RegisterPage";
+import PasswordForgotPage from "./containers/PasswordForgotPage";
 
 export default () => (
-  <App>
     <Switch>
-      <Route path={routes.HOME} component={HomePage} />
+      <Route exact path={routes.ACCOUNT} component={AccountPage} />
+      <Route exact path={routes.PLAYLIST} component={PlaylistPage} />
+      <Route exact path={routes.SEARCH} component={SearchPage} />
+      <Route exact path={routes.REGISTER} component={RegisterPage} />
+      <Route exact path={routes.FORGOTPASSWORD} component={PasswordForgotPage} />
     </Switch>
-  </App>
 );
