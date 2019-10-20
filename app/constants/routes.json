@@ -2,5 +2,7 @@
   "SEARCH": "/",
   "ACCOUNT": "/account",
   "PLAYLIST": "/playlist",
-  "LOGIN": "/login"
+  "LOGIN": "/login",
+  "REGISTER": "/register",
+  "FORGOTPASSWORD": "/passwordForgotten"
 }
