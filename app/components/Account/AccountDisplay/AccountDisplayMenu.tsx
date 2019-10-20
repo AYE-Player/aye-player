@@ -1,16 +1,13 @@
-import React from "react";
-import styled from "styled-components";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import withStyles from "@material-ui/styles/withStyles";
-
+import React from "react";
+import styled from "styled-components";
 import useInject from "../../../hooks/useInject";
 import { RootStoreModel } from "../../../stores/RootStore";
-import { NavLink } from "react-router-dom";
 
-interface IAccountDisplayMenuProps {
-}
+interface IAccountDisplayMenuProps {}
 
 const Container = styled.div`
   height: 30px;
@@ -46,7 +43,7 @@ const StyledMenu = withStyles({
 const AccountDisplayMenu: React.FunctionComponent<
   IAccountDisplayMenuProps
 > = props => {
-  const Store = ({ user}: RootStoreModel) => ({
+  const Store = ({ user }: RootStoreModel) => ({
     user: user
   });
 
@@ -67,6 +64,12 @@ const AccountDisplayMenu: React.FunctionComponent<
     setAnchorEl(null);
   };
 
+  const _handleProfileClick = () => {
+    // navigate to the account page AND close the menu
+    setAnchorEl(null);
+    window.location.href = `${window.location.href.split("#/")[0]}#/account`;
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -77,12 +80,8 @@ const AccountDisplayMenu: React.FunctionComponent<
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem>
-            <NavLink to="/account">Profile</NavLink>
-          </MenuItem>
-          <MenuItem onClick={() => _handleLogoutClick()}>
-            Logout
-          </MenuItem>
+          <MenuItem onClick={() => _handleProfileClick()}>Profile</MenuItem>
+          <MenuItem onClick={() => _handleLogoutClick()}>Logout</MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>
