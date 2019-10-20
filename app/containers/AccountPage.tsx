@@ -78,16 +78,16 @@ const AccountPage: React.FunctionComponent = () => {
       <Header>Account Settings</Header>
       <SettingsContainer>
         <AvatarUpload avatar={avatar} setAvatar={setAvatar} />
-        <Divider />
+        <Divider size={2} />
         <SettingsAligner>
           <NewPassword
             handlePasswordChange={_handlePasswordChange}
             handlePasswordChange2={_handlePasswordChange2}
           />
-          <Divider />
+          <Divider size={2} />
           <CustomButton onClick={() => _updateUser()} name="Update" />
         </SettingsAligner>
-        <Divider />
+        <Divider size={2} />
         <CustomizedDialogs
           confirmButtonText="Confirm Delete"
           title="Account Deletion"
