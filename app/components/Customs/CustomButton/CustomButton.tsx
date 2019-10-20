@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 interface ICustomButtonProps {
   onClick?: (event: React.MouseEvent) => void;
   name?: string;
+  disabled?: boolean;
 }
 
 const CssButton = withStyles({
@@ -18,20 +19,23 @@ const CssButton = withStyles({
       backgroundColor: "#565f6c",
       borderColor: "#565f6c"
     },
-    '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
-        borderColor: '#9cf',
-      },
+    "& .MuiOutlinedInput-root": {
+      "&:hover fieldset": {
+        borderColor: "#9cf"
+      }
     },
     borderRadius: "5px"
   }
 })(Button);
 
-
 const CustomButton: React.FunctionComponent<ICustomButtonProps> = props => {
   return (
     <>
-      <CssButton variant="outlined" onClick={props.onClick}>
+      <CssButton
+        variant="outlined"
+        disabled={props.disabled}
+        onClick={props.onClick}
+      >
         {props.name ? props.name : props.children}
       </CssButton>
     </>

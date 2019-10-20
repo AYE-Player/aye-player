@@ -6,47 +6,61 @@ interface ICustomTextFieldProps {
   type: string;
   id: string;
   label: string;
+  helperText?: string;
   error?: boolean;
+  required?: boolean;
 }
-
 
 const CssTextField = withStyles({
   root: {
-    '& label': {
-      color: '#565f6c'
+    "& label": {
+      color: "#565f6c"
     },
-    '& label.Mui-focused': {
-      color: '#9cf',
+    "& label.Mui-focused": {
+      color: "#9cf"
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#9cf',
+    "& label.Mui-focused.Mui-error": {
+      color: "#f44336"
     },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#565f6c'
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#9cf"
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#565f6c"
       },
-      '&:hover fieldset': {
-        borderColor: '#9cf',
+      "&:hover fieldset": {
+        borderColor: "#9cf"
       },
-      '&.Mui-focused fieldset': {
-        borderColor: '#9cf',
+      "&.Mui-focused fieldset": {
+        borderColor: "#9cf"
       },
+      "&.Mui-focused fieldset.Mui-error": {
+        borderColor: "#f44336"
+      }
     },
-    '& .MuiOutlinedInput-input': {
-      color: '#fbfbfb'
+    "& .MuiOutlinedInput-input": {
+      color: "#fbfbfb"
+    },
+    "& .MuiFormHelperText-root": {
+      color: "#707986"
     }
-  },
+  }
 })(TextField);
 
-const CustomTextField: React.FunctionComponent<ICustomTextFieldProps> = props => {
+const CustomTextField: React.FunctionComponent<
+  ICustomTextFieldProps
+> = props => {
   return (
     <CssTextField
-      error={props.error}
       id={props.id}
       label={props.label}
       type={props.type}
       variant="outlined"
+      helperText={props.helperText}
       onChange={props.onChange}
+      required={props.required}
+      error={props.error}
     />
   );
 };
