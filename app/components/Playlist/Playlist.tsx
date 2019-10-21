@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PlaylistEntity from "./PlaylistEntity";
-import { RootStoreModel } from "../../stores/RootStore";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../../app/hooks/useInject";
 import { observer } from "mobx-react-lite";
 

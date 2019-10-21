@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
-import { TrackModel } from "app/stores/Track";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import { TrackModel } from "app/dataLayer/models/Track";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
 
 interface IProps {

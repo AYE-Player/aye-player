@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 
 const Container = styled.div`
   width: calc(100% - 320px);

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ReactPlayer from "react-player";
 import { observer } from "mobx-react-lite";
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 
 import PlayerControls from "./PlayerControls";
 

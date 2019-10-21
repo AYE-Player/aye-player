@@ -5,7 +5,7 @@ import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
 import Divider from "../components/Divider/Divider";
 import useInject from "../hooks/useInject";
-import { RootStoreModel } from "../stores/RootStore";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { validateEmail, debounce } from "../helpers/";
 
 const Header = styled.div`

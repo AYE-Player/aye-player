@@ -5,7 +5,7 @@ import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
 import styled from "styled-components";
 import useInject from "../../../hooks/useInject";
-import { RootStoreModel } from "../../../stores/RootStore";
+import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
 
 interface IAccountDisplayMenuProps {}
 

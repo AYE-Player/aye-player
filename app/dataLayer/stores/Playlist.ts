@@ -1,5 +1,5 @@
 import { types, Instance } from "mobx-state-tree";
-import Track, { TrackModel } from "./Track";
+import Track, { TrackModel } from "../models/Track";
 
 export type PlaylistModel = Instance<typeof Playlist>;
 
