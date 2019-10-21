@@ -80,7 +80,7 @@ const PlaylistEntityMenu: React.FunctionComponent<
       <Container onClick={_handleClick}>
         <MoreHorizIcon />
         <StyledMenu
-          id="simple-menu"
+          id="playlist-menu-item"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
