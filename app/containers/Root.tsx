@@ -174,19 +174,13 @@ export default class Root extends Component {
           data-tid="container"
           style={{ height: "100%", padding: "8px 8px 0 8px" }}
         >
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            style={{ height: "100%" }}
-            xs={3}
-          >
+          <Grid container direction="column" style={{ height: "100%" }} xs={3}>
             <Playlist />
             <Player />
           </Grid>
-          <Grid container direction="row" xs={9} justify="center">
+          <Grid container direction="row" xs={9}>
             <HashRouter>
-              <MainPage/>
+              <MainPage />
             </HashRouter>
           </Grid>
         </Grid>
