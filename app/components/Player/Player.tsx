@@ -4,7 +4,6 @@ import ReactPlayer from "react-player";
 import { observer } from "mobx-react-lite";
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
-
 import PlayerControls from "./PlayerControls";
 
 interface IPlayerProps {}
@@ -39,13 +38,14 @@ const PlayerOverlay = styled.img`
 let playerElement: any;
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const Store = ({ player, playlist, queue }: RootStoreModel) => ({
+  const Store = ({ player, playlist, queue, user }: RootStoreModel) => ({
     player: player,
     queue: queue,
-    playlist: playlist
+    playlist: playlist,
+    user: user
   });
 
-  const { player, playlist, queue } = useInject(Store);
+  const { player, playlist, queue, user } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -155,7 +155,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.currentTrackId && (
+      {player.currentTrackId && user.isAdmin && (
         <PlayerOverlay
           src={`https://img.youtube.com/vi/${player.currentTrackId}/hqdefault.jpg`}
         />
