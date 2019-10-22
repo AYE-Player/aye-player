@@ -13,8 +13,8 @@ interface IProps {
   track: TrackModel;
   index: number;
   onDragOver: React.Dispatch<any>;
-  onDragEnd: (newIndex: number) => void;
-  setSelectedTrack: React.Dispatch<any>;
+  onDragEnd: (event: any) => void;
+  onDragStart: (event: any, idx: number) => void;
 }
 
 const Container = styled.div<any>`
@@ -74,9 +74,10 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   return (
     <Container
       draggable
-      onDragStart={() => props.setSelectedTrack(props.index)}
+      onDragStart={(event: any) => props.onDragStart(event, props.index)}
       onDragOver={() => props.onDragOver(props.index)}
-      onDragEnd={() => props.onDragEnd(props.index)}
+      onDragEnd={(event: any) => props.onDragEnd(event)}
+      id={props.index}
     >
       <DragHandle className=".showDraggable" fontSize="small" />
       <TrackInfoContainer

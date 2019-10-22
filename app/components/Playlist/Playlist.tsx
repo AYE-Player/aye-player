@@ -29,8 +29,8 @@ const Header = styled.div`
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
-  const [selectedTrackIdx, setSelectedTrackIdx] = React.useState(null);
-  const [newIdx, setNewIdx] = React.useState(null);
+  const [selectedTrackPosition, setSelectedTrackPosition] = React.useState(null);
+  const [newPosition, setNewPosition] = React.useState(null);
 
   const Store = ({ playlist, queue }: RootStoreModel) => ({
     playlist: playlist,
@@ -39,16 +39,30 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   const { playlist, queue } = useInject(Store);
 
-  const _onDragEnd = () => {
-    const track = playlist.removeAndGetTrack(selectedTrackIdx);
+  const _onDragStart = (event: any, idx: number) => {
+    setSelectedTrackPosition(idx);
+
+    // set indicator style for dragging event
+    event.target.style.backgroundColor = "#232c39";
+    event.target.style.opacity = 0.3;
+    event.target.style.borderBottom = "none";
+  }
+
+  const _onDragEnd = (event: any) => {
+    // reapply styles after dragging
+    event.target.style.backgroundColor = "#232c39";
+    event.target.style.opacity = 1;
+    event.target.style.borderBottom = "1px solid #565f6c";
+
+    const track = playlist.removeAndGetTrack(selectedTrackPosition);
     playlist.addTrackAt(Track.create({
       id: track.id,
       title: track.title,
       duration: track.duration
-    }), newIdx);
+    }), newPosition);
 
     queue.clear();
-    queue.addTracks(playlist.getTracksStartingFrom(newIdx));
+    queue.addTracks(playlist.getTracksStartingFrom(newPosition));
   }
 
   return (
@@ -61,9 +75,9 @@ const Playlist: React.FunctionComponent<IProps> = props => {
             track={Track}
             key={Track.id}
             index={index}
-            onDragOver={setNewIdx}
+            onDragOver={setNewPosition}
             onDragEnd={_onDragEnd}
-            setSelectedTrack={setSelectedTrackIdx}
+            onDragStart={_onDragStart}
           />
         ))}
       </ScrollContainer>
