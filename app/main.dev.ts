@@ -49,7 +49,7 @@ let loadingScreen = null;
 let rpc = new RPCClient("621726681140297728");
 
 ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
-  if (!rpc) return;
+  if (!rpc && !rpc.isConnected) return;
   rpc.setActivity(arg.playbackPosition, arg.endTime, arg.state, arg.details);
 });
 
