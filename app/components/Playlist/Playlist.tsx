@@ -32,11 +32,12 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   const [selectedTrackIdx, setSelectedTrackIdx] = React.useState(null);
   const [newIdx, setNewIdx] = React.useState(null);
 
-  const Store = ({ playlist }: RootStoreModel) => ({
-    playlist: playlist
+  const Store = ({ playlist, queue }: RootStoreModel) => ({
+    playlist: playlist,
+    queue: queue
   });
 
-  const { playlist } = useInject(Store);
+  const { playlist, queue } = useInject(Store);
 
   const _onDragEnd = () => {
     const track = playlist.removeAndGetTrack(selectedTrackIdx);
@@ -45,6 +46,9 @@ const Playlist: React.FunctionComponent<IProps> = props => {
       title: track.title,
       duration: track.duration
     }), newIdx);
+
+    queue.clear();
+    queue.addTracks(playlist.getTracksStartingFrom(newIdx));
   }
 
   return (
