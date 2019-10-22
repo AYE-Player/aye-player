@@ -1,5 +1,5 @@
-import { types, Instance } from "mobx-state-tree";
-import Track, { TrackModel } from "./Track";
+import { types, Instance, clone } from "mobx-state-tree";
+import Track, { TrackModel } from "../models/Track";
 
 export type PlaylistModel = Instance<typeof Playlist>;
 
@@ -36,6 +36,16 @@ const Playlist = types
       const foundTrack = self.tracks.find(trk => trk.id === id);
       const idx = self.tracks.indexOf(foundTrack);
       self.tracks.splice(idx, 1);
+    },
+
+    removeAndGetTrack(idx: number) {
+      const track = clone(self.tracks[idx]);
+      self.tracks.splice(idx, 1);
+      return track;
+    },
+
+    addTrackAt(track: TrackModel, newIndex: number) {
+      self.tracks.splice(newIndex, 0, track);
     }
   }));
 

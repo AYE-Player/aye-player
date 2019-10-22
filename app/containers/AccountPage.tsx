@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Button } from "@material-ui/core";
 
 import useInject from "../hooks/useInject";
-import { RootStoreModel } from "../stores/RootStore";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import LoginPage from "./LoginPage";
 import AvatarUpload from "../components/Account/AvatarUpload/AvatarUpload";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";

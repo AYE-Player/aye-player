@@ -2,7 +2,7 @@ import { Instance, types } from "mobx-state-tree";
 import Player, { PlayerModel } from "./Player";
 import Playlist, { PlaylistModel } from "./Playlist";
 import Queue, { QueueModel } from "./Queue";
-import User, { UserModel } from "./User";
+import User, { UserModel } from "../models/User";
 
 export type RootStoreModel = Instance<typeof RootStore>;
 export type RootStoreEnv = {

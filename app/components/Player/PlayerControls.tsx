@@ -16,7 +16,7 @@ import styled from "styled-components";
 import formattedDuration from "../../../app/helpers/formattedDuration";
 import { debounce } from "../../helpers/";
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import Divider from "../Divider/Divider";
 
 interface IProps {

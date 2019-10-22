@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import PlaylistEntity from "./PlaylistEntity";
-import { RootStoreModel } from "../../stores/RootStore";
-import useInject from "../../../app/hooks/useInject";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import useInject from "../../hooks/useInject";
 import { observer } from "mobx-react-lite";
+import Track from "../../dataLayer/models/Track";
 
 interface IProps {}
 
@@ -28,21 +29,55 @@ const Header = styled.div`
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
-  const Store = ({ playlist }: RootStoreModel) => ({
-    playlist: playlist
+  const [selectedTrackPosition, setSelectedTrackPosition] = React.useState(null);
+  const [newPosition, setNewPosition] = React.useState(null);
+
+  const Store = ({ playlist, queue }: RootStoreModel) => ({
+    playlist: playlist,
+    queue: queue
   });
 
-  const { playlist } = useInject(Store);
+  const { playlist, queue } = useInject(Store);
+
+  const _onDragStart = (event: any, idx: number) => {
+    setSelectedTrackPosition(idx);
+
+    // set indicator style for dragging event
+    event.target.style.backgroundColor = "#232c39";
+    event.target.style.opacity = 0.3;
+    event.target.style.borderBottom = "none";
+  }
+
+  const _onDragEnd = (event: any) => {
+    // reapply styles after dragging
+    event.target.style.backgroundColor = "#232c39";
+    event.target.style.opacity = 1;
+    event.target.style.borderBottom = "1px solid #565f6c";
+
+    const track = playlist.removeAndGetTrack(selectedTrackPosition);
+    playlist.addTrackAt(Track.create({
+      id: track.id,
+      title: track.title,
+      duration: track.duration
+    }), newPosition);
+
+    queue.clear();
+    queue.addTracks(playlist.getTracksStartingFrom(newPosition));
+  }
 
   return (
     <Container>
       <Header>Playlist</Header>
       <ScrollContainer>
-        {playlist.tracks.map(Track => (
+        {playlist.tracks.map((Track, index) => (
           <PlaylistEntity
             duration={Track.formattedDuration}
             track={Track}
             key={Track.id}
+            index={index}
+            onDragOver={setNewPosition}
+            onDragEnd={_onDragEnd}
+            onDragStart={_onDragStart}
           />
         ))}
       </ScrollContainer>

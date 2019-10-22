@@ -2,7 +2,7 @@ import RootStore, { RootStoreModel, RootStoreEnv } from "./RootStore";
 import Player from "./Player";
 import Playlist from "./Playlist";
 import Queue from "./Queue";
-import User from "./User";
+import User from "../models/User";
 
 // could possibly accept some initial state
 export const createStore = (): RootStoreModel => {

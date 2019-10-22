@@ -5,7 +5,7 @@ import { Grid } from "@material-ui/core";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
 import Divider from "../components/Divider/Divider";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
-import { RootStoreModel } from "../stores/RootStore";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import SmallLink from "../components/Link/SmallLink";
 

@@ -18,9 +18,10 @@ const User = types
       self.id = "1";
       self.email = "majesnix@majesnix.org";
       self.name = "majesnix";
-      self.avatar = "https://i.dcl.re/UYb1hvL5kRVy3IEvhHRsEbnj5L9N75Q0.png";
+      self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
       self.isAnonym = false;
       self.isAuthenticated = true;
+      self.isAdmin = true;
     },
     logout() {
       self.id = undefined;

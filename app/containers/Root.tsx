@@ -2,8 +2,8 @@ import React from "react";
 import { Component } from "react";
 import { HashRouter } from "react-router-dom";
 import { StoreProvider } from "../components/StoreProvider";
-import { createStore } from "../stores/createStore";
-import Track from "../stores/Track";
+import { createStore } from "../dataLayer/stores/createStore";
+import Track from "../dataLayer/models/Track";
 import { Grid } from "@material-ui/core";
 import Player from "../components/Player/Player";
 import Playlist from "../components/Playlist/Playlist";
@@ -174,19 +174,13 @@ export default class Root extends Component {
           data-tid="container"
           style={{ height: "100%", padding: "8px 8px 0 8px" }}
         >
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            style={{ height: "100%" }}
-            xs={3}
-          >
+          <Grid container direction="column" style={{ height: "100%" }} xs={3}>
             <Playlist />
             <Player />
           </Grid>
-          <Grid container direction="row" xs={9} justify="center">
+          <Grid container direction="row" xs={9}>
             <HashRouter>
-              <MainPage/>
+              <MainPage />
             </HashRouter>
           </Grid>
         </Grid>

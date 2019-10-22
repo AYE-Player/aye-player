@@ -1,15 +1,20 @@
+import DragHandleIcon from "@material-ui/icons/DragHandle";
+import { withStyles } from "@material-ui/styles";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
-import { observer } from "mobx-react-lite";
-
+import { TrackModel } from "../../dataLayer/models/Track";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../stores/RootStore";
-import { TrackModel } from "app/stores/Track";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
 
 interface IProps {
   duration: string;
   track: TrackModel;
+  index: number;
+  onDragOver: React.Dispatch<any>;
+  onDragEnd: (event: any) => void;
+  onDragStart: (event: any, idx: number) => void;
 }
 
 const Container = styled.div<any>`
@@ -19,15 +24,20 @@ const Container = styled.div<any>`
   position: relative;
   align-items: center;
   border-bottom: 1px solid #565f6c;
+  padding-left: 8px;
   &:last-child {
     border-bottom: none;
+  }
+  &:hover > svg {
+    opacity: 1;
   }
 `;
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
   cursor: pointer;
-  width: 260px;
+  width: 224px;
   padding: 10px 0;
+  padding-left: 8px;
   color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
 
@@ -36,6 +46,13 @@ const Title = styled.div<any>``;
 const Duration = styled.div`
   font-size: 12px;
 `;
+
+const DragHandle = withStyles({
+  root: {
+    opacity: 0,
+    cursor: "grab"
+  }
+})(DragHandleIcon);
 
 const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const Store = ({ player, playlist, queue }: RootStoreModel) => ({
@@ -55,7 +72,14 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   };
 
   return (
-    <Container>
+    <Container
+      draggable
+      onDragStart={(event: any) => props.onDragStart(event, props.index)}
+      onDragOver={() => props.onDragOver(props.index)}
+      onDragEnd={(event: any) => props.onDragEnd(event)}
+      id={props.index}
+    >
+      <DragHandle className=".showDraggable" fontSize="small" />
       <TrackInfoContainer
         active={player.currentTrackId === props.track.id}
         onClick={() => _handleClick(props.track)}
