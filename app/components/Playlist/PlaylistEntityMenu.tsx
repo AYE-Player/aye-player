@@ -35,7 +35,7 @@ const StyledMenu = withStyles({
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "top",
-      horizontal: "center"
+      horizontal: "left"
     }}
     transformOrigin={{
       vertical: "top",
@@ -75,6 +75,12 @@ const PlaylistEntityMenu: React.FunctionComponent<
     setAnchorEl(null);
   };
 
+  const _handleCopyUrl = () => {
+    navigator.clipboard.writeText(
+      `https://www.youtube.com/watch?v=${queue.currentTrack.id}`
+    );
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -92,6 +98,7 @@ const PlaylistEntityMenu: React.FunctionComponent<
           <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
             Play next
           </MenuItem>
+          <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

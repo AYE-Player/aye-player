@@ -59,7 +59,7 @@ const PlaybackControl = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-top: 268px;
+  margin-top: 273px;
   width: 320px;
   background-color: #232c39;
 `;

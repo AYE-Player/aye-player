@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const MenuItem = styled.div`
   border-top: 1px solid #565f6c;
-  height: 46px;
+  height: 45px;
   justify-content: center;
   align-items: center;
   display: flex;

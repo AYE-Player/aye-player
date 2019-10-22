@@ -164,7 +164,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         ref={_getPlayerElement}
         url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
         width="320px"
-        height="200px"
+        height="210px"
         playing={player.isPlaying}
         loop={player.loopTrack}
         volume={player.volume}
@@ -175,6 +175,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         onDuration={_setDuration}
         onProgress={_handleProgress}
         onEnded={() => _playNextTrack()}
+        style={{ zIndex: "2" }}
       />
     </Container>
   );
