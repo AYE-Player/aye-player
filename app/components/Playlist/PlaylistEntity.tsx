@@ -7,14 +7,13 @@ import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
+import { Draggable } from "react-beautiful-dnd";
 
 interface IProps {
   duration: string;
   track: TrackModel;
   index: number;
-  onDragOver: React.Dispatch<any>;
-  onDragEnd: (event: any) => void;
-  onDragStart: (event: any, idx: number) => void;
+  onClick: Function;
 }
 
 const Container = styled.div<any>`
@@ -55,40 +54,40 @@ const DragHandle = withStyles({
 })(DragHandleIcon);
 
 const PlaylistEntity: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player, playlist, queue }: RootStoreModel) => ({
-    player: player,
-    playlist: playlist,
-    queue: queue
+  const Store = ({ player }: RootStoreModel) => ({
+    player: player
   });
 
-  const { player, playlist, queue } = useInject(Store);
+  const { player } = useInject(Store);
 
-  const _handleClick = (track: TrackModel) => {
-    const idx = playlist.getIndexOfTrack(track);
-
-    queue.clear();
-    queue.addTracks(playlist.getTracksStartingFrom(idx));
-    player.playTrack(queue.currentTrack);
-  };
+  // TODO: This makes no sense, but without this call, the playerEntity is not rerenderd
+  // on song change and wont update the active color
+  player.currentTrackId;
 
   return (
-    <Container
-      draggable
-      onDragStart={(event: any) => props.onDragStart(event, props.index)}
-      onDragOver={() => props.onDragOver(props.index)}
-      onDragEnd={(event: any) => props.onDragEnd(event)}
-      id={props.index}
+    <Draggable
+      key={props.index}
+      draggableId={props.track.id}
+      index={props.index}
     >
-      <DragHandle className=".showDraggable" fontSize="small" />
-      <TrackInfoContainer
-        active={player.currentTrackId === props.track.id}
-        onClick={() => _handleClick(props.track)}
-      >
-        <Title>{props.track.title}</Title>
-        <Duration>{props.duration}</Duration>
-      </TrackInfoContainer>
-      <PlaylistEntityMenu id={props.track.id} />
-    </Container>
+      {(provided: any) => (
+        <Container
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <DragHandle fontSize="small" />
+          <TrackInfoContainer
+            active={player.currentTrackId === props.track.id}
+            onClick={() => props.onClick(props.track)}
+          >
+            <Title>{props.track.title}</Title>
+            <Duration>{props.duration}</Duration>
+          </TrackInfoContainer>
+          <PlaylistEntityMenu id={props.track.id} />
+        </Container>
+      )}
+    </Draggable>
   );
 };
 

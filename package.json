@@ -266,6 +266,7 @@
     "mobx-state-tree": "^3.14.1",
     "pj-custom-electron-titlebar": "^3.1.5",
     "react": "^16.10.2",
+    "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.12.15",
     "react-player": "^1.13.0",
