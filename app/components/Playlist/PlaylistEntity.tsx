@@ -1,4 +1,4 @@
-import DragHandleIcon from '@material-ui/icons/DragHandle';
+import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
 import React from "react";
@@ -11,6 +11,10 @@ import PlaylistEntityMenu from "./PlaylistEntityMenu";
 interface IProps {
   duration: string;
   track: TrackModel;
+  index: number;
+  onDragOver: React.Dispatch<any>;
+  onDragEnd: (newIndex: number) => void;
+  setSelectedTrack: React.Dispatch<any>;
 }
 
 const Container = styled.div<any>`
@@ -24,7 +28,7 @@ const Container = styled.div<any>`
   &:last-child {
     border-bottom: none;
   }
-  &:hover > svg{
+  &:hover > svg {
     opacity: 1;
   }
 `;
@@ -68,8 +72,13 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   };
 
   return (
-    <Container>
-      <DragHandle className=".showDraggable" fontSize="small"/>
+    <Container
+      draggable
+      onDragStart={() => props.setSelectedTrack(props.index)}
+      onDragOver={() => props.onDragOver(props.index)}
+      onDragEnd={() => props.onDragEnd(props.index)}
+    >
+      <DragHandle className=".showDraggable" fontSize="small" />
       <TrackInfoContainer
         active={player.currentTrackId === props.track.id}
         onClick={() => _handleClick(props.track)}

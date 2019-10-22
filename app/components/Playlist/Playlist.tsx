@@ -4,6 +4,7 @@ import PlaylistEntity from "./PlaylistEntity";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import { observer } from "mobx-react-lite";
+import Track from "../../dataLayer/models/Track";
 
 interface IProps {}
 
@@ -28,21 +29,37 @@ const Header = styled.div`
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
+  const [selectedTrackIdx, setSelectedTrackIdx] = React.useState(null);
+  const [newIdx, setNewIdx] = React.useState(null);
+
   const Store = ({ playlist }: RootStoreModel) => ({
     playlist: playlist
   });
 
   const { playlist } = useInject(Store);
 
+  const _onDragEnd = () => {
+    const track = playlist.removeAndGetTrack(selectedTrackIdx);
+    playlist.addTrackAt(Track.create({
+      id: track.id,
+      title: track.title,
+      duration: track.duration
+    }), newIdx);
+  }
+
   return (
     <Container>
       <Header>Playlist</Header>
       <ScrollContainer>
-        {playlist.tracks.map(Track => (
+        {playlist.tracks.map((Track, index) => (
           <PlaylistEntity
             duration={Track.formattedDuration}
             track={Track}
             key={Track.id}
+            index={index}
+            onDragOver={setNewIdx}
+            onDragEnd={_onDragEnd}
+            setSelectedTrack={setSelectedTrackIdx}
           />
         ))}
       </ScrollContainer>
