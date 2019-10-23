@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import PlaylistEntityMenu from "./PlaylistEntityMenu";
+import QueueEntityMenu from "./QueueEntityMenu";
 import { Draggable } from "react-beautiful-dnd";
 
 interface IProps {
@@ -53,16 +53,12 @@ const DragHandle = withStyles({
   }
 })(DragHandleIcon);
 
-const PlaylistEntity: React.FunctionComponent<IProps> = props => {
+const QueueEntity: React.FunctionComponent<IProps> = props => {
   const Store = ({ player }: RootStoreModel) => ({
     player: player
   });
 
   const { player } = useInject(Store);
-
-  // TODO: This makes no sense, but without this call, the playerEntity is not rerenderd
-  // on song change and wont update the active color
-  player.currentTrackId;
 
   return (
     <Draggable
@@ -79,16 +75,16 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
           <DragHandle fontSize="small" />
           <TrackInfoContainer
             active={player.currentTrackId === props.track.id}
-            onClick={() => props.onClick(props.track)}
+            onClick={() => props.onClick(props.index)}
           >
             <Title>{props.track.title}</Title>
             <Duration>{props.duration}</Duration>
           </TrackInfoContainer>
-          <PlaylistEntityMenu id={props.track.id} />
+          <QueueEntityMenu id={props.track.id} />
         </Container>
       )}
     </Draggable>
   );
 };
 
-export default observer(PlaylistEntity);
+export default observer(QueueEntity);

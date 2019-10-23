@@ -74,7 +74,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     const trackId = queue.nextTrack();
 
     if (!trackId) {
-      if (player.loopPlaylist) {
+      if (player.loopPlaylist && player.isShuffling) {
+        queue.addTracks(playlist.tracks);
+        queue.shuffel();
+        player.playTrack(playlist.getTrackById(queue.tracks[0]));
+      } else if (player.loopPlaylist) {
         queue.addTracks(playlist.tracks);
         player.playTrack(playlist.tracks[0]);
       } else {
@@ -164,7 +168,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         ref={_getPlayerElement}
         url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
         width="320px"
-        height="200px"
+        height="210px"
         playing={player.isPlaying}
         loop={player.loopTrack}
         volume={player.volume}
@@ -175,6 +179,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         onDuration={_setDuration}
         onProgress={_handleProgress}
         onEnded={() => _playNextTrack()}
+        style={{ zIndex: "2" }}
       />
     </Container>
   );

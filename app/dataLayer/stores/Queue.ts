@@ -28,6 +28,20 @@ const Queue = types
       }
     },
 
+    addTrack(id: string) {
+      self.tracks.push(id);
+    },
+
+    removeTrack(id: string) {
+      const foundList = self.tracks.find(trackId => trackId === id);
+      const idx = self.tracks.indexOf(foundList);
+      self.tracks.splice(idx, 1);
+    },
+
+    jumpTo(idx: number) {
+      self.tracks.splice(0, idx);
+    },
+
     addPrivilegedTrack(track: TrackModel) {
       self.tracks.unshift(track.id);
     },
@@ -37,10 +51,15 @@ const Queue = types
     },
 
     nextTrack() {
-      self.tracks.shift();
+      self.tracks.shift()
       if (self.tracks.length === 0) return null;
 
       return self.tracks[0];
+    },
+
+    moveTrack(oldIndex: number, newIndex: number) {
+      const trackId = self.tracks.splice(oldIndex, 1)[0];
+      self.tracks.splice(newIndex, 0, trackId);
     },
 
     clear() {

@@ -6,8 +6,8 @@ import { createStore } from "../dataLayer/stores/createStore";
 import Track from "../dataLayer/models/Track";
 import { Grid } from "@material-ui/core";
 import Player from "../components/Player/Player";
-import Playlist from "../components/Playlist/Playlist";
 import MainPage from "./MainPage";
+import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
 
 const rootStore = createStore();
 
@@ -175,7 +175,7 @@ export default class Root extends Component {
           style={{ height: "100%", padding: "8px 8px 0 8px" }}
         >
           <Grid container direction="column" style={{ height: "100%" }} xs={3}>
-            <Playlist />
+            <QueuePlaylistSwitch />
             <Player />
           </Grid>
           <Grid container direction="row" xs={9}>

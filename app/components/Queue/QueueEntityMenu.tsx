@@ -8,9 +8,8 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import useInject from "../../hooks/useInject";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import withStyles from "@material-ui/styles/withStyles";
-// import { TrackModel } from "app/store/Track";
 
-interface IPlaylistEntityMenuProps {
+interface IQueueEntityMenuProps {
   id: string;
 }
 
@@ -45,15 +44,14 @@ const StyledMenu = withStyles({
   />
 ));
 
-const PlaylistEntityMenu: React.FunctionComponent<
-  IPlaylistEntityMenuProps
+const QueueEntityMenu: React.FunctionComponent<
+  IQueueEntityMenuProps
 > = props => {
-  const Store = ({ playlist, queue }: RootStoreModel) => ({
-    playlist: playlist,
+  const Store = ({ queue }: RootStoreModel) => ({
     queue: queue
   });
 
-  const { playlist, queue } = useInject(Store);
+  const { queue } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -66,7 +64,7 @@ const PlaylistEntityMenu: React.FunctionComponent<
   };
 
   const _handleRemoveTrack = (id: string) => {
-    playlist.removeTrackById(id);
+    queue.removeTrack(id);
     setAnchorEl(null);
   };
 
@@ -105,4 +103,4 @@ const PlaylistEntityMenu: React.FunctionComponent<
   );
 };
 
-export default PlaylistEntityMenu;
+export default QueueEntityMenu;

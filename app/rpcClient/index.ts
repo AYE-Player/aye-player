@@ -11,6 +11,8 @@ interface IActivityParameters {
 export default class RPCClient {
   private _rpc: any;
 
+  public isConnected: boolean;
+
   private readonly _clientId: string;
 
   public constructor(clientId: string) {
@@ -70,6 +72,7 @@ export default class RPCClient {
     try {
       this._rpc.once("ready", async () => {
         console.log("[RPC] Successfully connected to Discord.");
+        this.isConnected = true;
 
         await this.setActivity(0, 0, null, "Idle");
       });
@@ -81,7 +84,8 @@ export default class RPCClient {
       await this._rpc.login({ clientId: this._clientId });
     } catch (error) {
       console.log("[RPC] Cannot connect to Discord, is it running?");
-      console.log("[RPC] ", error);
+      this.dispose();
+      this.isConnected = false;
     }
   }
 
