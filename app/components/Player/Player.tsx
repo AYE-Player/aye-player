@@ -74,7 +74,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     const trackId = queue.nextTrack();
 
     if (!trackId) {
-      if (player.loopPlaylist) {
+      if (player.loopPlaylist && player.isShuffling) {
+        queue.addTracks(playlist.tracks);
+        queue.shuffel();
+        player.playTrack(playlist.getTrackById(queue.tracks[0]));
+      } else if (player.loopPlaylist) {
         queue.addTracks(playlist.tracks);
         player.playTrack(playlist.tracks[0]);
       } else {
