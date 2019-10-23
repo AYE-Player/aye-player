@@ -84,7 +84,6 @@ export default class RPCClient {
       await this._rpc.login({ clientId: this._clientId });
     } catch (error) {
       console.log("[RPC] Cannot connect to Discord, is it running?");
-      console.log("[RPC] ", error);
       this.dispose();
       this.isConnected = false;
     }
