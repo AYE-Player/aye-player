@@ -10,6 +10,7 @@ import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import VolumeDown from "@material-ui/icons/VolumeDown";
 import VolumeUp from "@material-ui/icons/VolumeUp";
+import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
@@ -99,12 +100,13 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 const PlayerControls: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player, playlist }: RootStoreModel) => ({
+  const Store = ({ player, playlist, app }: RootStoreModel) => ({
     player,
-    playlist
+    playlist,
+    app
   });
 
-  const { player } = useInject(Store);
+  const { player, app } = useInject(Store);
 
   const _handleVolumeChange = (event: any, newValue: number) => {
     debounce(player.setVolume(newValue / 100), 500);
@@ -122,6 +124,10 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
   const _handleSeekingStop = (event: any) => {
     props.seekingStop(player.playbackPosition);
   };
+
+  const _showQueue = () => {
+    app.toggleQueueDisplay();
+  }
 
   return (
     <Container>
@@ -160,6 +166,9 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           ) : (
             <ShuffleIcon />
           )}
+        </Control>
+        <Control>
+          <QueueMusicIcon onClick={() => _showQueue()}/>
         </Control>
       </Grid>
       <Divider size={2} />
