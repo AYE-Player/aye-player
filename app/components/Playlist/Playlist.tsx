@@ -56,7 +56,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   const { playlist, queue, player } = useInject(Store);
 
-
   const _handleClick = (track: TrackModel) => {
     const idx = playlist.getIndexOfTrack(track);
 
@@ -66,7 +65,8 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     setValue(!value);
   };
 
-  // TODO: rethink drag an drop queue logic, its not working right now
+  // TODO: rethink drag an drop queue logic, its not working right now // also think about shuffle playback, this will
+  // break it right now
   const _onDragEnd = (result: IDragResult) => {
     const track = playlist.removeAndGetTrack(result.source.index);
     playlist.addTrackAt(
@@ -78,8 +78,10 @@ const Playlist: React.FunctionComponent<IProps> = props => {
       result.destination.index
     );
 
+    const idx = playlist.getIndexOfTrack(player.currentTrack);
+
     queue.clear();
-    queue.addTracks(playlist.getTracksStartingFrom(result.destination.index));
+    queue.addTracks(playlist.getTracksStartingFrom(idx));
   };
 
   return (
