@@ -64,7 +64,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
-          Playlist
+          Playlists
         </NavLink>
       </MenuItem>
       <MenuItem>
