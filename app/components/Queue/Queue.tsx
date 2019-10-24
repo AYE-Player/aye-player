@@ -47,13 +47,13 @@ const Header = styled.div`
 const Queue: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ queue, player, playlist }: RootStoreModel) => ({
+  const Store = ({ queue, player, playlists }: RootStoreModel) => ({
     queue: queue,
     player: player,
-    playlist: playlist
+    playlists: playlists
   });
 
-  const { queue, player, playlist } = useInject(Store);
+  const { queue, player, playlists } = useInject(Store);
 
   const _handleClick = (index: number) => {
     queue.jumpTo(index);
@@ -80,6 +80,9 @@ const Queue: React.FunctionComponent<IProps> = props => {
               {queue.tracks.length === 0
                 ? "No tracks in queue"
                 : queue.tracks.map((TrackId, index) => {
+                    const playlist = playlists.getListById(
+                      player.currentPlaylistId
+                    );
                     const track = playlist.getTrackById(TrackId);
 
                     return (

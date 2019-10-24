@@ -1,12 +1,12 @@
 import { types, Instance, clone } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
+import Track, { TrackModel } from "./Track";
 
 export type PlaylistModel = Instance<typeof Playlist>;
 
 const Playlist = types
   .model({
-    id: types.identifier,
-    tracks: types.array(Track)
+    id: types.refinement(types.identifier, identifier => identifier.indexOf("PL_") === 0),
+    tracks: types.optional(types.array(Track), [])
   })
   .views(self => ({
     getTrackById(id: string) {

@@ -48,12 +48,13 @@ const StyledMenu = withStyles({
 const PlaylistEntityMenu: React.FunctionComponent<
   IPlaylistEntityMenuProps
 > = props => {
-  const Store = ({ playlist, queue }: RootStoreModel) => ({
-    playlist: playlist,
-    queue: queue
+  const Store = ({ playlists, queue, player }: RootStoreModel) => ({
+    playlists: playlists,
+    queue: queue,
+    player: player
   });
 
-  const { playlist, queue } = useInject(Store);
+  const { playlists, queue, player } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -66,6 +67,7 @@ const PlaylistEntityMenu: React.FunctionComponent<
   };
 
   const _handleRemoveTrack = (id: string) => {
+    const playlist = playlists.getListById(player.currentPlaylistId);
     playlist.removeTrackById(id);
     setAnchorEl(null);
   };

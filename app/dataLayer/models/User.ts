@@ -7,7 +7,7 @@ const User = types
     isAuthenticated: types.optional(types.boolean, false),
     isAdmin: types.optional(types.boolean, false),
     isAnonym: types.optional(types.boolean, true),
-    id: types.maybe(types.string),
+    id: types.refinement(types.identifier, identifier => identifier.indexOf("USER_") === 0),
     email: types.maybe(types.string),
     name: types.maybe(types.string),
     avatar: types.maybe(types.string)
@@ -15,7 +15,7 @@ const User = types
   .actions(self => ({
     authenticate(username: string, password: string) {
       // TODO: This function should be called without parameters, these should come directly from the api response
-      self.id = "1";
+      self.id = "USER_1";
       self.email = "majesnix@majesnix.org";
       self.name = "majesnix";
       self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";

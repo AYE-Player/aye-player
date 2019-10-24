@@ -39,14 +39,14 @@ const PlayerOverlay = styled.img`
 let playerElement: any;
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const Store = ({ player, playlist, queue, user }: RootStoreModel) => ({
+  const Store = ({ player, playlists, queue, user }: RootStoreModel) => ({
     player: player,
     queue: queue,
-    playlist: playlist,
+    playlists: playlists,
     user: user
   });
 
-  const { player, playlist, queue, user } = useInject(Store);
+  const { player, playlists, queue, user } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -73,6 +73,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playNextTrack = () => {
     const trackId = queue.nextTrack();
+    const playlist = playlists.getListById(player.currentPlaylistId);
 
     if (!trackId) {
       if (player.loopPlaylist && player.isShuffling) {
@@ -104,6 +105,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _toggleShuffle = () => {
+    const playlist = playlists.getListById(player.currentPlaylistId);
+
     player.toggleShuffleState();
     if (player.isShuffling) {
       queue.clear();

@@ -16,7 +16,8 @@ const Player = types
     isMuted: types.optional(types.boolean, false),
     isSeeking: types.optional(types.boolean, false),
     playbackPosition: types.optional(types.number, 0),
-    currentTrackId: types.maybe(types.string)
+    currentTrackId: types.maybe(types.string),
+    currentPlaylistId: types.maybe(types.string)
   })
   .views(self => ({
     get currentTrack() {
@@ -72,6 +73,10 @@ const Player = types
 
     setCurrentTrack(id: string) {
       self.currentTrackId = id;
+    },
+
+    setCurrentPlaylist(id: string) {
+      self.currentPlaylistId = id;
     },
 
     setReadyState() {

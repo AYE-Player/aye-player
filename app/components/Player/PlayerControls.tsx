@@ -100,9 +100,8 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 const PlayerControls: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player, playlist, app }: RootStoreModel) => ({
+  const Store = ({ player, app }: RootStoreModel) => ({
     player,
-    playlist,
     app
   });
 

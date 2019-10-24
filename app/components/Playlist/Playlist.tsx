@@ -48,13 +48,14 @@ const Header = styled.div`
 const Playlist: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ playlist, queue, player }: RootStoreModel) => ({
-    playlist: playlist,
+  const Store = ({ playlists, queue, player }: RootStoreModel) => ({
+    playlists: playlists,
     queue: queue,
     player: player
   });
 
-  const { playlist, queue, player } = useInject(Store);
+  const { playlists, queue, player } = useInject(Store);
+  const playlist = playlists.getListById(player.currentPlaylistId);
 
   const _handleClick = (track: TrackModel) => {
     const idx = playlist.getIndexOfTrack(track);
@@ -94,15 +95,17 @@ const Playlist: React.FunctionComponent<IProps> = props => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {playlist.tracks.map((Track, index) => (
-                <PlaylistEntity
-                  duration={Track.formattedDuration}
-                  track={Track}
-                  key={Track.id}
-                  index={index}
-                  onClick={_handleClick}
-                />
-              ))}
+              {playlist.tracks.map((Track, index) => {
+                return (
+                  <PlaylistEntity
+                    duration={Track.formattedDuration}
+                    track={Track}
+                    key={Track.id}
+                    index={index}
+                    onClick={_handleClick}
+                  />
+                );
+              })}
               {provided.placeholder}
             </ScrollContainer>
           )}

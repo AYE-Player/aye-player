@@ -160,8 +160,11 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 
-  rootStore.queue.addTracks(rootStore.playlist.tracks);
-  rootStore.player.setCurrentTrack(rootStore.playlist.tracks[0].id);
+  rootStore.playlists.add(rootStore.playlist);
+  console.log("PLALIST", rootStore.playlists);
+  rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0].id);
+  rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
+  rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0].id);
 }
 
 export default class Root extends Component {
