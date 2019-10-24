@@ -23,6 +23,7 @@ const User = types
       self.isAuthenticated = true;
       self.isAdmin = true;
     },
+
     logout() {
       self.id = undefined;
       self.email = undefined;
@@ -32,12 +33,15 @@ const User = types
       self.isAuthenticated = false;
       self.isAdmin = false;
     },
+
     updatePassword(password: string) {
       console.log("NEW PASSWORD", password);
     },
+
     register(name: string, email: string, password: string) {
       console.log("REGISTER EVENT", name, email, password);
     },
+
     forgotPassword(email: string) {
       console.log("FORGOT PASSWORD EVENT", email);
     }

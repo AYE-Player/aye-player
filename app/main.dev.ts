@@ -13,6 +13,7 @@ import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 import RPCClient from "./rpcClient";
+const unhandled = require("electron-unhandled");
 
 export default class AppUpdater {
   constructor() {
@@ -121,6 +122,8 @@ const createAppScreen = () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+
+  unhandled();
 };
 
 /**

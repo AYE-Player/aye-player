@@ -1,10 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import ReactPlayer from "react-player";
 import { observer } from "mobx-react-lite";
-import useInject from "../../hooks/useInject";
+import React from "react";
+import ReactPlayer from "react-player";
+import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import useInject from "../../hooks/useInject";
 import PlayerControls from "./PlayerControls";
+const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
 
@@ -164,23 +165,27 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           src={`https://img.youtube.com/vi/${player.currentTrackId}/hqdefault.jpg`}
         />
       )}
-      <ReactPlayer
-        ref={_getPlayerElement}
-        url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
-        width="320px"
-        height="210px"
-        playing={player.isPlaying}
-        loop={player.loopTrack}
-        volume={player.volume}
-        muted={player.isMuted}
-        onReady={() => _onReady()}
-        onStart={() => _onStart()}
-        onError={() => _onError()}
-        onDuration={_setDuration}
-        onProgress={_handleProgress}
-        onEnded={() => _playNextTrack()}
-        style={{ zIndex: "2" }}
-      />
+      {player.currentTrackId ? (
+        <ReactPlayer
+          ref={_getPlayerElement}
+          url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
+          width="320px"
+          height="210px"
+          playing={player.isPlaying}
+          loop={player.loopTrack}
+          volume={player.volume}
+          muted={player.isMuted}
+          onReady={() => _onReady()}
+          onStart={() => _onStart()}
+          onError={() => _onError()}
+          onDuration={_setDuration}
+          onProgress={_handleProgress}
+          onEnded={() => _playNextTrack()}
+          style={{ zIndex: "2" }}
+        />
+      ) : (
+        <img src={AyeLogo} width="320" height="210" style={{ zIndex: 2 }} />
+      )}
     </Container>
   );
 };
