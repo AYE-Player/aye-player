@@ -37,6 +37,7 @@ const Player = types
       });
       this.notifyRPC({ track });
     },
+
     notifyRPC({ track, state }: { track?: TrackModel; state?: string }) {
       if (!track) {
         const root = getRoot(self);
