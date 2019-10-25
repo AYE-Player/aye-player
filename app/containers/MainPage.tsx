@@ -30,7 +30,7 @@ const MainPage: React.FunctionComponent = () => {
       >
         {user.isAuthenticated ? (
           <AccountDisplay username={user.name} avatar={user.avatar} />
-        ) : null}
+        ) : <AccountDisplay />}
         <Routes />
       </StyledGrid>
       <Navigation />
