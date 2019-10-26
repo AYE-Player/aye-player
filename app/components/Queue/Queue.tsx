@@ -1,10 +1,11 @@
+import QueueMusicIcon from "@material-ui/icons/QueueMusic";
+import { observer } from "mobx-react-lite";
 import React from "react";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import QueueEntity from "./QueueEntity";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { observer } from "mobx-react-lite";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import QueueEntity from "./QueueEntity";
 
 interface IProps {}
 
@@ -34,6 +35,12 @@ const Container = styled.div`
   flex: 1;
 `;
 
+const Control = styled.div`
+  margin: 0 10px;
+  width: 24px;
+  height: 24px;
+`;
+
 const ScrollContainer = styled.div`
   overflow: auto;
   height: calc(100% - 364px);
@@ -42,18 +49,21 @@ const ScrollContainer = styled.div`
 const Header = styled.div`
   font-size: 24px;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const Queue: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ queue, player, playlists }: RootStoreModel) => ({
-    queue: queue,
-    player: player,
-    playlists: playlists
+  const Store = ({ app, queue, player }: RootStoreModel) => ({
+    app,
+    queue,
+    player
   });
 
-  const { queue, player, playlists } = useInject(Store);
+  const { app, queue, player } = useInject(Store);
 
   const _handleClick = (index: number) => {
     queue.jumpTo(index);
@@ -65,12 +75,21 @@ const Queue: React.FunctionComponent<IProps> = props => {
     queue.moveTrack(result.source.index, result.destination.index);
   };
 
-  player.currentTrackId;
+  const _showQueue = () => {
+    app.toggleQueueDisplay();
+  };
+
+  player.currentTrack.id;
 
   return (
     <Container>
       <DragDropContext onDragEnd={_onDragEnd}>
-        <Header>Queue</Header>
+        <Header>
+          Queue
+          <Control>
+            <QueueMusicIcon onClick={() => _showQueue()} />
+          </Control>
+        </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
             <ScrollContainer
@@ -80,10 +99,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
               {queue.tracks.length === 0
                 ? "No tracks in queue"
                 : queue.tracks.map((TrackId, index) => {
-                    const playlist = playlists.getListById(
-                      player.currentPlaylistId
-                    );
-                    const track = playlist.getTrackById(TrackId);
+                    const track = player.currentPlaylist.getTrackById(TrackId);
 
                     return (
                       <QueueEntity

@@ -62,7 +62,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
 
   // TODO: This makes no sense, but without this call, the playerEntity is not rerenderd
   // on song change and wont update the active color
-  player.currentTrackId;
+  player.currentTrack.id;
 
   return (
     <Draggable
@@ -78,7 +78,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         >
           <DragHandle fontSize="small" />
           <TrackInfoContainer
-            active={player.currentTrackId === props.track.id}
+            active={player.currentTrack.id === props.track.id}
             onClick={() => props.onClick(props.track)}
           >
             <Title>{props.track.title}</Title>

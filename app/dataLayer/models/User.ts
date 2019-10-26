@@ -7,7 +7,7 @@ const User = types
     isAuthenticated: types.optional(types.boolean, false),
     isAdmin: types.optional(types.boolean, false),
     isAnonym: types.optional(types.boolean, true),
-    id: types.refinement(types.identifier, identifier => identifier.indexOf("USER_") === 0),
+    id: types.maybe(types.string),
     email: types.maybe(types.string),
     name: types.maybe(types.string),
     avatar: types.maybe(types.string)

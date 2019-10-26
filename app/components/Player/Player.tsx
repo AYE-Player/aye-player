@@ -46,7 +46,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     user: user
   });
 
-  const { player, playlists, queue, user } = useInject(Store);
+  const { player, queue, user } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -73,23 +73,22 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playNextTrack = () => {
     const trackId = queue.nextTrack();
-    const playlist = playlists.getListById(player.currentPlaylistId);
 
     if (!trackId) {
       if (player.loopPlaylist && player.isShuffling) {
-        queue.addTracks(playlist.tracks);
+        queue.addTracks(player.currentPlaylist.tracks);
         queue.shuffel();
-        player.playTrack(playlist.getTrackById(queue.tracks[0]));
+        player.playTrack(player.currentPlaylist.getTrackById(queue.tracks[0]));
       } else if (player.loopPlaylist) {
-        queue.addTracks(playlist.tracks);
-        player.playTrack(playlist.tracks[0]);
+        queue.addTracks(player.currentPlaylist.tracks);
+        player.playTrack(player.currentPlaylist.tracks[0]);
       } else {
         player.togglePlayingState();
       }
       return;
     }
 
-    player.playTrack(playlist.getTrackById(trackId));
+    player.playTrack(player.currentPlaylist.getTrackById(trackId));
   };
 
   const _toggleRepeat = () => {
@@ -105,18 +104,17 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _toggleShuffle = () => {
-    const playlist = playlists.getListById(player.currentPlaylistId);
 
     player.toggleShuffleState();
     if (player.isShuffling) {
       queue.clear();
-      queue.addTracks(playlist.tracks);
+      queue.addTracks(player.currentPlaylist.tracks);
       queue.shuffel();
     } else {
-      const idx = playlist.getIndexOfTrack(player.currentTrack);
+      const idx = player.currentPlaylist.getIndexOfTrack(player.currentTrack);
 
       queue.clear();
-      queue.addTracks(playlist.getTracksStartingFrom(idx));
+      queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
     }
   };
 
@@ -163,15 +161,15 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.currentTrackId && user.isAdmin && (
+      {player.currentTrack && user.isAdmin && (
         <PlayerOverlay
-          src={`https://img.youtube.com/vi/${player.currentTrackId}/hqdefault.jpg`}
+          src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
       )}
-      {player.currentTrackId ? (
+      {player.currentTrack ? (
         <ReactPlayer
           ref={_getPlayerElement}
-          url={`https://www.youtube.com/watch?v=${player.currentTrackId}`}
+          url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
           width="320px"
           height="210px"
           playing={player.isPlaying}

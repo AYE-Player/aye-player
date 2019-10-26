@@ -5,11 +5,13 @@ export type PlaylistModel = Instance<typeof Playlist>;
 
 const Playlist = types
   .model({
-    id: types.refinement(types.identifier, identifier => identifier.indexOf("PL_") === 0),
-    tracks: types.optional(types.array(Track), [])
+    id: types.identifier,
+    name: types.maybe(types.string),
+    tracks: types.maybe(types.array(Track))
   })
   .views(self => ({
     getTrackById(id: string) {
+      if (!self.tracks) return null;
       return self.tracks.find(track => track.id === id);
     },
 
@@ -46,6 +48,10 @@ const Playlist = types
 
     addTrackAt(track: TrackModel, newIndex: number) {
       self.tracks.splice(newIndex, 0, track);
+    },
+
+    setId(id: string) {
+      self.id = id;
     }
   }));
 

@@ -14,7 +14,7 @@ const Playlists = types
   }))
   .actions(self => ({
     add(playlist: PlaylistModel) {
-      self.lists.push(playlist.id);
+      self.lists.push(playlist);
     }
   }));
 
