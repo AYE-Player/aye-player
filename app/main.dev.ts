@@ -64,12 +64,11 @@ const createLoadingScreen = () => {
     frame: false,
     /// and set the transparency, to remove any window background color
     transparent: true,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true
     }
   });
-
-  loadingScreen.setResizable(false);
 
   loadingScreen.loadURL(`file://${__dirname}/loading.html`);
 
