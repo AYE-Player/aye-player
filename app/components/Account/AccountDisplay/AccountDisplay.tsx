@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AccountDisplayMenu from "./AccountDisplayMenu";
+import { Link } from "react-router-dom";
 
 interface IAccountDisplayProps {
   username?: string;
@@ -30,14 +31,21 @@ const Text = styled.div``;
 const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
   return (
     <Container>
-      <AccountDisplayMenu>
-        {props.avatar ? (
-          <Avatar src={props.avatar} />
-        ) : (
+      {props.username ? (
+        <AccountDisplayMenu>
+          {props.avatar ? (
+            <Avatar src={props.avatar} />
+          ) : (
+            <AccountCircleIcon style={{ marginRight: "8px" }} />
+          )}
+          <Text>{props.username}</Text>
+        </AccountDisplayMenu>
+      ) : (
+        <Link to="/account" style={{ display: "flex", alignItems: "center" }}>
           <AccountCircleIcon style={{ marginRight: "8px" }} />
-        )}
-        <Text>{props.username ? props.username : "Login"}</Text>
-      </AccountDisplayMenu>
+          Login
+        </Link>
+      )}
     </Container>
   );
 };
