@@ -190,7 +190,7 @@ if (process.env.NODE_ENV === "development") {
       title: "Nightcore - Play (Alan Walker, K-391)",
       duration: 148
     })
-  )
+  );
 
   rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
   rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0]);
@@ -211,7 +211,7 @@ export default class Root extends Component {
             <QueuePlaylistSwitch />
             <Player />
           </Grid>
-          <Grid container direction="row" xs={9}>
+          <Grid container direction="row" style={{ height: "100%" }} xs={9}>
             <HashRouter>
               <MainPage />
             </HashRouter>

@@ -22,14 +22,14 @@ const Header = styled.div`
 `;
 
 const Container = styled.div`
-  height: calc(100% - 40px);
+  height: 100%;
 `;
 
 const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: 40px;
+  height: 100%
 `;
 
 /*const ListEntity = styled.div`
@@ -52,7 +52,7 @@ const CreatePlaylist = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  max-height: calc(100% - 40px);
+  height: calc(100% - 128px);
 `;
 
 const PlaylistPage: React.FunctionComponent = () => {
@@ -113,35 +113,52 @@ const PlaylistPage: React.FunctionComponent = () => {
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ color: "white", backgroundColor: "#3d4653" }}
+                  style={{
+                    color: "white",
+                    backgroundColor: "#3d4653",
+                    borderBottom: "none"
+                  }}
                 >
                   Name
                 </TableCell>
                 <TableCell
                   align="right"
-                  style={{ color: "white", backgroundColor: "#3d4653" }}
+                  style={{
+                    color: "white",
+                    backgroundColor: "#3d4653",
+                    borderBottom: "none"
+                  }}
                 >
                   Tracks
                 </TableCell>
                 <TableCell
                   align="right"
-                  style={{ color: "white", backgroundColor: "#3d4653" }}
+                  style={{
+                    color: "white",
+                    backgroundColor: "#3d4653",
+                    borderBottom: "none"
+                  }}
                 >
                   Length
                 </TableCell>
                 <TableCell
                   align="right"
-                  style={{ color: "white", backgroundColor: "#3d4653" }}
+                  style={{
+                    color: "white",
+                    backgroundColor: "#3d4653",
+                    borderBottom: "none"
+                  }}
                 ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {playlists.lists.map(playlist => (
-                <TableRow
-                  key={playlist.id}
-                  style={{ borderBottom: "1px solid #565f6c" }}
-                >
-                  <TableCell component="th" scope="row">
+                <TableRow key={playlist.id}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    style={{ borderBottom: "1px solid #565f6c" }}
+                  >
                     <Link
                       to={`/playlist/${playlist.id}`}
                       style={{ color: "white" }}
@@ -149,13 +166,30 @@ const PlaylistPage: React.FunctionComponent = () => {
                       {playlist.name}
                     </Link>
                   </TableCell>
-                  <TableCell align="right" style={{ color: "white" }}>
+                  <TableCell
+                    align="right"
+                    style={{
+                      color: "white",
+                      borderBottom: "1px solid #565f6c"
+                    }}
+                  >
                     {playlist.tracks.length}
                   </TableCell>
-                  <TableCell align="right" style={{ color: "white" }}>
+                  <TableCell
+                    align="right"
+                    style={{
+                      color: "white",
+                      borderBottom: "1px solid #565f6c"
+                    }}
+                  >
                     {calculateTracksDuration(playlist)}
                   </TableCell>
-                  <TableCell style={{ color: "white" }}>
+                  <TableCell
+                    style={{
+                      color: "white",
+                      borderBottom: "1px solid #565f6c"
+                    }}
+                  >
                     <PlaylistPageMenu id={playlist.id} />
                   </TableCell>
                 </TableRow>
