@@ -72,7 +72,7 @@ const Navigation: React.FunctionComponent<any> = props => {
         <NavLink
           exact
           activeClassName="activeLink"
-          to="/account"
+          to="/settings"
           style={{
             width: "100%",
             height: "100%",
@@ -81,7 +81,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
-          {user.isAuthenticated ? "Account" : "Login"}
+          {"Settings"}
         </NavLink>
       </MenuItem>
     </Container>

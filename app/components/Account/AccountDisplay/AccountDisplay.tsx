@@ -4,8 +4,8 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AccountDisplayMenu from "./AccountDisplayMenu";
 
 interface IAccountDisplayProps {
-  username: string;
-  avatar: string;
+  username?: string;
+  avatar?: string;
 }
 
 const Container = styled.div`
@@ -25,14 +25,18 @@ const Avatar = styled.img`
   margin-right: 8px;
 `;
 
-const UserName = styled.div``;
+const Text = styled.div``;
 
 const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
   return (
     <Container>
-      <AccountDisplayMenu >
-        {props.avatar ? <Avatar src={props.avatar} /> : <AccountCircleIcon />}
-        <UserName>{props.username}</UserName>
+      <AccountDisplayMenu>
+        {props.avatar ? (
+          <Avatar src={props.avatar} />
+        ) : (
+          <AccountCircleIcon style={{ marginRight: "8px" }} />
+        )}
+        <Text>{props.username ? props.username : "Login"}</Text>
       </AccountDisplayMenu>
     </Container>
   );
