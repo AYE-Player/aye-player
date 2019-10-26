@@ -32,7 +32,7 @@ const SettingsAligner = styled.div`
 
 const AccountPage: React.FunctionComponent = () => {
   const UserStore = ({ user }: RootStoreModel) => ({
-    user: user
+    user
   });
 
   const { user } = useInject(UserStore);

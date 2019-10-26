@@ -27,26 +27,25 @@ const Container = styled.div`
   bottom: 35px;
 `;
 
-const PlayerOverlay = styled.img`
+/*const PlayerOverlay = styled.img`
   width: 320px;
   height: 210px;
   background-color: #000;
   position: absolute;
   margin-top: 42px;
   z-index: 999;
-`;
+`;*/
 
 let playerElement: any;
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const Store = ({ player, playlists, queue, user }: RootStoreModel) => ({
-    player: player,
-    queue: queue,
-    playlists: playlists,
-    user: user
+  const Store = ({ player, playlists, queue }: RootStoreModel) => ({
+    player,
+    queue,
+    playlists
   });
 
-  const { player, queue, user } = useInject(Store);
+  const { player, queue } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -104,7 +103,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _toggleShuffle = () => {
-
     player.toggleShuffleState();
     if (player.isShuffling) {
       queue.clear();
@@ -161,12 +159,12 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.currentTrack && user.isAdmin && (
+      {/*player.currentTrack && user.isAdmin && (
         <PlayerOverlay
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
-      )}
-      {player.currentTrack ? (
+      )*/}
+      {!queue.isEmpty ? (
         <ReactPlayer
           ref={_getPlayerElement}
           url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}

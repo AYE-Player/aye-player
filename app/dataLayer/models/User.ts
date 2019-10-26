@@ -5,7 +5,7 @@ export type UserModel = Instance<typeof User>;
 const User = types
   .model({
     isAuthenticated: types.optional(types.boolean, false),
-    isAdmin: types.optional(types.boolean, false),
+    hasPremium: types.optional(types.boolean, false),
     isAnonym: types.optional(types.boolean, true),
     id: types.maybe(types.string),
     email: types.maybe(types.string),
@@ -21,7 +21,7 @@ const User = types
       self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
       self.isAnonym = false;
       self.isAuthenticated = true;
-      self.isAdmin = true;
+      self.hasPremium = true;
     },
 
     logout() {
@@ -31,7 +31,7 @@ const User = types
       self.avatar = undefined;
       self.isAnonym = true;
       self.isAuthenticated = false;
-      self.isAdmin = false;
+      self.hasPremium = false;
     },
 
     updatePassword(password: string) {

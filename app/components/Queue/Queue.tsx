@@ -79,7 +79,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
     app.toggleQueueDisplay();
   };
 
-  player.currentTrack.id;
+  player.currentTrack;
 
   return (
     <Container>

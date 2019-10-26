@@ -13,7 +13,6 @@ import Playlist from "../dataLayer/models/Playlist";
 const rootStore = createStore();
 
 if (process.env.NODE_ENV === "development") {
-  console.log("CREATE PL");
   rootStore.playlists.add(
     Playlist.create({
       id: "1",
@@ -179,14 +178,19 @@ if (process.env.NODE_ENV === "development") {
 
   const playlist2 = rootStore.playlists.getListById("2");
   playlist2.addTrack(
-    Track.create(
-      {
-        id: "63i0u26PlpI",
-        title: "Nightcore - Cradles (Besomorph)",
-        duration: 122
-      }
-    )
+    Track.create({
+      id: "63i0u26PlpI",
+      title: "Nightcore - Cradles (Besomorph)",
+      duration: 122
+    })
   );
+  playlist2.addTrack(
+    Track.create({
+      id: "Pre8O2RlbjU",
+      title: "Nightcore - Play (Alan Walker, K-391)",
+      duration: 148
+    })
+  )
 
   rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
   rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0]);

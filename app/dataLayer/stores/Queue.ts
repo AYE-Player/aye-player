@@ -10,7 +10,7 @@ const Queue = types
   .views(self => ({
     get currentTrack() {
       const root = getRoot(self);
-      if (!self.tracks) return null;
+      if (!self.tracks || self.tracks.length === 0) return null;
       return resolveIdentifier(Track, root, self.tracks[0]);
     },
 
@@ -19,6 +19,10 @@ const Queue = types
       const track = self.tracks[idx];
       self.tracks.splice(idx, 1);
       return track;
+    },
+
+    get isEmpty() {
+      return self.tracks.length === 0
     }
   }))
   .actions(self => ({

@@ -44,7 +44,7 @@ const AccountDisplayMenu: React.FunctionComponent<
   IAccountDisplayMenuProps
 > = props => {
   const Store = ({ user }: RootStoreModel) => ({
-    user: user
+    user
   });
 
   const { user } = useInject(Store);

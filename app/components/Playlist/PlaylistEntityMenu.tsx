@@ -49,8 +49,8 @@ const PlaylistEntityMenu: React.FunctionComponent<
   IPlaylistEntityMenuProps
 > = props => {
   const Store = ({ queue, player }: RootStoreModel) => ({
-    queue: queue,
-    player: player
+    queue,
+    player
   });
 
   const { queue, player } = useInject(Store);

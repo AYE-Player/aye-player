@@ -1,14 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import PlaylistEntity from "./PlaylistEntity";
+import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import { observer } from "mobx-react-lite";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 
-interface IProps {}
+interface IProps {
+  match: any;
+}
 
 interface IDragResult {
   combine: any;
@@ -27,8 +28,6 @@ interface IDragResult {
 }
 
 const Container = styled.div`
-  margin: 8px 5px;
-  width: calc(320px - 5px);
   height: 100%;
   top: 0;
   display: flex;
@@ -36,15 +35,9 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const Control = styled.div`
-  margin: 0 10px;
-  width: 24px;
-  height: 24px;
-`;
-
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 364px);
+  height: calc(100% - 425px);
 `;
 
 const Header = styled.div`
@@ -55,37 +48,33 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
-const Playlist: React.FunctionComponent<IProps> = props => {
+const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ app, queue, player }: RootStoreModel) => ({
-    app,
+  const Store = ({ queue, player, playlists }: RootStoreModel) => ({
     queue,
-    player
+    player,
+    playlists
   });
 
-  const { app, queue, player } = useInject(Store);
+  const { queue, player, playlists } = useInject(Store);
+
+  const { id } = props.match.params;
+  const playlist = playlists.getListById(id);
 
   const _handleClick = (track: TrackModel) => {
-    const idx = player.currentPlaylist.getIndexOfTrack(track);
+    const idx = playlist.getIndexOfTrack(track);
 
     queue.clear();
-    queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
+    queue.addTracks(playlist.getTracksStartingFrom(idx));
+    player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack);
     setValue(!value);
   };
 
-  const _showQueue = () => {
-    app.toggleQueueDisplay();
-  };
-
-  player.currentTrack;
-
-  // TODO: rethink drag an drop queue logic, its not working right now // also think about shuffle playback, this will
-  // break it right now
   const _onDragEnd = (result: IDragResult) => {
-    const track = player.currentPlaylist.removeAndGetTrack(result.source.index);
-    player.currentPlaylist.addTrackAt(
+    const track = playlist.removeAndGetTrack(result.source.index);
+    playlist.addTrackAt(
       Track.create({
         id: track.id,
         title: track.title,
@@ -93,31 +82,23 @@ const Playlist: React.FunctionComponent<IProps> = props => {
       }),
       result.destination.index
     );
-
-    const idx = player.currentPlaylist.getIndexOfTrack(player.currentTrack);
-
-    queue.clear();
-    queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
   };
+
+  player.currentTrack;
 
   return (
     <DragDropContext onDragEnd={_onDragEnd}>
       <Container>
-        <Header>
-          Playlist
-          <Control>
-            <QueueMusicIcon onClick={() => _showQueue()} />
-          </Control>
-        </Header>
+        <Header>{playlist.name}</Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
             <ScrollContainer
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {player.currentPlaylist.tracks.map((Track, index) => {
+              {playlist.tracks.map((Track, index) => {
                 return (
-                  <PlaylistEntity
+                  <ExtendedPlaylistEntity
                     duration={Track.formattedDuration}
                     track={Track}
                     key={Track.id}
@@ -135,4 +116,4 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(Playlist);
+export default observer(ExtendedPlaylist);

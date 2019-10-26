@@ -16,7 +16,7 @@ const Header = styled.div`
 
 const LoginPage: React.FunctionComponent<any> = () => {
   const UserStore = ({ user }: RootStoreModel) => ({
-    user: user
+    user
   });
 
   const { user } = useInject(UserStore);

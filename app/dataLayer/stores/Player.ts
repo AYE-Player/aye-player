@@ -35,7 +35,7 @@ const Player = types
 
     notifyRPC({ track, state }: { track?: TrackModel; state?: string }) {
       if (!track) {
-        track = self.currentTrack
+        track = self.currentTrack;
       }
 
       ipcRenderer.send("setDiscordActivity", {
@@ -64,12 +64,20 @@ const Player = types
       self.volume = vol;
     },
 
-    setCurrentTrack(track: TrackModel) {
-      self.currentTrack = track;
+    setCurrentTrack(track?: TrackModel) {
+      if (track) {
+        self.currentTrack = track;
+      } else {
+        self.currentTrack = undefined;
+      }
     },
 
-    setCurrentPlaylist(playlist: PlaylistModel) {
-      self.currentPlaylist = playlist;
+    setCurrentPlaylist(playlist?: PlaylistModel) {
+      if (playlist) {
+        self.currentPlaylist = playlist;
+      } else {
+        self.currentPlaylist = undefined;
+      }
     },
 
     setReadyState() {

@@ -15,7 +15,7 @@ const Header = styled.div`
 
 const RegisterPage: React.FunctionComponent<any> = () => {
   const UserStore = ({ user }: RootStoreModel) => ({
-    user: user
+    user
   });
 
   const { user } = useInject(UserStore);

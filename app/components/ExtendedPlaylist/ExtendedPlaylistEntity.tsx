@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import PlaylistEntityMenu from "./PlaylistEntityMenu";
+import ExtendedPlaylistEntityMenu from "./ExtendedPlaylistEntityMenu";
 import { Draggable } from "react-beautiful-dnd";
 
 interface IProps {
@@ -34,7 +34,7 @@ const Container = styled.div<any>`
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
   cursor: pointer;
-  width: 224px;
+  width: 300px;
   padding: 10px 0;
   padding-left: 8px;
   color: ${(props: any) => (props.active ? "#99ccff" : "")};
@@ -53,7 +53,7 @@ const DragHandle = withStyles({
   }
 })(DragHandleIcon);
 
-const PlaylistEntity: React.FunctionComponent<IProps> = props => {
+const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
   const Store = ({ player }: RootStoreModel) => ({
     player
   });
@@ -80,11 +80,11 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             <Title>{props.track.title}</Title>
             <Duration>{props.duration}</Duration>
           </TrackInfoContainer>
-          <PlaylistEntityMenu id={props.track.id} />
+          <ExtendedPlaylistEntityMenu id={props.track.id} />
         </Container>
       )}
     </Draggable>
   );
 };
 
-export default observer(PlaylistEntity);
+export default observer(ExtendedPlaylistEntity);

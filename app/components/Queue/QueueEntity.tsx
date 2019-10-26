@@ -55,7 +55,7 @@ const DragHandle = withStyles({
 
 const QueueEntity: React.FunctionComponent<IProps> = props => {
   const Store = ({ player }: RootStoreModel) => ({
-    player: player
+    player
   });
 
   const { player } = useInject(Store);

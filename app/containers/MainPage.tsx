@@ -17,7 +17,7 @@ const StyledGrid = styled(Grid)`
 
 const MainPage: React.FunctionComponent = () => {
   const UserStore = ({ user }: RootStoreModel) => ({
-    user: user
+    user
   });
 
   const { user } = useInject(UserStore);
