@@ -33,6 +33,7 @@ interface IProps {
 const Container = styled.div`
   width: 320px;
   height: 90px;
+  padding-top: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -59,7 +60,7 @@ const PlaybackControl = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-top: 273px;
+  margin-top: 266px;
   width: 320px;
   background-color: #232c39;
 `;
