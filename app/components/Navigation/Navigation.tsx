@@ -11,6 +11,7 @@ const Container = styled.div`
   position: absolute;
   bottom: 0;
   right: 0;
+  background-color: #232c39;
 `;
 
 const MenuItem = styled.div`

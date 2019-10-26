@@ -6,6 +6,7 @@ import AccountPage from "./containers/AccountPage";
 import PlaylistPage from "./containers/PlaylistPage";
 import RegisterPage from "./containers/RegisterPage";
 import PasswordForgotPage from "./containers/PasswordForgotPage";
+import ExtendedPlaylist from "./components/ExtendedPlaylist/ExtendedPlaylist";
 
 export default () => (
     <Switch>
@@ -14,5 +15,6 @@ export default () => (
       <Route exact path={routes.SEARCH} component={SearchPage} />
       <Route exact path={routes.REGISTER} component={RegisterPage} />
       <Route exact path={routes.FORGOTPASSWORD} component={PasswordForgotPage} />
+      <Route path="/playlist/:id" component={ExtendedPlaylist} />
     </Switch>
 );

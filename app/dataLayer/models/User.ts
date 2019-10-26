@@ -5,7 +5,7 @@ export type UserModel = Instance<typeof User>;
 const User = types
   .model({
     isAuthenticated: types.optional(types.boolean, false),
-    isAdmin: types.optional(types.boolean, false),
+    hasPremium: types.optional(types.boolean, false),
     isAnonym: types.optional(types.boolean, true),
     id: types.maybe(types.string),
     email: types.maybe(types.string),
@@ -15,13 +15,13 @@ const User = types
   .actions(self => ({
     authenticate(username: string, password: string) {
       // TODO: This function should be called without parameters, these should come directly from the api response
-      self.id = "1";
+      self.id = "USER_1";
       self.email = "majesnix@majesnix.org";
       self.name = "majesnix";
       self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
       self.isAnonym = false;
       self.isAuthenticated = true;
-      self.isAdmin = true;
+      self.hasPremium = true;
     },
 
     logout() {
@@ -31,7 +31,7 @@ const User = types
       self.avatar = undefined;
       self.isAnonym = true;
       self.isAuthenticated = false;
-      self.isAdmin = false;
+      self.hasPremium = false;
     },
 
     updatePassword(password: string) {

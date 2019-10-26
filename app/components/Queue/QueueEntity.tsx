@@ -55,7 +55,7 @@ const DragHandle = withStyles({
 
 const QueueEntity: React.FunctionComponent<IProps> = props => {
   const Store = ({ player }: RootStoreModel) => ({
-    player: player
+    player
   });
 
   const { player } = useInject(Store);
@@ -74,7 +74,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
         >
           <DragHandle fontSize="small" />
           <TrackInfoContainer
-            active={player.currentTrackId === props.track.id}
+            active={player.currentTrack.id === props.track.id}
             onClick={() => props.onClick(props.index)}
           >
             <Title>{props.track.title}</Title>

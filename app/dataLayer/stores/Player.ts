@@ -1,7 +1,8 @@
-import { types, Instance, getRoot, resolveIdentifier } from "mobx-state-tree";
+import { types, Instance } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 
 import { ipcRenderer } from "electron";
+import Playlist, { PlaylistModel } from "../models/Playlist";
 
 export type PlayerModel = Instance<typeof Player>;
 
@@ -16,23 +17,17 @@ const Player = types
     isMuted: types.optional(types.boolean, false),
     isSeeking: types.optional(types.boolean, false),
     playbackPosition: types.optional(types.number, 0),
-    currentTrackId: types.maybe(types.string)
+    currentTrack: types.maybe(types.reference(Track)),
+    currentPlaylist: types.maybe(types.reference(Playlist))
   })
-  .views(self => ({
-    get currentTrack() {
-      const root = getRoot(self);
-      if (!self.currentTrackId) return null;
-      return resolveIdentifier(Track, root, self.currentTrackId);
-    }
-  }))
   .actions(self => ({
     playTrack(track: TrackModel) {
       self.playbackPosition = 0;
-      self.currentTrackId = track.id;
+      self.currentTrack = track;
       if (!self.isPlaying) self.isPlaying = true;
 
       new Notification(`Now Playing: ${track.title}`, {
-        icon: `https://img.youtube.com/vi/${self.currentTrackId}/hqdefault.jpg`,
+        icon: `https://img.youtube.com/vi/${self.currentTrack.id}/hqdefault.jpg`,
         silent: true
       });
       this.notifyRPC({ track });
@@ -40,8 +35,7 @@ const Player = types
 
     notifyRPC({ track, state }: { track?: TrackModel; state?: string }) {
       if (!track) {
-        const root = getRoot(self);
-        track = resolveIdentifier(Track, root, self.currentTrackId);
+        track = self.currentTrack;
       }
 
       ipcRenderer.send("setDiscordActivity", {
@@ -70,8 +64,20 @@ const Player = types
       self.volume = vol;
     },
 
-    setCurrentTrack(id: string) {
-      self.currentTrackId = id;
+    setCurrentTrack(track?: TrackModel) {
+      if (track) {
+        self.currentTrack = track;
+      } else {
+        self.currentTrack = undefined;
+      }
+    },
+
+    setCurrentPlaylist(playlist?: PlaylistModel) {
+      if (playlist) {
+        self.currentPlaylist = playlist;
+      } else {
+        self.currentPlaylist = undefined;
+      }
     },
 
     setReadyState() {
