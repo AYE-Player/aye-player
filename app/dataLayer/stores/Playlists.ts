@@ -15,7 +15,13 @@ const Playlists = types
   .actions(self => ({
     add(playlist: PlaylistModel) {
       self.lists.push(playlist);
-    }
+    },
+
+    removePlaylist(id: string) {
+      const foundList = self.lists.find(playlist => playlist.id === id);
+      const idx = self.lists.indexOf(foundList);
+      self.lists.splice(idx, 1);
+    },
   }));
 
 export default Playlists;
