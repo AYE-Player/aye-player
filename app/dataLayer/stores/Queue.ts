@@ -5,13 +5,13 @@ export type QueueModel = Instance<typeof Queue>;
 
 const Queue = types
   .model({
-    tracks: types.optional(types.array(types.string), [])
+    tracks: types.optional(types.array(types.reference(Track)), [])
   })
   .views(self => ({
     get currentTrack() {
       const root = getRoot(self);
       if (!self.tracks || self.tracks.length === 0) return null;
-      return resolveIdentifier(Track, root, self.tracks[0]);
+      return resolveIdentifier(Track, root, self.tracks[0].id);
     },
 
     get randomTrack() {
@@ -37,7 +37,7 @@ const Queue = types
     },
 
     removeTrack(id: string) {
-      const foundList = self.tracks.find(trackId => trackId === id);
+      const foundList = self.tracks.find(track => track.id === id);
       const idx = self.tracks.indexOf(foundList);
       self.tracks.splice(idx, 1);
     },

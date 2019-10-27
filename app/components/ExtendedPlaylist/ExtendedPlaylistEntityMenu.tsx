@@ -66,6 +66,8 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
   };
 
   const _handleRemoveTrack = (id: string) => {
+    console.log("pr", props);
+    console.log("REMOVING", id);
     player.currentPlaylist.removeTrackById(id);
     setAnchorEl(null);
   };
@@ -86,7 +88,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
       <Container onClick={_handleClick}>
         <MoreHorizIcon />
         <StyledMenu
-          id="playlist-menu-item"
+          id="extended-playlist-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}

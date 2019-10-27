@@ -4,6 +4,7 @@ import Queue from "./Queue";
 import User from "../models/User";
 import AppStore from "./AppStore";
 import Playlists from "./Playlists";
+import TrackStore from "./Tracks";
 
 export const createStore = (): RootStoreModel => {
   const playlists = Playlists.create();
@@ -11,13 +12,15 @@ export const createStore = (): RootStoreModel => {
   const queue = Queue.create();
   const user = User.create();
   const app = AppStore.create();
+  const tracks = TrackStore.create();
 
   const env: RootStoreEnv = {
     player: player,
     playlists: playlists,
     queue: queue,
     user: user,
-    app: app
+    app: app,
+    tracks: tracks,
   };
 
   const rootStore = RootStore.create(
@@ -26,7 +29,8 @@ export const createStore = (): RootStoreModel => {
       playlists,
       queue,
       user,
-      app
+      app,
+      tracks
     },
     env
   );
