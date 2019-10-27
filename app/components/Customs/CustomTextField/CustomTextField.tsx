@@ -11,6 +11,7 @@ interface ICustomTextFieldProps {
   required?: boolean;
 }
 
+// TODO: Implement correct coloring for error handling
 const CssTextField = withStyles({
   root: {
     "& label": {

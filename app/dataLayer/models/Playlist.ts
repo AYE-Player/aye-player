@@ -7,7 +7,7 @@ const Playlist = types
   .model({
     id: types.identifier,
     name: types.maybe(types.string),
-    tracks: types.maybe(types.array(Track))
+    tracks: types.maybe(types.array(types.reference(Track)))
   })
   .views(self => ({
     getTrackById(id: string) {
@@ -48,10 +48,6 @@ const Playlist = types
 
     addTrackAt(track: TrackModel, newIndex: number) {
       self.tracks.splice(newIndex, 0, track);
-    },
-
-    setId(id: string) {
-      self.id = id;
     }
   }));
 

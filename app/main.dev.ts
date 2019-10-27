@@ -59,7 +59,9 @@ const createLoadingScreen = () => {
   loadingScreen = new BrowserWindow({
     /// define width and height for the window
     width: 1280,
+    minWidth: 1280,
     height: 728,
+    minHeight: 728,
     /// remove the window frame, so it will become a frameless window
     frame: false,
     /// and set the transparency, to remove any window background color
@@ -68,8 +70,6 @@ const createLoadingScreen = () => {
       nodeIntegration: true
     }
   });
-
-  loadingScreen.setResizable(false);
 
   loadingScreen.loadURL(`file://${__dirname}/loading.html`);
 

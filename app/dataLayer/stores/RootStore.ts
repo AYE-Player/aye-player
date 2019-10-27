@@ -4,6 +4,7 @@ import Playlists, { PlaylistsModel } from "./Playlists";
 import Queue, { QueueModel } from "./Queue";
 import User, { UserModel } from "../models/User";
 import AppStore, { AppStoreModel } from "./AppStore";
+import TrackStore, { TrackStoreModel } from "./Tracks";
 
 export type RootStoreModel = Instance<typeof RootStore>;
 export type RootStoreEnv = {
@@ -12,6 +13,7 @@ export type RootStoreEnv = {
   queue: QueueModel;
   user: UserModel;
   app: AppStoreModel;
+  tracks: TrackStoreModel;
 };
 
 const RootStore = types.model("RootStore", {
@@ -19,7 +21,8 @@ const RootStore = types.model("RootStore", {
   playlists: Playlists,
   queue: Queue,
   user: User,
-  app: AppStore
+  app: AppStore,
+  tracks: TrackStore
 });
 
 export default RootStore;

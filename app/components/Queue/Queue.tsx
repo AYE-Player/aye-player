@@ -98,14 +98,12 @@ const Queue: React.FunctionComponent<IProps> = props => {
             >
               {queue.tracks.length === 0
                 ? "No tracks in queue"
-                : queue.tracks.map((TrackId, index) => {
-                    const track = player.currentPlaylist.getTrackById(TrackId);
-
+                : queue.tracks.map((track, index) => {
                     return (
                       <QueueEntity
                         duration={track.formattedDuration}
                         track={track}
-                        key={TrackId}
+                        key={track.id}
                         index={index}
                         onClick={_handleClick}
                       />

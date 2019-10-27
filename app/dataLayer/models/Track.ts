@@ -14,9 +14,10 @@ const Track = types
         return (new Array(length + 1).join(pad) + value).slice(-length);
       };
 
-      const hours = self.duration / 3600;
-      const minutes = Math.floor(self.duration / 60);
+      const hours = Math.floor(self.duration / 3600);
+      const minutes = Math.floor((self.duration - hours * 3600) / 60);
       const seconds = self.duration - minutes * 60;
+
       const finalTime =
         (hours >= 1 ? str_pad_left(hours, "0", 2) + ":" : "") +
         str_pad_left(minutes, "0", 2) +

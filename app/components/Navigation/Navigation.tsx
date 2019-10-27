@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 
 const Container = styled.div`
   width: calc(100% - 320px);
@@ -28,12 +26,6 @@ const MenuItem = styled.div`
 `;
 
 const Navigation: React.FunctionComponent<any> = props => {
-  const Store = ({ user }: RootStoreModel) => ({
-    user
-  });
-
-  const { user } = useInject(Store);
-
   return (
     <Container>
       <MenuItem>

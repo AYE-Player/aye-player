@@ -71,13 +71,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playNextTrack = () => {
-    const trackId = queue.nextTrack();
+    const track = queue.nextTrack();
 
-    if (!trackId) {
+    if (!track) {
       if (player.loopPlaylist && player.isShuffling) {
         queue.addTracks(player.currentPlaylist.tracks);
         queue.shuffel();
-        player.playTrack(player.currentPlaylist.getTrackById(queue.tracks[0]));
+        player.playTrack(queue.tracks[0]);
       } else if (player.loopPlaylist) {
         queue.addTracks(player.currentPlaylist.tracks);
         player.playTrack(player.currentPlaylist.tracks[0]);
@@ -87,7 +87,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
-    player.playTrack(player.currentPlaylist.getTrackById(trackId));
+    player.playTrack(track);
   };
 
   const _toggleRepeat = () => {
