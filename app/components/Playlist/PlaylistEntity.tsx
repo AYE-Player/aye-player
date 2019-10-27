@@ -40,7 +40,25 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
 
-const Title = styled.div<any>``;
+const Title = styled.div<any>`
+  padding-right: 15px;
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  ${(props: any) => {
+    if (props.length >= 30) {
+      return `div {
+
+        transform: translateX(0);
+        transition-timing-function: cubic-bezier(0.42,0,0.58,1);
+        transition-duration: 1s;
+      }
+      :hover div {
+        transform: translateX(calc(200px - 100%));
+      }`;
+    }
+  }}
+`;
 
 const Duration = styled.div`
   font-size: 12px;
@@ -77,7 +95,9 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             active={player.currentTrack.id === props.track.id}
             onClick={() => props.onClick(props.track)}
           >
-            <Title>{props.track.title}</Title>
+            <Title length={props.track.title.length}>
+              <div style={{ display: "inline-block" }}>{props.track.title}</div>
+            </Title>
             <Duration>{props.duration}</Duration>
           </TrackInfoContainer>
           <PlaylistEntityMenu id={props.track.id} />
