@@ -81,8 +81,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   player.currentTrack;
 
-  // TODO: rethink drag an drop queue logic, its not working right now // also think about shuffle playback, this will
-  // break it right now
   const _onDragEnd = (result: IDragResult) => {
     const track = player.currentPlaylist.removeAndGetTrack(result.source.index);
     player.currentPlaylist.addTrackAt(
