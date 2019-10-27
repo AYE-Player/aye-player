@@ -22,7 +22,7 @@ const Queue = types
     },
 
     get isEmpty() {
-      return self.tracks.length === 0
+      return self.tracks.length === 0;
     }
   }))
   .actions(self => ({
@@ -55,7 +55,7 @@ const Queue = types
     },
 
     nextTrack() {
-      self.tracks.shift()
+      self.tracks.shift();
       if (self.tracks.length === 0) return null;
 
       return self.tracks[0];
