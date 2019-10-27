@@ -113,12 +113,12 @@ const Playlist: React.FunctionComponent<IProps> = props => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {player.currentPlaylist.tracks.map((Track, index) => {
+              {player.currentPlaylist.tracks.map((track, index) => {
                 return (
                   <PlaylistEntity
-                    duration={Track.formattedDuration}
-                    track={Track}
-                    key={Track.id}
+                    duration={track.formattedDuration}
+                    track={track}
+                    key={track.id}
                     index={index}
                     onClick={_handleClick}
                   />
