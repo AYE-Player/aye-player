@@ -48,10 +48,6 @@ const Playlist = types
 
     addTrackAt(track: TrackModel, newIndex: number) {
       self.tracks.splice(newIndex, 0, track);
-    },
-
-    setId(id: string) {
-      self.id = id;
     }
   }));
 
