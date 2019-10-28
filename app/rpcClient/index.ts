@@ -3,10 +3,12 @@ const { Client } = require("discord-rpc"); // eslint-disable-line
 interface IActivityParameters {
   details: string;
   state?: string;
+  startTimestamp?: number;
   endTimestamp?: number;
   largeImageKey: string;
   instance: boolean;
 }
+
 
 export default class RPCClient {
   private _rpc: any;
@@ -52,6 +54,7 @@ export default class RPCClient {
     } else {
       activityParameters = {
         details,
+        startTimestamp: Math.floor(Date.now() / 1000),
         largeImageKey: "aye",
         instance: false
       };
