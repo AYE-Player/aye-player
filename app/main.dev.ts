@@ -13,6 +13,7 @@ import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 import RPCClient from "./rpcClient";
+import store from "./dataLayer/stores/PersistentStore";
 const unhandled = require("electron-unhandled");
 
 export default class AppUpdater {
@@ -52,6 +53,14 @@ let rpc = new RPCClient("621726681140297728");
 ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
   if (!rpc && !rpc.isConnected) return;
   rpc.setActivity(arg.playbackPosition, arg.endTime, arg.state, arg.details);
+});
+
+ipcMain.on("disableRPC", async () => {
+  await rpc.dispose();
+});
+
+ipcMain.on("enableRPC", async () => {
+  await rpc.login();
 });
 
 const createLoadingScreen = () => {
@@ -97,7 +106,10 @@ const createAppScreen = () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  rpc.login();
+
+  if (store.get("rpcEnabled")) {
+    rpc.login();
+  }
 
   mainWindow.on("ready-to-show", () => {
     if (process.env.START_MINIMIZED) {
