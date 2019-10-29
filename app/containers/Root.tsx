@@ -1,14 +1,13 @@
-import React from "react";
-import { Component } from "react";
-import { HashRouter } from "react-router-dom";
-import { StoreProvider } from "../components/StoreProvider";
-import { createStore } from "../dataLayer/stores/createStore";
-import Track from "../dataLayer/models/Track";
 import { Grid } from "@material-ui/core";
+import React, { Component } from "react";
+import { HashRouter } from "react-router-dom";
 import Player from "../components/Player/Player";
-import MainPage from "./MainPage";
 import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
+import { StoreProvider } from "../components/StoreProvider";
 import Playlist from "../dataLayer/models/Playlist";
+import Track from "../dataLayer/models/Track";
+import { createStore } from "../dataLayer/stores/createStore";
+import MainPage from "./MainPage";
 
 const rootStore = createStore();
 

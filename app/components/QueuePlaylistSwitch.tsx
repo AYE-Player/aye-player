@@ -1,9 +1,9 @@
-import React from "react";
 import { observer } from "mobx-react-lite";
+import React from "react";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
-import Queue from "./Queue/Queue";
 import Playlist from "./Playlist/Playlist";
+import Queue from "./Queue/Queue";
 
 interface IQueuePlaylistSwitchProps {}
 

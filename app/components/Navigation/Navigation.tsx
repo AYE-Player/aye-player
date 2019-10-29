@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 const Container = styled.div`
   width: calc(100% - 320px);

@@ -1,8 +1,7 @@
-import { types, Instance } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
-
 import { ipcRenderer } from "electron";
+import { Instance, types } from "mobx-state-tree";
 import Playlist, { PlaylistModel } from "../models/Playlist";
+import Track, { TrackModel } from "../models/Track";
 
 export type PlayerModel = Instance<typeof Player>;
 

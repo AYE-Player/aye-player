@@ -4,6 +4,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
@@ -14,7 +15,6 @@ import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
-import { observer } from "mobx-react-lite";
 
 const Header = styled.div`
   font-size: 24px;
@@ -114,7 +114,7 @@ const PlaylistPage: React.FunctionComponent = () => {
               <TableRow>
                 <TableCell
                   style={{
-                    color: "white",
+                    color: "#FBFBFB",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -124,7 +124,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 <TableCell
                   align="right"
                   style={{
-                    color: "white",
+                    color: "#FBFBFB",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -134,7 +134,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 <TableCell
                   align="right"
                   style={{
-                    color: "white",
+                    color: "#FBFBFB",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -144,7 +144,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 <TableCell
                   align="right"
                   style={{
-                    color: "white",
+                    color: "#FBFBFB",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -161,7 +161,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   >
                     <Link
                       to={`/playlist/${playlist.id}`}
-                      style={{ color: "white" }}
+                      style={{ color: "#FBFBFB" }}
                     >
                       {playlist.name}
                     </Link>
@@ -169,7 +169,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   <TableCell
                     align="right"
                     style={{
-                      color: "white",
+                      color: "#FBFBFB",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
@@ -178,7 +178,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   <TableCell
                     align="right"
                     style={{
-                      color: "white",
+                      color: "#FBFBFB",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
@@ -186,7 +186,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   </TableCell>
                   <TableCell
                     style={{
-                      color: "white",
+                      color: "#FBFBFB",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >

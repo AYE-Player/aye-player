@@ -1,4 +1,4 @@
-import { types, Instance } from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
 import Playlist, { PlaylistModel } from "../models/Playlist";
 
 export type PlaylistsModel = Instance<typeof Playlists>;

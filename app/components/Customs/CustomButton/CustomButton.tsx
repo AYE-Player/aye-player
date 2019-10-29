@@ -1,6 +1,6 @@
-import React from "react";
 import { Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import React from "react";
 
 interface ICustomButtonProps {
   onClick?: (event: React.MouseEvent) => void;

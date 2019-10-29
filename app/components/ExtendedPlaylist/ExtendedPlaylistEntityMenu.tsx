@@ -1,14 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-
-import useInject from "../../hooks/useInject";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
-// import { TrackModel } from "app/store/Track";
+import React from "react";
+import styled from "styled-components";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import useInject from "../../hooks/useInject";
 
 interface IPlaylistEntityMenuProps {
   id: string;

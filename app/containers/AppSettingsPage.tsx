@@ -1,12 +1,11 @@
-import React from "react";
-import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-
-import useInject from "../hooks/useInject";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import React from "react";
 import Switch from "react-switch";
-import Divider from "../components/Divider/Divider";
+import styled from "styled-components";
 import CustomSwitch from "../components/Customs/CustomSwitch/CustomSwitch";
+import Divider from "../components/Divider/Divider";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import useInject from "../hooks/useInject";
 
 const Header = styled.div`
   font-size: 24px;

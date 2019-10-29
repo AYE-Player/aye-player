@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import AccountDisplayMenu from "./AccountDisplayMenu";
+import React from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import AccountDisplayMenu from "./AccountDisplayMenu";
 
 interface IAccountDisplayProps {
   username?: string;

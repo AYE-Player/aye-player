@@ -1,5 +1,5 @@
-import { types, Instance } from "mobx-state-tree";
 import { ipcRenderer } from "electron";
+import { Instance, types } from "mobx-state-tree";
 import Store from "./PersistentStore";
 
 export type AppStoreModel = Instance<typeof AppStore>;

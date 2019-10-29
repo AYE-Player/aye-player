@@ -1,11 +1,11 @@
-import RootStore, { RootStoreModel, RootStoreEnv } from "./RootStore";
-import Player from "./Player";
-import Queue from "./Queue";
 import User from "../models/User";
 import AppStore from "./AppStore";
-import Playlists from "./Playlists";
-import TrackStore from "./Tracks";
 import Store from "./PersistentStore";
+import Player from "./Player";
+import Playlists from "./Playlists";
+import Queue from "./Queue";
+import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";
+import TrackStore from "./Tracks";
 
 export const createStore = (): RootStoreModel => {
   const playlists = Playlists.create();

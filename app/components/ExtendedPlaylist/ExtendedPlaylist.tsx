@@ -1,11 +1,11 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
+import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { observer } from "mobx-react-lite";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import Track, { TrackModel } from "../../dataLayer/models/Track";
+import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 
 interface IProps {
   match: any;

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import CustomButton from "../../Customs/CustomButton/CustomButton";
-
 const placeholder = require("../../../images/placeholder.png");
 
 interface IAvatarUploadProps {

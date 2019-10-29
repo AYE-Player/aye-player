@@ -14,7 +14,7 @@ import log from "electron-log";
 import MenuBuilder from "./menu";
 import RPCClient from "./rpcClient";
 import store from "./dataLayer/stores/PersistentStore";
-const unhandled = require("electron-unhandled");
+import unhandled from "electron-unhandled";
 
 export default class AppUpdater {
   constructor() {

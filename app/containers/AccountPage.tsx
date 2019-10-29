@@ -1,16 +1,15 @@
+import { Button } from "@material-ui/core";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
-import { observer } from "mobx-react-lite";
-import { Button } from "@material-ui/core";
-
-import useInject from "../hooks/useInject";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
-import LoginPage from "./LoginPage";
 import AvatarUpload from "../components/Account/AvatarUpload/AvatarUpload";
-import CustomButton from "../components/Customs/CustomButton/CustomButton";
-import Divider from "../components/Divider/Divider";
-import CustomizedDialogs from "../components/Customs/CustomDialog/CustomDialog";
 import NewPassword from "../components/Account/NewPassword/NewPassword";
+import CustomButton from "../components/Customs/CustomButton/CustomButton";
+import CustomizedDialogs from "../components/Customs/CustomDialog/CustomDialog";
+import Divider from "../components/Divider/Divider";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import useInject from "../hooks/useInject";
+import LoginPage from "./LoginPage";
 
 const Header = styled.div`
   font-size: 24px;
