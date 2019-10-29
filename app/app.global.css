@@ -6,7 +6,7 @@
 
 body {
   position: relative;
-  color: white;
+  color: #fbfbfb;
   height: 100vh;
   background-color: #232c39 !important;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
@@ -31,7 +31,7 @@ li {
 }
 
 a {
-  color: white;
+  color: #fbfbfb;
   opacity: 0.75;
   text-decoration: none;
 }
