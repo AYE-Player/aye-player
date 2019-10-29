@@ -6,6 +6,7 @@ import useInject from "../hooks/useInject";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import Switch from "react-switch";
 import Divider from "../components/Divider/Divider";
+import CustomSwitch from "../components/Customs/CustomSwitch/CustomSwitch";
 
 const Header = styled.div`
   font-size: 24px;
@@ -36,29 +37,7 @@ const AccountPage: React.FunctionComponent = () => {
     <Container>
       <Header>App Settings</Header>
       <SettingsContainer>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            width: "200px",
-            justifyContent: "space-between"
-          }}
-        >
-          <Switch
-            onChange={_switchRPCStatus}
-            checked={app.rpcEnabled}
-            onColor="#99ccff"
-            onHandleColor="#565f6c"
-            handleDiameter={30}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            height={20}
-            width={48}
-          />
-          <span>Use DiscordRPC</span>
-        </label>
+        <CustomSwitch label="Use DiscordRPC" onChange={_switchRPCStatus} checked={app.rpcEnabled} />
         <Divider size={3} />
         <label
           style={{
