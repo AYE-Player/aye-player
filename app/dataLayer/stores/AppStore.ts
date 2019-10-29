@@ -7,7 +7,7 @@ export type AppStoreModel = Instance<typeof AppStore>;
 const AppStore = types
   .model({
     showQueue: types.optional(types.boolean, false),
-    rpcEnabled: types.optional(types.boolean, true)
+    rpcEnabled: types.boolean
   })
   .actions(self => ({
     toggleQueueDisplay() {
