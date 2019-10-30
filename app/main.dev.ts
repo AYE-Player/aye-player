@@ -8,12 +8,12 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, Tray, Menu } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 import RPCClient from "./rpcClient";
-import store from "./dataLayer/stores/PersistentStore";
+import Settings from "./dataLayer/stores/PersistentSettings";
 import unhandled from "electron-unhandled";
 
 export default class AppUpdater {
@@ -46,8 +46,9 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
-let mainWindow = null;
-let loadingScreen = null;
+let mainWindow: BrowserWindow = null;
+let loadingScreen: BrowserWindow = null;
+let tray: Tray = null;
 let rpc = new RPCClient("621726681140297728");
 
 ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
@@ -67,9 +68,11 @@ const createLoadingScreen = () => {
   /// create a browser window
   loadingScreen = new BrowserWindow({
     /// define width and height for the window
-    width: 1280,
+    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1280,
     minWidth: 1280,
-    height: 728,
+    height: Settings.has("windowSize")
+      ? Settings.get("windowSize").height
+      : 728,
     minHeight: 728,
     /// remove the window frame, so it will become a frameless window
     frame: false,
@@ -82,6 +85,13 @@ const createLoadingScreen = () => {
 
   loadingScreen.loadURL(`file://${__dirname}/loading.html`);
 
+  if (Settings.get("windowPosition")) {
+    const { x, y } = Settings.get("windowPosition");
+    loadingScreen.setPosition(x, y);
+  } else {
+    loadingScreen.center();
+  }
+
   loadingScreen.on("closed", () => (loadingScreen = null));
 
   loadingScreen.webContents.on("did-finish-load", () => {
@@ -93,9 +103,11 @@ const createAppScreen = () => {
   mainWindow = new BrowserWindow({
     title: "AYE-Player",
     show: false,
-    width: 1280,
+    width: Settings.get("windowSize") ? Settings.get("windowSize").width : 1280,
     minWidth: 1280,
-    height: 728,
+    height: Settings.get("windowSize")
+      ? Settings.get("windowSize").height
+      : 728,
     minHeight: 728,
     frame: false,
     titleBarStyle: "hidden",
@@ -107,7 +119,36 @@ const createAppScreen = () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  if (store.get("rpcEnabled")) {
+  tray = new Tray(`${__dirname}/images/dd.png`);
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Show App",
+      click: function() {
+        mainWindow.show();
+      }
+    },
+    {
+      label: "Quit",
+      click: function() {
+        app.quit();
+      }
+    }
+  ]);
+  tray.setContextMenu(contextMenu);
+  tray.setToolTip("AYE - Player");
+  tray.on("click", () => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
+
+  if (Settings.get("windowPosition")) {
+    const { x, y } = Settings.get("windowPosition");
+    mainWindow.setPosition(x, y);
+  } else {
+    mainWindow.center();
+  }
+
+  if (Settings.get("rpcEnabled")) {
     rpc.login();
   }
 
@@ -118,6 +159,20 @@ const createAppScreen = () => {
       mainWindow.show();
       mainWindow.focus();
     }
+  });
+
+  mainWindow.on("close", () => {
+    const [x, y] = mainWindow.getPosition();
+    const [width, height] = mainWindow.getSize();
+    Settings.set("windowSize", {
+      height,
+      width
+    });
+    Settings.set("windowPosition", {
+      x,
+      y
+    });
+    rpc.dispose();
   });
 
   mainWindow.on("closed", () => {

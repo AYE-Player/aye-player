@@ -1,6 +1,6 @@
 import User from "../models/User";
 import AppStore from "./AppStore";
-import Store from "./PersistentStore";
+import Settings from "./PersistentSettings";
 import Player from "./Player";
 import Playlists from "./Playlists";
 import Queue from "./Queue";
@@ -13,7 +13,7 @@ export const createStore = (): RootStoreModel => {
   const queue = Queue.create();
   const user = User.create();
   const app = AppStore.create({
-    rpcEnabled: Store.get("rpcEnabled")
+    rpcEnabled: Settings.get("rpcEnabled")
   });
   const tracks = TrackStore.create();
 

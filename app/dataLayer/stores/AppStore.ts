@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import { Instance, types } from "mobx-state-tree";
-import Store from "./PersistentStore";
+import Settings from "./PersistentSettings";
 
 export type AppStoreModel = Instance<typeof AppStore>;
 
@@ -18,10 +18,10 @@ const AppStore = types
       self.rpcEnabled = !self.rpcEnabled;
       if (self.rpcEnabled) {
         ipcRenderer.send("enableRPC");
-        Store.set('rpcEnabled', true);
+        Settings.set('rpcEnabled', true);
       } else {
         ipcRenderer.send("disableRPC");
-        Store.set('rpcEnabled', false);
+        Settings.set('rpcEnabled', false);
       }
     }
   }));
