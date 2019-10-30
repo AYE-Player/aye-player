@@ -5,8 +5,8 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
 import styled from "styled-components";
-import useInject from "../hooks/useInject";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import useInject from "../hooks/useInject";
 
 interface IPlaylistPageMenuProps {
   id: string;

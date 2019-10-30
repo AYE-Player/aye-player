@@ -2,12 +2,12 @@ import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
 import React from "react";
+import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
-import { Draggable } from "react-beautiful-dnd";
 
 interface IProps {
   duration: string;

@@ -1,42 +1,41 @@
 import React from "react";
-import { Switch } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from "react-switch";
 
 interface ICustomSwitchProps {
-  onChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  onChange: (
+    checked: boolean,
+    event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
+    id: string
+  ) => void;
   label: string;
+  checked: boolean;
 }
-
-const StyledSwitch = withStyles({
-  switchBase: {
-    color: "#565f6c",
-    '&$checked': {
-      color: "#9cf",
-    },
-    '&$checked + $track': {
-      backgroundColor: "#9cf",
-    },
-  },
-  checked: {},
-  track: {},
-  }
-)(Switch);
 
 const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = props => {
   return (
-    <FormGroup>
-      <FormControlLabel
-        label={props.label}
-        control={
-          <StyledSwitch
+    <label
+      style={{
+        display: "flex",
+        alignItems: "center",
+        width: "200px",
+        justifyContent: "space-between"
+      }}
+    >
+      <Switch
         onChange={props.onChange}
+        checked={props.checked}
+        onColor="#99ccff"
+        onHandleColor="#565f6c"
+        handleDiameter={30}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+        height={20}
+        width={48}
       />
-
-        }
-      />
-    </FormGroup>
+      <span>{props.label}</span>
+    </label>
   );
 };
 

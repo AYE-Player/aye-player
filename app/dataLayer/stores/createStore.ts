@@ -1,9 +1,10 @@
-import RootStore, { RootStoreModel, RootStoreEnv } from "./RootStore";
-import Player from "./Player";
-import Queue from "./Queue";
 import User from "../models/User";
 import AppStore from "./AppStore";
+import Store from "./PersistentStore";
+import Player from "./Player";
 import Playlists from "./Playlists";
+import Queue from "./Queue";
+import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";
 import TrackStore from "./Tracks";
 
 export const createStore = (): RootStoreModel => {
@@ -11,7 +12,9 @@ export const createStore = (): RootStoreModel => {
   const player = Player.create();
   const queue = Queue.create();
   const user = User.create();
-  const app = AppStore.create();
+  const app = AppStore.create({
+    rpcEnabled: Store.get("rpcEnabled")
+  });
   const tracks = TrackStore.create();
 
   const env: RootStoreEnv = {

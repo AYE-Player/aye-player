@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import Divider from "../../Divider/Divider";
-
 import CustomTextField from "../../../components/Customs/CustomTextField/CustomTextField";
+import Divider from "../../Divider/Divider";
 
 interface INewPasswordProps {
   handlePasswordChange: any;

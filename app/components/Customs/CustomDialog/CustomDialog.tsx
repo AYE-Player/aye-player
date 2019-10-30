@@ -1,18 +1,18 @@
-import React from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import MuiDialogActions from "@material-ui/core/DialogActions";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import React from "react";
 
 interface ICustomDialogProps {
   openButtonText?: string;
@@ -79,11 +79,14 @@ const DialogActions = withStyles((theme: Theme) => ({
 }))(MuiDialogActions);
 
 export default function CustomDialog(props: ICustomDialogProps) {
-
   return (
     <div>
       {props.openButtonText ? (
-        <Button variant="outlined" color="secondary" onClick={props.handleClickOpen}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={props.handleClickOpen}
+        >
           {props.openButtonText}
         </Button>
       ) : (

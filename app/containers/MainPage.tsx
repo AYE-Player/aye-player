@@ -4,10 +4,9 @@ import React from "react";
 import styled from "styled-components";
 import AccountDisplay from "../components/Account/AccountDisplay/AccountDisplay";
 import Navigation from "../components/Navigation/Navigation";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import Routes from "../Routes";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
-
 
 const StyledGrid = styled(Grid)`
   height: calc(100% - 47px);

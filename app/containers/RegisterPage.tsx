@@ -4,9 +4,9 @@ import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
 import Divider from "../components/Divider/Divider";
-import useInject from "../hooks/useInject";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
-import { validateEmail, debounce } from "../helpers/";
+import { debounce, validateEmail } from "../helpers/";
+import useInject from "../hooks/useInject";
 
 const Header = styled.div`
   font-size: 24px;

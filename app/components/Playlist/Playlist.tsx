@@ -1,12 +1,12 @@
+import QueueMusicIcon from "@material-ui/icons/QueueMusic";
+import { observer } from "mobx-react-lite";
 import React from "react";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import PlaylistEntity from "./PlaylistEntity";
+import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { observer } from "mobx-react-lite";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import QueueMusicIcon from "@material-ui/icons/QueueMusic";
-import Track, { TrackModel } from "../../dataLayer/models/Track";
+import PlaylistEntity from "./PlaylistEntity";
 
 interface IProps {}
 
