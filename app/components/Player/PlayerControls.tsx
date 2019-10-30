@@ -20,14 +20,14 @@ import useInject from "../../hooks/useInject";
 import Divider from "../Divider/Divider";
 
 interface IProps {
-  play: Function;
-  stop: Function;
-  pause: Function;
-  toggleRepeat: Function;
-  shuffle: Function;
-  skip: Function;
-  previous: Function;
-  seekingStop: Function;
+  play: any;
+  stop: any;
+  pause: any;
+  toggleRepeat: any;
+  shuffle: any;
+  skip: any;
+  previous: any;
+  seekingStop: any;
 }
 
 const Container = styled.div`
