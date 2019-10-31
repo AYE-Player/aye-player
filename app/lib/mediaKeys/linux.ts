@@ -1,16 +1,7 @@
 import { BrowserWindow } from "electron";
 
 import DBus from "dbus-next";
-import { ipcMain } from "electron";
 import logger from "../ayeLogger";
-
-let track = null;
-
-ipcMain.on("win2Player", (e, args) => {
-  if (args[0] === "trackInfo") {
-    track = args[1];
-  }
-});
 
 function executeMediaKey(win: BrowserWindow, key: string) {
   logger.media(`Executing ${key} media key command`);
@@ -37,8 +28,6 @@ async function registerBindings(
   try {
     const dbusPlayer = await bus.getProxyObject(serviceName, objectPath);
     const mediaKeys = dbusPlayer.getInterface(interfaceName);
-    console.log("DBUS PLAYER", dbusPlayer);
-    console.log("MEDIA KEYS", mediaKeys);
 
     mediaKeys.on("MediaPlayerKeyPressed", (iface, keyName) => {
       logger.media(`Media key pressed: ${keyName}`);
@@ -50,7 +39,7 @@ async function registerBindings(
           executeMediaKey(win, "play-previous");
           break;
         case "Play":
-          if (track !== null) executeMediaKey(win, "play-pause");
+          executeMediaKey(win, "play-pause");
           break;
         default:
       }
