@@ -32,18 +32,18 @@ const Container = styled.div`
 
 const PlayerOverlayImage = styled.img`
   width: 320px;
-  height: 210px;
+  height: 200px;
   background-color: #000;
   position: absolute;
-  margin-top: 44px;
+  margin-top: 47px;
   z-index: 999;
 `;
 
 const PlayerOverlay = styled.div`
   width: 320px;
-  height: 210px;
+  height: 200px;
   position: absolute;
-  margin-top: 44px;
+  margin-top: 47px;
   border-color: none;
   z-index: 999;
 `;
@@ -227,11 +227,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {/*player.currentTrack && user.isAdmin && (
-        <PlayerOverlay
-          src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
-        />
-      )*/}
       {player.isPlaying ? (
         <PlayerOverlay />
       ) : (
@@ -245,7 +240,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           ref={_getPlayerElement}
           url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
           width="320px"
-          height="210px"
+          height="202px"
           config={{
             youtube: {
               playerVars: {
@@ -270,8 +265,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       ) : (
         <img
           src={AyeLogo}
-          width="320"
-          height="210"
+          width="320px"
+          height="200px"
           style={{
             zIndex: 2
           }}
