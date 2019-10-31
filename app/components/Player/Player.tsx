@@ -53,12 +53,14 @@ let history: any = [];
 
 // Listeners
 ipcRenderer.on("play-pause", (event, message) => {
-  if (Root.stores.queue.isEmpty) {
-    console.log("qaueue emtpy - play evenet");
-    Root.stores.queue.addTracks(Root.stores.player.currentPlaylist.tracks);
-    Root.stores.player.playTrack(Root.stores.queue.currentTrack);
+  const { queue, player } = Root.stores;
+
+  if (queue.isEmpty) {
+    queue.addTracks(player.currentPlaylist.tracks);
+    player.playTrack(queue.currentTrack);
   }
-  Root.stores.player.togglePlayingState();
+
+  player.togglePlayingState();
 });
 
 // TODO: Think about something nicer, while this is working, it feels quite strange
