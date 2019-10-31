@@ -3,8 +3,7 @@ import { globalShortcut } from "electron";
 
 const macOSWindows = (win: BrowserWindow) => {
   globalShortcut.register("MediaPlayPause", () => {
-    console.log("Executing play-pause media key command");
-    win.webContents.send("play");
+    win.webContents.send("play-pause");
   });
 
   globalShortcut.register("MediaNextTrack", () => {
