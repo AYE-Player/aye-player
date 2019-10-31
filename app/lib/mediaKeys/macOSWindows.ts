@@ -8,16 +8,12 @@ const macOSWindows = (win: BrowserWindow) => {
 
   globalShortcut.register("MediaNextTrack", () => {
     console.log("Executing play-next media key command");
-    win.webContents.send("skipTrack");
+    win.webContents.send("play-next");
   });
 
   globalShortcut.register("MediaPreviousTrack", () => {
     console.log("Executing play-previous media key command");
-    win.webContents.send("previousTrack");
-  });
-
-  globalShortcut.register("CommandOrControl+P", () => {
-    win.webContents.send("play");
+    win.webContents.send("play-previous");
   });
 };
 

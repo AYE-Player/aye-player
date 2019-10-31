@@ -53,18 +53,18 @@ let history: any = [];
 
 // Listeners
 ipcRenderer.on("play-pause", (event, message) => {
+  if (Root.stores.queue.isEmpty) {
+    console.log("qaueue emtpy - play evenet");
+    Root.stores.queue.addTracks(Root.stores.player.currentPlaylist.tracks);
+    Root.stores.player.playTrack(Root.stores.queue.currentTrack);
+  }
   Root.stores.player.togglePlayingState();
-
-  ipcRenderer.emit("player2Win", [
-    "onStateChange",
-    Root.stores.player.isPlaying
-  ]);
 });
 
 // TODO: Think about something nicer, while this is working, it feels quite strange
 // to have a second local history to get tracks, there should be a way to update the
 // trackHistory on change, even inside a listener
-ipcRenderer.on("skipTrack", (event, message) => {
+ipcRenderer.on("play-next", (event, message) => {
   const { queue, player, trackHistory } = Root.stores;
   const prevTrack = player.currentTrack;
   const track = queue.nextTrack();
@@ -88,7 +88,7 @@ ipcRenderer.on("skipTrack", (event, message) => {
   player.playTrack(track);
 });
 
-ipcRenderer.on("previousTrack", (event, message) => {
+ipcRenderer.on("play-previous", (event, message) => {
   const { player } = Root.stores;
   const track = history.pop();
   if (!track) return;
