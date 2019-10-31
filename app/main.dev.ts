@@ -62,6 +62,10 @@ let loadingScreen: BrowserWindow = null;
 let tray: Tray = null;
 let rpc = new RPCClient("621726681140297728");
 
+// Fix the player not being able to play audio when the user did not interact
+// with the page
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+
 let shouldQuit = false;
 
 /**
@@ -119,7 +123,7 @@ const createAppScreen = () => {
       : 728,
     minHeight: 728,
     frame: true,
-    titleBarStyle: "hidden",
+    titleBarStyle: "hiddenInset",
     maximizable: false,
     webPreferences: {
       nodeIntegration: true
@@ -269,7 +273,26 @@ app.on("ready", async () => {
   new AppUpdater();
 });
 
-app.on("activate", () => mainWindow.show()); // macOS only
+// macOS only
+app.on("activate", () => {
+  mainWindow.show();
+  mainWindow.focus();
+});
+
+// Make the app a single-instance app
+const gotTheLock = app.requestSingleInstanceLock();
+
+app.on("second-instance", () => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
+if (!gotTheLock) {
+  app.quit();
+}
 
 // IPC Communication
 
