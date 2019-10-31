@@ -267,6 +267,7 @@
     "mobx-react": "^6.1.4",
     "mobx-react-lite": "^1.5.0",
     "mobx-state-tree": "^3.14.1",
+    "mpris-service": "^2.1.0",
     "pj-custom-electron-titlebar": "^3.1.6",
     "react": "^16.11.0",
     "react-beautiful-dnd": "^11.0.5",

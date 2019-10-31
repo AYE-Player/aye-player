@@ -8,13 +8,24 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow, ipcMain, Tray, Menu } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Tray,
+  Menu,
+  systemPreferences,
+  globalShortcut
+} from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 import RPCClient from "./rpcClient";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import unhandled from "electron-unhandled";
+
+// import mprisService from "./lib/mprisService";
+import registerMediaKeys from "./lib/registerMediaKeys";
 
 export default class AppUpdater {
   constructor() {
@@ -119,7 +130,7 @@ const createAppScreen = () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  tray = new Tray(`${__dirname}/images/dd.png`);
+  tray = new Tray(`${__dirname}/../resources/icons/16x16.png`);
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Show App",
@@ -140,6 +151,26 @@ const createAppScreen = () => {
     mainWindow.show();
     mainWindow.focus();
   });
+
+  // Register MPRIS
+  /*if (process.platform === "linux") {
+    try {
+      mprisService(mainWindow, app);
+    } catch (err) {
+      console.error(err);
+    }
+  }*/
+
+  let isTrusted;
+  if (process.platform === "darwin") {
+    isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
+    console.log("isTrustedAccessibilityClient", isTrusted);
+  }
+
+  if (isTrusted || process.platform !== "darwin") {
+    // Register media keys
+    registerMediaKeys(mainWindow);
+  }
 
   if (Settings.get("windowPosition")) {
     const { x, y } = Settings.get("windowPosition");
@@ -164,15 +195,22 @@ const createAppScreen = () => {
   mainWindow.on("close", () => {
     const [x, y] = mainWindow.getPosition();
     const [width, height] = mainWindow.getSize();
+
+    // save windows position and size
     Settings.set("windowSize", {
       height,
       width
     });
+
     Settings.set("windowPosition", {
       x,
       y
     });
+
+    // dispose of rpc client
     rpc.dispose();
+    // unregister shortcuts
+    globalShortcut.unregisterAll();
   });
 
   mainWindow.on("closed", () => {
@@ -185,6 +223,10 @@ const createAppScreen = () => {
       loadingScreen.close();
     }
     mainWindow.show();
+  });
+
+  mainWindow.webContents.on("new-window", (event, url) => {
+    event.preventDefault();
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);

@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlayerControls from "./PlayerControls";
+import { ipcRenderer } from "electron";
+import Root from "../../containers/Root";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
@@ -37,15 +39,61 @@ const Container = styled.div`
 `;*/
 
 let playerElement: any;
+let history: any = [];
+
+// Listeners
+ipcRenderer.on("play", (event, message) => {
+  Root.stores.player.togglePlayingState();
+});
+
+// TODO: Think about something nicer, while this is working, it feels quite strange
+// to have a second local history to get tracks, there should be a way to update the
+// trackHistory on change, even inside a listener
+ipcRenderer.on("skipTrack", (event, message) => {
+  const { queue, player, trackHistory } = Root.stores;
+  const prevTrack = player.currentTrack;
+  const track = queue.nextTrack();
+
+  if (!track) {
+    if (player.loopPlaylist && player.isShuffling) {
+      queue.addTracks(player.currentPlaylist.tracks);
+      queue.shuffel();
+      player.playTrack(queue.tracks[0]);
+    } else if (player.loopPlaylist) {
+      queue.addTracks(player.currentPlaylist.tracks);
+      player.playTrack(player.currentPlaylist.tracks[0]);
+    } else {
+      player.togglePlayingState();
+    }
+    return;
+  }
+
+  history.push(prevTrack);
+  trackHistory.addTrack(prevTrack);
+  player.playTrack(track);
+});
+
+ipcRenderer.on("previousTrack", (event, message) => {
+  const { player } = Root.stores;
+  const track = history.pop();
+  if (!track) return;
+  player.playTrack(track);
+});
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const Store = ({ player, playlists, queue }: RootStoreModel) => ({
+  const Store = ({
+    player,
+    playlists,
+    queue,
+    trackHistory
+  }: RootStoreModel) => ({
     player,
     queue,
-    playlists
+    playlists,
+    trackHistory
   });
 
-  const { player, queue } = useInject(Store);
+  const { player, queue, trackHistory } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -55,7 +103,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     console.log("PLAYER READY");
   };
 
-  const _onStart = () => {};
+  const _onStart = () => {
+    console.log("STARTING");
+  };
 
   const _playVideo = () => {
     player.togglePlayingState();
@@ -71,6 +121,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playNextTrack = () => {
+    const prevTrack = player.currentTrack;
     const track = queue.nextTrack();
 
     if (!track) {
@@ -87,6 +138,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
+    trackHistory.addTrack(prevTrack);
+    history.push(prevTrack);
     player.playTrack(track);
   };
 
@@ -117,7 +170,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playPreviousTrack = () => {
-    console.log("NOT IMPLEMENTED YET");
+    const track = trackHistory.getLatestTrack();
+    if (!track) return;
+    player.playTrack(track);
   };
 
   const _handleSeekMouseUp = (value: number) => {
@@ -170,6 +225,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
           width="320px"
           height="210px"
+          config={{
+            youtube: {
+              playerVars: {
+                modestbranding: 1
+              }
+            }
+          }}
           playing={player.isPlaying}
           loop={player.loopTrack}
           volume={player.volume}
@@ -180,10 +242,19 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           onDuration={_setDuration}
           onProgress={_handleProgress}
           onEnded={() => _playNextTrack()}
-          style={{ zIndex: "2" }}
+          style={{
+            zIndex: 2
+          }}
         />
       ) : (
-        <img src={AyeLogo} width="320" height="210" style={{ zIndex: 2 }} />
+        <img
+          src={AyeLogo}
+          width="320"
+          height="210"
+          style={{
+            zIndex: 2
+          }}
+        />
       )}
     </Container>
   );

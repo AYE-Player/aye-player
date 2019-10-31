@@ -195,6 +195,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export default class Root extends Component {
+  public static stores = rootStore;
+
   render() {
     return (
       <StoreProvider value={rootStore}>
