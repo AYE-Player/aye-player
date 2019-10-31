@@ -7,6 +7,7 @@ import useInject from "../../hooks/useInject";
 import PlayerControls from "./PlayerControls";
 import { ipcRenderer } from "electron";
 import Root from "../../containers/Root";
+import { Repeat } from "../../types/interfaces";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
@@ -29,21 +30,35 @@ const Container = styled.div`
   bottom: 35px;
 `;
 
-/*const PlayerOverlay = styled.img`
+const PlayerOverlayImage = styled.img`
   width: 320px;
   height: 210px;
   background-color: #000;
   position: absolute;
-  margin-top: 42px;
+  margin-top: 44px;
   z-index: 999;
-`;*/
+`;
+
+const PlayerOverlay = styled.div`
+  width: 320px;
+  height: 210px;
+  position: absolute;
+  margin-top: 44px;
+  border-color: none;
+  z-index: 999;
+`;
 
 let playerElement: any;
 let history: any = [];
 
 // Listeners
-ipcRenderer.on("play", (event, message) => {
+ipcRenderer.on("play-pause", (event, message) => {
   Root.stores.player.togglePlayingState();
+
+  ipcRenderer.emit("player2Win", [
+    "onStateChange",
+    Root.stores.player.isPlaying
+  ]);
 });
 
 // TODO: Think about something nicer, while this is working, it feels quite strange
@@ -55,11 +70,11 @@ ipcRenderer.on("skipTrack", (event, message) => {
   const track = queue.nextTrack();
 
   if (!track) {
-    if (player.loopPlaylist && player.isShuffling) {
+    if (player.repeat === Repeat.ALL && player.isShuffling) {
       queue.addTracks(player.currentPlaylist.tracks);
       queue.shuffel();
       player.playTrack(queue.tracks[0]);
-    } else if (player.loopPlaylist) {
+    } else if (player.repeat === Repeat.ALL) {
       queue.addTracks(player.currentPlaylist.tracks);
       player.playTrack(player.currentPlaylist.tracks[0]);
     } else {
@@ -109,7 +124,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playVideo = () => {
     player.togglePlayingState();
-    player.notifyRPC({});
+    player.notifyRPC();
   };
 
   const _stopVideo = () => {
@@ -125,11 +140,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     const track = queue.nextTrack();
 
     if (!track) {
-      if (player.loopPlaylist && player.isShuffling) {
+      if (player.repeat === Repeat.ALL && player.isShuffling) {
         queue.addTracks(player.currentPlaylist.tracks);
         queue.shuffel();
         player.playTrack(queue.tracks[0]);
-      } else if (player.loopPlaylist) {
+      } else if (player.repeat === Repeat.ALL) {
         queue.addTracks(player.currentPlaylist.tracks);
         player.playTrack(player.currentPlaylist.tracks[0]);
       } else {
@@ -144,14 +159,12 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _toggleRepeat = () => {
-    if (player.loopTrack) {
-      player.setLoopTrack(false);
-      player.setLoopPlaylist(false);
-    } else if (player.loopPlaylist) {
-      player.setLoopPlaylist(false);
-      player.setLoopTrack(true);
+    if (player.repeat === Repeat.ONE) {
+      player.setRepeatStatus(Repeat.NONE);
+    } else if (player.repeat === Repeat.ALL) {
+      player.setRepeatStatus(Repeat.ONE);
     } else {
-      player.setLoopPlaylist(true);
+      player.setRepeatStatus(Repeat.ALL);
     }
   };
 
@@ -177,17 +190,17 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _handleSeekMouseUp = (value: number) => {
     playerElement.seekTo(value);
-    player.notifyRPC({});
+    player.notifyRPC();
   };
 
   const _handleProgress = (state: IPlayerState) => {
     player.setPlaybackPosition(Math.round(state.playedSeconds));
     if (
       Math.round(state.playedSeconds) >= player.currentTrack.duration - 2 &&
-      player.loopTrack
+      player.repeat === Repeat.ONE
     ) {
       player.setPlaybackPosition(0);
-      player.notifyRPC({});
+      player.notifyRPC();
       return;
     }
   };
@@ -219,6 +232,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
       )*/}
+      {player.isPlaying ? (
+        <PlayerOverlay />
+      ) : (
+        <PlayerOverlayImage
+          src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
+        />
+      )}
+
       {!queue.isEmpty ? (
         <ReactPlayer
           ref={_getPlayerElement}
@@ -233,7 +254,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             }
           }}
           playing={player.isPlaying}
-          loop={player.loopTrack}
+          loop={player.repeat === Repeat.ONE}
           volume={player.volume}
           muted={player.isMuted}
           onReady={() => _onReady()}

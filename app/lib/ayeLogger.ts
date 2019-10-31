@@ -2,17 +2,17 @@ import logFile from "electron-log";
 import debug from "debug";
 import { unlinkSync } from "fs";
 
-const logger = debug("headset");
-const logMedia = debug("headset:media");
-const logTray = debug("headset:tray");
-const logWin2Player = debug("headset:win2Player");
-const logPlayer2Win = debug("headset:player2Win");
+const logger = debug("aye");
+const logMedia = debug("aye:media");
+const logTray = debug("aye:tray");
+const logWin2Player = debug("aye:win2Player");
+const logPlayer2Win = debug("aye:player2Win");
 
-logFile.transports.console.level = false;
-logFile.transports.file.fileName = "headset.log";
+logFile.transports.console.level = "debug";
+logFile.transports.file.fileName = "aye.log";
 logFile.transports.file.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] {text}";
 
-class HeadsetLogger {
+class AyeLogger {
   // This function will be removed when 'electron-log' gets fixed
   static clear() {
     try {
@@ -24,39 +24,39 @@ class HeadsetLogger {
     }
   }
 
-  static info(message) {
+  static info(message: string) {
     logger(message);
-    logFile.info(`headset\t\t ${message}`);
+    logFile.info(`aye\t\t ${message}`);
   }
 
-  static media(message) {
+  static media(message: string) {
     logMedia(message);
-    logFile.info(`headset:media\t\t ${message}`);
+    logFile.info(`aye:media\t\t ${message}`);
   }
 
-  static tray(message) {
+  static tray(message: string) {
     logTray(message);
-    logFile.info(`headset:tray\t\t ${message}`);
+    logFile.info(`aye:tray\t\t ${message}`);
   }
 
-  static win2Player(message) {
+  static win2Player(message: string) {
     logWin2Player("%O", message);
     if (typeof message[1] === "object" && message[1] !== null) {
       logFile.info(
-        `headset:win2Player\t ${message[0]}\n${JSON.stringify(
+        `aye:win2Player\t ${message[0]}\n${JSON.stringify(
           message[1],
           null,
           1
         )}`
       );
     } else {
-      logFile.info(`headset:win2Player\t ${message}`);
+      logFile.info(`aye:win2Player\t ${message}`);
     }
   }
 
-  static player2Win(message) {
+  static player2Win(message: string) {
     logPlayer2Win("%o", message);
   }
 }
 
-export default HeadsetLogger;
+export default AyeLogger;

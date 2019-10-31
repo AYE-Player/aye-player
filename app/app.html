@@ -58,25 +58,26 @@
   <body>
     <div id="root" style="width: 100%; height: 100%;"></div>
     <script>
-      const customTitlebar = require("pj-custom-electron-titlebar");
+      if (process.env.darwin) {
+        const customTitlebar = require("pj-custom-electron-titlebar");
+        const Settings = require("./dataLayer/stores/PersistentSettings");
 
-      // 2. Create the custom titlebar with your own settings
-      //    To make it work, we just need to provide the backgroundColor property
-      //    Other properties are optional.
-      const AyeTitleBar = new customTitlebar.Titlebar({
-        backgroundColor: customTitlebar.Color.fromHex("#3D4653"),
-        shadow: false,
-        iconsTheme: process.env.darwin
-          ? customTitlebar.Themebar.mac
-          : customTitlebar.Themebar.win,
-        maximizable: false,
-        hideWhenClickingClose: true,
-        overflow: "hidden",
-        icon: "./images/Aniaugen.svg"
-      });
+        // 2. Create the custom titlebar with your own settings
+        //    To make it work, we just need to provide the backgroundColor property
+        //    Other properties are optional.
+        const AyeTitleBar = new customTitlebar.Titlebar({
+          backgroundColor: customTitlebar.Color.fromHex("#3D4653"),
+          shadow: false,
+          iconsTheme: customTitlebar.Themebar.mac,
+          maximizable: false,
+          hideWhenClickingClose: true,
+          overflow: "hidden",
+          icon: "./images/Aniaugen.svg"
+        });
 
-      // 3. Update Titlebar text
-      AyeTitleBar.updateTitle("AYE Player");
+        // 3. Update Titlebar text
+        AyeTitleBar.updateTitle("AYE Player");
+      }
 
       const scripts = [];
 

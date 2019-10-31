@@ -24,7 +24,7 @@ import RPCClient from "./rpcClient";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import unhandled from "electron-unhandled";
 
-// import mprisService from "./lib/mprisService";
+import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
 
 export default class AppUpdater {
@@ -62,18 +62,11 @@ let loadingScreen: BrowserWindow = null;
 let tray: Tray = null;
 let rpc = new RPCClient("621726681140297728");
 
-ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
-  if (!rpc && !rpc.isConnected) return;
-  rpc.setActivity(arg.playbackPosition, arg.endTime, arg.state, arg.details);
-});
+let shouldQuit = false;
 
-ipcMain.on("disableRPC", async () => {
-  await rpc.dispose();
-});
-
-ipcMain.on("enableRPC", async () => {
-  await rpc.login();
-});
+/**
+ *  Create Loading Screen
+ */
 
 const createLoadingScreen = () => {
   /// create a browser window
@@ -96,7 +89,7 @@ const createLoadingScreen = () => {
 
   loadingScreen.loadURL(`file://${__dirname}/loading.html`);
 
-  if (Settings.get("windowPosition")) {
+  if (Settings.has("windowPosition")) {
     const { x, y } = Settings.get("windowPosition");
     loadingScreen.setPosition(x, y);
   } else {
@@ -107,20 +100,25 @@ const createLoadingScreen = () => {
 
   loadingScreen.webContents.on("did-finish-load", () => {
     loadingScreen.show();
+    loadingScreen.focus();
   });
 };
+
+/**
+ *  Create App Screen
+ */
 
 const createAppScreen = () => {
   mainWindow = new BrowserWindow({
     title: "AYE-Player",
     show: false,
-    width: Settings.get("windowSize") ? Settings.get("windowSize").width : 1280,
+    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1280,
     minWidth: 1280,
-    height: Settings.get("windowSize")
+    height: Settings.has("windowSize")
       ? Settings.get("windowSize").height
       : 728,
     minHeight: 728,
-    frame: false,
+    frame: true,
     titleBarStyle: "hidden",
     maximizable: false,
     webPreferences: {
@@ -141,6 +139,7 @@ const createAppScreen = () => {
     {
       label: "Quit",
       click: function() {
+        shouldQuit = true;
         app.quit();
       }
     }
@@ -152,27 +151,7 @@ const createAppScreen = () => {
     mainWindow.focus();
   });
 
-  // Register MPRIS
-  /*if (process.platform === "linux") {
-    try {
-      mprisService(mainWindow, app);
-    } catch (err) {
-      console.error(err);
-    }
-  }*/
-
-  let isTrusted;
-  if (process.platform === "darwin") {
-    isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
-    console.log("isTrustedAccessibilityClient", isTrusted);
-  }
-
-  if (isTrusted || process.platform !== "darwin") {
-    // Register media keys
-    registerMediaKeys(mainWindow);
-  }
-
-  if (Settings.get("windowPosition")) {
+  if (Settings.has("windowPosition")) {
     const { x, y } = Settings.get("windowPosition");
     mainWindow.setPosition(x, y);
   } else {
@@ -192,7 +171,13 @@ const createAppScreen = () => {
     }
   });
 
-  mainWindow.on("close", () => {
+  mainWindow.on("close", event => {
+    if (Settings.get("minimizeToTray") && !shouldQuit) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+
+    console.log("AYE - Closing");
     const [x, y] = mainWindow.getPosition();
     const [width, height] = mainWindow.getSize();
 
@@ -222,6 +207,26 @@ const createAppScreen = () => {
     if (loadingScreen) {
       loadingScreen.close();
     }
+
+    // Register Media Keys and MPRIS after loading is finished, to prevent attaching mpris/keys to
+    // the loading screen and create a second - dead - registration for mpris
+
+    // Register MPRIS
+    if (process.platform === "linux") {
+      try {
+        mprisService(mainWindow, app);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    let isTrusted: boolean;
+    if (process.platform === "darwin") {
+      isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
+      console.log("isTrustedAccessibilityClient", isTrusted);
+    }
+
+    registerMediaKeys(mainWindow);
     mainWindow.show();
   });
 
@@ -262,4 +267,21 @@ app.on("ready", async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+});
+
+app.on("activate", () => mainWindow.show()); // macOS only
+
+// IPC Communication
+
+ipcMain.on("setDiscordActivity", (event: any, arg: any) => {
+  if (!rpc && !rpc.isConnected) return;
+  rpc.setActivity(arg.playbackPosition, arg.endTime, arg.state, arg.details);
+});
+
+ipcMain.on("disableRPC", async () => {
+  await rpc.dispose();
+});
+
+ipcMain.on("enableRPC", async () => {
+  await rpc.login();
 });

@@ -1,27 +1,26 @@
-import { ipcMain } from "electron";
+import { ipcMain, BrowserWindow, App } from "electron";
 import mpris from "mpris-service";
-import logger from "./headsetLogger";
+import logger from "./ayeLogger";
 
-function executeMediaKey(win, key) {
-  win.webContents.executeJavaScript(`
-    window.electronConnector.emit('${key}')
-  `);
+function executeMediaKey(win: BrowserWindow, key: string) {
+  logger.info(`Sending key: ${key}`);
+  win.webContents.send(key);
 }
 
-function changeVolumeState(win, volume) {
+function changeVolumeState(win: BrowserWindow, volume) {
   win.webContents.executeJavaScript(`
     window.changeVolumeSate(${volume})
   `);
 }
 
-const mprisService = (win, player, app) => {
+const mprisService = (win: BrowserWindow, app: App) => {
   logger.media("Initializing MPRIS");
   const mprisPlayer = mpris({
-    name: "headset",
-    identity: "Headset",
+    name: "ayeplayer",
+    identity: "AYE Player",
     canRaise: true,
     supportedInterfaces: ["player"],
-    desktopEntry: "headset"
+    desktopEntry: "ayeplayer"
   });
 
   mprisPlayer.playbackStatus = "Stopped";
@@ -30,7 +29,7 @@ const mprisService = (win, player, app) => {
   mprisPlayer.canControl = true;
   mprisPlayer.minimumRate = 1;
   mprisPlayer.maximumRate = 1;
-  mprisPlayer.volume = 0.75;
+  mprisPlayer.volume = 0.2;
 
   mprisPlayer.on("raise", () => {
     logger.media("Window raised");
@@ -38,7 +37,7 @@ const mprisService = (win, player, app) => {
   });
 
   mprisPlayer.on("quit", () => {
-    logger.media("Quitting Headset");
+    logger.media("Quitting Aye");
     app.exit();
   });
 
@@ -59,7 +58,10 @@ const mprisService = (win, player, app) => {
 
   mprisPlayer.on("play", () => {
     logger.media("Play received");
-    if (mprisPlayer.playbackStatus === "Paused") {
+    if (
+      mprisPlayer.playbackStatus === "Paused" ||
+      mprisPlayer.playbackStatus === "Stopped"
+    ) {
       executeMediaKey(win, "play-pause");
     }
   });
@@ -91,7 +93,7 @@ const mprisService = (win, player, app) => {
     }
   });
 
-  mprisPlayer.on("volume", vol => {
+  mprisPlayer.on("volume", (vol: number) => {
     if (mprisPlayer.playbackStatus !== "Stopped") {
       let volume = vol;
       if (vol > 1) {
@@ -103,12 +105,12 @@ const mprisService = (win, player, app) => {
 
       logger.media(`Volume received, set to: ${volume}`);
       changeVolumeState(win, volume * 100);
-      player.webContents.send("win2Player", ["setVolume", volume * 100]);
+      win.webContents.send("win2Player", ["setVolume", volume * 100]);
       mprisPlayer.volume = volume;
     }
   });
 
-  mprisPlayer.on("seek", seek => {
+  mprisPlayer.on("seek", (seek: number) => {
     if (mprisPlayer.playbackStatus !== "Stopped") {
       logger.media(`Seek ${seek / 1e6} sec`);
       win.webContents.send("player2Win", [
@@ -118,7 +120,7 @@ const mprisService = (win, player, app) => {
     }
   });
 
-  mprisPlayer.on("position", arg => {
+  mprisPlayer.on("position", (arg: any) => {
     if (mprisPlayer.playbackStatus !== "Stopped") {
       logger.media(`Go to position ${arg.position / 1e6} sec`);
       win.webContents.send("player2Win", ["seekTo", arg.position / 1e6]); // in seconds
@@ -179,13 +181,14 @@ const mprisService = (win, player, app) => {
   });
 
   ipcMain.on("player2Win", (e, args) => {
+    console.log("PLAYER 2 WIN", args);
     switch (args[0]) {
       case "currentTime":
         mprisPlayer.getPosition = () => args[1] * 1e6; // in microseconds
         break;
       case "onStateChange":
-        if (args[1] === 1) mprisPlayer.playbackStatus = "Playing";
-        if (args[1] === 2) mprisPlayer.playbackStatus = "Paused";
+        if (args[1] === true) mprisPlayer.playbackStatus = "Playing";
+        if (args[1] === false) mprisPlayer.playbackStatus = "Paused";
         logger.media(`Playback status: ${mprisPlayer.playbackStatus}`);
         break;
       default:

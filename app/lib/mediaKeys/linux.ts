@@ -2,7 +2,7 @@ import { BrowserWindow } from "electron";
 
 import DBus from "dbus-next";
 import { ipcMain } from "electron";
-import logger from "../headsetLogger";
+import logger from "../ayeLogger";
 
 let track = null;
 
@@ -12,14 +12,18 @@ ipcMain.on("win2Player", (e, args) => {
   }
 });
 
-function executeMediaKey(win: BrowserWindow, key) {
+function executeMediaKey(win: BrowserWindow, key: string) {
   logger.media(`Executing ${key} media key command`);
   win.webContents.executeJavaScript(`
     window.electronConnector.emit('${key}')
   `);
 }
 
-async function registerBindings(win: BrowserWindow, desktopEnv, bus) {
+async function registerBindings(
+  win: BrowserWindow,
+  desktopEnv: string,
+  bus: DBus.MessageBus
+) {
   let serviceName = `org.${desktopEnv}.SettingsDaemon`;
   let objectPath = `/org/${desktopEnv}/SettingsDaemon/MediaKeys`;
   let interfaceName = `org.${desktopEnv}.SettingsDaemon.MediaKeys`;
@@ -33,6 +37,8 @@ async function registerBindings(win: BrowserWindow, desktopEnv, bus) {
   try {
     const dbusPlayer = await bus.getProxyObject(serviceName, objectPath);
     const mediaKeys = dbusPlayer.getInterface(interfaceName);
+    console.log("DBUS PLAYER", dbusPlayer);
+    console.log("MEDIA KEYS", mediaKeys);
 
     mediaKeys.on("MediaPlayerKeyPressed", (iface, keyName) => {
       logger.media(`Media key pressed: ${keyName}`);
@@ -50,7 +56,7 @@ async function registerBindings(win: BrowserWindow, desktopEnv, bus) {
       }
     });
 
-    mediaKeys.GrabMediaPlayerKeys("headset", 0);
+    mediaKeys.GrabMediaPlayerKeys("ayeplayer", 0);
     logger.media(`Grabbed media keys for ${desktopEnv}`);
   } catch (err) {
     // Error if trying to grab keys in another desktop environment

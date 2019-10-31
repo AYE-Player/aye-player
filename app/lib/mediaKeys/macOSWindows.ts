@@ -17,9 +17,9 @@ const macOSWindows = (win: BrowserWindow) => {
     win.webContents.send("previousTrack");
   });
 
-  globalShortcut.register("CommandOrControl+P", () =>{
+  globalShortcut.register("CommandOrControl+P", () => {
     win.webContents.send("play");
-  })
+  });
 };
 
 export default macOSWindows;

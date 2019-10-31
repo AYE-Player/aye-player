@@ -14,7 +14,8 @@ export const createStore = (): RootStoreModel => {
   const queue = Queue.create();
   const user = User.create();
   const app = AppStore.create({
-    rpcEnabled: Settings.get("rpcEnabled")
+    rpcEnabled: Settings.get("rpcEnabled"),
+    minimizeToTray: Settings.get("minimizeToTray")
   });
   const tracks = TrackStore.create();
   const trackHistory = TrackHistory.create();

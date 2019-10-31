@@ -35,7 +35,7 @@ const TrackInfoContainer = styled.div<any>`
   display: inline-block;
   cursor: pointer;
   width: 300px;
-  padding: 10px 0;
+  padding: 8px 0;
   padding-left: 8px;
   color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
