@@ -6,6 +6,7 @@ import styled from "styled-components";
 import SearchEntity from "../components/Search/SearchEntity";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { TrackModel } from "app/dataLayer/models/Track";
 
 const Header = styled.div`
   font-size: 24px;
@@ -44,14 +45,16 @@ const SearchIconContainer = styled.div`
 
 // TODO: Dont use playlist as entities, use the search results
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({ player }: RootStoreModel) => ({
-    player
+  const Store = ({ player, queue }: RootStoreModel) => ({
+    player,
+    queue
   });
 
-  const { player } = useInject(Store);
+  const { player, queue } = useInject(Store);
 
-  const _handleClick = () => {
-    console.log("KLICK")
+  const _handleDoubleClick = (track: TrackModel) => {
+    queue.addPrivilegedTrack(track);
+    player.playTrack(track);
   }
 
   return (
@@ -75,7 +78,7 @@ const SearchPage: React.FunctionComponent = () => {
                     track={track}
                     key={track.id}
                     index={index}
-                    onClick={_handleClick}
+                    onDoubleClick={_handleDoubleClick}
                   />
                 );
               })}

@@ -2,15 +2,13 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import SearchEntityMenu from "./SearchEntityMenu";
 
 interface IProps {
   duration: string;
   track: TrackModel;
   index: number;
-  onClick: Function;
+  onDoubleClick: Function;
 }
 
 const Container = styled.div<any>`
@@ -25,8 +23,8 @@ const Container = styled.div<any>`
   &:last-child {
     border-bottom: none;
   }
-  &:hover > svg {
-    opacity: 1;
+  &:hover {
+    color: "#99ccff";
   }
 `;
 const TrackInfoContainer = styled.div<any>`
@@ -36,7 +34,6 @@ const TrackInfoContainer = styled.div<any>`
   padding: 8px;
   padding-left: 8px;
   width: 100%;
-  color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
 
 const Title = styled.div<any>`
@@ -60,30 +57,34 @@ const Title = styled.div<any>`
 `;
 
 const Duration = styled.div`
-  font-size: 12px;
+  font-size: 14px;
+`;
+
+const TrackImageContainer = styled.div`
+  width: 48px;
+  height: 48px;
+  margin-right: 32px;
+  border-radius: 24px;
+  overflow: hidden;
 `;
 
 const TrackImage = styled.img`
-  width: 48px;
+  position: relative;
+  padding-right: 32px;
+  width: 64px;
   height: 48px;
-  margin-right: 16px;
-  border-radius: 24px;
+  transform: scale(1.4);
 `;
 
 const SearchEntity: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player }: RootStoreModel) => ({
-    player
-  });
-
-  const { player } = useInject(Store);
-
   return (
     <Container>
-      <TrackInfoContainer
-        active={player.currentTrack.id === props.track.id}
-        onClick={() => props.onClick(props.track)}
-      >
-        <TrackImage src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`} />
+      <TrackInfoContainer onDoubleClick={() => props.onDoubleClick(props.track)}>
+        <TrackImageContainer>
+          <TrackImage
+            src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`}
+          />
+        </TrackImageContainer>
         <Title length={props.track.title.length}>
           <div style={{ display: "inline-block" }}>{props.track.title}</div>
         </Title>
