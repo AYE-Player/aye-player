@@ -123,7 +123,7 @@ const createAppScreen = () => {
       : 728,
     minHeight: 728,
     frame: true,
-    titleBarStyle: "hiddenInset",
+    titleBarStyle: "hidden",
     maximizable: false,
     webPreferences: {
       nodeIntegration: true
@@ -181,7 +181,6 @@ const createAppScreen = () => {
       mainWindow.hide();
     }
 
-    console.log("AYE - Closing");
     const [x, y] = mainWindow.getPosition();
     const [width, height] = mainWindow.getSize();
 
@@ -227,10 +226,14 @@ const createAppScreen = () => {
     let isTrusted: boolean;
     if (process.platform === "darwin") {
       isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
-      console.log("isTrustedAccessibilityClient", isTrusted);
     }
 
-    registerMediaKeys(mainWindow);
+    if (
+      isTrusted === undefined ||
+      (process.env.platform === "darwin" && isTrusted)
+    ) {
+      registerMediaKeys(mainWindow);
+    }
     mainWindow.show();
   });
 
