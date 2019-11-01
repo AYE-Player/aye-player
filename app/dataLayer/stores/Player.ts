@@ -79,7 +79,11 @@ const Player = types
     },
 
     togglePlayingState() {
-      if (self.isPlaying) this.notifyRPC({ state: "Paused" });
+      if (self.isPlaying) {
+        this.notifyRPC({ state: "Paused" });
+      } else {
+        this.notifyRPC();
+      }
       self.isPlaying = !self.isPlaying;
 
       ipcRenderer.send("player2Win", ["onStateChange", self.isPlaying]);
