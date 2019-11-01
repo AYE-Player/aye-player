@@ -181,7 +181,6 @@ const mprisService = (win: BrowserWindow, app: App) => {
   });
 
   ipcMain.on("player2Win", (e, args) => {
-    console.log("PLAYER 2 WIN", args);
     switch (args[0]) {
       case "currentTime":
         mprisPlayer.getPosition = () => args[1] * 1e6; // in microseconds
