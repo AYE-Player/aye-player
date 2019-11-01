@@ -1,11 +1,11 @@
 import { InputBase } from "@material-ui/core";
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from "@material-ui/icons/Search";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
-/* import { RootStoreModel } from "../dataLayer/stores/RootStore";
-import { formattedDuration } from "../helpers";
-import useInject from "../hooks/useInject"; */
+import SearchEntity from "../components/Search/SearchEntity";
+import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import useInject from "../hooks/useInject";
 
 const Header = styled.div`
   font-size: 24px;
@@ -20,12 +20,12 @@ const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 40px;
-  height: 100%
+  height: 100%;
 `;
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 128px);
+  height: calc(100% - 150px);
 `;
 
 const Search = styled.div`
@@ -35,36 +35,50 @@ const Search = styled.div`
   justify-content: center;
   background-color: #565f6c;
   border-radius: 4px;
+  margin-bottom: 16px;
 `;
 
 const SearchIconContainer = styled.div`
   margin-right: 8px;
-
 `;
 
+// TODO: Dont use playlist as entities, use the search results
 const SearchPage: React.FunctionComponent = () => {
-  /*const [open, setOpen] = React.useState(false);
-
-  const Store = ({ playlists }: RootStoreModel) => ({
-    playlists
+  const Store = ({ player }: RootStoreModel) => ({
+    player
   });
 
-  const { playlists } = useInject(Store);*/
+  const { player } = useInject(Store);
+
+  const _handleClick = () => {
+    console.log("KLICK")
+  }
 
   return (
     <Container>
       <Header>Search</Header>
       <PlaylistContainer>
-        <ScrollContainer>
         <Search>
-            <SearchIconContainer>
-              <SearchIcon />
-            </SearchIconContainer>
-            <InputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <SearchIconContainer>
+            <SearchIcon />
+          </SearchIconContainer>
+          <InputBase
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+          />
+        </Search>
+        <ScrollContainer>
+        {player.currentPlaylist.tracks.map((track, index) => {
+                return (
+                  <SearchEntity
+                    duration={track.formattedDuration}
+                    track={track}
+                    key={track.id}
+                    index={index}
+                    onClick={_handleClick}
+                  />
+                );
+              })}
         </ScrollContainer>
       </PlaylistContainer>
     </Container>
