@@ -73,7 +73,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
-          {"Settings"}
+          Settings
         </NavLink>
       </MenuItem>
     </Container>

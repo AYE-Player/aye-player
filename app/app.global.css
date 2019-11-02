@@ -46,6 +46,7 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
+  color: #9cf;
 }
 
 :not(input):not(textarea),

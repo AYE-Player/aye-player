@@ -171,11 +171,8 @@ const createAppScreen = () => {
       mainWindow.minimize();
     } else {
       mainWindow.show();
-      mainWindow.focus();
+      // mainWindow.focus();
     }
-
-    // Register Media Keys and MPRIS after loading is finished, to prevent attaching mpris/keys to
-    // the loading screen and create a second - dead - registration for mpris
 
     // Register MPRIS
     if (process.platform === "linux") {
@@ -234,8 +231,6 @@ const createAppScreen = () => {
     if (loadingScreen) {
       loadingScreen.close();
     }
-
-    mainWindow.show();
   });
 
   mainWindow.webContents.on("new-window", (event, url) => {

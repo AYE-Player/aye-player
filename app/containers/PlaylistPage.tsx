@@ -15,6 +15,7 @@ import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
+import { withStyles } from "@material-ui/styles";
 
 const Header = styled.div`
   font-size: 24px;
@@ -29,7 +30,7 @@ const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 40px;
-  height: 100%
+  height: 100%;
 `;
 
 /*const ListEntity = styled.div`
@@ -48,12 +49,22 @@ const CreatePlaylist = styled.div`
   cursor: pointer;
   right: 10px;
   bottom: 56px;
+  &:hover {
+    color: #99ccff;
+  }
 `;
 
 const ScrollContainer = styled.div`
   overflow: auto;
   height: calc(100% - 128px);
 `;
+
+const StyledTableCell = withStyles({
+  body: {
+    color: "#fbfbfb",
+    ':hover': "#99ccff"
+  }
+})(TableCell);
 
 const PlaylistPage: React.FunctionComponent = () => {
   const [newPlaylistName, setNewPlaylistName] = React.useState("");
@@ -154,7 +165,7 @@ const PlaylistPage: React.FunctionComponent = () => {
             <TableBody>
               {playlists.lists.map(playlist => (
                 <TableRow key={playlist.id}>
-                  <TableCell
+                  <StyledTableCell
                     component="th"
                     scope="row"
                     style={{ borderBottom: "1px solid #565f6c" }}
@@ -165,8 +176,8 @@ const PlaylistPage: React.FunctionComponent = () => {
                     >
                       {playlist.name}
                     </Link>
-                  </TableCell>
-                  <TableCell
+                  </StyledTableCell>
+                  <StyledTableCell
                     align="right"
                     style={{
                       color: "#FBFBFB",
@@ -174,8 +185,8 @@ const PlaylistPage: React.FunctionComponent = () => {
                     }}
                   >
                     {playlist.tracks.length}
-                  </TableCell>
-                  <TableCell
+                  </StyledTableCell>
+                  <StyledTableCell
                     align="right"
                     style={{
                       color: "#FBFBFB",
@@ -183,15 +194,15 @@ const PlaylistPage: React.FunctionComponent = () => {
                     }}
                   >
                     {calculateTracksDuration(playlist)}
-                  </TableCell>
-                  <TableCell
+                  </StyledTableCell>
+                  <StyledTableCell
                     style={{
                       color: "#FBFBFB",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
                     <PlaylistPageMenu id={playlist.id} />
-                  </TableCell>
+                  </StyledTableCell>
                 </TableRow>
               ))}
             </TableBody>
