@@ -173,6 +173,30 @@ const createAppScreen = () => {
       mainWindow.show();
       mainWindow.focus();
     }
+
+    // Register Media Keys and MPRIS after loading is finished, to prevent attaching mpris/keys to
+    // the loading screen and create a second - dead - registration for mpris
+
+    // Register MPRIS
+    if (process.platform === "linux") {
+      try {
+        mprisService(mainWindow, app);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    let isTrusted: boolean;
+    if (process.platform === "darwin") {
+      isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
+    }
+
+    if (
+      isTrusted === undefined ||
+      (process.env.platform === "darwin" && isTrusted)
+    ) {
+      registerMediaKeys(mainWindow);
+    }
   });
 
   mainWindow.on("close", event => {
@@ -211,29 +235,6 @@ const createAppScreen = () => {
       loadingScreen.close();
     }
 
-    // Register Media Keys and MPRIS after loading is finished, to prevent attaching mpris/keys to
-    // the loading screen and create a second - dead - registration for mpris
-
-    // Register MPRIS
-    if (process.platform === "linux") {
-      try {
-        mprisService(mainWindow, app);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    let isTrusted: boolean;
-    if (process.platform === "darwin") {
-      isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
-    }
-
-    if (
-      isTrusted === undefined ||
-      (process.env.platform === "darwin" && isTrusted)
-    ) {
-      registerMediaKeys(mainWindow);
-    }
     mainWindow.show();
   });
 
