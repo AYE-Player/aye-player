@@ -3,12 +3,21 @@ import React from "react";
 import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
 import SearchEntityMenu from "./SearchEntityMenu";
+import CustomListDialog from "../Customs/CustomListDialog/CustomListDialog";
+import useInject from "../../hooks/useInject";
+import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import { OptionsObject } from "notistack";
+import SnackMessage from "../Customs/SnackMessage/SnackMessage";
 
 interface IProps {
   duration: string;
   track: TrackModel;
   index: number;
   onDoubleClick: Function;
+  sendNotification: (
+    message: React.ReactNode,
+    options?: OptionsObject
+  ) => React.ReactText;
 }
 
 const Container = styled.div<any>`
@@ -23,8 +32,8 @@ const Container = styled.div<any>`
   &:last-child {
     border-bottom: none;
   }
-  &:hover {
-    color: "#99ccff";
+  &:hover > div {
+    color: #99ccff;
   }
 `;
 const TrackInfoContainer = styled.div<any>`
@@ -38,7 +47,7 @@ const TrackInfoContainer = styled.div<any>`
 
 const Title = styled.div<any>`
   padding-right: 16px;
-  width: 200px;
+  width: 300px;
   white-space: nowrap;
   overflow: hidden;
   ${(props: any) => {
@@ -50,7 +59,7 @@ const Title = styled.div<any>`
         transition-duration: 1s;
       }
       :hover div {
-        transform: translateX(calc(200px - 100%));
+        transform: translateX(calc(300px - 100%));
       }`;
     }
   }}
@@ -70,16 +79,65 @@ const TrackImageContainer = styled.div`
 
 const TrackImage = styled.img`
   position: relative;
-  padding-right: 32px;
   width: 64px;
   height: 48px;
-  transform: scale(1.4);
+  transform: scale(1.4) translate(-5px);
 `;
 
 const SearchEntity: React.FunctionComponent<IProps> = props => {
+  const Store = ({ playlists }: RootStoreModel) => ({
+    playlists
+  });
+
+  const { playlists } = useInject(Store);
+
+  const [open, setOpen] = React.useState(false);
+
+  const _handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const _handleClose = (id: string, givenTrack: TrackModel) => {
+    setOpen(false);
+    const playlist = playlists.getListById(id);
+    try {
+      if (playlist.tracks.find(track => track.id === givenTrack.id)) {
+        props.sendNotification("", {
+          content: key => (
+            <SnackMessage
+              id={key}
+              variant="warning"
+              message="Track already in list"
+            />
+          )
+        });
+      } else {
+        playlist.addTrack(givenTrack);
+        props.sendNotification("", {
+          content: key => (
+            <SnackMessage
+              id={key}
+              variant="info"
+              message={`Added track to list ${playlist.name}`}
+            />
+          )
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const _createListItem = (value: string) => {
+    setOpen(false);
+    console.log(value);
+  };
+
   return (
     <Container>
-      <TrackInfoContainer onDoubleClick={() => props.onDoubleClick(props.track)}>
+      <TrackInfoContainer
+        onDoubleClick={() => props.onDoubleClick(props.track)}
+      >
         <TrackImageContainer>
           <TrackImage
             src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`}
@@ -90,7 +148,20 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
         </Title>
         <Duration>{props.duration}</Duration>
       </TrackInfoContainer>
-      <SearchEntityMenu id={props.track.id} />
+      <SearchEntityMenu id={props.track.id} openListDialog={_handleClickOpen} />
+      <CustomListDialog
+        dialogTitle="Select Playlist"
+        open={open}
+        track={props.track}
+        onSelect={_handleClose}
+        createListItem={_createListItem}
+        options={playlists.lists.map(list => {
+          return {
+            name: list.name,
+            id: list.id
+          };
+        })}
+      />
     </Container>
   );
 };

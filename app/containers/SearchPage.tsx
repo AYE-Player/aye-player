@@ -7,6 +7,7 @@ import SearchEntity from "../components/Search/SearchEntity";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import { TrackModel } from "app/dataLayer/models/Track";
+import { useSnackbar } from "notistack";
 
 const Header = styled.div`
   font-size: 24px;
@@ -39,10 +40,6 @@ const Search = styled.div`
   margin-bottom: 16px;
 `;
 
-const SearchIconContainer = styled.div`
-  margin-right: 8px;
-`;
-
 // TODO: Dont use playlist as entities, use the search results
 const SearchPage: React.FunctionComponent = () => {
   const Store = ({ player, queue }: RootStoreModel) => ({
@@ -52,38 +49,40 @@ const SearchPage: React.FunctionComponent = () => {
 
   const { player, queue } = useInject(Store);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const _handleDoubleClick = (track: TrackModel) => {
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
-  }
+  };
 
   return (
     <Container>
-      <Header>Search</Header>
-      <PlaylistContainer>
-        <Search>
-          <SearchIconContainer>
-            <SearchIcon />
-          </SearchIconContainer>
-          <InputBase
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
-        <ScrollContainer>
-        {player.currentPlaylist.tracks.map((track, index) => {
-                return (
-                  <SearchEntity
-                    duration={track.formattedDuration}
-                    track={track}
-                    key={track.id}
-                    index={index}
-                    onDoubleClick={_handleDoubleClick}
-                  />
-                );
-              })}
-        </ScrollContainer>
-      </PlaylistContainer>
+        <Header>Search</Header>
+        <PlaylistContainer>
+          <Search>
+            <SearchIcon style={{ marginRight: "8px" }} />
+            <InputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              style={{ color: "#fbfbfb" }}
+            />
+          </Search>
+          <ScrollContainer>
+            {player.currentPlaylist.tracks.map((track, index) => {
+              return (
+                <SearchEntity
+                  duration={track.formattedDuration}
+                  track={track}
+                  key={track.id}
+                  index={index}
+                  onDoubleClick={_handleDoubleClick}
+                  sendNotification={enqueueSnackbar}
+                />
+              );
+            })}
+          </ScrollContainer>
+        </PlaylistContainer>
     </Container>
   );
 };

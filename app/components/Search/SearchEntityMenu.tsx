@@ -10,6 +10,7 @@ import useInject from "../../hooks/useInject";
 
 interface ISearchEntityMenuProps {
   id: string;
+  openListDialog: any;
 }
 
 const Container = styled.div`
@@ -89,6 +90,7 @@ const SearchEntityMenu: React.FunctionComponent<
             Play next
           </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+          <MenuItem onClick={() => props.openListDialog()}>Add to Playlist...</MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

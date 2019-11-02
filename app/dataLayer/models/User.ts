@@ -34,6 +34,10 @@ const User = types
       self.hasPremium = false;
     },
 
+    delete() {
+      console.log("DELETING USER");
+    },
+
     updatePassword(password: string) {
       console.log("NEW PASSWORD", password);
     },

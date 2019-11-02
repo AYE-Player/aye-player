@@ -30,6 +30,9 @@ const Container = styled.div<any>`
   &:hover > svg {
     opacity: 1;
   }
+  &:hover > div {
+    color: #99ccff;
+  }
 `;
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;

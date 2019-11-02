@@ -312,3 +312,8 @@ ipcMain.on("disableRPC", async () => {
 ipcMain.on("enableRPC", async () => {
   await rpc.login();
 });
+
+ipcMain.on("restart", () => {
+  app.relaunch();
+  app.exit();
+});

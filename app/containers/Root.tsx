@@ -8,6 +8,7 @@ import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
 import MainPage from "./MainPage";
+import { SnackbarProvider } from "notistack";
 
 const rootStore = createStore();
 
@@ -200,22 +201,34 @@ export default class Root extends Component {
   render() {
     return (
       <StoreProvider value={rootStore}>
-        <Grid
-          container
-          direction="row"
-          data-tid="container"
-          style={{ height: "100%", padding: "8px 8px 0 8px" }}
+        <SnackbarProvider
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
         >
-          <Grid container direction="column" style={{ height: "100%" }} xs={3}>
-            <QueuePlaylistSwitch />
-            <Player />
+          <Grid
+            container
+            direction="row"
+            data-tid="container"
+            style={{ height: "100%", padding: "8px 8px 0 8px" }}
+          >
+            <Grid
+              container
+              direction="column"
+              style={{ height: "100%" }}
+              xs={3}
+            >
+              <QueuePlaylistSwitch />
+              <Player />
+            </Grid>
+            <Grid container direction="row" style={{ height: "100%" }} xs={9}>
+              <HashRouter>
+                <MainPage />
+              </HashRouter>
+            </Grid>
           </Grid>
-          <Grid container direction="row" style={{ height: "100%" }} xs={9}>
-            <HashRouter>
-              <MainPage />
-            </HashRouter>
-          </Grid>
-        </Grid>
+        </SnackbarProvider>
       </StoreProvider>
     );
   }
