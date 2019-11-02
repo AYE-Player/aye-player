@@ -5,6 +5,9 @@ import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlayerControls from "./PlayerControls";
+import { ipcRenderer } from "electron";
+import Root from "../../containers/Root";
+import { Repeat } from "../../types/interfaces";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
@@ -27,25 +30,87 @@ const Container = styled.div`
   bottom: 35px;
 `;
 
-/*const PlayerOverlay = styled.img`
+const PlayerOverlayImage = styled.img`
   width: 320px;
-  height: 210px;
+  height: 200px;
   background-color: #000;
   position: absolute;
-  margin-top: 42px;
+  margin-top: 47px;
   z-index: 999;
-`;*/
+`;
+
+const PlayerOverlay = styled.div`
+  width: 320px;
+  height: 200px;
+  position: absolute;
+  margin-top: 47px;
+  border-color: none;
+  z-index: 999;
+`;
 
 let playerElement: any;
+let history: any = [];
+
+// Listeners
+ipcRenderer.on("play-pause", (event, message) => {
+  const { queue, player } = Root.stores;
+
+  if (queue.isEmpty) {
+    queue.addTracks(player.currentPlaylist.tracks);
+    player.playTrack(queue.currentTrack);
+  }
+
+  player.togglePlayingState();
+});
+
+// TODO: Think about something nicer, while this is working, it feels quite strange
+// to have a second local history to get tracks, there should be a way to update the
+// trackHistory on change, even inside a listener
+ipcRenderer.on("play-next", (event, message) => {
+  const { queue, player, trackHistory } = Root.stores;
+  const prevTrack = player.currentTrack;
+  const track = queue.nextTrack();
+
+  if (!track) {
+    if (player.repeat === Repeat.ALL && player.isShuffling) {
+      queue.addTracks(player.currentPlaylist.tracks);
+      queue.shuffel();
+      player.playTrack(queue.tracks[0]);
+    } else if (player.repeat === Repeat.ALL) {
+      queue.addTracks(player.currentPlaylist.tracks);
+      player.playTrack(player.currentPlaylist.tracks[0]);
+    } else {
+      player.togglePlayingState();
+    }
+    return;
+  }
+
+  history.push(prevTrack);
+  trackHistory.addTrack(prevTrack);
+  player.playTrack(track);
+});
+
+ipcRenderer.on("play-previous", (event, message) => {
+  const { player } = Root.stores;
+  const track = history.pop();
+  if (!track) return;
+  player.playTrack(track);
+});
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
-  const Store = ({ player, playlists, queue }: RootStoreModel) => ({
+  const Store = ({
+    player,
+    playlists,
+    queue,
+    trackHistory
+  }: RootStoreModel) => ({
     player,
     queue,
-    playlists
+    playlists,
+    trackHistory
   });
 
-  const { player, queue } = useInject(Store);
+  const { player, queue, trackHistory } = useInject(Store);
 
   const _getPlayerElement = (player: any) => {
     playerElement = player;
@@ -55,11 +120,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     console.log("PLAYER READY");
   };
 
-  const _onStart = () => {};
+  const _onStart = () => {
+    console.log("STARTING");
+  };
 
   const _playVideo = () => {
     player.togglePlayingState();
-    player.notifyRPC({});
+    player.notifyRPC();
   };
 
   const _stopVideo = () => {
@@ -71,14 +138,15 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playNextTrack = () => {
+    const prevTrack = player.currentTrack;
     const track = queue.nextTrack();
 
     if (!track) {
-      if (player.loopPlaylist && player.isShuffling) {
+      if (player.repeat === Repeat.ALL && player.isShuffling) {
         queue.addTracks(player.currentPlaylist.tracks);
         queue.shuffel();
         player.playTrack(queue.tracks[0]);
-      } else if (player.loopPlaylist) {
+      } else if (player.repeat === Repeat.ALL) {
         queue.addTracks(player.currentPlaylist.tracks);
         player.playTrack(player.currentPlaylist.tracks[0]);
       } else {
@@ -87,18 +155,18 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
+    trackHistory.addTrack(prevTrack);
+    history.push(prevTrack);
     player.playTrack(track);
   };
 
   const _toggleRepeat = () => {
-    if (player.loopTrack) {
-      player.setLoopTrack(false);
-      player.setLoopPlaylist(false);
-    } else if (player.loopPlaylist) {
-      player.setLoopPlaylist(false);
-      player.setLoopTrack(true);
+    if (player.repeat === Repeat.ONE) {
+      player.setRepeatStatus(Repeat.NONE);
+    } else if (player.repeat === Repeat.ALL) {
+      player.setRepeatStatus(Repeat.ONE);
     } else {
-      player.setLoopPlaylist(true);
+      player.setRepeatStatus(Repeat.ALL);
     }
   };
 
@@ -117,22 +185,24 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playPreviousTrack = () => {
-    console.log("NOT IMPLEMENTED YET");
+    const track = trackHistory.getLatestTrack();
+    if (!track) return;
+    player.playTrack(track);
   };
 
   const _handleSeekMouseUp = (value: number) => {
     playerElement.seekTo(value);
-    player.notifyRPC({});
+    player.notifyRPC();
   };
 
   const _handleProgress = (state: IPlayerState) => {
     player.setPlaybackPosition(Math.round(state.playedSeconds));
     if (
       Math.round(state.playedSeconds) >= player.currentTrack.duration - 2 &&
-      player.loopTrack
+      player.repeat === Repeat.ONE
     ) {
       player.setPlaybackPosition(0);
-      player.notifyRPC({});
+      player.notifyRPC();
       return;
     }
   };
@@ -159,19 +229,29 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {/*player.currentTrack && user.isAdmin && (
-        <PlayerOverlay
+      {player.isPlaying ? (
+        <PlayerOverlay />
+      ) : (
+        <PlayerOverlayImage
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
-      )*/}
+      )}
+
       {!queue.isEmpty ? (
         <ReactPlayer
           ref={_getPlayerElement}
           url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
           width="320px"
-          height="210px"
+          height="202px"
+          config={{
+            youtube: {
+              playerVars: {
+                modestbranding: 1
+              }
+            }
+          }}
           playing={player.isPlaying}
-          loop={player.loopTrack}
+          loop={player.repeat === Repeat.ONE}
           volume={player.volume}
           muted={player.isMuted}
           onReady={() => _onReady()}
@@ -180,10 +260,19 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           onDuration={_setDuration}
           onProgress={_handleProgress}
           onEnded={() => _playNextTrack()}
-          style={{ zIndex: "2" }}
+          style={{
+            zIndex: 2
+          }}
         />
       ) : (
-        <img src={AyeLogo} width="320" height="210" style={{ zIndex: 2 }} />
+        <img
+          src={AyeLogo}
+          width="320px"
+          height="200px"
+          style={{
+            zIndex: 2
+          }}
+        />
       )}
     </Container>
   );

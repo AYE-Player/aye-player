@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import CustomButton from "../../Customs/CustomButton/CustomButton";
+import { UserModel } from "../../../dataLayer/models/User";
 const placeholder = require("../../../images/placeholder.png");
 
 interface IAvatarUploadProps {
   avatar: any;
   setAvatar: Function;
+  user?: UserModel;
 }
 
 const Aligner = styled.div`
@@ -45,7 +47,7 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
           onChange={fileSelectedHandler}
         />
         <Image
-          src={props.avatar ? props.avatar : placeholder}
+          src={props.avatar ? props.avatar : props.user ? props.user.avatar : placeholder}
           onClick={() => _clickInputFaker()}
         />
         <CustomButton onClick={() => _clickInputFaker()}>Change</CustomButton>

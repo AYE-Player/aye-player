@@ -51,7 +51,7 @@ const AccountDisplayMenu: React.FunctionComponent<
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const _handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const _handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
 

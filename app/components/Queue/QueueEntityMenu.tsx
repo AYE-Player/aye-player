@@ -54,7 +54,7 @@ const QueueEntityMenu: React.FunctionComponent<
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const _handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const _handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -86,7 +86,7 @@ const QueueEntityMenu: React.FunctionComponent<
       <Container onClick={_handleClick}>
         <MoreHorizIcon />
         <StyledMenu
-          id="playlist-menu-item"
+          id="queue-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}

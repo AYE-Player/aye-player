@@ -4,6 +4,10 @@ const schema = {
   rpcEnabled: {
     type: "boolean",
     default: true
+  },
+  minimizeToTray: {
+    type: "boolean",
+    default: false
   }
 };
 

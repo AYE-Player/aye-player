@@ -12,6 +12,7 @@ body {
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
   overflow-x: hidden;
+  margin: 0;
 }
 
 h2 {
@@ -45,6 +46,7 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
+  color: #9cf;
 }
 
 :not(input):not(textarea),

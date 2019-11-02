@@ -2,14 +2,19 @@ import { ipcRenderer } from "electron";
 import { Instance, types } from "mobx-state-tree";
 import Playlist, { PlaylistModel } from "../models/Playlist";
 import Track, { TrackModel } from "../models/Track";
+import { Repeat } from "../../types/interfaces";
 
 export type PlayerModel = Instance<typeof Player>;
+
+interface IRPCState {
+  track?: TrackModel;
+  state?: string;
+}
 
 const Player = types
   .model({
     volume: types.optional(types.number, 0.2),
-    loopPlaylist: types.optional(types.boolean, false),
-    loopTrack: types.optional(types.boolean, false),
+    repeat: types.optional(types.string, "none"),
     isShuffling: types.optional(types.boolean, false),
     isReady: types.optional(types.boolean, false),
     isPlaying: types.optional(types.boolean, false),
@@ -32,7 +37,7 @@ const Player = types
       this.notifyRPC({ track });
     },
 
-    notifyRPC({ track, state }: { track?: TrackModel; state?: string }) {
+    notifyRPC({ track, state }: IRPCState = {}) {
       if (!track) {
         track = self.currentTrack;
       }
@@ -45,18 +50,8 @@ const Player = types
       });
     },
 
-    setLoopPlaylist(state: boolean) {
-      if (self.isShuffling) {
-        self.isShuffling = false;
-      }
-      self.loopPlaylist = state;
-    },
-
-    setLoopTrack(state: boolean) {
-      if (self.isShuffling) {
-        self.isShuffling = false;
-      }
-      self.loopTrack = state;
+    setRepeatStatus(status: Repeat) {
+      self.repeat = status;
     },
 
     setVolume(vol: number) {
@@ -84,14 +79,19 @@ const Player = types
     },
 
     togglePlayingState() {
-      if (self.isPlaying) this.notifyRPC({ state: "Paused" });
+      if (self.isPlaying) {
+        this.notifyRPC({ state: "Paused" });
+      } else {
+        this.notifyRPC();
+      }
       self.isPlaying = !self.isPlaying;
+
+      ipcRenderer.send("player2Win", ["onStateChange", self.isPlaying]);
     },
 
     toggleShuffleState() {
-      if (self.loopTrack || self.loopPlaylist) {
-        self.loopTrack = false;
-        self.loopPlaylist = false;
+      if (self.repeat === Repeat.ALL || self.repeat === Repeat.ALL) {
+        self.repeat = Repeat.NONE;
       }
       self.isShuffling = !self.isShuffling;
     },

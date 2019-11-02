@@ -98,7 +98,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
   };
 
-  return (
+  const renderPlaylist = () => (
     <DragDropContext onDragEnd={_onDragEnd}>
       <Container>
         <Header>
@@ -130,6 +130,12 @@ const Playlist: React.FunctionComponent<IProps> = props => {
         </Droppable>
       </Container>
     </DragDropContext>
+  );
+
+  return player.currentPlaylist ? (
+    renderPlaylist()
+  ) : (
+    <Container>No Playlist</Container>
   );
 };
 

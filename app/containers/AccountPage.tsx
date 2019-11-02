@@ -10,6 +10,8 @@ import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
+import { useSnackbar } from "notistack";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 
 const Header = styled.div`
   font-size: 24px;
@@ -30,8 +32,9 @@ const SettingsAligner = styled.div`
 `;
 
 const AccountPage: React.FunctionComponent = () => {
-  const UserStore = ({ user }: RootStoreModel) => ({
-    user
+  const UserStore = ({ user, playlists }: RootStoreModel) => ({
+    user,
+    playlists
   });
 
   const { user } = useInject(UserStore);
@@ -40,6 +43,8 @@ const AccountPage: React.FunctionComponent = () => {
   const [password2, setPassword2] = React.useState("");
   const [avatar, setAvatar] = React.useState("");
   const [open, setOpen] = React.useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const _handleDeleteClickOpen = () => {
     setOpen(true);
@@ -65,18 +70,37 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   const _updateUser = () => {
-    console.log(password, password2, avatar);
+    try {
+      console.log(password, password2, avatar);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="success" message="Update successfull" />
+        )
+      });
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message="Something went wrong"
+          />
+        )
+      });
+    }
   };
 
   const _deleteUser = () => {
-    console.log("deleting user");
+    user.delete();
+    user.logout();
   };
 
   return user.isAuthenticated ? (
     <Container>
       <Header>Account Settings</Header>
       <SettingsContainer>
-        <AvatarUpload avatar={avatar} setAvatar={setAvatar} />
+        Username: {user.name}
+        <AvatarUpload avatar={avatar} setAvatar={setAvatar} user={user} />
         <Divider size={2} />
         <SettingsAligner>
           <NewPassword

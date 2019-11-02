@@ -22,6 +22,10 @@ const Playlists = types
       const idx = self.lists.indexOf(foundList);
       self.lists.splice(idx, 1);
     },
+
+    clear() {
+      self.lists.length = 0;
+    }
   }));
 
 export default Playlists;

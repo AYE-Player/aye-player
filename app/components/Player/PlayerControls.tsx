@@ -18,16 +18,17 @@ import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import { debounce } from "../../helpers/";
 import useInject from "../../hooks/useInject";
 import Divider from "../Divider/Divider";
+import { Repeat } from "../../types/interfaces";
 
 interface IProps {
-  play: Function;
-  stop: Function;
-  pause: Function;
-  toggleRepeat: Function;
-  shuffle: Function;
-  skip: Function;
-  previous: Function;
-  seekingStop: Function;
+  play: any;
+  stop: any;
+  pause: any;
+  toggleRepeat: any;
+  shuffle: any;
+  skip: any;
+  previous: any;
+  seekingStop: any;
 }
 
 const Container = styled.div`
@@ -126,13 +127,13 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
   return (
     <Container>
       <Grid container justify="center" alignItems="center" spacing={2}>
-        {player.loopTrack ? (
+        {player.repeat === Repeat.ONE ? (
           <Control onClick={props.toggleRepeat}>
             <RepeatOneIcon color="primary" />
           </Control>
         ) : (
           <Control onClick={props.toggleRepeat}>
-            {player.loopPlaylist ? (
+            {player.repeat === Repeat.ALL ? (
               <RepeatIcon color="primary" />
             ) : (
               <RepeatIcon />

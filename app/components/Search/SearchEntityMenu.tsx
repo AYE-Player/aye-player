@@ -8,8 +8,9 @@ import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 
-interface IPlaylistEntityMenuProps {
+interface ISearchEntityMenuProps {
   id: string;
+  openListDialog: any;
 }
 
 const Container = styled.div`
@@ -43,15 +44,14 @@ const StyledMenu = withStyles({
   />
 ));
 
-const ExtendedPlaylistEntityMenu: React.FunctionComponent<
-  IPlaylistEntityMenuProps
+const SearchEntityMenu: React.FunctionComponent<
+  ISearchEntityMenuProps
 > = props => {
-  const Store = ({ queue, player }: RootStoreModel) => ({
-    queue,
-    player
+  const Store = ({ queue }: RootStoreModel) => ({
+    queue
   });
 
-  const { queue, player } = useInject(Store);
+  const { queue } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -63,10 +63,6 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
     setAnchorEl(null);
   };
 
-  const _handleRemoveTrack = (id: string) => {
-    player.currentPlaylist.removeTrackById(id);
-    setAnchorEl(null);
-  };
 
   const _handlePlayNextTrack = (id: string) => {
     queue.addNextTrack(id);
@@ -84,23 +80,21 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
       <Container onClick={_handleClick}>
         <MoreHorizIcon />
         <StyledMenu
-          id="extended-playlist-menu"
+          id="playlist-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
-            Remove
-          </MenuItem>
           <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
             Play next
           </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+          <MenuItem onClick={() => props.openListDialog()}>Add to Playlist...</MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>
   );
 };
 
-export default ExtendedPlaylistEntityMenu;
+export default SearchEntityMenu;
