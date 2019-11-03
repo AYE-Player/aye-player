@@ -1,4 +1,4 @@
-import { types, Instance } from "mobx-state-tree";
+import { types, Instance, flow } from "mobx-state-tree";
 
 export type UserModel = Instance<typeof User>;
 
@@ -42,9 +42,17 @@ const User = types
       console.log("NEW PASSWORD", password);
     },
 
-    register(name: string, email: string, password: string) {
+    /*async register(name: string, email: string, password: string) {
       console.log("REGISTER EVENT", name, email, password);
-    },
+    },*/
+    register: flow(function* register(name: string, email: string, password: string) {
+      try {
+        // const response = yield Api.register("bla", {"bla"})  // yield for promise resolving
+        console.log("REGISTER EVENT", name, email, password);
+      } catch (error) {
+        console.error("Failed registration", error);
+      }
+    }),
 
     forgotPassword(email: string) {
       console.log("FORGOT PASSWORD EVENT", email);

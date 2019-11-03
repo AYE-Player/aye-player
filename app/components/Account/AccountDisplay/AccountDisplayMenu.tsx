@@ -10,7 +10,7 @@ import useInject from "../../../hooks/useInject";
 interface IAccountDisplayMenuProps {}
 
 const Container = styled.div`
-  height: 30px;
+  height: 32px;
   right: 0;
   cursor: pointer;
   display: flex;
