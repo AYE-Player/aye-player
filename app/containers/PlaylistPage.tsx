@@ -49,9 +49,6 @@ const CreatePlaylist = styled.div`
   cursor: pointer;
   right: 10px;
   bottom: 56px;
-  &:hover {
-    color: #99ccff;
-  }
 `;
 
 const ScrollContainer = styled.div`
@@ -61,8 +58,7 @@ const ScrollContainer = styled.div`
 
 const StyledTableCell = withStyles({
   body: {
-    color: "#fbfbfb",
-    ':hover': "#99ccff"
+    color: "#fbfbfb"
   }
 })(TableCell);
 
