@@ -7,6 +7,7 @@ const logMedia = debug("aye:media");
 const logTray = debug("aye:tray");
 const logWin2Player = debug("aye:win2Player");
 const logPlayer2Win = debug("aye:player2Win");
+const logRPC = debug("aye:rpc");
 
 logFile.transports.console.level = "debug";
 logFile.transports.file.fileName = "aye.log";
@@ -43,15 +44,16 @@ class AyeLogger {
     logWin2Player("%O", message);
     if (typeof message[1] === "object" && message[1] !== null) {
       logFile.info(
-        `aye:win2Player\t ${message[0]}\n${JSON.stringify(
-          message[1],
-          null,
-          1
-        )}`
+        `aye:win2Player\t ${message[0]}\n${JSON.stringify(message[1], null, 1)}`
       );
     } else {
       logFile.info(`aye:win2Player\t ${message}`);
     }
+  }
+
+  static rpc(message: string) {
+    logRPC(message);
+    logFile.info(`aye:rpc\t\t ${message}`);
   }
 
   static player2Win(message: string) {

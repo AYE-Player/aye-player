@@ -1,4 +1,5 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
+import Logger from "../lib/ayeLogger";
 
 interface IActivityParameters {
   details: string;
@@ -9,7 +10,6 @@ interface IActivityParameters {
   instance: boolean;
 }
 
-
 export default class RPCClient {
   private _rpc: any;
 
@@ -17,8 +17,20 @@ export default class RPCClient {
 
   private readonly _clientId: string;
 
+  private _activityTimer: number;
+  private _activityBlocker: number;
+  private _activity: IActivityParameters;
+  private _canSetActivity = true;
+
   public constructor(clientId: string) {
     this._clientId = clientId;
+    this._activityTimer = setInterval(() => {
+      if (this._canSetActivity && this._activity) {
+        this._rpc.setActivity(this._activity);
+        this._activity = null;
+        this._canSetActivity = false;
+      }
+    }, 5000);
   }
 
   public get client() {
@@ -61,20 +73,28 @@ export default class RPCClient {
     }
 
     try {
-      this._rpc.setActivity(activityParameters);
+      if (this._canSetActivity) {
+        this._rpc.setActivity(activityParameters);
+        this._canSetActivity = false;
+        this._activityBlocker = setTimeout(() => {
+          this._canSetActivity = true;
+        }, 10000);
+      } else {
+        this._activity = activityParameters;
+      }
     } catch (error) {
-      console.log("[RPC] ", error);
+      Logger.rpc(error);
     }
   }
 
   public async login() {
     if (this._rpc) return;
     this._rpc = new Client({ transport: "ipc" });
-    console.log("[RPC] Connecting...");
+    Logger.rpc("[RPC] Connecting...");
 
     try {
       this._rpc.once("ready", async () => {
-        console.log("[RPC] Successfully connected to Discord.");
+        Logger.rpc("[RPC] Successfully connected to Discord.");
         this.isConnected = true;
 
         await this.setActivity(0, 0, null, "Idle");
@@ -86,7 +106,7 @@ export default class RPCClient {
 
       await this._rpc.login({ clientId: this._clientId });
     } catch (error) {
-      console.log("[RPC] Cannot connect to Discord, is it running?");
+      Logger.rpc("[RPC] Cannot connect to Discord, is it running?");
       this.dispose();
       this.isConnected = false;
     }
@@ -95,6 +115,8 @@ export default class RPCClient {
   public async dispose() {
     try {
       if (this._rpc) await this._rpc.destroy();
+      if (this._activityTimer) clearInterval(this._activityTimer);
+      if (this._activityBlocker) clearTimeout(this._activityBlocker);
     } catch {}
     this._rpc = null;
   }
