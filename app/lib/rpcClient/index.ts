@@ -1,5 +1,5 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
-import Logger from "../lib/ayeLogger";
+import Logger from "../ayeLogger";
 
 interface IActivityParameters {
   details: string;
