@@ -23,6 +23,7 @@ import MenuBuilder from "./menu";
 import RPCClient from "./lib/rpcClient";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import unhandled from "electron-unhandled";
+import i18n from "../configs/i18next.config";
 
 import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
@@ -237,8 +238,17 @@ const createAppScreen = () => {
     event.preventDefault();
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  const menuBuilder = new MenuBuilder(mainWindow, i18n);
+  //menuBuilder.buildMenu();
+
+  i18n.on("loaded", (loaded) => {
+    i18n.changeLanguage('en');
+    //i18n.off('loaded');
+  });
+
+  i18n.on('languageChanged', (lng) => {
+    menuBuilder.buildMenu();
+  })
 
   unhandled();
 };

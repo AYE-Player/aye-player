@@ -2,12 +2,18 @@ import React from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import Root from "./containers/Root";
+import i18n from "../configs/i18next.config.client";
+import { I18nextProvider } from "react-i18next";
 import "./app.global.css";
 
 render(
-  <AppContainer>
-    <Root />
-  </AppContainer>,
+  <I18nextProvider
+    i18n={i18n}
+  >
+    <AppContainer>
+      <Root />
+    </AppContainer>
+  </I18nextProvider>,
   document.getElementById("root")
 );
 
@@ -16,9 +22,9 @@ if ((module as any).hot) {
     // eslint-disable-next-line global-require
     const NextRoot = require("./containers/Root").default;
     render(
-        <AppContainer>
-          <NextRoot />
-        </AppContainer>,
+      <AppContainer>
+        <NextRoot />
+      </AppContainer>,
       document.getElementById("root")
     );
   });

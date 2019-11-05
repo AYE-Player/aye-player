@@ -33,6 +33,8 @@ const AppStore = types
       } else {
         Settings.set("minimizeToTray", false);
       }
+
+      ipcRenderer.send("restart");
     }
   }));
 

@@ -8,6 +8,7 @@ import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import { TrackModel } from "app/dataLayer/models/Track";
 import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -51,6 +52,8 @@ const SearchPage: React.FunctionComponent = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { t } = useTranslation();
+
   const _handleDoubleClick = (track: TrackModel) => {
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
@@ -58,13 +61,13 @@ const SearchPage: React.FunctionComponent = () => {
 
   return (
     <Container>
-        <Header>Search</Header>
+        <Header>{t('Search')}</Header>
         <PlaylistContainer>
           <Search>
             <SearchIcon style={{ marginRight: "8px" }} />
             <InputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
+              placeholder={t("Search…")}
+              inputProps={{ "aria-label": t("search") }}
               style={{ color: "#fbfbfb" }}
             />
           </Search>
