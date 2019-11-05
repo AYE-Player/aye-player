@@ -13,14 +13,14 @@ const Container = styled.div`
   position: absolute;
   top: 8px;
   right: 16px;
-  height: 30px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-items: center;
 `;
 
 const Avatar = styled.img`
-  border-radius: 15px;
+  border-radius: 16px;
   width: 24px;
   height: 24px;
   margin-right: 8px;

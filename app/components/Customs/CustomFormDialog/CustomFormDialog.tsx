@@ -26,7 +26,7 @@ const CustomFormDialog: React.FunctionComponent<
   ICustomFormDialogProps
 > = props => {
   return (
-    <div>
+    <>
       {props.button}
       <Dialog
         open={props.open}
@@ -55,7 +55,7 @@ const CustomFormDialog: React.FunctionComponent<
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 };
 

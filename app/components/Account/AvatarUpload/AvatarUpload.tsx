@@ -37,7 +37,7 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
   };
 
   return (
-    <div>
+    <>
       <Aligner>
         <input
           accept="image/*"
@@ -52,7 +52,7 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
         />
         <CustomButton onClick={() => _clickInputFaker()}>Change</CustomButton>
       </Aligner>
-    </div>
+    </>
   );
 };
 

@@ -20,7 +20,7 @@ import {
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-import RPCClient from "./rpcClient";
+import RPCClient from "./lib/rpcClient";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import unhandled from "electron-unhandled";
 

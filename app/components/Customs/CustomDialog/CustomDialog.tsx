@@ -80,7 +80,7 @@ const DialogActions = withStyles((theme: Theme) => ({
 
 export default function CustomDialog(props: ICustomDialogProps) {
   return (
-    <div>
+    <>
       {props.openButtonText ? (
         <Button
           variant="outlined"
@@ -109,6 +109,6 @@ export default function CustomDialog(props: ICustomDialogProps) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
