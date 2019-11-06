@@ -288,7 +288,8 @@
     "register-scheme": "github:devsnek/node-register-scheme",
     "shortid": "^2.2.15",
     "source-map-support": "^0.5.16",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "v8-compile-cache": "^2.1.0"
   },
   "devEngines": {
     "node": ">=7.x",

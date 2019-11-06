@@ -28,6 +28,8 @@ import i18n from "../configs/i18next.config";
 import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
 
+import 'v8-compile-cache';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = "info";
