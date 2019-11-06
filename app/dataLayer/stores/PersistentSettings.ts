@@ -8,6 +8,10 @@ const schema = {
   minimizeToTray: {
     type: "boolean",
     default: false
+  },
+  language: {
+    type: "string",
+    default: "en"
   }
 };
 

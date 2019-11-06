@@ -6,6 +6,7 @@ import React from "react";
 import styled from "styled-components";
 import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
+import { useTranslation } from "react-i18next";
 
 interface IAccountDisplayMenuProps {}
 
@@ -43,6 +44,8 @@ const StyledMenu = withStyles({
 const AccountDisplayMenu: React.FunctionComponent<
   IAccountDisplayMenuProps
 > = props => {
+  const { t } = useTranslation();
+
   const Store = ({ user }: RootStoreModel) => ({
     user
   });
@@ -80,8 +83,8 @@ const AccountDisplayMenu: React.FunctionComponent<
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleProfileClick()}>Profile</MenuItem>
-          <MenuItem onClick={() => _handleLogoutClick()}>Logout</MenuItem>
+          <MenuItem onClick={() => _handleProfileClick()}>{t("AccountDisplay.Menu.profile")}</MenuItem>
+          <MenuItem onClick={() => _handleLogoutClick()}>{t("AccountDisplay.Menu.logout")}</MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

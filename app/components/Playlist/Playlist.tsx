@@ -102,7 +102,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     <DragDropContext onDragEnd={_onDragEnd}>
       <Container>
         <Header>
-          Current Playlist
+          Playlist
           <Control>
             <QueueMusicIcon onClick={() => _showQueue()} />
           </Control>

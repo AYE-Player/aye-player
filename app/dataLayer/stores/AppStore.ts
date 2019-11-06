@@ -8,7 +8,8 @@ const AppStore = types
   .model({
     showQueue: types.optional(types.boolean, false),
     rpcEnabled: types.boolean,
-    minimizeToTray: types.boolean
+    minimizeToTray: types.boolean,
+    language: types.string
   })
   .actions(self => ({
     toggleQueueDisplay() {
@@ -33,6 +34,17 @@ const AppStore = types
       } else {
         Settings.set("minimizeToTray", false);
       }
+
+      ipcRenderer.send("restart");
+    },
+
+    async setLanguage(lang: string) {
+      self.language = lang;
+      Settings.set("language", lang);
+
+      ipcRenderer.send("changeLang", {
+        lang
+      })
     }
   }));
 

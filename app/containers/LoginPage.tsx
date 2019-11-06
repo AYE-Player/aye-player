@@ -7,6 +7,7 @@ import Divider from "../components/Divider/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -14,6 +15,8 @@ const Header = styled.div`
 `;
 
 const LoginPage: React.FunctionComponent<any> = () => {
+  const { t } = useTranslation();
+
   const UserStore = ({ user }: RootStoreModel) => ({
     user
   });
@@ -45,10 +48,10 @@ const LoginPage: React.FunctionComponent<any> = () => {
       alignItems="center"
       style={{ height: "100%" }}
     >
-      <Header>Login</Header>
+      <Header>{t("LoginPage.header")}</Header>
       <Divider size={2} />
       <CustomTextField
-        label="Username"
+        label={t("LoginPage.username")}
         id="username"
         onChange={_handleNameChange}
         key="username"
@@ -56,18 +59,18 @@ const LoginPage: React.FunctionComponent<any> = () => {
       />
       <Divider size={2} />
       <CustomTextField
-        label="Password"
+        label={t("LoginPage.password")}
         id="password"
         onChange={_handlePasswordChange}
         key="password"
         type="password"
       />
       <Divider size={3} />
-      <CustomButton onClick={_handleOnClick} name="Login" />
+      <CustomButton onClick={_handleOnClick} name={t("LoginPage.loginButton")} />
       <Divider size={3} />
-      <SmallLink name="Need an account?" to="/register" />
+      <SmallLink name={t("LoginPage.registerLink")} to="/register" />
       <Divider />
-      <SmallLink name="Forgot password?" to="/passwordForgotten" />
+      <SmallLink name={t("LoginPage.forgotPasswordLink")} to="/passwordForgotten" />
     </Grid>
   );
 };

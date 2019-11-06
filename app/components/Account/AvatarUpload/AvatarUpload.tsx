@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import CustomButton from "../../Customs/CustomButton/CustomButton";
 import { UserModel } from "../../../dataLayer/models/User";
+import { useTranslation } from "react-i18next";
 const placeholder = require("../../../images/placeholder.png");
 
 interface IAvatarUploadProps {
@@ -28,6 +29,8 @@ const Image = styled.img`
 `;
 
 const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
+  const { t } = useTranslation();
+
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.setAvatar(URL.createObjectURL(event.target.files[0]));
   };
@@ -47,10 +50,18 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
           onChange={fileSelectedHandler}
         />
         <Image
-          src={props.avatar ? props.avatar : props.user ? props.user.avatar : placeholder}
+          src={
+            props.avatar
+              ? props.avatar
+              : props.user
+              ? props.user.avatar
+              : placeholder
+          }
           onClick={() => _clickInputFaker()}
         />
-        <CustomButton onClick={() => _clickInputFaker()}>Change</CustomButton>
+        <CustomButton onClick={() => _clickInputFaker()}>
+          {t("AccountPage.changeAvatarButton")}
+        </CustomButton>
       </Aligner>
     </>
   );

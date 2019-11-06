@@ -15,7 +15,8 @@ export const createStore = (): RootStoreModel => {
   const user = User.create();
   const app = AppStore.create({
     rpcEnabled: Settings.get("rpcEnabled"),
-    minimizeToTray: Settings.get("minimizeToTray")
+    minimizeToTray: Settings.get("minimizeToTray"),
+    language: Settings.get("language")
   });
   const tracks = TrackStore.create();
   const trackHistory = TrackHistory.create();

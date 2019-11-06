@@ -7,6 +7,7 @@ import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
+import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -25,6 +26,8 @@ const RegisterPage: React.FunctionComponent<any> = () => {
   const [password2, setPassword2] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [invalidEmail, setInvalidEmail] = React.useState(false);
+
+  const { t } = useTranslation();
 
   const _handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -54,9 +57,9 @@ const RegisterPage: React.FunctionComponent<any> = () => {
 
   const _passwordsMatch = () => {
     if (password.length < 8) {
-      return "min. 8 characters";
+      return t("RegisterPage.minLengthPassword");
     } else if (password !== password2 && password.length >= 8) {
-      return "passwords do not match";
+      return "RegisterPage.matchPassword";
     } else {
       return "";
     }
@@ -81,7 +84,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
       <Header>Register</Header>
       <Divider size={2} />
       <CustomTextField
-        label="Username"
+        label={t("RegisterPage.username")}
         id="username"
         onChange={_handleNameChange}
         key="username"
@@ -90,7 +93,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
       />
       <Divider size={2} />
       <CustomTextField
-        label="E-Mail"
+        label={t("RegisterPage.email")}
         id="email"
         onChange={_handleEmailChange}
         key="email"
@@ -100,7 +103,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
       />
       <Divider size={2} />
       <CustomTextField
-        label="Password"
+        label={t("RegisterPage.password")}
         id="password"
         onChange={_handlePasswordChange}
         key="password"
@@ -110,7 +113,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
       />
       <Divider size={2} />
       <CustomTextField
-        label="Repeat Password"
+        label={t("RegisterPage.repeatPassword")}
         id="password2"
         onChange={_handlePassword2Change}
         key="password2"
@@ -128,7 +131,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
       <CustomButton
         onClick={_handleOnClick}
         disabled={_disableButton()}
-        name="Register"
+        name={t("RegisterPage.registerButton")}
       />
     </Grid>
   );
