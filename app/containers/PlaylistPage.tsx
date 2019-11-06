@@ -16,6 +16,7 @@ import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
 import { withStyles } from "@material-ui/styles";
+import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -66,6 +67,8 @@ const PlaylistPage: React.FunctionComponent = () => {
   const [newPlaylistName, setNewPlaylistName] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
+  const { t } = useTranslation();
+
   const Store = ({ playlists }: RootStoreModel) => ({
     playlists
   });
@@ -113,7 +116,7 @@ const PlaylistPage: React.FunctionComponent = () => {
       <PlaylistContainer>
         <ScrollContainer>
           <Table
-            aria-label="simple table"
+            aria-label="playlist table"
             style={{ minWidth: "400px" }}
             stickyHeader
           >
@@ -126,7 +129,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                     borderBottom: "none"
                   }}
                 >
-                  Name
+                  {t("PlaylistPage.name")}
                 </TableCell>
                 <TableCell
                   align="right"
@@ -136,7 +139,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                     borderBottom: "none"
                   }}
                 >
-                  Tracks
+                  {t("PlaylistPage.tracks")}
                 </TableCell>
                 <TableCell
                   align="right"
@@ -146,7 +149,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                     borderBottom: "none"
                   }}
                 >
-                  Length
+                  {t("PlaylistPage.length")}
                 </TableCell>
                 <TableCell
                   align="right"
@@ -206,21 +209,21 @@ const PlaylistPage: React.FunctionComponent = () => {
         </ScrollContainer>
         <CustomFormDialog
           id="createPlaylistDialog"
-          title="Create Playlist"
-          label="Playlist Name"
+          title={t("PlaylistPage.dialog.title")}
+          label={t("PlaylistPage.dialog.label")}
           button={
             <CreatePlaylist onClick={() => _handleOnClick()}>
-              Create Playlist
+              {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "10px" }} />
             </CreatePlaylist>
           }
-          dialogText="Enter the name of your new playlist"
+          dialogText={t("PlaylistPage.dialog.text")}
           open={open}
           handleClose={() => _handleClose()}
           handleConfirm={() => _createPlaylist()}
           handleChange={_onPlaylistNameChange}
-          confirmButtonText="Create"
-          cancelButtonText="Cancel"
+          confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
+          cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
           type="text"
         />
       </PlaylistContainer>

@@ -7,6 +7,7 @@ import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
+import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -22,6 +23,8 @@ const PasswordForgotPage: React.FunctionComponent<any> = () => {
 
   const [email, setEmail] = React.useState("");
   const [invalidEmail, setInvalidEmail] = React.useState(false);
+
+  const { t } = useTranslation();
 
   const _handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -41,12 +44,12 @@ const PasswordForgotPage: React.FunctionComponent<any> = () => {
       alignItems="center"
       style={{ height: "100%" }}
     >
-      <Header>Forgot Password</Header>
+      <Header>{t("PasswordForgotPage.header")}</Header>
       <Divider size={2} />
-      Please enter your E-Mail to receive an password reset link.
+      {t("PasswordForgotPage.text")}
       <Divider size={2} />
       <CustomTextField
-        label="E-Mail"
+        label={t("PasswordForgotPage.textfield.label")}
         id="email"
         onChange={_handleEmailChange}
         key="email"
@@ -55,7 +58,10 @@ const PasswordForgotPage: React.FunctionComponent<any> = () => {
         required
       />
       <Divider size={3} />
-      <CustomButton onClick={_handleOnClick} name="Reset" />
+      <CustomButton
+        onClick={_handleOnClick}
+        name={t("PasswordForgotPage.resetButton.name")}
+      />
     </Grid>
   );
 };

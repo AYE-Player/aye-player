@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AccountDisplayMenu from "./AccountDisplayMenu";
+import { useTranslation } from "react-i18next";
 
 interface IAccountDisplayProps {
   username?: string;
@@ -29,6 +30,8 @@ const Avatar = styled.img`
 const Text = styled.div``;
 
 const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
+  const { t } = useTranslation();
+
   return (
     <Container>
       {props.username ? (
@@ -43,7 +46,7 @@ const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
       ) : (
         <Link to="/account" style={{ display: "flex", alignItems: "center" }}>
           <AccountCircleIcon style={{ marginRight: "8px" }} />
-          Login
+          {t("AccountDisplay.loginButton")}
         </Link>
       )}
     </Container>

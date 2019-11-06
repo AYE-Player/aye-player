@@ -17,7 +17,7 @@ const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = props => {
       style={{
         display: "flex",
         alignItems: "center",
-        width: "200px",
+        width: "250px",
         justifyContent: "space-between"
       }}
     >

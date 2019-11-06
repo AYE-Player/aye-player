@@ -130,7 +130,6 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
 
   const _createListItem = (value: string) => {
     setOpen(false);
-    console.log(value);
   };
 
   return (

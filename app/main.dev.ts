@@ -11,24 +11,23 @@
 import {
   app,
   BrowserWindow,
+  globalShortcut,
   ipcMain,
-  Tray,
   Menu,
   systemPreferences,
-  globalShortcut
+  Tray
 } from "electron";
-import { autoUpdater } from "electron-updater";
 import log from "electron-log";
-import MenuBuilder from "./menu";
-import RPCClient from "./lib/rpcClient";
-import Settings from "./dataLayer/stores/PersistentSettings";
 import unhandled from "electron-unhandled";
+import { autoUpdater } from "electron-updater";
+import "v8-compile-cache";
 import i18n from "../configs/i18next.config";
-
+import Settings from "./dataLayer/stores/PersistentSettings";
 import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
-
-import 'v8-compile-cache';
+import RPCClient from "./lib/rpcClient";
+import MenuBuilder from "./menu";
+import config from "../configs/app.config";
 
 export default class AppUpdater {
   constructor() {
@@ -234,6 +233,13 @@ const createAppScreen = () => {
     if (loadingScreen) {
       loadingScreen.close();
     }
+
+    const lng = Settings.get("language");
+    mainWindow.webContents.send("language-changed", {
+      language: lng,
+      namespace: config.namespace,
+      resource: i18n.getResourceBundle(lng, config.namespace)
+    });
   });
 
   mainWindow.webContents.on("new-window", (event, url) => {
@@ -243,14 +249,23 @@ const createAppScreen = () => {
   const menuBuilder = new MenuBuilder(mainWindow, i18n);
   //menuBuilder.buildMenu();
 
-  i18n.on("loaded", (loaded) => {
-    i18n.changeLanguage('en');
+  i18n.on("loaded", loaded => {
+    i18n.changeLanguage(Settings.get("language"));
     //i18n.off('loaded');
   });
 
-  i18n.on('languageChanged', (lng) => {
+  i18n.on("languageChanged", lng => {
     menuBuilder.buildMenu();
-  })
+    mainWindow.webContents.send("language-changed", {
+      language: lng,
+      namespace: config.namespace,
+      resource: i18n.getResourceBundle(lng, config.namespace)
+    });
+  });
+
+  ipcMain.on("changeLang", (event: any, arg: any) => {
+    i18n.changeLanguage(arg.lang);
+  });
 
   unhandled();
 };

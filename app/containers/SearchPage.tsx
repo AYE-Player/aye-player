@@ -61,12 +61,12 @@ const SearchPage: React.FunctionComponent = () => {
 
   return (
     <Container>
-        <Header>{t('Search')}</Header>
+        <Header>{t('SearchPage.title')}</Header>
         <PlaylistContainer>
           <Search>
             <SearchIcon style={{ marginRight: "8px" }} />
             <InputBase
-              placeholder={t("Search…")}
+              placeholder={t("SearchPage.placeholder")}
               inputProps={{ "aria-label": t("search") }}
               style={{ color: "#fbfbfb" }}
             />

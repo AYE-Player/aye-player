@@ -1,19 +1,30 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import Root from "./containers/Root";
-import i18n from "../configs/i18next.config.client";
-import { I18nextProvider } from "react-i18next";
+import "../configs/i18next.config.client";
 import "./app.global.css";
+import { ipcRenderer } from "electron";
+import i18n from "../configs/i18next.config.client";
+
+ipcRenderer.on("language-changed", (event, message) => {
+  if (!i18n.hasResourceBundle(message.language, message.namespace)) {
+    i18n.addResourceBundle(
+      message.language,
+      message.namespace,
+      message.resource
+    );
+  }
+
+  i18n.changeLanguage(message.language);
+});
 
 render(
-  <I18nextProvider
-    i18n={i18n}
-  >
+  <Suspense fallback={<div>Loading...</div>}>
     <AppContainer>
       <Root />
     </AppContainer>
-  </I18nextProvider>,
+  </Suspense>,
   document.getElementById("root")
 );
 

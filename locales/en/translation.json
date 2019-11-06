@@ -6,5 +6,83 @@
   "Learn More": "Learn More",
   "Documentation": "Documentation",
   "Community Discussions": "Community Discussions",
-  "Search Issues": "Search Issues"
+  "Search Issues": "Search Issues",
+  "SearchPage": {
+    "title": "Search",
+    "placeholder": "Search..."
+  },
+  "Navigation": {
+    "search": "Search",
+    "playlists": "Playlists",
+    "settings": "Settings"
+  },
+  "RegisterPage": {
+    "minLengthPassword": "min. 8 characters",
+    "matchPassword": "passwords do not match",
+    "username": "Username",
+    "email": "E-Mail",
+    "password": "Password",
+    "repeatPassword": "Repeat Password",
+    "registerButton": "Register"
+  },
+  "PlaylistPage": {
+    "name": "Name",
+    "tracks": "Tracks",
+    "length": "Length",
+    "dialog": {
+      "title": "Create Playlist",
+      "label": "Playlist Name",
+      "text": "Enter the name of your new playlist",
+      "confirmButton": "Create",
+      "cancelButton": "Cancel"
+    }
+  },
+  "PasswordForgotPage": {
+    "header": "Forgot Password",
+    "text": "Please enter your E-Mail to receive a password reset link.",
+    "textfield": {
+      "label": "E-Mail"
+    },
+    "resetButton": {
+      "name": "Reset"
+    }
+  },
+  "AppSettingsPage": {
+    "header": "App Settings",
+    "discord": "Use DiscordRPC",
+    "tray": "Minimize to Tray*",
+    "language": "Language",
+    "infoText": "* App has to be restarted"
+  },
+  "LoginPage": {
+    "header": "Login",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "registerLink": "Need an account?",
+    "forgotPasswordLink": "Forgot password?"
+  },
+  "AccountPage": {
+    "header": "Account Settings",
+    "updateErrorMessage": "Something went wrong",
+    "updateSuccessMessage": "Update successfull",
+    "username": "Username",
+    "updateButton": "Update",
+    "deleteButton": "Delete",
+    "password": "Password",
+    "repeatPassword": "Repeat Password",
+    "changeAvatarButton": "Ändern",
+    "deleteDialog": {
+      "confirmButton": "Confirm Delete",
+      "title": "Account Deletion",
+      "text": "Do you really want to delete your Account? This action is irrevesible."
+    }
+  },
+  "AccountDisplay": {
+    "loginButton": "Login",
+    "Menu": {
+      "profile": "Profile",
+      "logout": "Logout"
+    }
+  }
 }

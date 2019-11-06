@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   width: calc(100% - 320px);
@@ -26,6 +27,8 @@ const MenuItem = styled.div`
 `;
 
 const Navigation: React.FunctionComponent<any> = props => {
+  const { t } = useTranslation();
+
   return (
     <Container>
       <MenuItem>
@@ -41,7 +44,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
-          Search
+          {t("Navigation.search")}
         </NavLink>
       </MenuItem>
       <MenuItem>
@@ -57,7 +60,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
-          Playlists
+          {t("Navigation.playlists")}
         </NavLink>
       </MenuItem>
       <MenuItem>
@@ -73,7 +76,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
-          Settings
+          {t("Navigation.settings")}
         </NavLink>
       </MenuItem>
     </Container>

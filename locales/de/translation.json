@@ -6,5 +6,83 @@
   "Learn More": "Mehr Erfahren",
   "Documentation": "Dokumentation",
   "Community Discussions": "Community Diskussion",
-  "Search Issues": "Probleme durchsuchen"
+  "Search Issues": "Probleme durchsuchen",
+  "SearchPage": {
+    "title": "Suchen",
+    "placeholder": "$t(SearchPage.title)..."
+  },
+  "Navigation": {
+    "search": "Suchen",
+    "playlists": "Playlists",
+    "settings": "Einstellungen"
+  },
+  "RegisterPage": {
+    "minLengthPassword": "min. 8 Zeichen",
+    "matchPassword": "Passwörter stimmen nicht überein",
+    "username": "Benutzername",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "repeatPassword": "Passwort wiederholen",
+    "registerButton": "Registrieren"
+  },
+  "PlaylistPage": {
+    "name": "Name",
+    "tracks": "Lieder",
+    "length": "Länge",
+    "dialog": {
+      "title": "Erstelle Playlist",
+      "label": "Name der Playlist",
+      "text": "Gib deiner neuen Playlist einen Namen",
+      "confirmButton": "Erstellen",
+      "cancelButton": "Abbrechen"
+    }
+  },
+  "PasswordForgotPage": {
+    "header": "Passwort vergessen",
+    "text": "Bitte gebe uns deine E-Mail addresse, damit wir dir einen Reset-Link schicken können.",
+    "textfield": {
+      "label": "E-Mail"
+    },
+    "resetButton": {
+      "name": "Zurücksetzen"
+    }
+  },
+  "AppSettingsPage": {
+    "header": "App Einstellungen",
+    "discord": "DiscordRPC benutzen",
+    "tray": "Minimieren *",
+    "language": "Sprache",
+    "infoText": "* App muss neu gestartet werden"
+  },
+  "LoginPage": {
+    "header": "Einloggen",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "loginButton": "Login",
+    "registerLink": "Noch keinen account?",
+    "forgotPasswordLink": "Passwort vergessen?"
+  },
+  "AccountPage": {
+    "header": "Account Einstellungen",
+    "updateErrorMessage": "Etwas ist schiefgelaufen",
+    "updateSuccessMessage": "Aktualisierung erfolreich",
+    "username": "Benutzername",
+    "updateButton": "Aktualisieren",
+    "deleteButton": "Löschen",
+    "password": "Passwort",
+    "repeatPassword": "Passwort wiederholen",
+    "changeAvatarButton": "Ändern",
+    "deleteDialog": {
+      "confirmButton": "Löschen bestätigen",
+      "title": "Account Löschung",
+      "text": "Möchtest du deinen Account wirklich löschen? Dies kann nicht rückgängig gemacht werden."
+    }
+  },
+  "AccountDisplay": {
+    "loginButton": "Einloggen",
+    "Menu": {
+      "profile": "Profil",
+      "logout": "Ausloggen"
+    }
+  }
 }

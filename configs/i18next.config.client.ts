@@ -1,27 +1,30 @@
-import i18n from 'i18next';
+import i18n, { InitOptions } from "i18next";
 import { initReactI18next } from "react-i18next";
-import config from './app.config';
+import config from "./app.config";
+import en from "../locales/en/translation.json";
+import de from "../locales/de/translation.json";
 
-const i18nextOptions = {
+const i18nextOptions: InitOptions = {
   interpolation: {
     escapeValue: false
   },
-  saveMissing: true,
-  lng: 'en',
   fallbackLng: config.fallbackLng,
   whitelist: config.languages,
-  react: {
-    wait: false
+  resources: {
+    en: {
+      translation: en
+    },
+    de: {
+      translation: de
+    }
   }
 };
 
-i18n
-  .use(initReactI18next);
+i18n.use(initReactI18next);
 
 // initialize if not already initialized
 if (!i18n.isInitialized) {
-  i18n
-    .init(i18nextOptions);
+  i18n.init(i18nextOptions);
 }
 
 export default i18n;

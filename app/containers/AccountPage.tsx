@@ -12,6 +12,7 @@ import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
 import { useSnackbar } from "notistack";
 import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
+import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -32,6 +33,8 @@ const SettingsAligner = styled.div`
 `;
 
 const AccountPage: React.FunctionComponent = () => {
+  const { t } = useTranslation();
+
   const UserStore = ({ user, playlists }: RootStoreModel) => ({
     user,
     playlists
@@ -74,7 +77,7 @@ const AccountPage: React.FunctionComponent = () => {
       console.log(password, password2, avatar);
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="success" message="Update successfull" />
+          <SnackMessage id={key} variant="success" message={t("AccountPage.updateSuccessMessage")} />
         )
       });
     } catch (error) {
@@ -83,7 +86,7 @@ const AccountPage: React.FunctionComponent = () => {
           <SnackMessage
             id={key}
             variant="error"
-            message="Something went wrong"
+            message={t("AccountPage.updateErrorMessage")}
           />
         )
       });
@@ -97,9 +100,9 @@ const AccountPage: React.FunctionComponent = () => {
 
   return user.isAuthenticated ? (
     <Container>
-      <Header>Account Settings</Header>
+      <Header>{t("AccountPage.header")}</Header>
       <SettingsContainer>
-        Username: {user.name}
+      {t("AccountPage.username")}: {user.name}
         <AvatarUpload avatar={avatar} setAvatar={setAvatar} user={user} />
         <Divider size={2} />
         <SettingsAligner>
@@ -112,9 +115,9 @@ const AccountPage: React.FunctionComponent = () => {
         </SettingsAligner>
         <Divider size={2} />
         <CustomizedDialogs
-          confirmButtonText="Confirm Delete"
-          title="Account Deletion"
-          text="Do you really want to delete your Account? This action is irrevesible."
+          confirmButtonText={t("AccountPage.deleteDialog.confirmButton")}
+          title={t("AccountPage.deleteDialog.title")}
+          text={t("AccountPage.deleteDialog.text")}
           open={open}
           handleConfirmClose={_handleDeleteConfirmClose}
           handleClose={_handleDeleteClose}
@@ -133,7 +136,7 @@ const AccountPage: React.FunctionComponent = () => {
             }}
             onClick={() => _handleDeleteClickOpen()}
           >
-            Delete
+            {t("AccountPage.deleteButton")}
           </Button>
         </CustomizedDialogs>
       </SettingsContainer>
