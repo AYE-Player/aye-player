@@ -13,16 +13,24 @@ const User = types
     avatar: types.maybe(types.string)
   })
   .actions(self => ({
-    authenticate(username: string, password: string) {
+    authenticate: flow(function* authenticate(
+      username: string,
+      password: string
+    ) {
       // TODO: This function should be called without parameters, these should come directly from the api response
-      self.id = "USER_1";
-      self.email = "majesnix@majesnix.org";
-      self.name = "majesnix";
-      self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
-      self.isAnonym = false;
-      self.isAuthenticated = true;
-      self.hasPremium = true;
-    },
+      try {
+        // Authenticate user
+        self.id = "USER_1";
+        self.email = "majesnix@majesnix.org";
+        self.name = "majesnix";
+        self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
+        self.isAnonym = false;
+        self.isAuthenticated = true;
+        self.hasPremium = true;
+      } catch (error) {
+        // Show error
+      }
+    }),
 
     logout() {
       self.id = undefined;
@@ -45,7 +53,11 @@ const User = types
     /*async register(name: string, email: string, password: string) {
       console.log("REGISTER EVENT", name, email, password);
     },*/
-    register: flow(function* register(name: string, email: string, password: string) {
+    register: flow(function* register(
+      name: string,
+      email: string,
+      password: string
+    ) {
       try {
         // const response = yield Api.register("bla", {"bla"})  // yield for promise resolving
         console.log("REGISTER EVENT", name, email, password);
