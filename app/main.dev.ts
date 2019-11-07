@@ -21,13 +21,13 @@ import log from "electron-log";
 import unhandled from "electron-unhandled";
 import { autoUpdater } from "electron-updater";
 import "v8-compile-cache";
-import i18n from "../configs/i18next.config";
+import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
 import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
-import config from "../configs/app.config";
+import config from "./configs/app.config";
 
 export default class AppUpdater {
   constructor() {
@@ -42,10 +42,7 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-if (
-  process.env.NODE_ENV === "development" ||
-  process.env.DEBUG_PROD === "true"
-) {
+if (true) {
   require("electron-debug")();
 }
 
@@ -68,6 +65,8 @@ let shouldQuit = false;
 // Fix the player not being able to play audio when the user did not interact
 // with the page
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+
+unhandled();
 
 /**
  *  Create Loading Screen
@@ -133,7 +132,7 @@ const createAppScreen = () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  tray = new Tray(`${__dirname}/../resources/icons/16x16.png`);
+  tray = new Tray(`${__dirname}/images/placeholder.png`);
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Show App",
@@ -239,6 +238,8 @@ const createAppScreen = () => {
       namespace: config.namespace,
       resource: i18n.getResourceBundle(lng, config.namespace)
     });
+
+    i18n.changeLanguage(lng);
   });
 
   mainWindow.webContents.on("new-window", (event, url) => {
@@ -246,27 +247,19 @@ const createAppScreen = () => {
   });
 
   const menuBuilder = new MenuBuilder(mainWindow, i18n);
-  //menuBuilder.buildMenu();
 
-  i18n.on("loaded", loaded => {
-    i18n.changeLanguage(Settings.get("language"));
-    //i18n.off('loaded');
-  });
-
-  i18n.on("languageChanged", lng => {
+  menuBuilder.i18n.on("languageChanged", lng => {
     menuBuilder.buildMenu();
     mainWindow.webContents.send("language-changed", {
       language: lng,
       namespace: config.namespace,
-      resource: i18n.getResourceBundle(lng, config.namespace)
+      resource: menuBuilder.i18n.getResourceBundle(lng, config.namespace)
     });
   });
 
   ipcMain.on("changeLang", (event: any, arg: any) => {
-    i18n.changeLanguage(arg.lang);
+    menuBuilder.i18n.changeLanguage(arg.lang);
   });
-
-  unhandled();
 };
 
 /**
@@ -295,7 +288,7 @@ app.on("ready", async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  // new AppUpdater();
 });
 
 // macOS only

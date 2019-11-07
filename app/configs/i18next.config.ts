@@ -1,14 +1,16 @@
-import i18n from "i18next";
+import i18n, { InitOptions } from "i18next";
 import i18nextBackend from "i18next-node-fs-backend";
 import config from "./app.config";
+import en from "../locales/en/translation.json";
+import de from "../locales/de/translation.json";
 
-const i18nextOptions = {
+const i18nextOptions: InitOptions = {
   backend: {
     // path where resources get loaded from
-    loadPath: "./locales/{{lng}}/{{ns}}.json",
+    loadPath: "../locales/{{lng}}/{{ns}}.json",
 
     // path to post missing resources
-    addPath: "./locales/{{lng}}/{{ns}}.missing.json",
+    addPath: "../locales/{{lng}}/{{ns}}.missing.json",
 
     // jsonIndent to use when storing json files
     jsonIndent: 2
@@ -21,6 +23,14 @@ const i18nextOptions = {
   whitelist: config.languages,
   react: {
     wait: false
+  },
+  resources: {
+    en: {
+      translation: en
+    },
+    de: {
+      translation: de
+    }
   }
 };
 

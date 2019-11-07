@@ -2,10 +2,10 @@ import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import Root from "./containers/Root";
-import "../configs/i18next.config.client";
+import "./configs/i18next.config.client";
 import "./app.global.css";
 import { ipcRenderer } from "electron";
-import i18n from "../configs/i18next.config.client";
+import i18n from "./configs/i18next.config.client";
 
 ipcRenderer.on("language-changed", (event, message) => {
   if (!i18n.hasResourceBundle(message.language, message.namespace)) {
