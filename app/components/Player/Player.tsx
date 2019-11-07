@@ -231,49 +231,50 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       />
       {player.isPlaying ? (
         <PlayerOverlay />
+      ) : queue.isEmpty ? (
+        <img
+          src={AyeLogo}
+          style={{
+            width: "320px",
+            height: "200px",
+            position: "absolute",
+            marginTop: "48px",
+            borderColor: "none",
+            backgroundColor: "#232c39",
+            zIndex: 999
+          }}
+        />
       ) : (
         <PlayerOverlayImage
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
       )}
-
-      {!queue.isEmpty ? (
-        <ReactPlayer
-          ref={_getPlayerElement}
-          url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
-          width="320px"
-          height="202px"
-          config={{
-            youtube: {
-              playerVars: {
-                modestbranding: 1
-              }
+      <ReactPlayer
+        ref={_getPlayerElement}
+        url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
+        width="320px"
+        height="202px"
+        config={{
+          youtube: {
+            playerVars: {
+              modestbranding: 1
             }
-          }}
-          playing={player.isPlaying}
-          loop={player.repeat === Repeat.ONE}
-          volume={player.volume}
-          muted={player.isMuted}
-          onReady={() => _onReady()}
-          onStart={() => _onStart()}
-          onError={() => _onError()}
-          onDuration={_setDuration}
-          onProgress={_handleProgress}
-          onEnded={() => _playNextTrack()}
-          style={{
-            zIndex: 2
-          }}
-        />
-      ) : (
-        <img
-          src={AyeLogo}
-          width="320px"
-          height="200px"
-          style={{
-            zIndex: 2
-          }}
-        />
-      )}
+          }
+        }}
+        playing={player.isPlaying}
+        loop={player.repeat === Repeat.ONE}
+        volume={player.volume}
+        muted={player.isMuted}
+        onReady={() => _onReady()}
+        onStart={() => _onStart()}
+        onError={() => _onError()}
+        onDuration={_setDuration}
+        onProgress={_handleProgress}
+        onEnded={() => _playNextTrack()}
+        style={{
+          zIndex: 2
+        }}
+      />
     </Container>
   );
 };
