@@ -17,11 +17,12 @@ interface IProps {
 }
 
 const Container = styled.div<any>`
-  height: 48px;
-  width: calc(100% - 10px);
+  height: 72px;
+  width: calc(100% - 16px);
   display: flex;
   position: relative;
   align-items: center;
+  justify-content: space-between;
   border-bottom: 1px solid #565f6c;
   padding-left: 8px;
   &:last-child {
@@ -32,18 +33,52 @@ const Container = styled.div<any>`
   }
 `;
 const TrackInfoContainer = styled.div<any>`
-  display: inline-block;
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  width: 300px;
-  padding: 8px 0;
+  padding: 8px;
   padding-left: 8px;
+  width: 100%;
   color: ${(props: any) => (props.active ? "#99ccff" : "")};
 `;
 
-const Title = styled.div<any>``;
+const Title = styled.div<any>`
+  padding-right: 16px;
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  ${(props: any) => {
+    if (props.length >= 30) {
+      return `div {
+
+      transform: translateX(0);
+      transition-timing-function: cubic-bezier(0.42,0,0.58,1);
+      transition-duration: 1s;
+    }
+    :hover div {
+      transform: translateX(calc(300px - 100%));
+    }`;
+    }
+  }}
+`;
 
 const Duration = styled.div`
-  font-size: 12px;
+  font-size: 14px;
+`;
+
+const TrackImageContainer = styled.div`
+  width: 48px;
+  height: 48px;
+  margin-right: 32px;
+  border-radius: 24px;
+  overflow: hidden;
+`;
+
+const TrackImage = styled.img`
+  position: relative;
+  width: 64px;
+  height: 48px;
+  transform: scale(1.4) translate(-5px);
 `;
 
 const DragHandle = withStyles({
@@ -77,7 +112,12 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
             active={player.currentTrack.id === props.track.id}
             onClick={() => props.onClick(props.track)}
           >
-            <Title>{props.track.title}</Title>
+            <TrackImageContainer>
+              <TrackImage
+                src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`}
+              />
+            </TrackImageContainer>
+            <Title length={props.track.title.length}>{props.track.title}</Title>
             <Duration>{props.duration}</Duration>
           </TrackInfoContainer>
           <ExtendedPlaylistEntityMenu id={props.track.id} />

@@ -25,7 +25,7 @@ import i18n from "../configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
-import RPCClient from "./lib/rpcClient";
+import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
 import config from "../configs/app.config";
 
@@ -63,12 +63,11 @@ let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
 let tray: Tray = null;
 let rpc = new RPCClient("621726681140297728");
+let shouldQuit = false;
 
 // Fix the player not being able to play audio when the user did not interact
 // with the page
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-
-let shouldQuit = false;
 
 /**
  *  Create Loading Screen

@@ -105,7 +105,10 @@ const mprisService = (win: BrowserWindow, app: App) => {
 
       logger.media(`Volume received, set to: ${volume}`);
       changeVolumeState(win, volume * 100);
-      win.webContents.send("win2Player", ["setVolume", volume * 100]);
+      win.webContents.send("win2Player", {
+        type: "setVolume",
+        info: volume * 100
+      });
       mprisPlayer.volume = volume;
     }
   });
@@ -113,24 +116,30 @@ const mprisService = (win: BrowserWindow, app: App) => {
   mprisPlayer.on("seek", (seek: number) => {
     if (mprisPlayer.playbackStatus !== "Stopped") {
       logger.media(`Seek ${seek / 1e6} sec`);
-      win.webContents.send("player2Win", [
-        "seekTo",
-        (mprisPlayer.getPosition() + seek) / 1e6
-      ]); // in seconds
+      win.webContents.send("player2Win", {
+        type: "seekTo",
+        info: (mprisPlayer.getPosition() + seek) / 1e6
+      }); // in seconds
     }
   });
 
   mprisPlayer.on("position", (arg: any) => {
     if (mprisPlayer.playbackStatus !== "Stopped") {
       logger.media(`Go to position ${arg.position / 1e6} sec`);
-      win.webContents.send("player2Win", ["seekTo", arg.position / 1e6]); // in seconds
+      win.webContents.send("player2Win", {
+        type: "seekTo",
+        info: arg.position / 1e6
+      }); // in seconds
     }
   });
 
   mprisPlayer.on("shuffle", shuffle => {
     if (mprisPlayer.playbackStatus !== "Stopped") {
       logger.media(`Set shuffling: ${shuffle}`);
-      win.webContents.send("player2Win", ["onMprisShuffle", shuffle]);
+      win.webContents.send("player2Win", {
+        type: "onMprisShuffle",
+        info: shuffle
+      });
       mprisPlayer.shuffle = shuffle;
     }
   });
@@ -143,51 +152,54 @@ const mprisService = (win: BrowserWindow, app: App) => {
       if (loop === "Track") repeat = "one";
       if (loop === "Playlist") repeat = "all";
       if (loop === "None") repeat = null;
-      win.webContents.send("player2Win", ["onMprisRepeat", repeat]);
+      win.webContents.send("player2Win", {
+        type: "onMprisRepeat",
+        info: repeat
+      });
     }
   });
 
   ipcMain.on("win2Player", (e, args) => {
-    switch (args[0]) {
+    switch (args.type) {
       case "setVolume":
-        mprisPlayer.volume = args[1] / 100;
+        mprisPlayer.volume = args.data / 100;
         break;
       case "trackInfo":
         mprisPlayer.metadata = {
-          "xesam:artist": [args[1].artist],
-          "xesam:title": args[1].title,
-          "xesam:url": `https://www.youtube.com/watch?v=${args[1].id}`,
+          "xesam:artist": [args.data.artist],
+          "xesam:title": args.data.title,
+          "xesam:url": `https://www.youtube.com/watch?v=${args.data.id}`,
           "mpris:trackid": mprisPlayer.objectPath("track/0"),
-          "mpris:artUrl": args[1].thumbnail,
-          "mpris:length": args[1].duration * 1e6 // in microseconds
+          "mpris:artUrl": args.data.thumbnail,
+          "mpris:length": args.data.duration * 1e6 // in microseconds
         };
         logger.media(
           `Track Info:\n${JSON.stringify(mprisPlayer.metadata, null, 2)}`
         );
         break;
       case "seekTo":
-        mprisPlayer.seeked(args[1] * 1e6); // in microseconds
+        mprisPlayer.seeked(args.data * 1e6); // in microseconds
         break;
       case "shuffle":
-        mprisPlayer.shuffle = args[1];
+        mprisPlayer.shuffle = args.data;
         break;
       case "repeat":
-        if (args[1] === "one") mprisPlayer.loopStatus = "Track";
-        if (args[1] === "all") mprisPlayer.loopStatus = "Playlist";
-        if (args[1] === null) mprisPlayer.loopStatus = "None";
+        if (args.data === "one") mprisPlayer.loopStatus = "Track";
+        if (args.data === "all") mprisPlayer.loopStatus = "Playlist";
+        if (args.data === null) mprisPlayer.loopStatus = "None";
         break;
       default:
     }
   });
 
   ipcMain.on("player2Win", (e, args) => {
-    switch (args[0]) {
+    switch (args.type) {
       case "currentTime":
-        mprisPlayer.getPosition = () => args[1] * 1e6; // in microseconds
+        mprisPlayer.getPosition = () => args.data * 1e6; // in microseconds
         break;
       case "onStateChange":
-        if (args[1] === true) mprisPlayer.playbackStatus = "Playing";
-        if (args[1] === false) mprisPlayer.playbackStatus = "Paused";
+        if (args.data === true) mprisPlayer.playbackStatus = "Playing";
+        if (args.data === false) mprisPlayer.playbackStatus = "Paused";
         logger.media(`Playback status: ${mprisPlayer.playbackStatus}`);
         break;
       default:
