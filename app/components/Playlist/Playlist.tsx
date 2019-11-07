@@ -28,7 +28,7 @@ interface IDragResult {
 
 const Container = styled.div`
   margin: 8px 5px;
-  width: calc(320px - 5px);
+  width: 315px;
   height: 100%;
   top: 0;
   display: flex;
