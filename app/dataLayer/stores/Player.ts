@@ -86,7 +86,10 @@ const Player = types
       }
       self.isPlaying = !self.isPlaying;
 
-      ipcRenderer.send("player2Win", ["onStateChange", self.isPlaying]);
+      ipcRenderer.send("player2Win", {
+        type: "onStateChange",
+        data: self.isPlaying
+      });
     },
 
     toggleShuffleState() {
