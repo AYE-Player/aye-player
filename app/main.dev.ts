@@ -42,7 +42,10 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-if (true) {
+if (
+  process.env.NODE_ENV === "development" ||
+  process.env.DEBUG_PROD === "true"
+) {
   require("electron-debug")();
 }
 
@@ -66,6 +69,7 @@ let shouldQuit = false;
 // with the page
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
+// Catch all unhandled errors
 unhandled();
 
 /**
@@ -127,7 +131,8 @@ const createAppScreen = () => {
     maximizable: false,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    icon: `${__dirname}/images/placeholder.png`
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
