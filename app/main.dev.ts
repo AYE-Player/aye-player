@@ -25,7 +25,7 @@ import i18n from "../configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
 import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
-import RPCClient from "./lib/rpcClient";
+import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
 import config from "../configs/app.config";
 
