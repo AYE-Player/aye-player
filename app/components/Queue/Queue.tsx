@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
+import { useTranslation } from "react-i18next";
 
 interface IProps {}
 
@@ -55,6 +56,8 @@ const Header = styled.div`
 `;
 
 const Queue: React.FunctionComponent<IProps> = props => {
+  const { t } = useTranslation();
+
   const [value, setValue] = React.useState(true); //boolean state
 
   const Store = ({ app, queue, player }: RootStoreModel) => ({
@@ -81,7 +84,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
 
   player.currentTrack;
 
-  return (
+  const renderQueue = () => (
     <Container>
       <DragDropContext onDragEnd={_onDragEnd}>
         <Header>
@@ -96,24 +99,36 @@ const Queue: React.FunctionComponent<IProps> = props => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {queue.tracks.length === 0
-                ? "No tracks in queue"
-                : queue.tracks.map((track, index) => {
-                    return (
-                      <QueueEntity
-                        duration={track.formattedDuration}
-                        track={track}
-                        key={track.id}
-                        index={index}
-                        onClick={_handleClick}
-                      />
-                    );
-                  })}
+              {queue.tracks.map((track, index) => {
+                return (
+                  <QueueEntity
+                    duration={track.formattedDuration}
+                    track={track}
+                    key={track.id}
+                    index={index}
+                    onClick={_handleClick}
+                  />
+                );
+              })}
               {provided.placeholder}
             </ScrollContainer>
           )}
         </Droppable>
       </DragDropContext>
+    </Container>
+  );
+
+  return queue.tracks.length !== 0 ? (
+    renderQueue()
+  ) : (
+    <Container>
+      <Header>
+        Queue
+        <Control>
+          <QueueMusicIcon onClick={() => _showQueue()} />
+        </Control>
+      </Header>
+      <ScrollContainer>{t("Queue.noTracks")}</ScrollContainer>
     </Container>
   );
 };
