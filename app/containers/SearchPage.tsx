@@ -61,31 +61,33 @@ const SearchPage: React.FunctionComponent = () => {
 
   return (
     <Container>
-        <Header>{t('SearchPage.title')}</Header>
-        <PlaylistContainer>
-          <Search>
-            <SearchIcon style={{ marginRight: "8px" }} />
-            <InputBase
-              placeholder={t("SearchPage.placeholder")}
-              inputProps={{ "aria-label": t("search") }}
-              style={{ color: "#fbfbfb" }}
-            />
-          </Search>
-          <ScrollContainer>
-            {player.currentPlaylist.tracks.map((track, index) => {
-              return (
-                <SearchEntity
-                  duration={track.formattedDuration}
-                  track={track}
-                  key={track.id}
-                  index={index}
-                  onDoubleClick={_handleDoubleClick}
-                  sendNotification={enqueueSnackbar}
-                />
-              );
-            })}
-          </ScrollContainer>
-        </PlaylistContainer>
+      <Header>{t("SearchPage.title")}</Header>
+      <PlaylistContainer>
+        <Search>
+          <SearchIcon style={{ marginRight: "8px" }} />
+          <InputBase
+            placeholder={t("SearchPage.placeholder")}
+            inputProps={{ "aria-label": t("search") }}
+            style={{ color: "#fbfbfb" }}
+          />
+        </Search>
+        <ScrollContainer>
+          {player.currentPlaylist
+            ? player.currentPlaylist.tracks.map((track, index) => {
+                return (
+                  <SearchEntity
+                    duration={track.formattedDuration}
+                    track={track}
+                    key={track.id}
+                    index={index}
+                    onDoubleClick={_handleDoubleClick}
+                    sendNotification={enqueueSnackbar}
+                  />
+                );
+              })
+            : []}
+        </ScrollContainer>
+      </PlaylistContainer>
     </Container>
   );
 };

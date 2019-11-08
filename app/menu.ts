@@ -5,10 +5,11 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions
 } from "electron";
+import { i18n } from "i18next";
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
-  i18n: any;
+  i18n: i18n;
 
   constructor(mainWindow: BrowserWindow, i18n: any) {
     this.mainWindow = mainWindow;
@@ -55,26 +56,29 @@ export default class MenuBuilder {
       label: "Electron",
       submenu: [
         {
-          label: this.i18n.t("About AYE-Player"),
+          label: this.i18n.t("macMenu.AboutAYEPlayer"),
           selector: "orderFrontStandardAboutPanel:"
         },
         { type: "separator" },
         { label: "Services", submenu: [] },
         { type: "separator" },
         {
-          label: this.i18n.t("Hide AYE-Player"),
+          label: this.i18n.t("macMenu.HideAYEPlayer"),
           accelerator: "Command+H",
           selector: "hide:"
         },
         {
-          label: this.i18n.t("Hide Others"),
+          label: this.i18n.t("macMenu.HideOthers"),
           accelerator: "Command+Shift+H",
           selector: "hideOtherApplications:"
         },
-        { label: this.i18n.t("Show All"), selector: "unhideAllApplications:" },
+        {
+          label: this.i18n.t("macMenu.ShowAll"),
+          selector: "unhideAllApplications:"
+        },
         { type: "separator" },
         {
-          label: "Quit",
+          label: this.i18n.t("macMenu.Quit"),
           accelerator: "Command+Q",
           click: () => {
             app.quit();
@@ -83,40 +87,60 @@ export default class MenuBuilder {
       ]
     };
     const subMenuEdit = {
-      label: "Edit",
+      label: this.i18n.t("macMenu.Edit"),
       submenu: [
-        { label: this.i18n.t("Undo"), accelerator: "Command+Z", selector: "undo:" },
-        { label: this.i18n.t("Redo"), accelerator: "Shift+Command+Z", selector: "redo:" },
-        { type: "separator" },
-        { label: this.i18n.t("Cut"), accelerator: "Command+X", selector: "cut:" },
-        { label: this.i18n.t("Copy"), accelerator: "Command+C", selector: "copy:" },
-        { label: this.i18n.t("Paste"), accelerator: "Command+V", selector: "paste:" },
         {
-          label: this.i18n.t("Select All"),
+          label: this.i18n.t("macMenu.Undo"),
+          accelerator: "Command+Z",
+          selector: "undo:"
+        },
+        {
+          label: this.i18n.t("macMenu.Redo"),
+          accelerator: "Shift+Command+Z",
+          selector: "redo:"
+        },
+        { type: "separator" },
+        {
+          label: this.i18n.t("macMenu.Cut"),
+          accelerator: "Command+X",
+          selector: "cut:"
+        },
+        {
+          label: this.i18n.t("macMenu.Copy"),
+          accelerator: "Command+C",
+          selector: "copy:"
+        },
+        {
+          label: this.i18n.t("macMenu.Paste"),
+          accelerator: "Command+V",
+          selector: "paste:"
+        },
+        {
+          label: this.i18n.t("macMenu.SelectAll"),
           accelerator: "Command+A",
           selector: "selectAll:"
         }
       ]
     };
     const subMenuViewDev = {
-      label: this.i18n.t("View"),
+      label: this.i18n.t("macMenu.View"),
       submenu: [
         {
-          label: this.i18n.t("Reload"),
+          label: this.i18n.t("macMenu.Reload"),
           accelerator: "Command+R",
           click: () => {
             this.mainWindow.webContents.reload();
           }
         },
         {
-          label: this.i18n.t("Toggle Full Screen"),
+          label: this.i18n.t("macMenu.ToggleFullScreen"),
           accelerator: "Ctrl+Command+F",
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
           }
         },
         {
-          label: this.i18n.t("Toggle Developer Tools"),
+          label: this.i18n.t("macMenu.ToggleDeveloperTools"),
           accelerator: "Alt+Command+I",
           click: () => {
             this.mainWindow.webContents.toggleDevTools();
@@ -125,10 +149,10 @@ export default class MenuBuilder {
       ]
     };
     const subMenuViewProd = {
-      label: this.i18n.t("View"),
+      label: this.i18n.t("macMenu.View"),
       submenu: [
         {
-          label: this.i18n.t("Toggle Full Screen"),
+          label: this.i18n.t("macMenu.ToggleFullScreen"),
           accelerator: "Ctrl+Command+F",
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
@@ -137,29 +161,36 @@ export default class MenuBuilder {
       ]
     };
     const subMenuWindow = {
-      label: this.i18n.t("Window"),
+      label: this.i18n.t("macMenu.Window"),
       submenu: [
         {
-          label: this.i18n.t("Minimize"),
+          label: this.i18n.t("macMenu.Minimize"),
           accelerator: "Command+M",
           selector: "performMiniaturize:"
         },
-        { label: this.i18n.t("Close"), accelerator: "Command+W", selector: "performClose:" },
+        {
+          label: this.i18n.t("macMenu.Close"),
+          accelerator: "Command+W",
+          selector: "performClose:"
+        },
         { type: "separator" },
-        { label: this.i18n.t("Bring All to Front"), selector: "arrangeInFront:" }
+        {
+          label: this.i18n.t("macMenu.BringAllToFront"),
+          selector: "arrangeInFront:"
+        }
       ]
     };
     const subMenuHelp = {
-      label: this.i18n.t("Help"),
+      label: this.i18n.t("macMenu.Help"),
       submenu: [
         {
-          label: this.i18n.t("Learn More"),
+          label: this.i18n.t("macMenu.LearnMore"),
           click() {
             shell.openExternal("http://electron.atom.io");
           }
         },
         {
-          label: this.i18n.t("Documentation"),
+          label: this.i18n.t("macMenu.Documentation"),
           click() {
             shell.openExternal(
               "https://github.com/atom/electron/tree/master/docs#readme"
@@ -167,13 +198,13 @@ export default class MenuBuilder {
           }
         },
         {
-          label: this.i18n.t("Community Discussions"),
+          label: this.i18n.t("macMenu.CommunityDiscussions"),
           click() {
             shell.openExternal("https://discuss.atom.io/c/electron");
           }
         },
         {
-          label: this.i18n.t("Search Issues"),
+          label: this.i18n.t("macMenu.SearchIssues"),
           click() {
             shell.openExternal("https://github.com/atom/electron/issues");
           }
@@ -196,38 +227,16 @@ export default class MenuBuilder {
   buildDefaultTemplate(): MenuItemConstructorOptions[] {
     const templateDefault = [
       {
-        label: this.i18n.t("&View"),
-        submenu:
-          process.env.NODE_ENV === "development"
-            ? [
-                {
-                  label: this.i18n.t("&Reload"),
-                  accelerator: "Ctrl+R",
-                  click: () => {
-                    this.mainWindow.webContents.reload();
-                  }
-                },
-                {
-                  label: this.i18n.t("Toggle &Developer Tools"),
-                  accelerator: "Alt+Ctrl+I",
-                  click: () => {
-                    this.mainWindow.webContents.toggleDevTools();
-                  }
-                }
-              ]
-            : []
-      },
-      {
-        label: this.i18n.t("Help"),
+        label: this.i18n.t("menu.Help"),
         submenu: [
           {
-            label: this.i18n.t("Learn More"),
+            label: this.i18n.t("menu.LearnMore"),
             click() {
               shell.openExternal("http://electron.atom.io");
             }
           },
           {
-            label: this.i18n.t("Documentation"),
+            label: this.i18n.t("menu.Documentation"),
             click() {
               shell.openExternal(
                 "https://github.com/atom/electron/tree/master/docs#readme"
@@ -235,13 +244,13 @@ export default class MenuBuilder {
             }
           },
           {
-            label: this.i18n.t("Community Discussions"),
+            label: this.i18n.t("menu.CommunityDiscussions"),
             click() {
               shell.openExternal("https://discuss.atom.io/c/electron");
             }
           },
           {
-            label: this.i18n.t("Search Issues"),
+            label: this.i18n.t("menu.SearchIssues"),
             click() {
               shell.openExternal("https://github.com/atom/electron/issues");
             }

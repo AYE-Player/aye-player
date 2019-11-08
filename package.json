@@ -11,7 +11,6 @@
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
     "dev": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 npm run start-renderer-dev",
-    "dev:mac": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env platform='darwin' START_HOT=1 npm run start-renderer-dev",
     "lint": "cross-env NODE_ENV=development eslint --cache --format=pretty .",
     "lint-fix": "npm run --silent lint --fix; exit 0",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
@@ -61,11 +60,12 @@
     "appId": "com.electron.AYEPlayer",
     "files": [
       "app/dist/",
+      "app/images/",
+      "app/locales/",
       "app/app.html",
       "app/loading.html",
       "app/main.prod.js",
       "app/main.prod.js.map",
-      "locales/",
       "package.json"
     ],
     "dmg": {
@@ -91,8 +91,6 @@
     "linux": {
       "target": [
         "deb",
-        "rpm",
-        "snap",
         "AppImage"
       ],
       "category": "Development"
@@ -122,7 +120,8 @@
   "license": "UNLICENSED",
   "keywords": [
     "electron",
-    "boilerplate",
+    "musicplayer",
+    "youtube",
     "react",
     "mobx",
     "typescript",
@@ -196,7 +195,7 @@
     "cross-spawn": "^7.0.1",
     "css-loader": "^3.2.0",
     "detect-port": "^1.3.0",
-    "electron": "^7.0.1",
+    "electron": "^7.1.0",
     "electron-builder": "^22.1.0",
     "electron-devtools-installer": "^2.2.4",
     "enzyme": "^3.10.0",
@@ -242,7 +241,7 @@
     "testcafe-live": "^0.1.4",
     "testcafe-react-selectors": "^3.3.0",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.6.4",
+    "typescript": "3.6.4",
     "url-loader": "^2.2.0",
     "webpack": "^4.41.2",
     "webpack-bundle-analyzer": "^3.6.0",
@@ -269,7 +268,7 @@
     "history": "^4.10.1",
     "i18next": "^19.0.0",
     "i18next-node-fs-backend": "^2.1.3",
-    "mobx": "^5.14.2",
+    "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "mobx-react-lite": "^1.5.0",
     "mobx-state-tree": "^3.15.0",

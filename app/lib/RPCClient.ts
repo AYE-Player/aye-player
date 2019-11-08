@@ -90,11 +90,11 @@ export default class RPCClient {
   public async login() {
     if (this._rpc) return;
     this._rpc = new Client({ transport: "ipc" });
-    Logger.rpc("[RPC] Connecting...");
+    Logger.rpc("Connecting...");
 
     try {
       this._rpc.once("ready", async () => {
-        Logger.rpc("[RPC] Successfully connected to Discord.");
+        Logger.rpc("Successfully connected to Discord.");
         this.isConnected = true;
 
         await this.setActivity(0, 0, null, "Idle");
@@ -106,7 +106,7 @@ export default class RPCClient {
 
       await this._rpc.login({ clientId: this._clientId });
     } catch (error) {
-      Logger.rpc("[RPC] Cannot connect to Discord, is it running?");
+      Logger.rpc("Cannot connect to Discord, is it running?");
       this.dispose();
       this.isConnected = false;
     }

@@ -216,7 +216,10 @@ export default class Root extends Component {
             <Grid
               container
               direction="column"
-              style={{ height: "100%" }}
+              style={{
+                height: "100%",
+                borderRight: "1px solid #565f6c"
+              }}
               xs={3}
             >
               <QueuePlaylistSwitch />

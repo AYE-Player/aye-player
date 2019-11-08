@@ -231,13 +231,25 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       />
       {player.isPlaying ? (
         <PlayerOverlay />
+      ) : queue.isEmpty || !player.currentTrack ? (
+        <img
+          src={AyeLogo}
+          style={{
+            width: "320px",
+            height: "200px",
+            position: "absolute",
+            marginTop: "48px",
+            borderColor: "none",
+            backgroundColor: "#232c39",
+            zIndex: 999
+          }}
+        />
       ) : (
         <PlayerOverlayImage
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
       )}
-
-      {!queue.isEmpty ? (
+      {player.currentTrack ? (
         <ReactPlayer
           ref={_getPlayerElement}
           url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
@@ -264,16 +276,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 2
           }}
         />
-      ) : (
-        <img
-          src={AyeLogo}
-          width="320px"
-          height="200px"
-          style={{
-            zIndex: 2
-          }}
-        />
-      )}
+      ) : <div style={{width: "320px", height: "202px"}}></div>}
     </Container>
   );
 };
