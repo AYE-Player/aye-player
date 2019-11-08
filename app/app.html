@@ -58,7 +58,7 @@
   <body>
     <div id="root" style="width: 100%; height: 100%;"></div>
     <script>
-      if (process.env.platform === "darwin") {
+      if (process.platform === "darwin") {
         const customTitlebar = require("pj-custom-electron-titlebar");
 
         // 2. Create the custom titlebar with your own settings

@@ -231,7 +231,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       />
       {player.isPlaying ? (
         <PlayerOverlay />
-      ) : queue.isEmpty ? (
+      ) : queue.isEmpty || !player.currentTrack ? (
         <img
           src={AyeLogo}
           style={{
@@ -249,32 +249,34 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
         />
       )}
-      <ReactPlayer
-        ref={_getPlayerElement}
-        url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
-        width="320px"
-        height="202px"
-        config={{
-          youtube: {
-            playerVars: {
-              modestbranding: 1
+      {player.currentTrack ? (
+        <ReactPlayer
+          ref={_getPlayerElement}
+          url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
+          width="320px"
+          height="202px"
+          config={{
+            youtube: {
+              playerVars: {
+                modestbranding: 1
+              }
             }
-          }
-        }}
-        playing={player.isPlaying}
-        loop={player.repeat === Repeat.ONE}
-        volume={player.volume}
-        muted={player.isMuted}
-        onReady={() => _onReady()}
-        onStart={() => _onStart()}
-        onError={() => _onError()}
-        onDuration={_setDuration}
-        onProgress={_handleProgress}
-        onEnded={() => _playNextTrack()}
-        style={{
-          zIndex: 2
-        }}
-      />
+          }}
+          playing={player.isPlaying}
+          loop={player.repeat === Repeat.ONE}
+          volume={player.volume}
+          muted={player.isMuted}
+          onReady={() => _onReady()}
+          onStart={() => _onStart()}
+          onError={() => _onError()}
+          onDuration={_setDuration}
+          onProgress={_handleProgress}
+          onEnded={() => _playNextTrack()}
+          style={{
+            zIndex: 2
+          }}
+        />
+      ) : <div style={{width: "320px", height: "202px"}}></div>}
     </Container>
   );
 };
