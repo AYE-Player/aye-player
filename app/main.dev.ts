@@ -13,9 +13,7 @@ import {
   BrowserWindow,
   globalShortcut,
   ipcMain,
-  Menu,
-  systemPreferences,
-  Tray
+  systemPreferences
 } from "electron";
 import log from "electron-log";
 import unhandled from "electron-unhandled";
@@ -28,6 +26,7 @@ import registerMediaKeys from "./lib/registerMediaKeys";
 import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
 import config from "./configs/app.config";
+import AyeTray from "./modules/AyeTray";
 
 export default class AppUpdater {
   constructor() {
@@ -61,9 +60,8 @@ const installExtensions = async () => {
 
 let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
-let tray: Tray = null;
+let tray: AyeTray = null;
 let rpc = new RPCClient("621726681140297728");
-let shouldQuit = false;
 
 // Fix the player not being able to play audio when the user did not interact
 // with the page
@@ -132,33 +130,10 @@ const createAppScreen = () => {
     webPreferences: {
       nodeIntegration: true
     },
-    icon: `${__dirname}/images/placeholder.png`
+    icon: `${__dirname}/images/icons/png/32x32.png`
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-
-  tray = new Tray(`${__dirname}/images/placeholder.png`);
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Show App",
-      click: function() {
-        mainWindow.show();
-      }
-    },
-    {
-      label: "Quit",
-      click: function() {
-        shouldQuit = true;
-        app.quit();
-      }
-    }
-  ]);
-  tray.setContextMenu(contextMenu);
-  tray.setToolTip("AYE - Player");
-  tray.on("click", () => {
-    mainWindow.show();
-    mainWindow.focus();
-  });
 
   if (Settings.has("windowPosition")) {
     const { x, y } = Settings.get("windowPosition");
@@ -201,8 +176,11 @@ const createAppScreen = () => {
     }
   });
 
+  tray = new AyeTray(mainWindow);
+  tray.init();
+
   mainWindow.on("close", event => {
-    if (Settings.get("minimizeToTray") && !shouldQuit) {
+    if (Settings.get("minimizeToTray") && !tray.shouldQuit) {
       event.preventDefault();
       mainWindow.hide();
     }
