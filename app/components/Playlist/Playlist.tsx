@@ -7,6 +7,7 @@ import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlaylistEntity from "./PlaylistEntity";
+import { useTranslation } from "react-i18next";
 
 interface IProps {}
 
@@ -56,6 +57,8 @@ const Header = styled.div`
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
+  const { t } = useTranslation();
+
   const [value, setValue] = React.useState(true); //boolean state
 
   const Store = ({ app, queue, player }: RootStoreModel) => ({
@@ -135,7 +138,15 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   return player.currentPlaylist ? (
     renderPlaylist()
   ) : (
-    <Container>No Playlist</Container>
+    <Container>
+      <Header>
+        Playlist
+        <Control>
+          <QueueMusicIcon onClick={() => _showQueue()} />
+        </Control>
+      </Header>
+      {t("Playlist.noList")}
+    </Container>
   );
 };
 

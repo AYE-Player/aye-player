@@ -92,7 +92,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
         >
           <DragHandle fontSize="small" />
           <TrackInfoContainer
-            active={player.currentTrack.id === props.track.id}
+            active={player.currentTrack ? player.currentTrack.id === props.track.id : false}
             onClick={() => props.onClick(props.index)}
           >
             <Title length={props.track.title.length}>

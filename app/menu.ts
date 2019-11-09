@@ -181,16 +181,16 @@ export default class MenuBuilder {
       ]
     };
     const subMenuHelp = {
-      label: this.i18n.t("macMenu.Help"),
+      label: this.i18n.t("menu.Help"),
       submenu: [
         {
-          label: this.i18n.t("macMenu.LearnMore"),
+          label: this.i18n.t("menu.LearnMore"),
           click() {
             shell.openExternal("http://electron.atom.io");
           }
         },
         {
-          label: this.i18n.t("macMenu.Documentation"),
+          label: this.i18n.t("menu.Documentation"),
           click() {
             shell.openExternal(
               "https://github.com/atom/electron/tree/master/docs#readme"
@@ -198,13 +198,13 @@ export default class MenuBuilder {
           }
         },
         {
-          label: this.i18n.t("macMenu.CommunityDiscussions"),
+          label: this.i18n.t("menu.CommunityDiscussions"),
           click() {
             shell.openExternal("https://discuss.atom.io/c/electron");
           }
         },
         {
-          label: this.i18n.t("macMenu.SearchIssues"),
+          label: this.i18n.t("menu.SearchIssues"),
           click() {
             shell.openExternal("https://github.com/atom/electron/issues");
           }
