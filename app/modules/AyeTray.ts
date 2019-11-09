@@ -11,7 +11,7 @@ class AyeTray extends BaseModule {
 
   init() {
     this.tray = new Tray(
-      nativeTheme.shouldUseDarkColors
+      nativeTheme.shouldUseDarkColors || process.platform === "linux"
         ? `${__dirname}/../images/icons/png/16x16_w.png`
         : `${__dirname}/../images/icons/png/16x16.png`
     );

@@ -217,7 +217,7 @@ export default class Root extends Component {
               style={{
                 height: "100%",
                 borderRight: "1px solid #565f6c",
-                width: "325px",
+                width: "328px",
                 display: "flex",
                 flexDirection: "column"
               }}

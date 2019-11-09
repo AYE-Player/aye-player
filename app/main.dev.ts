@@ -41,14 +41,14 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-if (
+/*if (
   process.env.NODE_ENV === "development" ||
   process.env.DEBUG_PROD === "true"
 ) {
   require("electron-debug")();
-}
+}*/
 
-const installExtensions = async () => {
+/*const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS"];
@@ -56,7 +56,7 @@ const installExtensions = async () => {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
-};
+};*/
 
 let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
@@ -78,8 +78,8 @@ const createLoadingScreen = () => {
   /// create a browser window
   loadingScreen = new BrowserWindow({
     /// define width and height for the window
-    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1280,
-    minWidth: 1280,
+    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1333,
+    minWidth: 1333,
     height: Settings.has("windowSize")
       ? Settings.get("windowSize").height
       : 728,
@@ -118,8 +118,8 @@ const createAppScreen = () => {
   mainWindow = new BrowserWindow({
     title: "AYE-Player",
     show: false,
-    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1280,
-    minWidth: 1280,
+    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1333,
+    minWidth: 1333,
     height: Settings.has("windowSize")
       ? Settings.get("windowSize").height
       : 728,
@@ -130,7 +130,7 @@ const createAppScreen = () => {
     webPreferences: {
       nodeIntegration: true
     },
-    icon: `${__dirname}/images/icons/png/32x32.png`
+    icon: `${__dirname}/images/icons/png/32x32_w.png`
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -262,7 +262,7 @@ app.on("ready", async () => {
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
   ) {
-    await installExtensions();
+    //await installExtensions();
   }
 
   // Create our screens

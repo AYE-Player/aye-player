@@ -72,10 +72,10 @@
   },
   "AppSettingsPage": {
     "header": "App Settings",
-    "discord": "Use DiscordRPC",
+    "discord": "Show Discord Presence",
     "tray": "Minimize to Tray*",
     "language": "Language",
-    "infoText": "* App has to be restarted"
+    "infoText": "* App will be restarted"
   },
   "LoginPage": {
     "header": "Login",
