@@ -213,18 +213,18 @@ export default class Root extends Component {
             data-tid="container"
             style={{ height: "100%", padding: "8px 8px 0 8px" }}
           >
-            <Grid
-              container
-              direction="column"
+            <div
               style={{
                 height: "100%",
-                borderRight: "1px solid #565f6c"
+                borderRight: "1px solid #565f6c",
+                width: "325px",
+                display: "flex",
+                flexDirection: "column"
               }}
-              xs={3}
             >
               <QueuePlaylistSwitch />
               <Player />
-            </Grid>
+            </div>
             <Grid container direction="row" style={{ height: "100%" }} xs={9}>
               <HashRouter>
                 <MainPage />
