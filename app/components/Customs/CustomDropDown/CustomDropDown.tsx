@@ -3,6 +3,8 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { MenuItem } from "@material-ui/core";
+import styled from "styled-components";
 
 interface ICustomDropDownProps {
   options: any;
@@ -25,26 +27,39 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CustomDropDown: React.FunctionComponent<ICustomDropDownProps> = (props) => {
+const StyledSelect = styled(Select)`
+  background-color: "#3D4653";
+`;
+
+const CustomDropDown: React.FunctionComponent<ICustomDropDownProps> = props => {
   const classes = useStyles(props);
 
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor={props.id}>{props.name}</InputLabel>
-        <Select
-          native
+        <InputLabel style={{ color: "#FBFBFB" }} htmlFor={props.id}>
+          {props.name}
+        </InputLabel>
+        <StyledSelect
           value={props.selected}
           onChange={props.handleChange}
+          style={{
+            color: "#FBFBFB"
+          }}
           inputProps={{
             name: props.name,
             id: props.id
           }}
         >
-          {props.options.map((o: any) => (
-            <option value={o.value} key={o.value}>{o.text}</option>
+          {props.options.map((option: any) => (
+            <MenuItem
+              value={option.value}
+              key={option.value}
+            >
+              {option.text}
+            </MenuItem>
           ))}
-        </Select>
+        </StyledSelect>
       </FormControl>
     </div>
   );

@@ -72,10 +72,10 @@
   },
   "AppSettingsPage": {
     "header": "App Einstellungen",
-    "discord": "DiscordRPC benutzen",
+    "discord": "Discord Presence anzeigen",
     "tray": "Minimieren *",
     "language": "Sprache",
-    "infoText": "* App muss neu gestartet werden"
+    "infoText": "* App wird neugestartet"
   },
   "LoginPage": {
     "header": "Einloggen",

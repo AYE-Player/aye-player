@@ -62,13 +62,13 @@ const AccountPage: React.FunctionComponent = () => {
           onChange={_switchRPCStatus}
           checked={app.rpcEnabled}
         />
-        <Divider size={3} />
+        <Divider size={2} />
         <CustomSwitch
           label={t("AppSettingsPage.tray")}
           onChange={_switchMinToTray}
           checked={app.minimizeToTray}
         />
-        <Divider size={3} />
+        <Divider size={2} />
         <CustomDropDown
           name={t("AppSettingsPage.language")}
           id="language-select"

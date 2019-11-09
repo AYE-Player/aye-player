@@ -17,8 +17,9 @@ const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = props => {
       style={{
         display: "flex",
         alignItems: "center",
-        width: "250px",
-        justifyContent: "space-between"
+        width: "264px",
+        justifyContent: "flex-start",
+        height: "48px"
       }}
     >
       <Switch
@@ -34,7 +35,7 @@ const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = props => {
         height={16}
         width={48}
       />
-      <span>{props.label}</span>
+      <span style={{ marginLeft: "16px", width: "100%" }}>{props.label}</span>
     </label>
   );
 };

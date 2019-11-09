@@ -13,9 +13,7 @@ import {
   BrowserWindow,
   globalShortcut,
   ipcMain,
-  Menu,
-  systemPreferences,
-  Tray
+  systemPreferences
 } from "electron";
 import log from "electron-log";
 import unhandled from "electron-unhandled";
@@ -28,6 +26,7 @@ import registerMediaKeys from "./lib/registerMediaKeys";
 import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
 import config from "./configs/app.config";
+import AyeTray from "./modules/AyeTray";
 
 export default class AppUpdater {
   constructor() {
@@ -42,14 +41,14 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-if (
+/*if (
   process.env.NODE_ENV === "development" ||
   process.env.DEBUG_PROD === "true"
 ) {
   require("electron-debug")();
-}
+}*/
 
-const installExtensions = async () => {
+/*const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS"];
@@ -57,13 +56,12 @@ const installExtensions = async () => {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
-};
+};*/
 
 let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
-let tray: Tray = null;
+let tray: AyeTray = null;
 let rpc = new RPCClient("621726681140297728");
-let shouldQuit = false;
 
 // Fix the player not being able to play audio when the user did not interact
 // with the page
@@ -80,8 +78,8 @@ const createLoadingScreen = () => {
   /// create a browser window
   loadingScreen = new BrowserWindow({
     /// define width and height for the window
-    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1280,
-    minWidth: 1280,
+    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1333,
+    minWidth: 1333,
     height: Settings.has("windowSize")
       ? Settings.get("windowSize").height
       : 728,
@@ -120,8 +118,8 @@ const createAppScreen = () => {
   mainWindow = new BrowserWindow({
     title: "AYE-Player",
     show: false,
-    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1280,
-    minWidth: 1280,
+    width: Settings.has("windowSize") ? Settings.get("windowSize").width : 1333,
+    minWidth: 1333,
     height: Settings.has("windowSize")
       ? Settings.get("windowSize").height
       : 728,
@@ -132,33 +130,10 @@ const createAppScreen = () => {
     webPreferences: {
       nodeIntegration: true
     },
-    icon: `${__dirname}/images/placeholder.png`
+    icon: `${__dirname}/images/icons/png/32x32_w.png`
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-
-  tray = new Tray(`${__dirname}/images/placeholder.png`);
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Show App",
-      click: function() {
-        mainWindow.show();
-      }
-    },
-    {
-      label: "Quit",
-      click: function() {
-        shouldQuit = true;
-        app.quit();
-      }
-    }
-  ]);
-  tray.setContextMenu(contextMenu);
-  tray.setToolTip("AYE - Player");
-  tray.on("click", () => {
-    mainWindow.show();
-    mainWindow.focus();
-  });
 
   if (Settings.has("windowPosition")) {
     const { x, y } = Settings.get("windowPosition");
@@ -201,8 +176,11 @@ const createAppScreen = () => {
     }
   });
 
+  tray = new AyeTray(mainWindow);
+  tray.init();
+
   mainWindow.on("close", event => {
-    if (Settings.get("minimizeToTray") && !shouldQuit) {
+    if (Settings.get("minimizeToTray") && !tray.shouldQuit) {
       event.preventDefault();
       mainWindow.hide();
     }
@@ -284,7 +262,7 @@ app.on("ready", async () => {
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
   ) {
-    await installExtensions();
+    //await installExtensions();
   }
 
   // Create our screens

@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
-  width: calc(100% - 320px);
+  width: calc(100% - 336px);
   display: flex;
   position: absolute;
   bottom: 0;
@@ -15,11 +15,14 @@ const Container = styled.div`
 
 const MenuItem = styled.div`
   border-top: 1px solid #565f6c;
-  height: 45px;
+  height: 48px;
   justify-content: center;
   align-items: center;
   display: flex;
   flex: 1;
+  &:first-child {
+    border-left: 1px solid #565f6c;
+  }
   &:nth-child(2n) {
     border-left: 1px solid #565f6c;
     border-right: 1px solid #565f6c;
