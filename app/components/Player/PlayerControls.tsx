@@ -21,14 +21,14 @@ import Divider from "../Divider/Divider";
 import { Repeat } from "../../types/interfaces";
 
 interface IProps {
-  play: any;
-  stop: any;
-  pause: any;
-  toggleRepeat: any;
-  shuffle: any;
-  skip: any;
-  previous: any;
-  seekingStop: any;
+  play: () => void;
+  stop: () => void;
+  pause: () => void;
+  toggleRepeat: () => void;
+  shuffle: () => void;
+  skip: () => void;
+  previous: () => void;
+  seekingStop: (value: number) => void;
 }
 
 const Container = styled.div`

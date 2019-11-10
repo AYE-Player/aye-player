@@ -36,8 +36,7 @@
   },
   "Navigation": {
     "search": "Suchen",
-    "playlists": "Playlists",
-    "settings": "Einstellungen"
+    "playlists": "Playlists"
   },
   "RegisterPage": {
     "minLengthPassword": "min. 8 Zeichen",
@@ -46,7 +45,9 @@
     "email": "E-Mail",
     "password": "Passwort",
     "repeatPassword": "Passwort wiederholen",
-    "registerButton": "Registrieren"
+    "registerButton": "Registrieren",
+    "success": "Wir haben dir eine E-Mail geschickt, um deine Registrierung abzuschließen",
+    "error": "Etwas ist schief gelaufen, versuche es später nocheinmal"
   },
   "PlaylistPage": {
     "name": "Name",
@@ -90,6 +91,7 @@
     "updateErrorMessage": "Etwas ist schiefgelaufen",
     "updateSuccessMessage": "Aktualisierung erfolreich",
     "username": "Benutzername",
+    "email": "E-Mail",
     "updateButton": "Aktualisieren",
     "deleteButton": "Löschen",
     "password": "Passwort",
@@ -105,6 +107,7 @@
     "loginButton": "Einloggen",
     "Menu": {
       "profile": "Profil",
+      "settings": "Einstellungen",
       "logout": "Ausloggen"
     }
   },

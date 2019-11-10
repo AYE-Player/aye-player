@@ -5,7 +5,7 @@ export type QueueModel = Instance<typeof Queue>;
 
 const Queue = types
   .model({
-    tracks: types.optional(types.array(types.reference(Track)), [])
+    tracks: types.optional(types.array(types.safeReference(Track)), [])
   })
   .views(self => ({
     get currentTrack() {

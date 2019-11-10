@@ -12,7 +12,7 @@ import { TrackModel } from "../../../dataLayer/models/Track";
 export interface SimpleDialogProps {
   dialogTitle: string;
   open: boolean;
-  options: any[];
+  options: { id: string; name: string }[];
   track: TrackModel;
   onSelect: (id: string, track: TrackModel) => void;
   createListItem: (value: string) => void;
@@ -27,13 +27,10 @@ const CustomListDialog = (props: SimpleDialogProps) => {
 
   const handleListAddListItemClick = (value: string) => {
     createListItem(value);
-  }
+  };
 
   return (
-    <Dialog
-      aria-labelledby="custom-dialog-title"
-      open={open}
-    >
+    <Dialog aria-labelledby="custom-dialog-title" open={open}>
       <DialogTitle id="custom-dialog-title">{props.dialogTitle}</DialogTitle>
       <List>
         {props.options.map(option => (
@@ -45,7 +42,10 @@ const CustomListDialog = (props: SimpleDialogProps) => {
             <ListItemText primary={option.name} />
           </ListItem>
         ))}
-        <ListItem button onClick={() => handleListAddListItemClick("createPlaylist")}>
+        <ListItem
+          button
+          onClick={() => handleListAddListItemClick("createPlaylist")}
+        >
           <ListItemAvatar>
             <Avatar>
               <AddIcon />
@@ -56,6 +56,6 @@ const CustomListDialog = (props: SimpleDialogProps) => {
       </List>
     </Dialog>
   );
-}
+};
 
 export default CustomListDialog;

@@ -12,7 +12,7 @@ const CssButton = withStyles({
   root: {
     color: "#fbfbfb",
     height: "40px",
-    width: "100px",
+    width: "140px",
     padding: "0 16px",
     backgroundColor: "#3d4653",
     "&:hover": {

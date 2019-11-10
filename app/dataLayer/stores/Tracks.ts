@@ -15,6 +15,7 @@ const TrackStore = types
   .actions(self => ({
     add(track: TrackModel) {
       self.tracks.push(track);
+      return track;
     },
 
     removeTrack(id: string) {

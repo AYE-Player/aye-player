@@ -5,8 +5,6 @@ import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import QueueEntityMenu from "./QueueEntityMenu";
 
 interface IProps {
@@ -72,12 +70,6 @@ const DragHandle = withStyles({
 })(DragHandleIcon);
 
 const QueueEntity: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player }: RootStoreModel) => ({
-    player
-  });
-
-  const { player } = useInject(Store);
-
   return (
     <Draggable
       key={props.index}
@@ -91,10 +83,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
           {...provided.dragHandleProps}
         >
           <DragHandle fontSize="small" />
-          <TrackInfoContainer
-            active={player.currentTrack ? player.currentTrack.id === props.track.id : false}
-            onClick={() => props.onClick(props.index)}
-          >
+          <TrackInfoContainer onClick={() => props.onClick(props.index)}>
             <Title length={props.track.title.length}>
               <div style={{ display: "inline-block" }}>{props.track.title}</div>
             </Title>

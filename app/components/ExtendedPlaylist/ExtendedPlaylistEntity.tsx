@@ -16,7 +16,7 @@ interface IProps {
   onClick: Function;
 }
 
-const Container = styled.div<any>`
+const Container = styled.div`
   height: 72px;
   width: calc(100% - 16px);
   display: flex;

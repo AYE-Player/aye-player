@@ -1,4 +1,5 @@
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -42,6 +43,7 @@ const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
             <AccountCircleIcon style={{ marginRight: "8px" }} />
           )}
           <Text>{props.username}</Text>
+          <ExpandMoreIcon />
         </AccountDisplayMenu>
       ) : (
         <Link to="/account" style={{ display: "flex", alignItems: "center" }}>

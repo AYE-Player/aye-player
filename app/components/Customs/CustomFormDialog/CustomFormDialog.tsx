@@ -14,9 +14,9 @@ interface ICustomFormDialogProps {
   button: any;
   dialogText: string;
   open: boolean;
-  handleClose: any;
-  handleConfirm: any;
-  handleChange: any;
+  handleClose: () => void;
+  handleConfirm: () => void;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   confirmButtonText: string;
   cancelButtonText: string;
   type: string;

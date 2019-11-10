@@ -1,13 +1,15 @@
 import { Grid } from "@material-ui/core";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -28,6 +30,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
   const [invalidEmail, setInvalidEmail] = React.useState(false);
 
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const _handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -51,15 +54,36 @@ const RegisterPage: React.FunctionComponent<any> = () => {
     debounce(setInvalidEmail(!validateEmail(event.target.value)), 500);
   };
 
-  const _handleOnClick = (event: React.MouseEvent) => {
-    user.register(name, email, password);
+  const _handleOnClick = async (event: React.MouseEvent) => {
+    try {
+      await user.register(name, email, password);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="success"
+            message={t("RegisterPage.success")}
+          />
+        )
+      });
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("RegisterPage.error")}
+          />
+        )
+      });
+    }
   };
 
   const _passwordsMatch = () => {
     if (password.length < 8) {
       return t("RegisterPage.minLengthPassword");
     } else if (password !== password2 && password.length >= 8) {
-      return "RegisterPage.matchPassword";
+      return t("RegisterPage.matchPassword");
     } else {
       return "";
     }

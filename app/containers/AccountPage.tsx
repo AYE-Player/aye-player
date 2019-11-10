@@ -77,7 +77,11 @@ const AccountPage: React.FunctionComponent = () => {
       console.log(password, password2, avatar);
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="success" message={t("AccountPage.updateSuccessMessage")} />
+          <SnackMessage
+            id={key}
+            variant="success"
+            message={t("AccountPage.updateSuccessMessage")}
+          />
         )
       });
     } catch (error) {
@@ -102,7 +106,14 @@ const AccountPage: React.FunctionComponent = () => {
     <Container>
       <Header>{t("AccountPage.header")}</Header>
       <SettingsContainer>
-      {t("AccountPage.username")}: {user.name}
+        <div>
+          {t("AccountPage.username")}: {user.name}
+        </div>
+        <Divider size={2} />
+        <div>
+          {t("AccountPage.email")}: {user.email}
+        </div>
+        <Divider size={2} />
         <AvatarUpload avatar={avatar} setAvatar={setAvatar} user={user} />
         <Divider size={2} />
         <SettingsAligner>
@@ -129,7 +140,7 @@ const AccountPage: React.FunctionComponent = () => {
             color="secondary"
             style={{
               height: "40px",
-              width: "100px",
+              width: "140px",
               padding: "0 16px",
               backgroundColor: "#DC143C",
               borderRadius: "5px"
