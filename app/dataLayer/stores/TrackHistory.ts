@@ -5,7 +5,7 @@ export type TrackHistoryModel = Instance<typeof TrackHistory>;
 
 const TrackHistory = types
   .model({
-    tracks: types.optional(types.array(types.safeReference(Track)), [])
+    tracks: types.array(types.safeReference(Track))
   })
   .views(self => ({
     get currentTrack() {
