@@ -130,7 +130,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playVideo = () => {
     player.togglePlayingState();
-    player.notifyRPC();
   };
 
   const _stopVideo = () => {
