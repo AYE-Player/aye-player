@@ -13,7 +13,7 @@ interface IAvatarUploadProps {
 
 const Aligner = styled.div`
   display: flex;
-  width: 200px;
+  width: 264px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;

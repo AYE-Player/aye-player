@@ -240,7 +240,7 @@ const createAppScreen = () => {
     });
   });
 
-  ipcMain.on("changeLang", (event: any, arg: any) => {
+  ipcMain.on("changeLang", (_event: any, arg: any) => {
     menuBuilder.i18n.changeLanguage(arg.lang);
   });
 };

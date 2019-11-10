@@ -11,7 +11,7 @@ export default class MenuBuilder {
   mainWindow: BrowserWindow;
   i18n: i18n;
 
-  constructor(mainWindow: BrowserWindow, i18n: any) {
+  constructor(mainWindow: BrowserWindow, i18n: i18n) {
     this.mainWindow = mainWindow;
     this.i18n = i18n;
   }

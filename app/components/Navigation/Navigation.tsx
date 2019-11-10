@@ -25,7 +25,6 @@ const MenuItem = styled.div`
   }
   &:nth-child(2n) {
     border-left: 1px solid #565f6c;
-    border-right: 1px solid #565f6c;
   }
 `;
 
@@ -64,22 +63,6 @@ const Navigation: React.FunctionComponent<any> = props => {
           }}
         >
           {t("Navigation.playlists")}
-        </NavLink>
-      </MenuItem>
-      <MenuItem>
-        <NavLink
-          exact
-          activeClassName="activeLink"
-          to="/settings"
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          {t("Navigation.settings")}
         </NavLink>
       </MenuItem>
     </Container>

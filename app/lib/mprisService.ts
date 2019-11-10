@@ -164,19 +164,6 @@ const mprisService = (win: BrowserWindow, app: App) => {
       case "setVolume":
         mprisPlayer.volume = args.data / 100;
         break;
-      case "trackInfo":
-        mprisPlayer.metadata = {
-          "xesam:artist": [args.data.artist],
-          "xesam:title": args.data.title,
-          "xesam:url": `https://www.youtube.com/watch?v=${args.data.id}`,
-          "mpris:trackid": mprisPlayer.objectPath("track/0"),
-          "mpris:artUrl": args.data.thumbnail,
-          "mpris:length": args.data.duration * 1e6 // in microseconds
-        };
-        logger.media(
-          `Track Info:\n${JSON.stringify(mprisPlayer.metadata, null, 2)}`
-        );
-        break;
       case "seekTo":
         mprisPlayer.seeked(args.data * 1e6); // in microseconds
         break;
@@ -201,6 +188,19 @@ const mprisService = (win: BrowserWindow, app: App) => {
         if (args.data === true) mprisPlayer.playbackStatus = "Playing";
         if (args.data === false) mprisPlayer.playbackStatus = "Paused";
         logger.media(`Playback status: ${mprisPlayer.playbackStatus}`);
+        break;
+      case "trackInfo":
+        mprisPlayer.metadata = {
+          /*"xesam:artist": [args.data.artist],*/
+          "xesam:title": args.data.title,
+          "xesam:url": `https://www.youtube.com/watch?v=${args.data.id}`,
+          "mpris:trackid": mprisPlayer.objectPath("track/0"),
+          "mpris:artUrl": `https://img.youtube.com/vi/${args.data.id}/hqdefault.jpg`,
+          "mpris:length": args.data.duration * 1e6 // in microseconds
+        };
+        logger.media(
+          `Track Info:\n${JSON.stringify(mprisPlayer.metadata, null, 2)}`
+        );
         break;
       default:
     }

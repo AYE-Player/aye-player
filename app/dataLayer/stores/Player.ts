@@ -13,16 +13,16 @@ interface IRPCState {
 
 const Player = types
   .model({
-    volume: types.optional(types.number, 0.2),
-    repeat: types.optional(types.string, "none"),
-    isShuffling: types.optional(types.boolean, false),
-    isReady: types.optional(types.boolean, false),
-    isPlaying: types.optional(types.boolean, false),
-    isMuted: types.optional(types.boolean, false),
-    isSeeking: types.optional(types.boolean, false),
-    playbackPosition: types.optional(types.number, 0),
-    currentTrack: types.maybe(types.reference(Track)),
-    currentPlaylist: types.maybe(types.reference(Playlist))
+    volume: types.number,
+    repeat: types.string,
+    isShuffling: types.boolean,
+    isReady: types.boolean,
+    isPlaying: types.boolean,
+    isMuted: types.boolean,
+    isSeeking: types.boolean,
+    playbackPosition: types.number,
+    currentTrack: types.maybe(types.safeReference(Track)),
+    currentPlaylist: types.maybe(types.safeReference(Playlist))
   })
   .actions(self => ({
     playTrack(track: TrackModel) {
@@ -47,6 +47,15 @@ const Player = types
         endTime: state ? null : track.duration,
         details: track.title,
         state: state ? state : null
+      });
+
+      ipcRenderer.send("player2Win", {
+        type: "trackInfo",
+        data: {
+          id: self.currentTrack.id,
+          title: self.currentTrack.title,
+          duration: self.currentTrack.duration
+        }
       });
     },
 

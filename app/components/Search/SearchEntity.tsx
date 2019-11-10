@@ -45,13 +45,14 @@ const TrackInfoContainer = styled.div<any>`
   width: 100%;
 `;
 
+// TODO: FIX scrolltext, to only scroll if it really goes out of the disgnated zone
 const Title = styled.div<any>`
   padding-right: 16px;
   width: 300px;
   white-space: nowrap;
   overflow: hidden;
   ${(props: any) => {
-    if (props.length >= 30) {
+    if (props.length >= 42) {
       return `div {
 
         transform: translateX(0);
@@ -67,6 +68,7 @@ const Title = styled.div<any>`
 
 const Duration = styled.div`
   font-size: 14px;
+  margin-left: 16px;
 `;
 
 const TrackImageContainer = styled.div`

@@ -6,13 +6,22 @@ import Select from "@material-ui/core/Select";
 import { MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 
+interface IOption {
+  value: string;
+  text: string;
+}
+
 interface ICustomDropDownProps {
-  options: any;
+  options: IOption[];
   name: string;
   id: string;
-  handleChange: any;
-  selected: any;
-  setSelected: any;
+  handleChange: (
+    event: React.ChangeEvent<{
+      value: string;
+    }>
+  ) => Promise<void>;
+  selected: string;
+  setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -51,11 +60,8 @@ const CustomDropDown: React.FunctionComponent<ICustomDropDownProps> = props => {
             id: props.id
           }}
         >
-          {props.options.map((option: any) => (
-            <MenuItem
-              value={option.value}
-              key={option.value}
-            >
+          {props.options.map((option: IOption) => (
+            <MenuItem value={option.value} key={option.value}>
               {option.text}
             </MenuItem>
           ))}

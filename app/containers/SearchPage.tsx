@@ -41,22 +41,53 @@ const Search = styled.div`
   margin-bottom: 16px;
 `;
 
-// TODO: Dont use playlist as entities, use the search results
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({ player, queue }: RootStoreModel) => ({
+  const Store = ({ player, queue, searchResult, tracks }: RootStoreModel) => ({
     player,
-    queue
+    queue,
+    searchResult,
+    tracks
   });
 
-  const { player, queue } = useInject(Store);
+  const { player, queue, searchResult, tracks } = useInject(Store);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslation();
 
+  const [term, setTerm] = React.useState("");
+
   const _handleDoubleClick = (track: TrackModel) => {
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
+  };
+
+  const _handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTerm(event.target.value);
+  };
+
+  const _handleSearchIconClick = (event: any) => {
+    if (term.length > 0) {
+      _search(term);
+    } else {
+      console.log("empty serach");
+    }
+  };
+
+  const _handleKeyPress = (event: any) => {
+    if (event.key === "Enter" && term.length > 0) {
+      _search(term);
+    }
+  };
+
+  // TODO: maybe this can be nicer? try to think about someting
+  const _search = async (term: string) => {
+    const result = await searchResult.search(term);
+    const foundTracks = [];
+    for (const track of result) {
+      foundTracks.push(tracks.add(track));
+    }
+    searchResult.addTracks(foundTracks);
   };
 
   return (
@@ -64,16 +95,22 @@ const SearchPage: React.FunctionComponent = () => {
       <Header>{t("SearchPage.title")}</Header>
       <PlaylistContainer>
         <Search>
-          <SearchIcon style={{ marginRight: "8px" }} />
+          <SearchIcon
+            style={{ marginRight: "8px" }}
+            onClick={_handleSearchIconClick}
+          />
           <InputBase
+            onKeyPress={_handleKeyPress}
+            onChange={_handleChange}
             placeholder={t("SearchPage.placeholder")}
-            inputProps={{ "aria-label": t("search") }}
+            inputProps={{ "aria-label": t("SearchPage.title") }}
             style={{ color: "#fbfbfb" }}
           />
         </Search>
         <ScrollContainer>
-          {player.currentPlaylist
-            ? player.currentPlaylist.tracks.map((track, index) => {
+          {searchResult.isEmpty
+            ? []
+            : searchResult.tracks.map((track, index) => {
                 return (
                   <SearchEntity
                     duration={track.formattedDuration}
@@ -84,8 +121,7 @@ const SearchPage: React.FunctionComponent = () => {
                     sendNotification={enqueueSnackbar}
                   />
                 );
-              })
-            : []}
+              })}
         </ScrollContainer>
       </PlaylistContainer>
     </Container>

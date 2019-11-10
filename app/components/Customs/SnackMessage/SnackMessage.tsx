@@ -8,7 +8,15 @@ interface ISnackMessageProps {
 }
 
 const Container = styled.div<any>`
-  width: 256px;
+  ${props => {
+    if (props.length >= 25) {
+      return "width: 500px";
+    } else if (props.lenght >= 15) {
+      return "width: 350px";
+    } else {
+      return "width: 256px";
+    }
+  }}
   height: 40px;
   display: flex;
   align-items: center;
@@ -26,7 +34,7 @@ const Container = styled.div<any>`
 
 const SnackMessage = React.forwardRef((props: ISnackMessageProps, ref) => {
   return (
-    <Container key={props.id} variant={props.variant} ref={ref}>
+    <Container key={props.id} variant={props.variant} ref={ref} length={props.message.length}>
       {props.message}
     </Container>
   );

@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
 import { useTranslation } from "react-i18next";
+import Divider from "../../Divider/Divider";
 
 interface IAccountDisplayMenuProps {}
 
@@ -73,6 +74,12 @@ const AccountDisplayMenu: React.FunctionComponent<
     window.location.href = `${window.location.href.split("#/")[0]}#/account`;
   };
 
+  const _handleSettingsClick = () => {
+    // navigate to the account page AND close the menu
+    setAnchorEl(null);
+    window.location.href = `${window.location.href.split("#/")[0]}#/settings`;
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -84,6 +91,8 @@ const AccountDisplayMenu: React.FunctionComponent<
           onClose={_handleClose}
         >
           <MenuItem onClick={() => _handleProfileClick()}>{t("AccountDisplay.Menu.profile")}</MenuItem>
+          <MenuItem onClick={() => _handleSettingsClick()}>{t("AccountDisplay.Menu.settings")}</MenuItem>
+          <Divider />
           <MenuItem onClick={() => _handleLogoutClick()}>{t("AccountDisplay.Menu.logout")}</MenuItem>
         </StyledMenu>
       </Container>

@@ -5,8 +5,8 @@ import Divider from "../../Divider/Divider";
 import { useTranslation } from "react-i18next";
 
 interface INewPasswordProps {
-  handlePasswordChange: any;
-  handlePasswordChange2: any;
+  handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handlePasswordChange2: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Aligner = styled.div`

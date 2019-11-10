@@ -36,8 +36,7 @@
   },
   "Navigation": {
     "search": "Search",
-    "playlists": "Playlists",
-    "settings": "Settings"
+    "playlists": "Playlists"
   },
   "RegisterPage": {
     "minLengthPassword": "min. 8 characters",
@@ -46,7 +45,9 @@
     "email": "E-Mail",
     "password": "Password",
     "repeatPassword": "Repeat Password",
-    "registerButton": "Register"
+    "registerButton": "Register",
+    "success": "We send you an email, to complete your registration.",
+    "error": "Something went wrong, please try again later."
   },
   "PlaylistPage": {
     "name": "Name",
@@ -90,6 +91,7 @@
     "updateErrorMessage": "Something went wrong",
     "updateSuccessMessage": "Update successfull",
     "username": "Username",
+    "email": "E-Mail",
     "updateButton": "Update",
     "deleteButton": "Delete",
     "password": "Password",
@@ -105,6 +107,7 @@
     "loginButton": "Login",
     "Menu": {
       "profile": "Profile",
+      "settings": "Settings",
       "logout": "Logout"
     }
   },

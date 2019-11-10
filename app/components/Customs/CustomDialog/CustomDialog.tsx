@@ -20,11 +20,11 @@ interface ICustomDialogProps {
   title: string;
   text: string;
   onConfirm: Function;
-  handleClose: any;
-  handleClickOpen: any;
-  handleConfirmClose: any;
-  open: any;
-  children: any;
+  handleClose: () => void;
+  handleClickOpen: () => void;
+  handleConfirmClose: () => void;
+  open: boolean;
+  children: JSX.Element | JSX.Element[];
 }
 
 const styles = (theme: Theme) =>
