@@ -41,14 +41,14 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-/*if (
+if (
   process.env.NODE_ENV === "development" ||
   process.env.DEBUG_PROD === "true"
 ) {
   require("electron-debug")();
-}*/
+}
 
-/*const installExtensions = async () => {
+const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS"];
@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === "production") {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
-};*/
+};
 
 let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
@@ -151,7 +151,6 @@ const createAppScreen = () => {
       mainWindow.minimize();
     } else {
       mainWindow.show();
-      // mainWindow.focus();
     }
 
     // Register MPRIS
@@ -262,7 +261,7 @@ app.on("ready", async () => {
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
   ) {
-    //await installExtensions();
+    await installExtensions();
   }
 
   // Create our screens
