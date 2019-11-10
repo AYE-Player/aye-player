@@ -97,6 +97,10 @@ ipcRenderer.on("play-previous", (event, message) => {
   player.playTrack(track);
 });
 
+ipcRenderer.on("position", (event, message) => {
+  playerElement.seekTo(Math.floor(message.pos));
+});
+
 const Player: React.FunctionComponent<IPlayerProps> = () => {
   const Store = ({
     player,
@@ -276,7 +280,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 2
           }}
         />
-      ) : <div style={{width: "320px", height: "202px"}}></div>}
+      ) : (
+        <div style={{ width: "320px", height: "202px" }}></div>
+      )}
     </Container>
   );
 };

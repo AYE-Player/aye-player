@@ -21,12 +21,12 @@ import { autoUpdater } from "electron-updater";
 import "v8-compile-cache";
 import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
-import mprisService from "./lib/mprisService";
 import registerMediaKeys from "./lib/registerMediaKeys";
 import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
 import config from "./configs/app.config";
 import AyeTray from "./modules/AyeTray";
+import AyeMpris from "./modules/AyeMpris";
 
 export default class AppUpdater {
   constructor() {
@@ -157,7 +157,7 @@ const createAppScreen = () => {
     // Register MPRIS
     if (process.platform === "linux") {
       try {
-        mprisService(mainWindow, app);
+        new AyeMpris(mainWindow).init();
       } catch (err) {
         console.error(err);
       }
