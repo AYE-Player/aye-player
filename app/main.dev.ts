@@ -169,7 +169,7 @@ const createAppScreen = () => {
 
     if (
       isTrusted === undefined ||
-      (process.env.platform === "darwin" && isTrusted)
+      (process.platform === "darwin" && isTrusted)
     ) {
       registerMediaKeys(mainWindow);
     }
