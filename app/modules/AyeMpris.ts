@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import mpris from "mpris-service";
-import logger from "../lib/ayeLogger";
+import logger from "./AyeLogger";
 import BaseModule from "./BaseModule";
 
 class AyeMpris extends BaseModule {

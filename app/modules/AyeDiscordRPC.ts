@@ -1,5 +1,5 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
-import Logger from "./ayeLogger";
+import Logger from "./AyeLogger";
 
 interface IActivityParameters {
   details: string;
@@ -10,7 +10,7 @@ interface IActivityParameters {
   instance: boolean;
 }
 
-export default class RPCClient {
+export default class AyeDiscordRPC {
   private _rpc: any;
 
   public isConnected: boolean;

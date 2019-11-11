@@ -19,14 +19,14 @@ import log from "electron-log";
 import unhandled from "electron-unhandled";
 import { autoUpdater } from "electron-updater";
 import "v8-compile-cache";
+import config from "./configs/app.config";
 import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
-import registerMediaKeys from "./lib/registerMediaKeys";
-import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
-import config from "./configs/app.config";
-import AyeTray from "./modules/AyeTray";
+import AyeDiscordRPC from "./modules/AyeDiscordRPC";
+import AyeMediaKeys from "./modules/AyeMediaKeys";
 import AyeMpris from "./modules/AyeMpris";
+import AyeTray from "./modules/AyeTray";
 
 export default class AppUpdater {
   constructor() {
@@ -61,7 +61,7 @@ const installExtensions = async () => {
 let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
 let tray: AyeTray = null;
-let rpc = new RPCClient("621726681140297728");
+let rpc: AyeDiscordRPC;
 
 // Fix the player not being able to play audio when the user did not interact
 // with the page
@@ -142,6 +142,10 @@ const createAppScreen = () => {
     mainWindow.center();
   }
 
+  // Register Modules
+  rpc = new AyeDiscordRPC("621726681140297728");
+  tray = new AyeTray(mainWindow);
+
   if (Settings.get("rpcEnabled")) {
     rpc.login();
   }
@@ -167,16 +171,14 @@ const createAppScreen = () => {
       isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
     }
 
+    // Register media keys
     if (
       isTrusted === undefined ||
       (process.platform === "darwin" && isTrusted)
     ) {
-      registerMediaKeys(mainWindow);
+      new AyeMediaKeys(mainWindow);
     }
   });
-
-  tray = new AyeTray(mainWindow);
-  tray.init();
 
   mainWindow.on("close", event => {
     if (Settings.get("minimizeToTray") && !tray.shouldQuit) {

@@ -7,9 +7,6 @@ class AyeTray extends BaseModule {
 
   constructor(window: BrowserWindow) {
     super(window);
-  }
-
-  init() {
     this.tray = new Tray(
       nativeTheme.shouldUseDarkColors || process.platform === "linux"
         ? `${__dirname}/../images/icons/png/16x16_w.png`
