@@ -6,7 +6,7 @@ export type SearchResultModel = Instance<typeof SearchResult>;
 
 const SearchResult = types
   .model({
-    tracks: types.array(types.safeReference(Track))
+    tracks: types.array(types.reference(Track))
   })
   .views(self => ({
     get isEmpty() {

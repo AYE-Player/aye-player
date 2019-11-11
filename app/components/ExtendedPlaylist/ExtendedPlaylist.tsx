@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
@@ -9,22 +9,6 @@ import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 
 interface IProps {
   match: any;
-}
-
-interface IDragResult {
-  combine: any;
-  destination: {
-    droppableId: string;
-    index: number;
-  };
-  draggableId: string;
-  mode: string;
-  reason: string;
-  source: {
-    index: number;
-    droppableId: string;
-  };
-  type: string;
 }
 
 const Container = styled.div`
@@ -72,7 +56,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     setValue(!value);
   };
 
-  const _onDragEnd = (result: IDragResult) => {
+  const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const track = playlist.removeAndGetTrack(result.source.index);
     playlist.addTrackAt(
       Track.create({

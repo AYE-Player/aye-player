@@ -160,6 +160,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
     trackHistory.addTrack(prevTrack);
     history.push(prevTrack);
+    player.setCurrentTrack();
     player.playTrack(track);
   };
 

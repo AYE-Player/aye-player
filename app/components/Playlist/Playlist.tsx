@@ -1,7 +1,7 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, ResponderProvided, DropResult } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
@@ -10,22 +10,6 @@ import PlaylistEntity from "./PlaylistEntity";
 import { useTranslation } from "react-i18next";
 
 interface IProps {}
-
-interface IDragResult {
-  combine: any;
-  destination: {
-    droppableId: string;
-    index: number;
-  };
-  draggableId: string;
-  mode: string;
-  reason: string;
-  source: {
-    index: number;
-    droppableId: string;
-  };
-  type: string;
-}
 
 const Container = styled.div`
   margin: 8px 5px;
@@ -84,7 +68,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   player.currentTrack;
 
-  const _onDragEnd = (result: IDragResult) => {
+  const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const track = player.currentPlaylist.removeAndGetTrack(result.source.index);
     player.currentPlaylist.addTrackAt(
       Track.create({

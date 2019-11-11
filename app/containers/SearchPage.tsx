@@ -69,8 +69,6 @@ const SearchPage: React.FunctionComponent = () => {
   const _handleSearchIconClick = (event: any) => {
     if (term.length > 0) {
       _search(term);
-    } else {
-      console.log("empty serach");
     }
   };
 

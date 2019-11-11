@@ -1,11 +1,11 @@
-import { getRoot, Instance, resolveIdentifier, types } from "mobx-state-tree";
+import { getRoot, Instance, resolveIdentifier, types, clone } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 
 export type QueueModel = Instance<typeof Queue>;
 
 const Queue = types
   .model({
-    tracks: types.array(types.safeReference(Track))
+    tracks: types.array(types.reference(Track))
   })
   .views(self => ({
     get currentTrack() {
@@ -36,6 +36,10 @@ const Queue = types
       self.tracks.push(id);
     },
 
+    addTrackAt(track: TrackModel, newIndex: number) {
+      self.tracks.splice(newIndex, 0, track);
+    },
+
     removeTrack(id: string) {
       const foundList = self.tracks.find(track => track.id === id);
       const idx = self.tracks.indexOf(foundList);
@@ -61,9 +65,16 @@ const Queue = types
       return self.tracks[0];
     },
 
+    removeAndGetTrack(index: number) {
+      const track = clone(self.tracks[index]);
+      self.tracks.splice(index, 1);
+      return track;
+    },
+
     moveTrack(oldIndex: number, newIndex: number) {
-      const trackId = self.tracks.splice(oldIndex, 1)[0];
-      self.tracks.splice(newIndex, 0, trackId);
+      const track = self.tracks[oldIndex].id;
+      self.tracks.splice(oldIndex, 1);
+      self.tracks.splice(newIndex, 0, track);
     },
 
     clear() {
