@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 interface IAccountDisplayProps {
   username?: string;
   avatar?: string;
+  email?: string;
 }
 
 const Container = styled.div`
@@ -42,7 +43,7 @@ const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
           ) : (
             <AccountCircleIcon style={{ marginRight: "8px" }} />
           )}
-          <Text>{props.username}</Text>
+          <Text>{props.username ? props.username : props.email}</Text>
           <ExpandMoreIcon />
         </AccountDisplayMenu>
       ) : (

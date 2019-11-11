@@ -28,7 +28,7 @@ const MainPage: React.FunctionComponent = () => {
         direction="column"
       >
         {user.isAuthenticated ? (
-          <AccountDisplay username={user.name} avatar={user.avatar} />
+          <AccountDisplay username={user.name} avatar={user.avatar} email={user.email} />
         ) : <AccountDisplay />}
         <Routes />
       </StyledGrid>
