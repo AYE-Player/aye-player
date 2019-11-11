@@ -36,8 +36,8 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
-  const _handleOnClick = (event: React.MouseEvent) => {
-    user.authenticate(name, password);
+  const _handleOnClick = async (event: React.MouseEvent) => {
+    await user.authenticate(name, password);
   };
 
   return (
@@ -66,11 +66,17 @@ const LoginPage: React.FunctionComponent<any> = () => {
         type="password"
       />
       <Divider size={3} />
-      <CustomButton onClick={_handleOnClick} name={t("LoginPage.loginButton")} />
+      <CustomButton
+        onClick={_handleOnClick}
+        name={t("LoginPage.loginButton")}
+      />
       <Divider size={3} />
       <SmallLink name={t("LoginPage.registerLink")} to="/register" />
       <Divider />
-      <SmallLink name={t("LoginPage.forgotPasswordLink")} to="/passwordForgotten" />
+      <SmallLink
+        name={t("LoginPage.forgotPasswordLink")}
+        to="/passwordForgotten"
+      />
     </Grid>
   );
 };
