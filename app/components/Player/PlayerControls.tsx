@@ -17,8 +17,8 @@ import formattedDuration from "../../../app/helpers/formattedDuration";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import { debounce } from "../../helpers/";
 import useInject from "../../hooks/useInject";
-import Divider from "../Divider/Divider";
 import { Repeat } from "../../types/interfaces";
+import Divider from "../Divider/Divider";
 
 interface IProps {
   play: () => void;

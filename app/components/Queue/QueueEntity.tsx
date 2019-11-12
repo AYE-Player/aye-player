@@ -72,7 +72,11 @@ const DragHandle = withStyles({
 
 const QueueEntity: React.FunctionComponent<IProps> = props => {
   return (
-    <Draggable key={props.dragId} draggableId={props.dragId} index={props.index}>
+    <Draggable
+      key={props.dragId}
+      draggableId={props.dragId}
+      index={props.index}
+    >
       {(provided: any) => (
         <Container
           ref={provided.innerRef}

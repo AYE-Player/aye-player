@@ -1,18 +1,18 @@
 import { Button } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import AvatarUpload from "../components/Account/AvatarUpload/AvatarUpload";
 import NewPassword from "../components/Account/NewPassword/NewPassword";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomizedDialogs from "../components/Customs/CustomDialog/CustomDialog";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
-import { useSnackbar } from "notistack";
-import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;

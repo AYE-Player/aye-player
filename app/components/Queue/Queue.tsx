@@ -7,12 +7,12 @@ import {
   DropResult,
   ResponderProvided
 } from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Track from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
-import { useTranslation } from "react-i18next";
-import Track from "../../dataLayer/models/Track";
 
 interface IProps {}
 

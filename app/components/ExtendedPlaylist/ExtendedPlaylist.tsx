@@ -1,6 +1,11 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { DragDropContext, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  ResponderProvided
+} from "react-beautiful-dnd";
 import styled from "styled-components";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";

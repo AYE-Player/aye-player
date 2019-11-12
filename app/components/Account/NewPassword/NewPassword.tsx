@@ -1,8 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomTextField from "../../../components/Customs/CustomTextField/CustomTextField";
 import Divider from "../../Divider/Divider";
-import { useTranslation } from "react-i18next";
 
 interface INewPasswordProps {
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

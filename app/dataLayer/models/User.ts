@@ -1,5 +1,5 @@
-import { types, Instance, flow } from "mobx-state-tree";
 import axios from "axios";
+import { flow, Instance, types } from "mobx-state-tree";
 import Logger from "../../modules/AyeLogger";
 
 export type UserModel = Instance<typeof User>;

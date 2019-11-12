@@ -43,9 +43,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const QueueEntityMenu: React.FunctionComponent<
-  IQueueEntityMenuProps
-> = props => {
+const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props => {
   const Store = ({ queue }: RootStoreModel) => ({
     queue
   });
@@ -67,9 +65,6 @@ const QueueEntityMenu: React.FunctionComponent<
     setAnchorEl(null);
   };
 
-  // FIXME: For this to work, we need to specify a unique id to each queue element, otherwise all elements with the
-  // same youtube id (e.g. if the same track is queued twice) will be shown as active. The best idea i had so far
-  // is to extend the track model only while the unique id is needed, but this seems not so nice
   const _handlePlayNextTrack = (id: string) => {
     queue.addNextTrack(id);
     setAnchorEl(null);

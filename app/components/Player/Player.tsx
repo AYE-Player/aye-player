@@ -1,13 +1,13 @@
+import { ipcRenderer } from "electron";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
+import Root from "../../containers/Root";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import PlayerControls from "./PlayerControls";
-import { ipcRenderer } from "electron";
-import Root from "../../containers/Root";
 import { Repeat } from "../../types/interfaces";
+import PlayerControls from "./PlayerControls";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}

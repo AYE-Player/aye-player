@@ -1,14 +1,14 @@
 import { InputBase } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import SearchEntity from "../components/Search/SearchEntity";
+import Track, { TrackModel } from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
-import { TrackModel } from "app/dataLayer/models/Track";
-import { useSnackbar } from "notistack";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -78,12 +78,12 @@ const SearchPage: React.FunctionComponent = () => {
     }
   };
 
-  // TODO: maybe this can be nicer? try to think about someting
+  // TODO: maybe this can be nicer? try to think about something
   const _search = async (term: string) => {
-    const result = await searchResult.search(term);
+    const result = await searchResult.getTracks(term);
     const foundTracks = [];
     for (const track of result) {
-      foundTracks.push(tracks.add(track));
+      foundTracks.push(tracks.add(Track.create(track)));
     }
     searchResult.addTracks(foundTracks);
   };

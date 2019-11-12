@@ -49,9 +49,7 @@ const CssTextField = withStyles({
   }
 })(TextField);
 
-const CustomTextField: React.FunctionComponent<
-  ICustomTextFieldProps
-> = props => {
+const CustomTextField: React.FunctionComponent<ICustomTextFieldProps> = props => {
   return (
     <CssTextField
       id={props.id}

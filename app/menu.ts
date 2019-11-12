@@ -1,9 +1,9 @@
 import {
   app,
-  Menu,
-  shell,
   BrowserWindow,
-  MenuItemConstructorOptions
+  Menu,
+  MenuItemConstructorOptions,
+  shell
 } from "electron";
 import { i18n } from "i18next";
 

@@ -36,7 +36,7 @@ const CustomButton: React.FunctionComponent<ICustomButtonProps> = props => {
         variant="outlined"
         disabled={props.disabled}
         onClick={props.onClick}
-        style={{...props.style}}
+        style={{ ...props.style }}
       >
         {props.name ? props.name : props.children}
       </CssButton>

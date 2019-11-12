@@ -1,5 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
@@ -7,7 +8,6 @@ import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;

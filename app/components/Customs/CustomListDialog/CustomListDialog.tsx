@@ -1,12 +1,12 @@
-import React from "react";
 import Avatar from "@material-ui/core/Avatar";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
 import AddIcon from "@material-ui/icons/Add";
+import React from "react";
 import { TrackModel } from "../../../dataLayer/models/Track";
 
 export interface SimpleDialogProps {

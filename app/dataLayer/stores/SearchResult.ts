@@ -1,6 +1,6 @@
-import { Instance, types, flow } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
 import axios from "axios";
+import { flow, Instance, types } from "mobx-state-tree";
+import Track, { TrackModel } from "../models/Track";
 
 export type SearchResultModel = Instance<typeof SearchResult>;
 
@@ -14,9 +14,11 @@ const SearchResult = types
     }
   }))
   .actions(self => ({
-    search: flow(function* register(term: string) {
+    getTracks: flow(function* getTracks(term: string) {
       try {
-        const { data } = yield axios.get(`http://api.aye-player.de/search/v1/${term}`);
+        const { data } = yield axios.get(
+          `http://api.aye-player.de/search/v1/${term}`
+        );
         const tracks = [];
 
         for (const track of data) {
@@ -32,6 +34,7 @@ const SearchResult = types
         throw error;
       }
     }),
+
     addTracks(tracks: TrackModel[]) {
       for (const track of tracks) {
         self.tracks.push(track.id);

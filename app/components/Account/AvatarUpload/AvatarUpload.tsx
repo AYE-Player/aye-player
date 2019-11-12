@@ -1,8 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-import CustomButton from "../../Customs/CustomButton/CustomButton";
-import { UserModel } from "../../../dataLayer/models/User";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import { UserModel } from "../../../dataLayer/models/User";
+import CustomButton from "../../Customs/CustomButton/CustomButton";
 const placeholder = require("../../../images/placeholder.png");
 
 interface IAvatarUploadProps {

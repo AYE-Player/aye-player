@@ -1,6 +1,6 @@
+import DBus from "dbus-next";
 import { BrowserWindow, globalShortcut, ipcRenderer } from "electron";
 import Logger from "./AyeLogger";
-import DBus from "dbus-next";
 import BaseModule from "./BaseModule";
 
 class AyeMediaKeys extends BaseModule {

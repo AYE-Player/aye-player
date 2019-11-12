@@ -5,9 +5,9 @@ import Player from "./Player";
 import Playlists from "./Playlists";
 import Queue from "./Queue";
 import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";
-import TrackStore from "./Tracks";
-import TrackHistory from "./TrackHistory";
 import SearchResult from "./SearchResult";
+import TrackHistory from "./TrackHistory";
+import TrackStore from "./Tracks";
 
 export const createStore = (): RootStoreModel => {
   const playlists = Playlists.create({ lists: [] });

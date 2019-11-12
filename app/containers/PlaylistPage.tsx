@@ -4,20 +4,20 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
+import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
 import styled from "styled-components";
-import CustomFormDialog from "../components/Customs/CustomFormDialog/CustomFormDialog";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
+import CustomFormDialog from "../components/Customs/CustomFormDialog/CustomFormDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
 import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
-import { withStyles } from "@material-ui/styles";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -44,13 +44,6 @@ const CreatePlaylist = styled.div`
   right: 10px;
   bottom: 56px;
 `;
-
-/* const CreateFirstPlaylist = styled.div`
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-`; */
 
 const ScrollContainer = styled.div`
   overflow: auto;

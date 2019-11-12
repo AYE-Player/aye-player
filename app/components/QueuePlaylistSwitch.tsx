@@ -14,9 +14,7 @@ const QueuePlaylistSwitch: React.FunctionComponent<IQueuePlaylistSwitchProps> = 
 
   const { app } = useInject(Store);
 
-  return (
-    app.showQueue ? <Queue/> : <Playlist />
-  );
+  return app.showQueue ? <Queue /> : <Playlist />;
 };
 
 export default observer(QueuePlaylistSwitch);

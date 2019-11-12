@@ -1,10 +1,10 @@
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AccountDisplayMenu from "./AccountDisplayMenu";
-import { useTranslation } from "react-i18next";
 
 interface IAccountDisplayProps {
   username?: string;

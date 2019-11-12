@@ -1,6 +1,6 @@
-import { Tray, BrowserWindow, nativeTheme, Menu, app } from "electron";
-import BaseModule from "./BaseModule";
+import { app, BrowserWindow, Menu, nativeTheme, Tray } from "electron";
 import path from "path";
+import BaseModule from "./BaseModule";
 
 class AyeTray extends BaseModule {
   protected tray: Tray;

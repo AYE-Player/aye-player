@@ -13,6 +13,6 @@ const formattedDuration = (duration: number) => {
     ":" +
     str_pad_left(seconds, "0", 2);
   return finalTime;
-}
+};
 
 export default formattedDuration;

@@ -1,8 +1,8 @@
 import { ipcRenderer } from "electron";
 import { Instance, types } from "mobx-state-tree";
+import { Repeat } from "../../types/interfaces";
 import Playlist, { PlaylistModel } from "../models/Playlist";
 import Track, { TrackModel } from "../models/Track";
-import { Repeat } from "../../types/interfaces";
 
 export type PlayerModel = Instance<typeof Player>;
 

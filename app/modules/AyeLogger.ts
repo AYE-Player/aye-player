@@ -1,5 +1,5 @@
-import logFile from "electron-log";
 import debug from "debug";
+import logFile from "electron-log";
 import { unlinkSync } from "fs";
 
 const logger = debug("aye");
