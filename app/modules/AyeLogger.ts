@@ -8,6 +8,7 @@ const logTray = debug("aye:tray");
 const logWin2Player = debug("aye:win2Player");
 const logPlayer2Win = debug("aye:player2Win");
 const logRPC = debug("aye:rpc");
+const logPlayer = debug("aye:player");
 
 logFile.transports.console.level = "debug";
 logFile.transports.file.fileName = "aye.log";
@@ -58,6 +59,21 @@ class AyeLogger {
 
   static player2Win(message: string) {
     logPlayer2Win("%o", message);
+  }
+
+  static player(message: string, type?: string) {
+    logPlayer("TYPE ", type, "MESSAGE", message);
+    switch (type) {
+      case "warn":
+        logFile.warn(`[WARN] aye:rpc\t\t ${message}`);
+        break;
+      case "error":
+        logFile.error(`[ERROR] aye:rpc\t\t ${message}`);
+        break;
+      default:
+        logFile.info(`aye:rpc\t\t ${message}`);
+        break;
+    }
   }
 }
 

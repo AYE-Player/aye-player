@@ -1,5 +1,5 @@
 import { BrowserWindow, globalShortcut, ipcRenderer } from "electron";
-import logger from "./AyeLogger";
+import Logger from "./AyeLogger";
 import DBus from "dbus-next";
 import BaseModule from "./BaseModule";
 
@@ -9,7 +9,7 @@ class AyeMediaKeys extends BaseModule {
   constructor(window: BrowserWindow) {
     super(window);
 
-    logger.media("Trying to register media Keys");
+    Logger.media("Trying to register media Keys");
     if (process.platform === "linux") {
       this.bus = DBus.sessionBus();
       this.linux();
@@ -20,7 +20,7 @@ class AyeMediaKeys extends BaseModule {
   }
 
   macOSWindows = () => {
-    logger.media("Registering MacOS/Windows keys");
+    Logger.media("Registering MacOS/Windows keys");
     globalShortcut.register("MediaPlayPause", () => {
       this.window.webContents.send("play-pause");
     });
@@ -60,7 +60,7 @@ class AyeMediaKeys extends BaseModule {
       const mediaKeys = dbusPlayer.getInterface(interfaceName);
 
       mediaKeys.on("MediaPlayerKeyPressed", (iface, keyName) => {
-        logger.media(`Media key pressed: ${keyName}`);
+        Logger.media(`Media key pressed: ${keyName}`);
         switch (keyName) {
           case "Next":
             this.executeMediaKey("play-next");
@@ -76,14 +76,14 @@ class AyeMediaKeys extends BaseModule {
       });
 
       mediaKeys.GrabMediaPlayerKeys("ayeplayer", 0);
-      logger.media(`Grabbed media keys for ${desktopEnv}`);
+      Logger.media(`Grabbed media keys for ${desktopEnv}`);
     } catch (err) {
       // Error if trying to grab keys in another desktop environment
     }
   }
 
   executeMediaKey(key: string) {
-    logger.media(`Executing ${key} media key command`);
+    Logger.media(`Executing ${key} media key command`);
     ipcRenderer.send(key);
   }
 }

@@ -1,5 +1,6 @@
 import { types, Instance, flow } from "mobx-state-tree";
 import axios from "axios";
+import Logger from "../../modules/AyeLogger";
 
 export type UserModel = Instance<typeof User>;
 
@@ -41,9 +42,13 @@ const User = types
       password: string
     ) {
       try {
+        Logger.player(`Trying to log in with: ${username}, ${password}`);
         const { data: token } = yield axios.post(
           "https://api.aye-player.de/auth/v1/",
-          { Email: username, Password: password }
+          {
+            Email: username,
+            Password: password
+          }
         );
         localStorage.setItem("token", token);
         // Authenticate user
@@ -54,14 +59,14 @@ const User = types
         self.isAnonym = false;
         self.isAuthenticated = true;
         self.hasPremium = true;
-        console.log("LOGIN");
+        Logger.player(`Logged in user ${username}`);
       } catch (error) {
-        // Show error
+        Logger.player(`Error logging in ${error}`, "error");
       }
     }),
 
     logout() {
-      console.log("LOGGING UT");
+      Logger.player("LOGGING UT");
       localStorage.removeItem("token");
       self.id = undefined;
       self.email = undefined;
@@ -73,16 +78,13 @@ const User = types
     },
 
     delete() {
-      console.log("DELETING USER");
+      Logger.player("DELETING USER");
     },
 
     updatePassword(password: string) {
-      console.log("NEW PASSWORD", password);
+      Logger.player(`NEW PASSWORD ${password}`);
     },
 
-    /*async register(name: string, email: string, password: string) {
-      console.log("REGISTER EVENT", name, email, password);
-    },*/
     register: flow(function* register(
       name: string,
       email: string,
@@ -93,16 +95,16 @@ const User = types
           "https://api.aye-player.de/userIdentity/v1/",
           { Email: email, Password: password }
         ); // yield for promise resolving
-        console.log("RES", response);
-        console.log("REGISTER EVENT", name, email, password);
+        Logger.player(`RES ${response}`);
+        Logger.player(`REGISTER EVENT ${name} ${email} ${password}`);
       } catch (error) {
-        console.error("Failed registration", error);
+        Logger.player(`Failed registration ${error}`, "error");
         throw error;
       }
     }),
 
     forgotPassword(email: string) {
-      console.log("FORGOT PASSWORD EVENT", email);
+      Logger.player(`FORGOT PASSWORD EVENT ${email}`);
     }
   }));
 
