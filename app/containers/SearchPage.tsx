@@ -80,10 +80,14 @@ const SearchPage: React.FunctionComponent = () => {
 
   // TODO: maybe this can be nicer? try to think about something
   const _search = async (term: string) => {
-    const result = await searchResult.getTracks(term);
+    const results = await searchResult.getTracks(term);
     const foundTracks = [];
-    for (const track of result) {
-      foundTracks.push(tracks.add(Track.create(track)));
+    for (const result of results) {
+      const track = Track.create(result);
+      if (!tracks.tracks.find(t => t.id === track.id)) {
+        tracks.add(track);
+      }
+      foundTracks.push(track);
     }
     searchResult.addTracks(foundTracks);
   };
