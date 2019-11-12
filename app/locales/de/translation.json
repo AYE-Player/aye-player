@@ -47,7 +47,7 @@
     "repeatPassword": "Passwort wiederholen",
     "registerButton": "Registrieren",
     "success": "Wir haben dir eine E-Mail geschickt, um deine Registrierung abzuschließen",
-    "error": "Etwas ist schief gelaufen, versuche es später nocheinmal"
+    "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
   },
   "PlaylistPage": {
     "name": "Name",
@@ -84,7 +84,8 @@
     "password": "Passwort",
     "loginButton": "Login",
     "registerLink": "Noch keinen account?",
-    "forgotPasswordLink": "Passwort vergessen?"
+    "forgotPasswordLink": "Passwort vergessen?",
+    "loginError": "Etwas ist schief gelaufen, versuche es später nocheinmal."
   },
   "AccountPage": {
     "header": "Account Einstellungen",

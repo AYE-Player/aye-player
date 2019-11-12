@@ -44,6 +44,7 @@ const AccountPage: React.FunctionComponent = () => {
 
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
+  const [passwordsMatch, setPasswordsMatch] = React.useState("");
   const [avatar, setAvatar] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
@@ -64,17 +65,38 @@ const AccountPage: React.FunctionComponent = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPassword(event.target.value);
+    _checkPasswordsMatch(event.target.value, password2);
   };
 
   const _handlePasswordChange2 = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPassword2(event.target.value);
+    _checkPasswordsMatch(password, event.target.value);
   };
 
-  const _updateUser = () => {
+  const _checkPasswordsMatch = (pass1: string, pass2: string) => {
+    console.log(pass1, pass2);
+    if (pass1.length < 8 && pass2.length > 0) {
+      setPasswordsMatch(t("RegisterPage.minLengthPassword"));
+    } else if (pass1 !== pass2 && pass1.length >= 8 && pass2.length > 0) {
+      setPasswordsMatch(t("RegisterPage.matchPassword"));
+    } else {
+      setPasswordsMatch("");
+    }
+  };
+
+  const _updateUser = async () => {
     try {
-      console.log(password, password2, avatar);
+      if (passwordsMatch && avatar) {
+        await user.updatePassword(password);
+        await user.updateAvatar(avatar);
+      } else if (avatar) {
+        await user.updateAvatar(avatar);
+      } else if (passwordsMatch) {
+        await user.updatePassword(password);
+      }
+
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -120,6 +142,7 @@ const AccountPage: React.FunctionComponent = () => {
           <NewPassword
             handlePasswordChange={_handlePasswordChange}
             handlePasswordChange2={_handlePasswordChange2}
+            passwordsMatch={passwordsMatch}
           />
           <Divider size={2} />
           <CustomButton onClick={() => _updateUser()} name="Update" />

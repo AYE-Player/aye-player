@@ -84,7 +84,8 @@
     "password": "Password",
     "loginButton": "Login",
     "registerLink": "Need an account?",
-    "forgotPasswordLink": "Forgot password?"
+    "forgotPasswordLink": "Forgot password?",
+    "loginError": "Something went wrong, please try again later."
   },
   "AccountPage": {
     "header": "Account Settings",
@@ -96,7 +97,7 @@
     "deleteButton": "Delete",
     "password": "Password",
     "repeatPassword": "Repeat Password",
-    "changeAvatarButton": "Ändern",
+    "changeAvatarButton": "Change",
     "deleteDialog": {
       "confirmButton": "Confirm Delete",
       "title": "Account Deletion",

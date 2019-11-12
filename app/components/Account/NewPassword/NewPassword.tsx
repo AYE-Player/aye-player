@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 interface INewPasswordProps {
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange2: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  passwordsMatch: string;
 }
 
 const Aligner = styled.div`
@@ -32,6 +33,7 @@ const NewPassword: React.FunctionComponent<INewPasswordProps> = props => {
         id="password2"
         label={t("AccountPage.repeatPassword")}
         onChange={props.handlePasswordChange2}
+        helperText={props.passwordsMatch}
       />
     </Aligner>
   );

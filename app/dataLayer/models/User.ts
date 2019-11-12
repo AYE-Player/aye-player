@@ -62,6 +62,7 @@ const User = types
         Logger.player(`Logged in user ${username}`);
       } catch (error) {
         Logger.player(`Error logging in ${error}`, "error");
+        throw error;
       }
     }),
 
@@ -81,9 +82,13 @@ const User = types
       Logger.player("DELETING USER");
     },
 
-    updatePassword(password: string) {
+    updatePassword: flow(function* updatePassword(password: string) {
       Logger.player(`NEW PASSWORD ${password}`);
-    },
+    }),
+
+    updateAvatar: flow(function* updateAvatar(avatar: any) {
+      Logger.player(`UPDATE USER ${avatar}`);
+    }),
 
     register: flow(function* register(
       name: string,

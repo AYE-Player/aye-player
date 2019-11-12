@@ -1,13 +1,15 @@
 import { Grid } from "@material-ui/core";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 import Divider from "../components/Divider/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -22,6 +24,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
   });
 
   const { user } = useInject(UserStore);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -37,7 +40,19 @@ const LoginPage: React.FunctionComponent<any> = () => {
   };
 
   const _handleOnClick = async (event: React.MouseEvent) => {
-    await user.authenticate(name, password);
+    try {
+      await user.authenticate(name, password);
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("LoginPage.loginError")}
+          />
+        )
+      });
+    }
   };
 
   return (
