@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import shortid from "shortid";
 import styled from "styled-components";
 import CustomFormDialog from "../components/Customs/CustomFormDialog/CustomFormDialog";
+import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
 import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
@@ -34,14 +35,6 @@ const PlaylistContainer = styled.div`
   height: 100%;
 `;
 
-/*const ListEntity = styled.div`
-  margin: 8px 0;
-  padding-bottom: 8px;
-  align-items: center;
-  display: flex;
-  border-bottom: 1px solid #565f6c;
-`;*/
-
 const CreatePlaylist = styled.div`
   margin-top: 8px;
   display: flex;
@@ -51,6 +44,13 @@ const CreatePlaylist = styled.div`
   right: 10px;
   bottom: 56px;
 `;
+
+/* const CreateFirstPlaylist = styled.div`
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`; */
 
 const ScrollContainer = styled.div`
   overflow: auto;
@@ -76,6 +76,7 @@ const PlaylistPage: React.FunctionComponent = () => {
   const { playlists } = useInject(Store);
 
   const _createPlaylist = () => {
+    console.log("CREATE PLAYLIST");
     setOpen(false);
     playlists.add(
       Playlist.create({
@@ -84,6 +85,7 @@ const PlaylistPage: React.FunctionComponent = () => {
         id: shortid.generate()
       })
     );
+    console.log("playlists", playlists.lists);
   };
 
   const calculateTracksDuration = (playlist: PlaylistModel) => {
@@ -110,7 +112,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     setNewPlaylistName(event.target.value);
   };
 
-  return (
+  const renderPlaylists = () => (
     <Container>
       <Header>Playlists</Header>
       <PlaylistContainer>
@@ -216,6 +218,39 @@ const PlaylistPage: React.FunctionComponent = () => {
               {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "10px" }} />
             </CreatePlaylist>
+          }
+          dialogText={t("PlaylistPage.dialog.text")}
+          open={open}
+          handleClose={() => _handleClose()}
+          handleConfirm={() => _createPlaylist()}
+          handleChange={_onPlaylistNameChange}
+          confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
+          cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
+          type="text"
+        />
+      </PlaylistContainer>
+    </Container>
+  );
+
+  return playlists.lists.length > 0 ? (
+    renderPlaylists()
+  ) : (
+    <Container>
+      <Header>Playlists</Header>
+      <PlaylistContainer>
+        You have no Playlist. Start by creating one:
+        <CustomFormDialog
+          id="createPlaylistDialog"
+          title={t("PlaylistPage.dialog.title")}
+          label={t("PlaylistPage.dialog.label")}
+          button={
+            <CustomButton
+              onClick={() => _handleOnClick()}
+              style={{ width: "250px", marginTop: "16px" }}
+            >
+              {t("PlaylistPage.dialog.title")}
+              <ControlPoint style={{ marginLeft: "16px" }} />
+            </CustomButton>
           }
           dialogText={t("PlaylistPage.dialog.text")}
           open={open}

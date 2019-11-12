@@ -43,9 +43,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const PlaylistPageMenu: React.FunctionComponent<
-  IPlaylistPageMenuProps
-> = props => {
+const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props => {
   const Store = ({ player, playlists, queue }: RootStoreModel) => ({
     player,
     playlists,
@@ -66,6 +64,8 @@ const PlaylistPageMenu: React.FunctionComponent<
 
   const _handleLoadClick = () => {
     const playlist = playlists.getListById(props.id);
+
+    if (playlist.tracks.length === 0) return;
 
     queue.clear();
     queue.addTracks(playlist.tracks);
@@ -90,7 +90,12 @@ const PlaylistPageMenu: React.FunctionComponent<
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleLoadClick()}>Load Playlist</MenuItem>
+          <MenuItem
+            onClick={() => _handleLoadClick()}
+            disabled={playlists.getListById(props.id).tracks.length === 0}
+          >
+            Load Playlist
+          </MenuItem>
           <MenuItem onClick={() => _handleDeleteClick()}>
             Delete Playlist
           </MenuItem>

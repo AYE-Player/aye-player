@@ -1,5 +1,6 @@
 import { Tray, BrowserWindow, nativeTheme, Menu, app } from "electron";
 import BaseModule from "./BaseModule";
+import path from "path";
 
 class AyeTray extends BaseModule {
   protected tray: Tray;
@@ -7,11 +8,27 @@ class AyeTray extends BaseModule {
 
   constructor(window: BrowserWindow) {
     super(window);
+
     this.tray = new Tray(
       nativeTheme.shouldUseDarkColors || process.platform === "linux"
-        ? `${__dirname}/../images/icons/png/16x16_w.png`
-        : `${__dirname}/../images/icons/png/16x16.png`
+        ? path.resolve(
+            path.join(
+              __dirname,
+              process.env.NODE_ENV === "development"
+                ? "../images/icons/png/16x16_w.png"
+                : "images/icons/png/16x16_w.png"
+            )
+          )
+        : path.resolve(
+            path.join(
+              __dirname,
+              process.env.NODE_ENV === "development"
+                ? "../images/icons/png/16x16_w.png"
+                : "images/icons/png/16x16.png"
+            )
+          )
     );
+
     const contextMenu = Menu.buildFromTemplate([
       {
         label: "Show App",
