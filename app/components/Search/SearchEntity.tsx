@@ -45,7 +45,7 @@ const TrackInfoContainer = styled.div<any>`
   width: 100%;
 `;
 
-// TODO: FIX scrolltext, to only scroll if it really goes out of the disgnated zone
+// TODO: FIX scrolltext, to only scroll if it really goes out of the designated zone
 const Title = styled.div<any>`
   padding-right: 16px;
   width: 300px;
