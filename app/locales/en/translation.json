@@ -32,7 +32,7 @@
   },
   "SearchPage": {
     "title": "Search",
-    "placeholder": "$t(SearchPage.title)..."
+    "placeholder": "$t(SearchPage.title)"
   },
   "Navigation": {
     "search": "Search",
