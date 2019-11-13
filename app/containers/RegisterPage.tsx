@@ -151,7 +151,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
         }
         required
       />
-      <Divider size={2} />
+      <Divider size={3} />
       <CustomButton
         onClick={_handleOnClick}
         disabled={_disableButton()}
