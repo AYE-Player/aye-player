@@ -35,7 +35,7 @@ const Search = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #565f6c;
   border-radius: 4px;
   margin-bottom: 16px;
@@ -97,16 +97,16 @@ const SearchPage: React.FunctionComponent = () => {
       <Header>{t("SearchPage.title")}</Header>
       <PlaylistContainer>
         <Search>
-          <SearchIcon
-            style={{ marginRight: "8px" }}
-            onClick={_handleSearchIconClick}
-          />
           <InputBase
             onKeyPress={_handleKeyPress}
             onChange={_handleChange}
             placeholder={t("SearchPage.placeholder")}
             inputProps={{ "aria-label": t("SearchPage.title") }}
-            style={{ color: "#fbfbfb" }}
+            style={{ color: "#fbfbfb", marginLeft: "16px", width: "100%" }}
+          />
+          <SearchIcon
+            style={{ padding: "0px 16px", backgroundColor: "#3d4653", height: "100%", borderRadius: "4px" }}
+            onClick={_handleSearchIconClick}
           />
         </Search>
         <ScrollContainer>
