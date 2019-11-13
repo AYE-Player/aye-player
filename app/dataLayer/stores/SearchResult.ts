@@ -1,6 +1,7 @@
 import axios from "axios";
 import { flow, Instance, types } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
+import { decodeHTMLEntities } from "../../helpers";
 
 export type SearchResultModel = Instance<typeof SearchResult>;
 
@@ -25,7 +26,7 @@ const SearchResult = types
           tracks.push({
             id: track.Id,
             duration: track.Duration,
-            title: track.Title
+            title: decodeHTMLEntities(track.Title)
           });
         }
 
