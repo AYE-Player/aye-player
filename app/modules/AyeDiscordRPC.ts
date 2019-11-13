@@ -29,6 +29,9 @@ export default class AyeDiscordRPC {
         this._rpc.setActivity(this._activity);
         this._activity = null;
         this._canSetActivity = false;
+        this._activityBlocker = setTimeout(() => {
+          this._canSetActivity = true;
+        }, 10000);
       }
     }, 5000);
   }
