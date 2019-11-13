@@ -9,6 +9,8 @@ import SearchEntity from "../components/Search/SearchEntity";
 import Track, { TrackModel } from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { detectLink } from "../helpers";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 
 const Header = styled.div`
   font-size: 24px;
@@ -80,17 +82,37 @@ const SearchPage: React.FunctionComponent = () => {
 
   // TODO: maybe this can be nicer? try to think about something
   const _search = async (term: string) => {
-    const results = await searchResult.getTracks(term);
-    const foundTracks = [];
-    for (const result of results) {
-      const track = Track.create(result);
-      if (!tracks.tracks.find(t => t.id === track.id)) {
-        tracks.add(track);
+    try {
+      if (detectLink(term)) {
+        const trackInfo = await searchResult.getTrackFromUrl(term);
+        const track = Track.create(trackInfo);
+        if (!tracks.tracks.find(t => t.id === track.id)) {
+          tracks.add(track);
+        }
+        searchResult.clear();
+        queue.addPrivilegedTrack(track);
+        player.playTrack(track);
+      } else {
+        const results = await searchResult.getTracks(term);
+        const foundTracks = [];
+        for (const result of results) {
+          const track = Track.create(result);
+          if (!tracks.tracks.find(t => t.id === track.id)) {
+            tracks.add(track);
+          }
+          foundTracks.push(track);
+        }
+        searchResult.clear();
+        searchResult.addTracks(foundTracks);
       }
-      foundTracks.push(track);
+    } catch (error) {
+      console.log("ERR", error);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
+        )
+      });
     }
-    searchResult.clear();
-    searchResult.addTracks(foundTracks);
   };
 
   return (

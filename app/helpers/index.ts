@@ -1,6 +1,13 @@
 import debounce from "./debounce";
 import decodeHTMLEntities from "./decodeHTMLEntities";
+import detectLink from "./detectLink";
 import formattedDuration from "./formattedDuration";
 import validateEmail from "./validateEmail";
 
-export { validateEmail, formattedDuration, debounce, decodeHTMLEntities };
+export {
+  validateEmail,
+  formattedDuration,
+  debounce,
+  decodeHTMLEntities,
+  detectLink
+};

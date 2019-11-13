@@ -2,6 +2,8 @@ import axios from "axios";
 import { flow, Instance, types } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 import { decodeHTMLEntities } from "../../helpers";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 
 export type SearchResultModel = Instance<typeof SearchResult>;
 
@@ -18,7 +20,7 @@ const SearchResult = types
     getTracks: flow(function* getTracks(term: string) {
       try {
         const { data } = yield axios.get(
-          `http://api.aye-player.de/search/v1/${term}`
+          `https://api.aye-player.de/search/v1/${term}`
         );
         const tracks = [];
 
@@ -32,6 +34,25 @@ const SearchResult = types
 
         return tracks;
       } catch (error) {
+        throw error;
+      }
+    }),
+    getTrackFromUrl: flow(function* getTrackFromUrl(url: string) {
+      try {
+        const { data } = yield axios.get(
+          `https://api.aye-player.de/search/v1/song?songUrl=${encodeURIComponent(
+            url
+          )}`
+        );
+
+        let parsedData = {
+          id: data.Id,
+          title: data.Title,
+          duration: data.Duration
+        }
+        return parsedData;
+      } catch (error) {
+        AyeLogger.player(error, LogType.ERROR);
         throw error;
       }
     }),
