@@ -72,7 +72,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
           <SnackMessage
             id={key}
             variant="error"
-            message={t("RegisterPage.error")}
+            message={t("General.error")}
           />
         )
       });

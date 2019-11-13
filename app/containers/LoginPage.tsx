@@ -48,7 +48,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
           <SnackMessage
             id={key}
             variant="error"
-            message={t("LoginPage.loginError")}
+            message={t("General.error")}
           />
         )
       });

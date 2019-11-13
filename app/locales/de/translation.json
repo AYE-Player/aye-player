@@ -30,6 +30,9 @@
     "Close": "Schließen",
     "BringAllToFront": "Alle Fenster In Vordergrund Bringen"
   },
+  "General": {
+    "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
+  },
   "SearchPage": {
     "title": "Suchen",
     "placeholder": "$t(SearchPage.title)"
@@ -46,8 +49,7 @@
     "password": "Passwort",
     "repeatPassword": "Passwort wiederholen",
     "registerButton": "Registrieren",
-    "success": "Wir haben dir eine E-Mail geschickt, um deine Registrierung abzuschließen",
-    "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
+    "success": "Wir haben dir eine E-Mail geschickt, um deine Registrierung abzuschließen"
   },
   "PlaylistPage": {
     "name": "Name",
@@ -84,12 +86,10 @@
     "password": "Passwort",
     "loginButton": "Login",
     "registerLink": "Noch keinen account?",
-    "forgotPasswordLink": "Passwort vergessen?",
-    "loginError": "Etwas ist schief gelaufen, versuche es später nocheinmal."
+    "forgotPasswordLink": "Passwort vergessen?"
   },
   "AccountPage": {
     "header": "Account Einstellungen",
-    "updateErrorMessage": "Etwas ist schiefgelaufen",
     "updateSuccessMessage": "Aktualisierung erfolreich",
     "username": "Benutzername",
     "email": "E-Mail",

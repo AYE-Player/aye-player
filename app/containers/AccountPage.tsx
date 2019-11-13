@@ -112,7 +112,7 @@ const AccountPage: React.FunctionComponent = () => {
           <SnackMessage
             id={key}
             variant="error"
-            message={t("AccountPage.updateErrorMessage")}
+            message={t("General.error")}
           />
         )
       });
