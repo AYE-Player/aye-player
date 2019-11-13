@@ -2,5 +2,5 @@ const expression = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|1
 const regex = new RegExp(expression);
 
 export default function detectLink(link: string) {
-  return link.match(regex);
+  return regex.exec(link);
 }
