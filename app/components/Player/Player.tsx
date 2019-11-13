@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Root from "../../containers/Root";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { Repeat } from "../../types/interfaces";
+import { Repeat } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 

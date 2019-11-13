@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import mpris from "mpris-service";
-import Logger from "./AyeLogger";
+import AyeLogger from "./AyeLogger";
 import BaseModule from "./BaseModule";
 
 class AyeMpris extends BaseModule {
@@ -28,22 +28,22 @@ class AyeMpris extends BaseModule {
     this.player.volume = 0.2;
 
     this.player.on("raise", () => {
-      Logger.media("Window raised");
+      AyeLogger.media("Window raised");
       this.window.show();
     });
 
     this.player.on("quit", () => {
-      Logger.media("Quitting Aye");
+      AyeLogger.media("Quitting Aye");
       app.exit();
     });
 
     this.player.on("rate", () => {
-      Logger.media("Attempting to change rate");
+      AyeLogger.media("Attempting to change rate");
       this.player.rate = 1;
     });
 
     this.player.on("playpause", () => {
-      Logger.media("Play-Pause received");
+      AyeLogger.media("Play-Pause received");
       if (
         this.player.playbackStatus === "Playing" ||
         this.player.playbackStatus === "Paused"
@@ -53,7 +53,7 @@ class AyeMpris extends BaseModule {
     });
 
     this.player.on("play", () => {
-      Logger.media("Play received");
+      AyeLogger.media("Play received");
       if (
         this.player.playbackStatus === "Paused" ||
         this.player.playbackStatus === "Stopped"
@@ -63,14 +63,14 @@ class AyeMpris extends BaseModule {
     });
 
     this.player.on("pause", () => {
-      Logger.media("Pause received");
+      AyeLogger.media("Pause received");
       if (this.player.playbackStatus === "Playing") {
         this.executeMediaKey(this.window, "play-pause");
       }
     });
 
     this.player.on("next", () => {
-      Logger.media("Next received");
+      AyeLogger.media("Next received");
       if (
         this.player.playbackStatus === "Playing" ||
         this.player.playbackStatus === "Paused"
@@ -80,7 +80,7 @@ class AyeMpris extends BaseModule {
     });
 
     this.player.on("previous", () => {
-      Logger.media("Previous received");
+      AyeLogger.media("Previous received");
       if (
         this.player.playbackStatus === "Playing" ||
         this.player.playbackStatus === "Paused"
@@ -99,7 +99,7 @@ class AyeMpris extends BaseModule {
           volume = 0;
         }
 
-        Logger.media(`Volume received, set to: ${volume}`);
+        AyeLogger.media(`Volume received, set to: ${volume}`);
         this.changeVolumeState(this.window, volume * 100);
         this.window.webContents.send("win2Player", {
           type: "setVolume",
@@ -111,7 +111,7 @@ class AyeMpris extends BaseModule {
 
     this.player.on("seek", (seek: number) => {
       if (this.player.playbackStatus !== "Stopped") {
-        Logger.media(`Seek ${seek / 1e6} sec`);
+        AyeLogger.media(`Seek ${seek / 1e6} sec`);
         this.window.webContents.send("player2Win", {
           type: "seekTo",
           info: (this.player.getPosition() + seek) / 1e6
@@ -121,7 +121,7 @@ class AyeMpris extends BaseModule {
 
     this.player.on("position", (arg: any) => {
       if (this.player.playbackStatus !== "Stopped") {
-        Logger.media(`Go to position ${arg.position / 1e6} sec`);
+        AyeLogger.media(`Go to position ${arg.position / 1e6} sec`);
         this.window.webContents.send("position", {
           type: "seekTo",
           pos: arg.position / 1e6
@@ -131,7 +131,7 @@ class AyeMpris extends BaseModule {
 
     this.player.on("shuffle", shuffle => {
       if (this.player.playbackStatus !== "Stopped") {
-        Logger.media(`Set shuffling: ${shuffle}`);
+        AyeLogger.media(`Set shuffling: ${shuffle}`);
         this.window.webContents.send("player2Win", {
           type: "onMprisShuffle",
           info: shuffle
@@ -142,7 +142,7 @@ class AyeMpris extends BaseModule {
 
     this.player.on("loopStatus", loop => {
       if (this.player.playbackStatus !== "Stopped") {
-        Logger.media(`Set looping to: ${loop}`);
+        AyeLogger.media(`Set looping to: ${loop}`);
         this.player.loopStatus = loop;
         let repeat = null;
         if (loop === "Track") repeat = "one";
@@ -183,7 +183,7 @@ class AyeMpris extends BaseModule {
         case "onStateChange":
           if (args.data === true) this.player.playbackStatus = "Playing";
           if (args.data === false) this.player.playbackStatus = "Paused";
-          Logger.media(`Playback status: ${this.player.playbackStatus}`);
+          AyeLogger.media(`Playback status: ${this.player.playbackStatus}`);
           break;
         case "trackInfo":
           this.player.metadata = {
@@ -195,7 +195,7 @@ class AyeMpris extends BaseModule {
             "mpris:length": args.data.duration * 1e6 // in microseconds
           };
           this.player.playbackStatus = "Playing";
-          Logger.media(
+          AyeLogger.media(
             `Track Info:\n${JSON.stringify(this.player.metadata, null, 2)}`
           );
           break;
@@ -205,7 +205,7 @@ class AyeMpris extends BaseModule {
   }
 
   executeMediaKey(win: BrowserWindow, key: string) {
-    Logger.info(`Sending key: ${key}`);
+    AyeLogger.info(`Sending key: ${key}`);
     win.webContents.send(key);
   }
 

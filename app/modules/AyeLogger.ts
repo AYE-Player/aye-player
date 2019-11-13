@@ -28,50 +28,52 @@ class AyeLogger {
 
   static info(message: string) {
     logger(message);
-    logFile.info(`aye\t\t ${message}`);
+    this.log(message, "info");
   }
 
-  static media(message: string) {
+  static media(message: string, type?: string) {
     logMedia(message);
-    logFile.info(`aye:media\t\t ${message}`);
+    this.log(message, "media", type);
   }
 
-  static tray(message: string) {
+  static tray(message: string, type?: string) {
     logTray(message);
-    logFile.info(`aye:tray\t\t ${message}`);
+    this.log(message, "tray", type);
   }
 
-  static win2Player(message: string) {
+  static win2Player(message: string, type?: string) {
     logWin2Player("%O", message);
     if (typeof message[1] === "object" && message[1] !== null) {
-      logFile.info(
-        `aye:win2Player\t ${message[0]}\n${JSON.stringify(message[1], null, 1)}`
-      );
-    } else {
-      logFile.info(`aye:win2Player\t ${message}`);
+      message = `\t ${message[0]}\n${JSON.stringify(message[1], null, 1)}`;
     }
+    this.log(message, "win2Player", type);
   }
 
-  static rpc(message: string) {
+  static rpc(message: string, type?: string) {
     logRPC(message);
-    logFile.info(`aye:rpc\t\t ${message}`);
+    this.log(message, "rpc", type);
   }
 
-  static player2Win(message: string) {
+  static player2Win(message: string, type?: string) {
     logPlayer2Win("%o", message);
+    this.log(message, "player2Win", type);
   }
 
   static player(message: string, type?: string) {
-    logPlayer("TYPE ", type, "MESSAGE", message);
+    logPlayer(message);
+    this.log(message, "player", type);
+  }
+
+  static log(message: string, service: string, type: string = "info") {
     switch (type) {
       case "warn":
-        logFile.warn(`[WARN] aye:rpc\t\t ${message}`);
+        logFile.warn(`[WARN] aye:${service}\t\t ${message}`);
         break;
       case "error":
-        logFile.error(`[ERROR] aye:rpc\t\t ${message}`);
+        logFile.error(`[ERROR] aye:${service}\t\t ${message}`);
         break;
       default:
-        logFile.info(`aye:rpc\t\t ${message}`);
+        logFile.info(`aye:${service}\t\t ${message}`);
         break;
     }
   }

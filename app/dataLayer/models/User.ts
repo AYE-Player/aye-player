@@ -1,6 +1,7 @@
 import axios from "axios";
 import { flow, Instance, types } from "mobx-state-tree";
-import Logger from "../../modules/AyeLogger";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 
 export type UserModel = Instance<typeof User>;
 
@@ -42,7 +43,7 @@ const User = types
       password: string
     ) {
       try {
-        Logger.player(`Trying to log in with: ${username}, ${password}`);
+        AyeLogger.player(`Trying to log in with: ${username}, ${password}`);
         const { data: token } = yield axios.post(
           "https://api.aye-player.de/auth/v1/",
           {
@@ -59,15 +60,15 @@ const User = types
         self.isAnonym = false;
         self.isAuthenticated = true;
         self.hasPremium = true;
-        Logger.player(`Logged in user ${username}`);
+        AyeLogger.player(`Logged in user ${username}`);
       } catch (error) {
-        Logger.player(`Error logging in ${error}`, "error");
+        AyeLogger.player(`Error logging in ${error}`, LogType.ERROR);
         throw error;
       }
     }),
 
     logout() {
-      Logger.player("LOGGING UT");
+      AyeLogger.player("LOGGING UT");
       localStorage.removeItem("token");
       self.id = undefined;
       self.email = undefined;
@@ -79,15 +80,15 @@ const User = types
     },
 
     delete() {
-      Logger.player("DELETING USER");
+      AyeLogger.player("DELETING USER");
     },
 
     updatePassword: flow(function* updatePassword(password: string) {
-      Logger.player(`NEW PASSWORD ${password}`);
+      AyeLogger.player(`NEW PASSWORD ${password}`);
     }),
 
     updateAvatar: flow(function* updateAvatar(avatar: any) {
-      Logger.player(`UPDATE USER ${avatar}`);
+      AyeLogger.player(`UPDATE USER ${avatar}`);
     }),
 
     register: flow(function* register(
@@ -100,16 +101,16 @@ const User = types
           "https://api.aye-player.de/userIdentity/v1/",
           { Email: email, Password: password }
         ); // yield for promise resolving
-        Logger.player(`RES ${response}`);
-        Logger.player(`REGISTER EVENT ${name} ${email} ${password}`);
+        AyeLogger.player(`RES ${response}`);
+        AyeLogger.player(`REGISTER EVENT ${name} ${email} ${password}`);
       } catch (error) {
-        Logger.player(`Failed registration ${error}`, "error");
+        AyeLogger.player(`Failed registration ${error}`, LogType.ERROR);
         throw error;
       }
     }),
 
     forgotPassword(email: string) {
-      Logger.player(`FORGOT PASSWORD EVENT ${email}`);
+      AyeLogger.player(`FORGOT PASSWORD EVENT ${email}`);
     }
   }));
 
