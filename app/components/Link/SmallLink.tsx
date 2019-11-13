@@ -12,9 +12,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 const SmallLink: React.FunctionComponent<ISmallLinkProps> = props => {
-  return (
-    <StyledNavLink to={props.to} >{props.name}</StyledNavLink>
-  );
+  return <StyledNavLink to={props.to}>{props.name}</StyledNavLink>;
 };
 
 export default SmallLink;

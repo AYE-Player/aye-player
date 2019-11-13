@@ -12,6 +12,7 @@ interface IProps {
   track: TrackModel;
   index: number;
   onClick: Function;
+  dragId: string;
 }
 
 const Container = styled.div<any>`
@@ -72,8 +73,8 @@ const DragHandle = withStyles({
 const QueueEntity: React.FunctionComponent<IProps> = props => {
   return (
     <Draggable
-      key={props.index}
-      draggableId={props.track.id}
+      key={props.dragId}
+      draggableId={props.dragId}
       index={props.index}
     >
       {(provided: any) => (

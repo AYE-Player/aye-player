@@ -34,7 +34,12 @@ const Container = styled.div<any>`
 
 const SnackMessage = React.forwardRef((props: ISnackMessageProps, ref) => {
   return (
-    <Container key={props.id} variant={props.variant} ref={ref} length={props.message.length}>
+    <Container
+      key={props.id}
+      variant={props.variant}
+      ref={ref}
+      length={props.message.length}
+    >
       {props.message}
     </Container>
   );

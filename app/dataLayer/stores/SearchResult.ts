@@ -1,12 +1,15 @@
-import { Instance, types, flow } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
 import axios from "axios";
+import { flow, Instance, types } from "mobx-state-tree";
+import Track, { TrackModel } from "../models/Track";
+import { decodeHTMLEntities } from "../../helpers";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 
 export type SearchResultModel = Instance<typeof SearchResult>;
 
 const SearchResult = types
   .model({
-    tracks: types.optional(types.array(types.safeReference(Track)), [])
+    tracks: types.array(types.reference(Track))
   })
   .views(self => ({
     get isEmpty() {
@@ -14,16 +17,18 @@ const SearchResult = types
     }
   }))
   .actions(self => ({
-    search: flow(function* register(term: string) {
+    getTracks: flow(function* getTracks(term: string) {
       try {
-        const { data } = yield axios.get(`http://api.aye-player.de/search/v1/${term}`);
+        const { data } = yield axios.get(
+          `https://api.aye-player.de/search/v1/${term}`
+        );
         const tracks = [];
 
         for (const track of data) {
           tracks.push({
             id: track.Id,
             duration: track.Duration,
-            title: track.Title
+            title: decodeHTMLEntities(track.Title)
           });
         }
 
@@ -32,6 +37,26 @@ const SearchResult = types
         throw error;
       }
     }),
+    getTrackFromUrl: flow(function* getTrackFromUrl(url: string) {
+      try {
+        const { data } = yield axios.get(
+          `https://api.aye-player.de/search/v1/song?songUrl=${encodeURIComponent(
+            url
+          )}`
+        );
+
+        let parsedData = {
+          id: data.Id,
+          title: data.Title,
+          duration: data.Duration
+        }
+        return parsedData;
+      } catch (error) {
+        AyeLogger.player(error, LogType.ERROR);
+        throw error;
+      }
+    }),
+
     addTracks(tracks: TrackModel[]) {
       for (const track of tracks) {
         self.tracks.push(track.id);

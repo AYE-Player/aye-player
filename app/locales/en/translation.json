@@ -30,9 +30,12 @@
     "Close": "Close",
     "BringAllToFront": "Bring All to Front"
   },
+  "General": {
+    "error": "Something went wrong, please try again later."
+  },
   "SearchPage": {
     "title": "Search",
-    "placeholder": "$t(SearchPage.title)..."
+    "placeholder": "$t(SearchPage.title)"
   },
   "Navigation": {
     "search": "Search",
@@ -46,8 +49,7 @@
     "password": "Password",
     "repeatPassword": "Repeat Password",
     "registerButton": "Register",
-    "success": "We send you an email, to complete your registration.",
-    "error": "Something went wrong, please try again later."
+    "success": "We send you an email, to complete your registration."
   },
   "PlaylistPage": {
     "name": "Name",
@@ -88,7 +90,6 @@
   },
   "AccountPage": {
     "header": "Account Settings",
-    "updateErrorMessage": "Something went wrong",
     "updateSuccessMessage": "Update successfull",
     "username": "Username",
     "email": "E-Mail",
@@ -96,7 +97,7 @@
     "deleteButton": "Delete",
     "password": "Password",
     "repeatPassword": "Repeat Password",
-    "changeAvatarButton": "Ändern",
+    "changeAvatarButton": "Change",
     "deleteDialog": {
       "confirmButton": "Confirm Delete",
       "title": "Account Deletion",

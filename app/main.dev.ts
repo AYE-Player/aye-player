@@ -19,13 +19,13 @@ import log from "electron-log";
 import unhandled from "electron-unhandled";
 import { autoUpdater } from "electron-updater";
 import "v8-compile-cache";
+import config from "./configs/app.config";
 import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
-import mprisService from "./lib/mprisService";
-import registerMediaKeys from "./lib/registerMediaKeys";
-import RPCClient from "./lib/RPCClient";
 import MenuBuilder from "./menu";
-import config from "./configs/app.config";
+import AyeDiscordRPC from "./modules/AyeDiscordRPC";
+import AyeMediaKeys from "./modules/AyeMediaKeys";
+import AyeMpris from "./modules/AyeMpris";
 import AyeTray from "./modules/AyeTray";
 
 export default class AppUpdater {
@@ -41,14 +41,14 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-/*if (
+if (
   process.env.NODE_ENV === "development" ||
   process.env.DEBUG_PROD === "true"
 ) {
   require("electron-debug")();
-}*/
+}
 
-/*const installExtensions = async () => {
+const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS"];
@@ -56,12 +56,12 @@ if (process.env.NODE_ENV === "production") {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
-};*/
+};
 
 let mainWindow: BrowserWindow = null;
 let loadingScreen: BrowserWindow = null;
 let tray: AyeTray = null;
-let rpc = new RPCClient("621726681140297728");
+let rpc: AyeDiscordRPC;
 
 // Fix the player not being able to play audio when the user did not interact
 // with the page
@@ -142,6 +142,10 @@ const createAppScreen = () => {
     mainWindow.center();
   }
 
+  // Register Modules
+  rpc = new AyeDiscordRPC("621726681140297728");
+  tray = new AyeTray(mainWindow);
+
   if (Settings.get("rpcEnabled")) {
     rpc.login();
   }
@@ -151,13 +155,12 @@ const createAppScreen = () => {
       mainWindow.minimize();
     } else {
       mainWindow.show();
-      // mainWindow.focus();
     }
 
     // Register MPRIS
     if (process.platform === "linux") {
       try {
-        mprisService(mainWindow, app);
+        new AyeMpris(mainWindow).init();
       } catch (err) {
         console.error(err);
       }
@@ -168,16 +171,14 @@ const createAppScreen = () => {
       isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
     }
 
+    // Register media keys
     if (
       isTrusted === undefined ||
-      (process.env.platform === "darwin" && isTrusted)
+      (process.platform === "darwin" && isTrusted)
     ) {
-      registerMediaKeys(mainWindow);
+      new AyeMediaKeys(mainWindow);
     }
   });
-
-  tray = new AyeTray(mainWindow);
-  tray.init();
 
   mainWindow.on("close", event => {
     if (Settings.get("minimizeToTray") && !tray.shouldQuit) {
@@ -262,7 +263,7 @@ app.on("ready", async () => {
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
   ) {
-    //await installExtensions();
+    await installExtensions();
   }
 
   // Create our screens

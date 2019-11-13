@@ -6,7 +6,7 @@ export type AppStoreModel = Instance<typeof AppStore>;
 
 const AppStore = types
   .model({
-    showQueue: types.optional(types.boolean, false),
+    showQueue: types.boolean,
     rpcEnabled: types.boolean,
     minimizeToTray: types.boolean,
     language: types.string

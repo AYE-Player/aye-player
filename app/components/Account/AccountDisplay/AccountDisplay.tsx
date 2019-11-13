@@ -1,14 +1,15 @@
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AccountDisplayMenu from "./AccountDisplayMenu";
-import { useTranslation } from "react-i18next";
 
 interface IAccountDisplayProps {
   username?: string;
   avatar?: string;
+  email?: string;
 }
 
 const Container = styled.div`
@@ -42,7 +43,7 @@ const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
           ) : (
             <AccountCircleIcon style={{ marginRight: "8px" }} />
           )}
-          <Text>{props.username}</Text>
+          <Text>{props.username ? props.username : props.email}</Text>
           <ExpandMoreIcon />
         </AccountDisplayMenu>
       ) : (

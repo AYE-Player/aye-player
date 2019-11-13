@@ -5,7 +5,7 @@ export type TrackStoreModel = Instance<typeof TrackStore>;
 
 const TrackStore = types
   .model({
-    tracks: types.optional(types.array(Track), [])
+    tracks: types.array(Track)
   })
   .views(self => ({
     getTrackById(id: string) {

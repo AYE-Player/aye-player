@@ -1,5 +1,5 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
-import Logger from "./ayeLogger";
+import AyeLogger from "./AyeLogger";
 
 interface IActivityParameters {
   details: string;
@@ -10,7 +10,7 @@ interface IActivityParameters {
   instance: boolean;
 }
 
-export default class RPCClient {
+export default class AyeDiscordRPC {
   private _rpc: any;
 
   public isConnected: boolean;
@@ -29,6 +29,9 @@ export default class RPCClient {
         this._rpc.setActivity(this._activity);
         this._activity = null;
         this._canSetActivity = false;
+        this._activityBlocker = setTimeout(() => {
+          this._canSetActivity = true;
+        }, 10000);
       }
     }, 5000);
   }
@@ -83,18 +86,18 @@ export default class RPCClient {
         this._activity = activityParameters;
       }
     } catch (error) {
-      Logger.rpc(error);
+      AyeLogger.rpc(error);
     }
   }
 
   public async login() {
     if (this._rpc) return;
     this._rpc = new Client({ transport: "ipc" });
-    Logger.rpc("Connecting...");
+    AyeLogger.rpc("Connecting...");
 
     try {
       this._rpc.once("ready", async () => {
-        Logger.rpc("Successfully connected to Discord.");
+        AyeLogger.rpc("Successfully connected to Discord.");
         this.isConnected = true;
 
         await this.setActivity(0, 0, null, "Idle");
@@ -106,7 +109,7 @@ export default class RPCClient {
 
       await this._rpc.login({ clientId: this._clientId });
     } catch (error) {
-      Logger.rpc("Cannot connect to Discord, is it running?");
+      AyeLogger.rpc("Cannot connect to Discord, is it running?");
       this.dispose();
       this.isConnected = false;
     }

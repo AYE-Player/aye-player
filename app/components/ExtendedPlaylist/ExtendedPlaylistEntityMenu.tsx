@@ -43,9 +43,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const ExtendedPlaylistEntityMenu: React.FunctionComponent<
-  IPlaylistEntityMenuProps
-> = props => {
+const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const Store = ({ queue, player }: RootStoreModel) => ({
     queue,
     player

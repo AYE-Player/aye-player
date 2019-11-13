@@ -3,10 +3,10 @@ import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
-import { useTranslation } from "react-i18next";
 import Divider from "../../Divider/Divider";
 
 interface IAccountDisplayMenuProps {}
@@ -42,9 +42,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const AccountDisplayMenu: React.FunctionComponent<
-  IAccountDisplayMenuProps
-> = props => {
+const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = props => {
   const { t } = useTranslation();
 
   const Store = ({ user }: RootStoreModel) => ({
@@ -90,10 +88,16 @@ const AccountDisplayMenu: React.FunctionComponent<
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleProfileClick()}>{t("AccountDisplay.Menu.profile")}</MenuItem>
-          <MenuItem onClick={() => _handleSettingsClick()}>{t("AccountDisplay.Menu.settings")}</MenuItem>
+          <MenuItem onClick={() => _handleProfileClick()}>
+            {t("AccountDisplay.Menu.profile")}
+          </MenuItem>
+          <MenuItem onClick={() => _handleSettingsClick()}>
+            {t("AccountDisplay.Menu.settings")}
+          </MenuItem>
           <Divider />
-          <MenuItem onClick={() => _handleLogoutClick()}>{t("AccountDisplay.Menu.logout")}</MenuItem>
+          <MenuItem onClick={() => _handleLogoutClick()}>
+            {t("AccountDisplay.Menu.logout")}
+          </MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

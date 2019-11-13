@@ -1,5 +1,14 @@
-import { Tray, BrowserWindow, nativeTheme, Menu, app } from "electron";
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  nativeTheme,
+  Tray
+} from "electron";
+import path from "path";
 import BaseModule from "./BaseModule";
+import AyeLogger from "./AyeLogger";
+import { LogType } from "../types/enums";
 
 class AyeTray extends BaseModule {
   protected tray: Tray;
@@ -7,35 +16,63 @@ class AyeTray extends BaseModule {
 
   constructor(window: BrowserWindow) {
     super(window);
-  }
 
-  init() {
-    this.tray = new Tray(
-      nativeTheme.shouldUseDarkColors || process.platform === "linux"
-        ? `${__dirname}/../images/icons/png/16x16_w.png`
-        : `${__dirname}/../images/icons/png/16x16.png`
-    );
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: "Show App",
-        click: function() {
-          this.window.show();
+    AyeLogger.tray("Trying to initialize");
+    try {
+      const imgPath =
+        process.env.NODE_ENV === "development"
+          ? "../images/icons/png/"
+          : "images/icons/png/";
+      this.tray = new Tray(
+        nativeTheme.shouldUseDarkColors || process.platform === "linux"
+          ? path.resolve(path.join(__dirname, `${imgPath}16x16_w.png`))
+          : path.resolve(path.join(__dirname, `${imgPath}16x16.png`))
+      );
+      this.shouldQuit = false;
+
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: "Play/Pause",
+          click: () => {
+            this.window.webContents.send("play-pause");
+          }
+        },
+        {
+          label: "Skip",
+          click: () => {
+            this.window.webContents.send("play-next");
+          }
+        },
+        {
+          label: "Previous",
+          click: () => {
+            this.window.webContents.send("play-previous");
+          }
+        },
+        { type: "separator" },
+        {
+          label: "Show AYE",
+          click: () => {
+            this.window.show();
+          }
+        },
+        {
+          label: "Quit AYE",
+          click: () => {
+            this.shouldQuit = true;
+            app.quit();
+          }
         }
-      },
-      {
-        label: "Quit",
-        click: function() {
-          this.shouldQuit = true;
-          app.quit();
-        }
-      }
-    ]);
-    this.tray.setContextMenu(contextMenu);
-    this.tray.setToolTip("AYE - Player");
-    this.tray.on("click", () => {
-      this.window.show();
-      this.window.focus();
-    });
+      ]);
+      this.tray.setContextMenu(contextMenu);
+      this.tray.setToolTip("AYE - Player");
+      this.tray.on("click", () => {
+        this.window.show();
+        this.window.focus();
+      });
+    } catch (error) {
+      AyeLogger.tray(`Error initializing ${error}`, LogType.ERROR);
+    }
   }
 }
 

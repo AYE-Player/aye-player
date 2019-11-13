@@ -95,7 +95,11 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         >
           <DragHandle fontSize="small" />
           <TrackInfoContainer
-            active={player.currentTrack ? player.currentTrack.id === props.track.id : false}
+            active={
+              player.currentTrack
+                ? player.currentTrack.id === props.track.id
+                : false
+            }
             onClick={() => props.onClick(props.track)}
           >
             <Title length={props.track.title.length}>

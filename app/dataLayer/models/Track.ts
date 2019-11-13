@@ -1,4 +1,4 @@
-import { types, Instance } from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
 
 export type TrackModel = Instance<typeof Track>;
 

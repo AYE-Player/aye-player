@@ -1,4 +1,5 @@
 import { Grid } from "@material-ui/core";
+import { SnackbarProvider } from "notistack";
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
 import Player from "../components/Player/Player";
@@ -8,7 +9,6 @@ import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
 import MainPage from "./MainPage";
-import { SnackbarProvider } from "notistack";
 
 const rootStore = createStore();
 

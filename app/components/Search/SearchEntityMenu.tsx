@@ -44,9 +44,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const SearchEntityMenu: React.FunctionComponent<
-  ISearchEntityMenuProps
-> = props => {
+const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props => {
   const Store = ({ queue }: RootStoreModel) => ({
     queue
   });
@@ -63,7 +61,6 @@ const SearchEntityMenu: React.FunctionComponent<
     setAnchorEl(null);
   };
 
-
   const _handlePlayNextTrack = (id: string) => {
     queue.addNextTrack(id);
     setAnchorEl(null);
@@ -72,7 +69,7 @@ const SearchEntityMenu: React.FunctionComponent<
   const _handleAddTrack = (id: string) => {
     queue.addTrack(id);
     setAnchorEl(null);
-  }
+  };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
@@ -98,7 +95,9 @@ const SearchEntityMenu: React.FunctionComponent<
             Add to Queue
           </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
-          <MenuItem onClick={() => props.openListDialog()}>Add to Playlist...</MenuItem>
+          <MenuItem onClick={() => props.openListDialog()}>
+            Add to Playlist...
+          </MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

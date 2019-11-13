@@ -4,9 +4,9 @@ import AppStore, { AppStoreModel } from "./AppStore";
 import Player, { PlayerModel } from "./Player";
 import Playlists, { PlaylistsModel } from "./Playlists";
 import Queue, { QueueModel } from "./Queue";
-import TrackStore, { TrackStoreModel } from "./Tracks";
-import TrackHistory, { TrackHistoryModel } from "./TrackHistory";
 import SearchResult, { SearchResultModel } from "./SearchResult";
+import TrackHistory, { TrackHistoryModel } from "./TrackHistory";
+import TrackStore, { TrackStoreModel } from "./Tracks";
 
 export type RootStoreModel = Instance<typeof RootStore>;
 export type RootStoreEnv = {

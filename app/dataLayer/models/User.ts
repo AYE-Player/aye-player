@@ -1,5 +1,7 @@
-import { types, Instance, flow } from "mobx-state-tree";
 import axios from "axios";
+import { flow, Instance, types } from "mobx-state-tree";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 
 export type UserModel = Instance<typeof User>;
 
@@ -15,24 +17,26 @@ const User = types
   })
   .actions(self => ({
     afterCreate: flow(function* afterCreate() {
-      if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      if (token) {
         try {
-          self.id = "USER_1";
-          self.email = "majesnix@majesnix.org";
-          self.name = "majesnix";
-          self.avatar =
-            "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
+          const { data: userInfo } = yield axios.get(
+            "https://api.aye-player.de/userIdentity/v1/",
+            {
+              headers: {
+                "x-access-token": token
+              }
+            }
+          );
+          self.id = userInfo.Id;
+          self.email = userInfo.Email;
+          self.name = userInfo.Username;
+          self.avatar = userInfo.Avatar;
           self.isAnonym = false;
           self.isAuthenticated = true;
           self.hasPremium = true;
         } catch (error) {
-          self.id = undefined;
-          self.email = undefined;
-          self.name = undefined;
-          self.avatar = undefined;
-          self.isAnonym = true;
-          self.isAuthenticated = false;
-          self.hasPremium = false;
+          // Doesnt matter
         }
       }
     }),
@@ -41,27 +45,41 @@ const User = types
       password: string
     ) {
       try {
+        AyeLogger.player(`Trying to log in with: ${username}`);
         const { data: token } = yield axios.post(
           "https://api.aye-player.de/auth/v1/",
-          { Email: username, Password: password }
+          {
+            Email: username,
+            Password: password
+          }
+        );
+        const { data: userInfo } = yield axios.get(
+          "https://api.aye-player.de/userIdentity/v1/",
+          {
+            headers: {
+              "x-access-token": token
+            }
+          }
         );
         localStorage.setItem("token", token);
+
         // Authenticate user
-        self.id = "USER_1";
-        self.email = "majesnix@majesnix.org";
-        self.name = "majesnix";
-        self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
+        self.id = userInfo.Id;
+        self.email = userInfo.Email;
+        self.name = userInfo.Username;
+        self.avatar = userInfo.Avatar;
         self.isAnonym = false;
         self.isAuthenticated = true;
+        // TODO: Really set this
         self.hasPremium = true;
-        console.log("LOGIN");
+        AyeLogger.player(`Logged in user ${username}`);
       } catch (error) {
-        // Show error
+        AyeLogger.player(`Error logging in ${error}`, LogType.ERROR);
+        throw error;
       }
     }),
 
     logout() {
-      console.log("LOGGING UT");
       localStorage.removeItem("token");
       self.id = undefined;
       self.email = undefined;
@@ -73,16 +91,17 @@ const User = types
     },
 
     delete() {
-      console.log("DELETING USER");
+      AyeLogger.player("DELETING USER");
     },
 
-    updatePassword(password: string) {
-      console.log("NEW PASSWORD", password);
-    },
+    updatePassword: flow(function* updatePassword(password: string) {
+      AyeLogger.player(`NEW PASSWORD ${password}`);
+    }),
 
-    /*async register(name: string, email: string, password: string) {
-      console.log("REGISTER EVENT", name, email, password);
-    },*/
+    updateAvatar: flow(function* updateAvatar(avatar: any) {
+      AyeLogger.player(`UPDATE USER ${avatar}`);
+    }),
+
     register: flow(function* register(
       name: string,
       email: string,
@@ -93,16 +112,16 @@ const User = types
           "https://api.aye-player.de/userIdentity/v1/",
           { Email: email, Password: password }
         ); // yield for promise resolving
-        console.log("RES", response);
-        console.log("REGISTER EVENT", name, email, password);
+        AyeLogger.player(`RES ${response}`);
+        AyeLogger.player(`REGISTER EVENT ${name} ${email} ${password}`);
       } catch (error) {
-        console.error("Failed registration", error);
+        AyeLogger.player(`Failed registration ${error}`, LogType.ERROR);
         throw error;
       }
     }),
 
     forgotPassword(email: string) {
-      console.log("FORGOT PASSWORD EVENT", email);
+      AyeLogger.player(`FORGOT PASSWORD EVENT ${email}`);
     }
   }));
 

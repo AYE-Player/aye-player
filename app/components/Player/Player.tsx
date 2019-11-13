@@ -1,13 +1,13 @@
+import { ipcRenderer } from "electron";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
+import Root from "../../containers/Root";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import { Repeat } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
-import { ipcRenderer } from "electron";
-import Root from "../../containers/Root";
-import { Repeat } from "../../types/interfaces";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
@@ -97,6 +97,10 @@ ipcRenderer.on("play-previous", (event, message) => {
   player.playTrack(track);
 });
 
+ipcRenderer.on("position", (event, message) => {
+  playerElement.seekTo(Math.floor(message.pos));
+});
+
 const Player: React.FunctionComponent<IPlayerProps> = () => {
   const Store = ({
     player,
@@ -126,7 +130,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playVideo = () => {
     player.togglePlayingState();
-    player.notifyRPC();
   };
 
   const _stopVideo = () => {
@@ -157,6 +160,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
     trackHistory.addTrack(prevTrack);
     history.push(prevTrack);
+    player.setCurrentTrack();
     player.playTrack(track);
   };
 
@@ -276,7 +280,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 2
           }}
         />
-      ) : <div style={{width: "320px", height: "202px"}}></div>}
+      ) : (
+        <div style={{ width: "320px", height: "202px" }}></div>
+      )}
     </Container>
   );
 };

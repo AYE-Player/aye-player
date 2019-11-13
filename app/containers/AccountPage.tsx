@@ -1,18 +1,18 @@
 import { Button } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import AvatarUpload from "../components/Account/AvatarUpload/AvatarUpload";
 import NewPassword from "../components/Account/NewPassword/NewPassword";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomizedDialogs from "../components/Customs/CustomDialog/CustomDialog";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
-import { useSnackbar } from "notistack";
-import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -44,6 +44,7 @@ const AccountPage: React.FunctionComponent = () => {
 
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
+  const [passwordsMatch, setPasswordsMatch] = React.useState("");
   const [avatar, setAvatar] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
@@ -64,17 +65,38 @@ const AccountPage: React.FunctionComponent = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPassword(event.target.value);
+    _checkPasswordsMatch(event.target.value, password2);
   };
 
   const _handlePasswordChange2 = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPassword2(event.target.value);
+    _checkPasswordsMatch(password, event.target.value);
   };
 
-  const _updateUser = () => {
+  const _checkPasswordsMatch = (pass1: string, pass2: string) => {
+    console.log(pass1, pass2);
+    if (pass1.length < 8 && pass2.length > 0) {
+      setPasswordsMatch(t("RegisterPage.minLengthPassword"));
+    } else if (pass1 !== pass2 && pass1.length >= 8 && pass2.length > 0) {
+      setPasswordsMatch(t("RegisterPage.matchPassword"));
+    } else {
+      setPasswordsMatch("");
+    }
+  };
+
+  const _updateUser = async () => {
     try {
-      console.log(password, password2, avatar);
+      if (passwordsMatch && avatar) {
+        await user.updatePassword(password);
+        await user.updateAvatar(avatar);
+      } else if (avatar) {
+        await user.updateAvatar(avatar);
+      } else if (passwordsMatch) {
+        await user.updatePassword(password);
+      }
+
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -90,7 +112,7 @@ const AccountPage: React.FunctionComponent = () => {
           <SnackMessage
             id={key}
             variant="error"
-            message={t("AccountPage.updateErrorMessage")}
+            message={t("General.error")}
           />
         )
       });
@@ -120,6 +142,7 @@ const AccountPage: React.FunctionComponent = () => {
           <NewPassword
             handlePasswordChange={_handlePasswordChange}
             handlePasswordChange2={_handlePasswordChange2}
+            passwordsMatch={passwordsMatch}
           />
           <Divider size={2} />
           <CustomButton onClick={() => _updateUser()} name="Update" />

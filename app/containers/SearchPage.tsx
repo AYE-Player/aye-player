@@ -1,14 +1,16 @@
 import { InputBase } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import SearchEntity from "../components/Search/SearchEntity";
+import Track, { TrackModel } from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
-import { TrackModel } from "app/dataLayer/models/Track";
-import { useSnackbar } from "notistack";
-import { useTranslation } from "react-i18next";
+import { detectLink } from "../helpers";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 
 const Header = styled.div`
   font-size: 24px;
@@ -35,7 +37,7 @@ const Search = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #565f6c;
   border-radius: 4px;
   margin-bottom: 16px;
@@ -69,8 +71,6 @@ const SearchPage: React.FunctionComponent = () => {
   const _handleSearchIconClick = (event: any) => {
     if (term.length > 0) {
       _search(term);
-    } else {
-      console.log("empty serach");
     }
   };
 
@@ -80,14 +80,39 @@ const SearchPage: React.FunctionComponent = () => {
     }
   };
 
-  // TODO: maybe this can be nicer? try to think about someting
+  // TODO: maybe this can be nicer? try to think about something
   const _search = async (term: string) => {
-    const result = await searchResult.search(term);
-    const foundTracks = [];
-    for (const track of result) {
-      foundTracks.push(tracks.add(track));
+    try {
+      if (detectLink(term)) {
+        const trackInfo = await searchResult.getTrackFromUrl(term);
+        const track = Track.create(trackInfo);
+        if (!tracks.tracks.find(t => t.id === track.id)) {
+          tracks.add(track);
+        }
+        searchResult.clear();
+        queue.addPrivilegedTrack(track);
+        player.playTrack(track);
+      } else {
+        const results = await searchResult.getTracks(term);
+        const foundTracks = [];
+        for (const result of results) {
+          const track = Track.create(result);
+          if (!tracks.tracks.find(t => t.id === track.id)) {
+            tracks.add(track);
+          }
+          foundTracks.push(track);
+        }
+        searchResult.clear();
+        searchResult.addTracks(foundTracks);
+      }
+    } catch (error) {
+      console.log("ERR", error);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
+        )
+      });
     }
-    searchResult.addTracks(foundTracks);
   };
 
   return (
@@ -95,16 +120,21 @@ const SearchPage: React.FunctionComponent = () => {
       <Header>{t("SearchPage.title")}</Header>
       <PlaylistContainer>
         <Search>
-          <SearchIcon
-            style={{ marginRight: "8px" }}
-            onClick={_handleSearchIconClick}
-          />
           <InputBase
             onKeyPress={_handleKeyPress}
             onChange={_handleChange}
             placeholder={t("SearchPage.placeholder")}
             inputProps={{ "aria-label": t("SearchPage.title") }}
-            style={{ color: "#fbfbfb" }}
+            style={{ color: "#fbfbfb", marginLeft: "16px", width: "100%" }}
+          />
+          <SearchIcon
+            style={{
+              padding: "0px 16px",
+              backgroundColor: "#3d4653",
+              height: "100%",
+              borderRadius: "4px"
+            }}
+            onClick={_handleSearchIconClick}
           />
         </Search>
         <ScrollContainer>

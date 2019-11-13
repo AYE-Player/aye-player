@@ -4,19 +4,20 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
+import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import shortid from "shortid";
 import styled from "styled-components";
+import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomFormDialog from "../components/Customs/CustomFormDialog/CustomFormDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
 import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
-import { withStyles } from "@material-ui/styles";
-import { useTranslation } from "react-i18next";
 
 const Header = styled.div`
   font-size: 24px;
@@ -33,14 +34,6 @@ const PlaylistContainer = styled.div`
   padding: 40px;
   height: 100%;
 `;
-
-/*const ListEntity = styled.div`
-  margin: 8px 0;
-  padding-bottom: 8px;
-  align-items: center;
-  display: flex;
-  border-bottom: 1px solid #565f6c;
-`;*/
 
 const CreatePlaylist = styled.div`
   margin-top: 8px;
@@ -76,6 +69,7 @@ const PlaylistPage: React.FunctionComponent = () => {
   const { playlists } = useInject(Store);
 
   const _createPlaylist = () => {
+    console.log("CREATE PLAYLIST");
     setOpen(false);
     playlists.add(
       Playlist.create({
@@ -84,6 +78,7 @@ const PlaylistPage: React.FunctionComponent = () => {
         id: shortid.generate()
       })
     );
+    console.log("playlists", playlists.lists);
   };
 
   const calculateTracksDuration = (playlist: PlaylistModel) => {
@@ -110,7 +105,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     setNewPlaylistName(event.target.value);
   };
 
-  return (
+  const renderPlaylists = () => (
     <Container>
       <Header>Playlists</Header>
       <PlaylistContainer>
@@ -216,6 +211,39 @@ const PlaylistPage: React.FunctionComponent = () => {
               {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "10px" }} />
             </CreatePlaylist>
+          }
+          dialogText={t("PlaylistPage.dialog.text")}
+          open={open}
+          handleClose={() => _handleClose()}
+          handleConfirm={() => _createPlaylist()}
+          handleChange={_onPlaylistNameChange}
+          confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
+          cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
+          type="text"
+        />
+      </PlaylistContainer>
+    </Container>
+  );
+
+  return playlists.lists.length > 0 ? (
+    renderPlaylists()
+  ) : (
+    <Container>
+      <Header>Playlists</Header>
+      <PlaylistContainer>
+        You have no Playlist. Start by creating one:
+        <CustomFormDialog
+          id="createPlaylistDialog"
+          title={t("PlaylistPage.dialog.title")}
+          label={t("PlaylistPage.dialog.label")}
+          button={
+            <CustomButton
+              onClick={() => _handleOnClick()}
+              style={{ width: "250px", marginTop: "16px" }}
+            >
+              {t("PlaylistPage.dialog.title")}
+              <ControlPoint style={{ marginLeft: "16px" }} />
+            </CustomButton>
           }
           dialogText={t("PlaylistPage.dialog.text")}
           open={open}

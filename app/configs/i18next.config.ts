@@ -1,8 +1,8 @@
 import i18n, { InitOptions } from "i18next";
 import i18nextBackend from "i18next-node-fs-backend";
-import config from "./app.config";
-import en from "../locales/en/translation.json";
 import de from "../locales/de/translation.json";
+import en from "../locales/en/translation.json";
+import config from "./app.config";
 
 const i18nextOptions: InitOptions = {
   backend: {

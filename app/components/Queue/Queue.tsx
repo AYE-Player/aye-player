@@ -1,30 +1,20 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  ResponderProvided
+} from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Track from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
-import { useTranslation } from "react-i18next";
 
 interface IProps {}
-
-interface IDragResult {
-  combine: any;
-  destination: {
-    droppableId: string;
-    index: number;
-  };
-  draggableId: string;
-  mode: string;
-  reason: string;
-  source: {
-    index: number;
-    droppableId: string;
-  };
-  type: string;
-}
 
 const Container = styled.div`
   margin: 8px 5px;
@@ -74,8 +64,16 @@ const Queue: React.FunctionComponent<IProps> = props => {
     setValue(!value);
   };
 
-  const _onDragEnd = (result: IDragResult) => {
-    queue.moveTrack(result.source.index, result.destination.index);
+  const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    const track = queue.removeAndGetTrack(result.source.index);
+    queue.addTrackAt(
+      Track.create({
+        id: track.id,
+        title: track.title,
+        duration: track.duration
+      }),
+      result.destination.index
+    );
   };
 
   const _showQueue = () => {
@@ -85,8 +83,8 @@ const Queue: React.FunctionComponent<IProps> = props => {
   player.currentTrack;
 
   const renderQueue = () => (
-    <Container>
-      <DragDropContext onDragEnd={_onDragEnd}>
+    <DragDropContext onDragEnd={_onDragEnd}>
+      <Container>
         <Header>
           Queue
           <Control>
@@ -104,7 +102,8 @@ const Queue: React.FunctionComponent<IProps> = props => {
                   <QueueEntity
                     duration={track.formattedDuration}
                     track={track}
-                    key={track.id}
+                    key={`${track.id}-${index}`}
+                    dragId={`${track.id}-${index}`}
                     index={index}
                     onClick={_handleClick}
                   />
@@ -114,8 +113,8 @@ const Queue: React.FunctionComponent<IProps> = props => {
             </ScrollContainer>
           )}
         </Droppable>
-      </DragDropContext>
-    </Container>
+      </Container>
+    </DragDropContext>
   );
 
   return queue.tracks.length !== 0 ? (

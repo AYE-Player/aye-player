@@ -6,6 +6,7 @@ interface ICustomButtonProps {
   onClick?: (event: React.MouseEvent) => void;
   name?: string;
   disabled?: boolean;
+  style?: any;
 }
 
 const CssButton = withStyles({
@@ -35,6 +36,7 @@ const CustomButton: React.FunctionComponent<ICustomButtonProps> = props => {
         variant="outlined"
         disabled={props.disabled}
         onClick={props.onClick}
+        style={{ ...props.style }}
       >
         {props.name ? props.name : props.children}
       </CssButton>

@@ -1,8 +1,8 @@
 import { ipcRenderer } from "electron";
 import { Instance, types } from "mobx-state-tree";
+import { Repeat } from "../../types/enums";
 import Playlist, { PlaylistModel } from "../models/Playlist";
 import Track, { TrackModel } from "../models/Track";
-import { Repeat } from "../../types/interfaces";
 
 export type PlayerModel = Instance<typeof Player>;
 
@@ -88,12 +88,13 @@ const Player = types
     },
 
     togglePlayingState() {
-      if (self.isPlaying) {
-        this.notifyRPC({ state: "Paused" });
-      } else {
-        this.notifyRPC();
-      }
       self.isPlaying = !self.isPlaying;
+
+      if (self.isPlaying) {
+        this.notifyRPC();
+      } else {
+        this.notifyRPC({ state: "Paused" });
+      }
 
       ipcRenderer.send("player2Win", {
         type: "onStateChange",
