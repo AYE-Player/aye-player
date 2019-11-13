@@ -1,4 +1,10 @@
-import { app, BrowserWindow, Menu, nativeTheme, Tray } from "electron";
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  nativeTheme,
+  Tray
+} from "electron";
 import path from "path";
 import BaseModule from "./BaseModule";
 import AyeLogger from "./AyeLogger";
@@ -13,34 +19,46 @@ class AyeTray extends BaseModule {
 
     AyeLogger.tray("Trying to initialize");
     try {
-      const imgPath = process.env.NODE_ENV === "development" ? "../images/icons/png/" : "images/icons/png/"
+      const imgPath =
+        process.env.NODE_ENV === "development"
+          ? "../images/icons/png/"
+          : "images/icons/png/";
       this.tray = new Tray(
         nativeTheme.shouldUseDarkColors || process.platform === "linux"
-          ? path.resolve(
-              path.join(
-                __dirname,
-                `${imgPath}16x16_w.png`
-              )
-            )
-          : path.resolve(
-              path.join(
-                __dirname,
-                `${imgPath}16x16.png`
-              )
-            )
+          ? path.resolve(path.join(__dirname, `${imgPath}16x16_w.png`))
+          : path.resolve(path.join(__dirname, `${imgPath}16x16.png`))
       );
       this.shouldQuit = false;
 
       const contextMenu = Menu.buildFromTemplate([
         {
-          label: "Show App",
-          click: function() {
+          label: "Play/Pause",
+          click: () => {
+            this.window.webContents.send("play-pause");
+          }
+        },
+        {
+          label: "Skip",
+          click: () => {
+            this.window.webContents.send("play-next");
+          }
+        },
+        {
+          label: "Previous",
+          click: () => {
+            this.window.webContents.send("play-previous");
+          }
+        },
+        { type: "separator" },
+        {
+          label: "Show AYE",
+          click: () => {
             this.window.show();
           }
         },
         {
-          label: "Quit",
-          click: function() {
+          label: "Quit AYE",
+          click: () => {
             this.shouldQuit = true;
             app.quit();
           }
