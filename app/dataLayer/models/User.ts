@@ -17,24 +17,26 @@ const User = types
   })
   .actions(self => ({
     afterCreate: flow(function* afterCreate() {
-      if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      if (token) {
         try {
-          self.id = "USER_1";
-          self.email = "majesnix@majesnix.org";
-          self.name = "majesnix";
-          self.avatar =
-            "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
+          const { data: userInfo } = yield axios.get(
+            "https://api.aye-player.de/userIdentity/v1/",
+            {
+              headers: {
+                "x-access-token": token
+              }
+            }
+          );
+          self.id = userInfo.Id;
+          self.email = userInfo.Email;
+          self.name = userInfo.Username;
+          self.avatar = userInfo.Avatar;
           self.isAnonym = false;
           self.isAuthenticated = true;
           self.hasPremium = true;
         } catch (error) {
-          self.id = undefined;
-          self.email = undefined;
-          self.name = undefined;
-          self.avatar = undefined;
-          self.isAnonym = true;
-          self.isAuthenticated = false;
-          self.hasPremium = false;
+          // Doesnt matter
         }
       }
     }),
@@ -43,7 +45,7 @@ const User = types
       password: string
     ) {
       try {
-        AyeLogger.player(`Trying to log in with: ${username}, ${password}`);
+        AyeLogger.player(`Trying to log in with: ${username}`);
         const { data: token } = yield axios.post(
           "https://api.aye-player.de/auth/v1/",
           {
@@ -51,14 +53,24 @@ const User = types
             Password: password
           }
         );
+        const { data: userInfo } = yield axios.get(
+          "https://api.aye-player.de/userIdentity/v1/",
+          {
+            headers: {
+              "x-access-token": token
+            }
+          }
+        );
         localStorage.setItem("token", token);
+
         // Authenticate user
-        self.id = "USER_1";
-        self.email = "majesnix@majesnix.org";
-        self.name = "majesnix";
-        self.avatar = "https://i.dcl.re/6zagS1oT6cRBXOBMJS8NLoL9PKQd1zJj.webp";
+        self.id = userInfo.Id;
+        self.email = userInfo.Email;
+        self.name = userInfo.Username;
+        self.avatar = userInfo.Avatar;
         self.isAnonym = false;
         self.isAuthenticated = true;
+        // TODO: Really set this
         self.hasPremium = true;
         AyeLogger.player(`Logged in user ${username}`);
       } catch (error) {
@@ -68,7 +80,6 @@ const User = types
     }),
 
     logout() {
-      AyeLogger.player("LOGGING UT");
       localStorage.removeItem("token");
       self.id = undefined;
       self.email = undefined;
