@@ -89,6 +89,7 @@ const SearchPage: React.FunctionComponent = () => {
       }
       foundTracks.push(track);
     }
+    searchResult.clear();
     searchResult.addTracks(foundTracks);
   };
 
@@ -105,7 +106,12 @@ const SearchPage: React.FunctionComponent = () => {
             style={{ color: "#fbfbfb", marginLeft: "16px", width: "100%" }}
           />
           <SearchIcon
-            style={{ padding: "0px 16px", backgroundColor: "#3d4653", height: "100%", borderRadius: "4px" }}
+            style={{
+              padding: "0px 16px",
+              backgroundColor: "#3d4653",
+              height: "100%",
+              borderRadius: "4px"
+            }}
             onClick={_handleSearchIconClick}
           />
         </Search>
