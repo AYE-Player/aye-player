@@ -32,6 +32,11 @@ const SettingsAligner = styled.div`
   width: 400px;
 `;
 
+const AvatarInfoText = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+`;
+
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
@@ -45,7 +50,7 @@ const AccountPage: React.FunctionComponent = () => {
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
   const [passwordsMatch, setPasswordsMatch] = React.useState("");
-  const [avatar, setAvatar] = React.useState("");
+  const [avatar, setAvatar] = React.useState<Blob>(null);
   const [open, setOpen] = React.useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -109,11 +114,7 @@ const AccountPage: React.FunctionComponent = () => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage
-            id={key}
-            variant="error"
-            message={t("General.error")}
-          />
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
         )
       });
     }
@@ -135,8 +136,9 @@ const AccountPage: React.FunctionComponent = () => {
         <div>
           {t("AccountPage.email")}: {user.email}
         </div>
-        <Divider size={2} />
+        <Divider size={3} />
         <AvatarUpload avatar={avatar} setAvatar={setAvatar} user={user} />
+        <AvatarInfoText>max. size 2MB</AvatarInfoText>
         <Divider size={2} />
         <SettingsAligner>
           <NewPassword

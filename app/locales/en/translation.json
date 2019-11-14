@@ -98,6 +98,7 @@
     "password": "Password",
     "repeatPassword": "Repeat Password",
     "changeAvatarButton": "Change",
+    "avatarToBig": "Your avatar is to big. (max size 2MB)",
     "deleteDialog": {
       "confirmButton": "Confirm Delete",
       "title": "Account Deletion",

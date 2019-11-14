@@ -1,6 +1,8 @@
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import SnackMessage from "../../../components/Customs/SnackMessage/SnackMessage";
 import { UserModel } from "../../../dataLayer/models/User";
 import CustomButton from "../../Customs/CustomButton/CustomButton";
 const placeholder = require("../../../images/placeholder.png");
@@ -30,8 +32,22 @@ const Image = styled.img`
 
 const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileSize = (event.target.files[0].size / 1024 / 1024).toFixed(4);
+    if (fileSize > "2") {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="warning"
+            message={t("AccountPage.avatarToBig")}
+          />
+        )
+      });
+      return;
+    }
     props.setAvatar(URL.createObjectURL(event.target.files[0]));
   };
 
