@@ -39,14 +39,14 @@ const PlayerOverlayImage = styled.img`
   z-index: 999;
 `;
 
-const PlayerOverlay = styled.div`
+/*const PlayerOverlay = styled.div`
   width: 320px;
   height: 200px;
   position: absolute;
   margin-top: 47px;
   border-color: none;
   z-index: 999;
-`;
+`;*/
 
 let playerElement: any;
 let history: any = [];
@@ -137,6 +137,10 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _pauseVideo = () => {
+    player.togglePlayingState();
+  };
+
+  const _onPause = () => {
     player.togglePlayingState();
   };
 
@@ -233,9 +237,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.isPlaying ? (
-        <PlayerOverlay />
-      ) : queue.isEmpty || !player.currentTrack ? (
+      {player.isPlaying ? null : queue.isEmpty || !player.currentTrack ? ( // <PlayerOverlay />
         <img
           src={AyeLogo}
           style={{
@@ -263,6 +265,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             youtube: {
               playerVars: {
                 modestbranding: 1
+              },
+              embedOptions: {
+                controls: 0
               }
             }
           }}
@@ -272,6 +277,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           muted={player.isMuted}
           onReady={() => _onReady()}
           onStart={() => _onStart()}
+          onPause={() => _onPause()}
           onError={() => _onError()}
           onDuration={_setDuration}
           onProgress={_handleProgress}
