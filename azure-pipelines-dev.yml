@@ -28,21 +28,21 @@ steps:
     displayName: 'Build'
 
   - task: DeleteFiles@1
-    condition: eq($(imageName), 'linux-latest')
+    condition: startsWith(variables['image.name'], 'ubuntu')
     inputs:
       SourceFolder: './release'
       Contents: 'linux-unpacked'
     displayName: 'Deleting unneeded linux files'
 
   - task: DeleteFiles@1
-    condition: eq($(imageName), 'macos-latest')
+    condition: startsWith(variables['image.name'], 'mac')
     inputs:
       SourceFolder: './release'
       Contents: 'mac'
     displayName: 'Deleting unneeded mac files'
 
   - task: DeleteFiles@1
-    condition: eq($(imageName), 'windows-latest')
+    condition: startsWith(variables['image.name'], 'windows')
     inputs:
       SourceFolder: './release'
       Contents: 'win-unpacked'
