@@ -16,7 +16,7 @@ const User = types
     avatar: types.maybe(types.string)
   })
   .actions(self => ({
-    afterCreate: flow(function* afterCreate() {
+    afterCreate: flow(function*() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
@@ -40,10 +40,7 @@ const User = types
         }
       }
     }),
-    authenticate: flow(function* authenticate(
-      username: string,
-      password: string
-    ) {
+    authenticate: flow(function*(username: string, password: string) {
       try {
         AyeLogger.player(`Trying to log in with: ${username}`);
         const { data: token } = yield axios.post(
@@ -94,24 +91,48 @@ const User = types
       AyeLogger.player("DELETING USER");
     },
 
-    updatePassword: flow(function* updatePassword(password: string) {
+    updatePassword: flow(function*(password: string) {
+      /* const res = yield axios.post(
+        "https://api.aye-player.de/userIdentity/v1/",
+        [{ op: "replace", path: "/Password", value: password }],
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
+        }
+      ); */
       AyeLogger.player(`NEW PASSWORD ${password}`);
     }),
 
-    updateAvatar: flow(function* updateAvatar(avatar: any) {
-      AyeLogger.player(`UPDATE USER ${avatar}`);
+    updateAvatar: flow(function*(avatar: Blob) {
+      try {
+        const data = new FormData();
+        data.append("avatar", avatar);
+
+        /*const res = yield axios.post(
+        `https://storage.aye-player.de/uploadAvatar/${self.id}`,
+        data,
+        {
+          headers: {
+            "Content-Type": 'multipart/form-data;',
+            "x-access-token": localStorage.getItem("token")
+          },
+          timeout: 30000
+        }
+      );*/
+        // send Data - avatar img
+        // AyeLogger.player(`Updated User Avatar ${res}`);
+      } catch (error) {
+        AyeLogger.player(`Error Updating user avatar ${error}`, LogType.ERROR);
+      }
     }),
 
-    register: flow(function* register(
-      name: string,
-      email: string,
-      password: string
-    ) {
+    register: flow(function*(name: string, email: string, password: string) {
       try {
         const response = yield axios.post(
           "https://api.aye-player.de/userIdentity/v1/",
           { Email: email, Password: password }
-        ); // yield for promise resolving
+        );
         AyeLogger.player(`RES ${response}`);
         AyeLogger.player(`REGISTER EVENT ${name} ${email} ${password}`);
       } catch (error) {
@@ -120,9 +141,19 @@ const User = types
       }
     }),
 
-    forgotPassword(email: string) {
-      AyeLogger.player(`FORGOT PASSWORD EVENT ${email}`);
-    }
+    forgotPassword: flow(function*(email: string) {
+      try {
+        /*const res = yield axios.post(
+        `https://api.aye-player.de/forgotPassword/${email}`,
+          timeout: 30000
+        }
+      );*/
+        AyeLogger.player(`FORGOT PASSWORD EVENT ${email}`);
+      } catch (error) {
+        AyeLogger.player(`Failed to reset password ${error}`, LogType.ERROR);
+        throw error;
+      }
+    })
   }));
 
 export default User;

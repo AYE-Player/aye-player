@@ -17,7 +17,7 @@ const SearchResult = types
     }
   }))
   .actions(self => ({
-    getTracks: flow(function* getTracks(term: string) {
+    getTracks: flow(function*(term: string) {
       try {
         const { data } = yield axios.get(
           `https://api.aye-player.de/search/v1/${term}`
@@ -37,7 +37,7 @@ const SearchResult = types
         throw error;
       }
     }),
-    getTrackFromUrl: flow(function* getTrackFromUrl(url: string) {
+    getTrackFromUrl: flow(function*(url: string) {
       try {
         const { data } = yield axios.get(
           `https://api.aye-player.de/search/v1/song?songUrl=${encodeURIComponent(
@@ -49,7 +49,7 @@ const SearchResult = types
           id: data.Id,
           title: data.Title,
           duration: data.Duration
-        }
+        };
         return parsedData;
       } catch (error) {
         AyeLogger.player(error, LogType.ERROR);
