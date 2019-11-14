@@ -33,7 +33,6 @@ steps:
       includeRootFolder: false
       archiveType: 'tar'
       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar.gz'
-      replaceExistingArchive: true
     displayName: 'Package the service'
 
   - task: PublishBuildArtifacts@1
