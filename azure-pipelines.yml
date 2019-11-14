@@ -37,28 +37,3 @@ steps:
       ArtifactName: 'aye_player_build'
       publishLocation: 'Container'
     displayName: 'Publish the build artifact to storage'
-
-  - task: CopyFilesOverSSH@0
-    displayName: 'Securely copy files to the remote machine'
-    inputs:
-      sshEndpoint: 'Dev Deployment Dev Server'
-      sourceFolder: '$(System.DefaultWorkingDirectory)/_AYE Player/aye_player_build'
-      targetFolder: '/home/dev_deployment/DeploymentStorage/aye_player/'
-
-  - task: ado-discord-webhook@1
-    inputs:
-      channelId: '637732991489146885'
-      webhookKey: 'r-N0I9FJXGTwPE4XrRR7p-ORJqfgi2eAi57pi0MUZ7-ZRY3OG3AB9ZEyID_veD6X8bLd'
-      messageType: 'content'
-      content: 'New Player build! Download it at https://dev.aye-player.de/builds :meguFaceStar:'
-    condition: succeeded()
-    displayName: "Build succeeded"
-
-  - task: ado-discord-webhook@1
-    inputs:
-      channelId: '637732991489146885'
-      webhookKey: 'r-N0I9FJXGTwPE4XrRR7p-ORJqfgi2eAi57pi0MUZ7-ZRY3OG3AB9ZEyID_veD6X8bLd'
-      messageType: 'content'
-      content: 'AYE Player CI failed :sad:'
-    condition: failed()
-    displayName: "Build failed"
