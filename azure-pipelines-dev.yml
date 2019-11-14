@@ -25,20 +25,41 @@ steps:
 
   - script: |
       yarn package
-    displayName: 'Package Electron App'
+    displayName: 'Build'
+
+  - task: DeleteFiles@1
+    condition: eq($(imageName), 'linux-latest')
+    inputs:
+      SourceFolder: './release'
+      Contents: 'linux-unpacked'
+    displayName: 'Deleting unneeded linux files'
+
+  - task: DeleteFiles@1
+    condition: eq($(imageName), 'macos-latest')
+    inputs:
+      SourceFolder: './release'
+      Contents: 'mac'
+    displayName: 'Deleting unneeded mac files'
+
+  - task: DeleteFiles@1
+    condition: eq($(imageName), 'windows-latest')
+    inputs:
+      SourceFolder: './release'
+      Contents: 'win-unpacked'
+    displayName: 'Deleting unneeded windows files'
 
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: './release'
       includeRootFolder: false
       archiveType: 'tar'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)_$(imageName).tar.gz'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/AYE_Player_$(imageName).tar.gz'
       replaceExistingArchive: true
-    displayName: 'Package the service'
+    displayName: 'Package'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)_$(imageName).tar.gz'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/AYE_Player_$(imageName).tar.gz'
       ArtifactName: 'aye_player_build'
       publishLocation: 'Container'
-    displayName: 'Publish the build artifact to storage'
+    displayName: 'Publish to Artifact Storage'
