@@ -25,24 +25,24 @@ steps:
 
   - script: |
       yarn package
-    displayName: 'Build'
+    displayName: 'Package'
 
   - task: DeleteFiles@1
-    condition: startsWith(variables['image.name'], 'ubuntu')
+    condition: eq($(imageName), 'ubuntu-latest')
     inputs:
       SourceFolder: './release'
       Contents: 'linux-unpacked'
     displayName: 'Deleting unneeded linux files'
 
   - task: DeleteFiles@1
-    condition: startsWith(variables['image.name'], 'mac')
+    condition: eq($(imageName), 'macos-latest')
     inputs:
       SourceFolder: './release'
       Contents: 'mac'
     displayName: 'Deleting unneeded mac files'
 
   - task: DeleteFiles@1
-    condition: startsWith(variables['image.name'], 'windows')
+    condition: eq($(imageName), 'windows-latest')
     inputs:
       SourceFolder: './release'
       Contents: 'win-unpacked'
@@ -55,7 +55,7 @@ steps:
       archiveType: 'tar'
       archiveFile: '$(Build.ArtifactStagingDirectory)/AYE_Player_$(imageName).tar.gz'
       replaceExistingArchive: true
-    displayName: 'Package'
+    displayName: 'Create Archive'
 
   - task: PublishBuildArtifacts@1
     inputs:
