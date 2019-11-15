@@ -32,7 +32,7 @@ steps:
     inputs:
       SourceFolder: './release'
       Contents: |
-        'linux-unpacked'
+        linux-unpacked
     displayName: 'Deleting unneeded linux files'
 
   - task: DeleteFiles@1
@@ -40,10 +40,10 @@ steps:
     inputs:
       SourceFolder: './release'
       Contents: |
-        'mac'
-        'AYE Player-0.0.1-mac.zip'
-        '._AYE Player-0.0.1.dmg'
-        'AYE Player-0.0.1.dmg.blockmap'
+        mac
+        AYE Player-0.0.1-mac.zip
+        ._AYE Player-0.0.1.dmg
+        AYE Player-0.0.1.dmg.blockmap
     displayName: 'Deleting unneeded mac files'
 
   - task: DeleteFiles@1
@@ -51,8 +51,8 @@ steps:
     inputs:
       SourceFolder: './release'
       Contents: |
-        'win-unpacked'
-        'AYE Player Setup 0.0.1.exe.blockmap'
+        win-unpacked
+        AYE Player Setup 0.0.1.exe.blockmap
     displayName: 'Deleting unneeded windows files'
 
   - task: ArchiveFiles@2
