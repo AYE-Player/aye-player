@@ -19,7 +19,9 @@ export const createStore = (): RootStoreModel => {
     isPlaying: false,
     isMuted: false,
     isSeeking: false,
-    playbackPosition: 0
+    playbackPosition: 0,
+    currentTrack: undefined,
+    currentPlaylist: undefined
   });
   const queue = Queue.create({ tracks: [] });
   const user = User.create();

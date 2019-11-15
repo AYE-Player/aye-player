@@ -1,7 +1,7 @@
-import { clone, getRoot, Instance, resolveIdentifier, types } from "mobx-state-tree";
+import { clone, getRoot, resolveIdentifier, types } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 
-export type QueueModel = Instance<typeof Queue>;
+export type QueueModel = typeof Queue.Type;
 
 const Queue = types
   .model({

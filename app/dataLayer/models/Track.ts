@@ -1,6 +1,6 @@
-import { Instance, types } from "mobx-state-tree";
+import { types } from "mobx-state-tree";
 
-export type TrackModel = Instance<typeof Track>;
+export type TrackModel = typeof Track.Type
 
 const Track = types
   .model({

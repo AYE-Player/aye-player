@@ -1,11 +1,11 @@
 import axios from "axios";
-import { flow, Instance, types } from "mobx-state-tree";
+import { flow, types } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 import { decodeHTMLEntities } from "../../helpers";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 
-export type SearchResultModel = Instance<typeof SearchResult>;
+export type SearchResultModel = typeof SearchResult.Type;
 
 const SearchResult = types
   .model({

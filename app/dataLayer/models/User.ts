@@ -1,9 +1,9 @@
 import axios from "axios";
-import { flow, Instance, types } from "mobx-state-tree";
+import { flow, types } from "mobx-state-tree";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 
-export type UserModel = Instance<typeof User>;
+export type UserModel = typeof User.Type;
 
 const User = types
   .model({

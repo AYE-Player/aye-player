@@ -1,7 +1,7 @@
-import { getRoot, Instance, resolveIdentifier, types } from "mobx-state-tree";
+import { getRoot, resolveIdentifier, types } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 
-export type TrackHistoryModel = Instance<typeof TrackHistory>;
+export type TrackHistoryModel = typeof TrackHistory.Type;
 
 const TrackHistory = types
   .model({

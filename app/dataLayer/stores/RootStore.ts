@@ -1,4 +1,4 @@
-import { Instance, types } from "mobx-state-tree";
+import { types } from "mobx-state-tree";
 import User, { UserModel } from "../models/User";
 import AppStore, { AppStoreModel } from "./AppStore";
 import Player, { PlayerModel } from "./Player";
@@ -8,7 +8,8 @@ import SearchResult, { SearchResultModel } from "./SearchResult";
 import TrackHistory, { TrackHistoryModel } from "./TrackHistory";
 import TrackStore, { TrackStoreModel } from "./Tracks";
 
-export type RootStoreModel = Instance<typeof RootStore>;
+export type RootStoreModel = typeof RootStore.Type;
+
 export type RootStoreEnv = {
   player: PlayerModel;
   playlists: PlaylistsModel;
