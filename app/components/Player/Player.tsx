@@ -30,14 +30,14 @@ const Container = styled.div`
   bottom: 35px;
 `;
 
-const PlayerOverlayImage = styled.img`
+/*const PlayerOverlayImage = styled.img`
   width: 320px;
   height: 200px;
   background-color: #000;
   position: absolute;
   margin-top: 47px;
   z-index: 999;
-`;
+`;*/
 
 /*const PlayerOverlay = styled.div`
   width: 320px;
@@ -141,7 +141,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onPause = () => {
-    player.togglePlayingState();
+    if (player.isPlaying) {
+      player.pause();
+    }
   };
 
   const _playNextTrack = () => {
@@ -250,11 +252,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 999
           }}
         />
-      ) : (
-        <PlayerOverlayImage
+      ) : null
+      /*<PlayerOverlayImage
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
-        />
-      )}
+        />*/
+      }
       {player.currentTrack ? (
         <ReactPlayer
           ref={_getPlayerElement}

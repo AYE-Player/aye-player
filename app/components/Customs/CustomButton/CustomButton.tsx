@@ -22,7 +22,7 @@ const CssButton = withStyles({
     },
     "& .MuiOutlinedInput-root": {
       "&:hover fieldset": {
-        borderColor: "#9cf"
+        borderColor: "#4fc3f7"
       }
     },
     borderRadius: "5px"

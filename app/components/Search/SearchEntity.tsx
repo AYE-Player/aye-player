@@ -33,7 +33,7 @@ const Container = styled.div<any>`
     border-bottom: none;
   }
   &:hover > div {
-    color: #99ccff;
+    color: #4fc3f7;
   }
 `;
 const TrackInfoContainer = styled.div<any>`

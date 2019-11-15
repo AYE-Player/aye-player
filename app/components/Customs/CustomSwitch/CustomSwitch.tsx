@@ -25,7 +25,7 @@ const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = props => {
       <Switch
         onChange={props.onChange}
         checked={props.checked}
-        onColor="#99ccff"
+        onColor="#4fc3f7"
         onHandleColor="#565f6c"
         handleDiameter={24}
         uncheckedIcon={false}
