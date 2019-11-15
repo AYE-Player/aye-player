@@ -277,8 +277,11 @@ app.on("ready", async () => {
 
 // macOS only
 app.on("activate", () => {
-  mainWindow.show();
-  mainWindow.focus();
+  if (mainWindow === null) {
+    createAppScreen();
+  } else {
+    mainWindow.show();
+  }
 });
 
 // Make the app a single-instance app
