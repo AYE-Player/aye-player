@@ -10,6 +10,7 @@ const placeholder = require("../../../images/placeholder.png");
 interface IAvatarUploadProps {
   avatar: any;
   setAvatar: Function;
+  setAvatarFile: Function;
   user?: UserModel;
 }
 
@@ -35,8 +36,9 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
   const { enqueueSnackbar } = useSnackbar();
 
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileSize = (event.target.files[0].size / 1024 / 1024).toFixed(4);
-    if (fileSize > "2") {
+    const file = event.target.files[0];
+    const fileSize = (file.size / 1024 / 1024);
+    if (fileSize > 2) {
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -48,7 +50,8 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
       });
       return;
     }
-    props.setAvatar(URL.createObjectURL(event.target.files[0]));
+    props.setAvatarFile(file);
+    props.setAvatar(URL.createObjectURL(file));
   };
 
   const _clickInputFaker = () => {
@@ -59,7 +62,7 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
     <>
       <Aligner>
         <input
-          accept="image/*"
+          accept="image/png, image/jpeg, image/gif, image/webp"
           style={{ display: "none" }}
           id="file-input-element"
           type="file"

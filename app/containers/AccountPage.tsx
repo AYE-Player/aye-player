@@ -1,4 +1,6 @@
 import { Button } from "@material-ui/core";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 import { observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
@@ -40,17 +42,19 @@ const AvatarInfoText = styled.div`
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user, playlists }: RootStoreModel) => ({
-    user,
-    playlists
+  const UserStore = ({ user }: RootStoreModel) => ({
+    user
   });
 
+
   const { user } = useInject(UserStore);
+  console.log(user);
 
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
   const [passwordsMatch, setPasswordsMatch] = React.useState("");
-  const [avatar, setAvatar] = React.useState<Blob>(null);
+  const [avatar, setAvatar] = React.useState("");
+  const [avatarFile, setAvatarFile] = React.useState<File>(null);
   const [open, setOpen] = React.useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -81,7 +85,6 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   const _checkPasswordsMatch = (pass1: string, pass2: string) => {
-    console.log(pass1, pass2);
     if (pass1.length < 8 && pass2.length > 0) {
       setPasswordsMatch(t("RegisterPage.minLengthPassword"));
     } else if (pass1 !== pass2 && pass1.length >= 8 && pass2.length > 0) {
@@ -95,9 +98,9 @@ const AccountPage: React.FunctionComponent = () => {
     try {
       if (passwordsMatch && avatar) {
         await user.updatePassword(password);
-        await user.updateAvatar(avatar);
+        await user.updateAvatar(avatarFile);
       } else if (avatar) {
-        await user.updateAvatar(avatar);
+        await user.updateAvatar(avatarFile);
       } else if (passwordsMatch) {
         await user.updatePassword(password);
       }
@@ -112,6 +115,7 @@ const AccountPage: React.FunctionComponent = () => {
         )
       });
     } catch (error) {
+      AyeLogger.player(`Error updating User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
@@ -137,7 +141,12 @@ const AccountPage: React.FunctionComponent = () => {
           {t("AccountPage.email")}: {user.email}
         </div>
         <Divider size={3} />
-        <AvatarUpload avatar={avatar} setAvatar={setAvatar} user={user} />
+        <AvatarUpload
+          avatar={avatar}
+          setAvatar={setAvatar}
+          user={user}
+          setAvatarFile={setAvatarFile}
+        />
         <AvatarInfoText>max. size 2MB</AvatarInfoText>
         <Divider size={2} />
         <SettingsAligner>

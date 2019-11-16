@@ -28,13 +28,18 @@ const User = types
               }
             }
           );
+          console.log("ISEROINFO", userInfo, userInfo.Roles.find(role => role.Name === "admin"));
           self.id = userInfo.Id;
           self.email = userInfo.Email;
           self.name = userInfo.Username;
-          self.avatar = userInfo.Avatar;
+          self.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
           self.isAnonym = false;
           self.isAuthenticated = true;
-          self.hasPremium = true;
+          self.hasPremium =
+            !!userInfo.Roles.find(role => role.Name === "admin") ||
+            !!userInfo.Roles.find(role => role.Name === "premium");
+
+          console.log("self", self);
         } catch (error) {
           // Doesnt matter
         }
@@ -64,7 +69,7 @@ const User = types
         self.id = userInfo.Id;
         self.email = userInfo.Email;
         self.name = userInfo.Username;
-        self.avatar = userInfo.Avatar;
+        self.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
         self.isAnonym = false;
         self.isAuthenticated = true;
         // TODO: Really set this
@@ -104,26 +109,45 @@ const User = types
       AyeLogger.player(`NEW PASSWORD ${password}`);
     }),
 
-    updateAvatar: flow(function*(avatar: Blob) {
+    updateAvatar: flow(function*(avatar: File) {
       try {
         const data = new FormData();
+
         data.append("avatar", avatar);
 
-        /*const res = yield axios.post(
-        `https://storage.aye-player.de/uploadAvatar/${self.id}`,
-        data,
-        {
-          headers: {
-            "Content-Type": 'multipart/form-data;',
-            "x-access-token": localStorage.getItem("token")
-          },
-          timeout: 30000
-        }
-      );*/
-        // send Data - avatar img
-        // AyeLogger.player(`Updated User Avatar ${res}`);
+        // Upload avatar image
+        // INFO: We have to use fetch here, because axios has problems with formData uploads/requests...
+        const res = yield fetch(
+          "https://api.aye-player.de/userIdentity/v1/avatar",
+          {
+            method: "POST",
+            body: data,
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+
+        // parse response (gives storage URL)
+        const avatarURL = yield res.json();
+
+        // Patch userprofile with new URL
+        yield axios.patch(
+          `https://api.aye-player.de/userIdentity/v1/${self.id}`,
+          [{ op: "replace", path: "/Avatar", value: avatarURL }],
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+
+        // set local URL for direct effect
+        self.avatar = avatarURL;
+        AyeLogger.player(`Updated User Avatar ${avatarURL}`);
       } catch (error) {
         AyeLogger.player(`Error Updating user avatar ${error}`, LogType.ERROR);
+        throw error;
       }
     }),
 
