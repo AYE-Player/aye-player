@@ -94,6 +94,7 @@ const SearchPage: React.FunctionComponent = () => {
         player.playTrack(track);
       } else {
         const results = await searchResult.getTracks(term);
+        console.log(results);
         const foundTracks = [];
         for (const result of results) {
           const track = Track.create(result);
@@ -143,7 +144,9 @@ const SearchPage: React.FunctionComponent = () => {
             : searchResult.tracks.map((track, index) => {
                 return (
                   <SearchEntity
-                    duration={track.formattedDuration}
+                    duration={
+                      track.duration === 0 ? "LIVE" : track.formattedDuration
+                    }
                     track={track}
                     key={track.id}
                     index={index}

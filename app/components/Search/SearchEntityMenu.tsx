@@ -11,6 +11,7 @@ import useInject from "../../hooks/useInject";
 interface ISearchEntityMenuProps {
   id: string;
   openListDialog: any;
+  isLivestream: boolean;
 }
 
 const Container = styled.div`
@@ -88,16 +89,22 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-            Play next
-          </MenuItem>
-          <MenuItem onClick={() => _handleAddTrack(props.id)}>
-            Add to Queue
-          </MenuItem>
-          <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
-          <MenuItem onClick={() => props.openListDialog()}>
-            Add to Playlist...
-          </MenuItem>
+          {props.isLivestream ? (
+            <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+          ) : (
+            <>
+              <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
+                Play next
+              </MenuItem>
+              <MenuItem onClick={() => _handleAddTrack(props.id)}>
+                Add to Queue
+              </MenuItem>
+              <MenuItem onClick={() => props.openListDialog()}>
+                Add to Playlist
+              </MenuItem>
+              <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+            </>
+          )}
         </StyledMenu>
       </Container>
     </ClickAwayListener>

@@ -185,15 +185,25 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         <Time>{formattedDuration(player.playbackPosition)}</Time>
         <PrettoSlider
           min={0}
-          max={player.currentTrack ? player.currentTrack.duration : 0}
-          value={player.playbackPosition}
+          max={
+            player.currentTrack && player.currentTrack.duration
+              ? player.currentTrack.duration
+              : 100
+          }
+          value={
+            player.currentTrack && player.currentTrack.duration
+              ? player.playbackPosition
+              : 100
+          }
           onChange={_handlePlaybackChange}
           onMouseUp={_handleSeekingStop}
         />
         <Time>
-          {formattedDuration(
-            player.currentTrack ? player.currentTrack.duration : 0
-          )}
+          {player.currentTrack
+            ? player.currentTrack.duration
+              ? formattedDuration(player.currentTrack.duration)
+              : "LIVE"
+            : null}
         </Time>
       </PlaybackControl>
     </Container>

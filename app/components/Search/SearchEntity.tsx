@@ -149,7 +149,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
         </Title>
         <Duration>{props.duration}</Duration>
       </TrackInfoContainer>
-      <SearchEntityMenu id={props.track.id} openListDialog={_handleClickOpen} />
+      <SearchEntityMenu id={props.track.id} openListDialog={_handleClickOpen} isLivestream={props.duration === "LIVE"} />
       <CustomListDialog
         dialogTitle="Select Playlist"
         open={open}

@@ -219,7 +219,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _setDuration = (duration: number) => {
     if (duration === player.currentTrack.duration) return;
-    player.currentTrack.setDuration(duration);
+    // player.currentTrack.setDuration(duration);
   };
 
   const _onError = () => {
