@@ -88,6 +88,9 @@
         "msi"
       ]
     },
+    "nsis": {
+      "perMachine": true
+    },
     "linux": {
       "target": [
         "deb",
@@ -98,7 +101,14 @@
     "directories": {
       "buildResources": "resources",
       "output": "release"
-    }
+    },
+    "protocols": [
+      {
+        "name": "aye-player-deeplinking",
+        "role": "Viewer",
+        "schemes": ["aye-player"]
+      }
+    ]
   },
   "husky": {
     "hooks": {

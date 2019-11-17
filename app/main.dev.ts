@@ -27,6 +27,7 @@ import AyeDiscordRPC from "./modules/AyeDiscordRPC";
 import AyeMediaKeys from "./modules/AyeMediaKeys";
 import AyeMpris from "./modules/AyeMpris";
 import AyeTray from "./modules/AyeTray";
+import AyeLogger from "./modules/AyeLogger";
 
 export default class AppUpdater {
   constructor() {
@@ -66,6 +67,8 @@ let rpc: AyeDiscordRPC;
 // Fix the player not being able to play audio when the user did not interact
 // with the page
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+// Set default protocol, to open pages/songs with an external link
+app.setAsDefaultProtocolClient("aye-player");
 
 // Catch all unhandled errors
 unhandled();
@@ -287,17 +290,35 @@ app.on("activate", () => {
 // Make the app a single-instance app
 const gotTheLock = app.requestSingleInstanceLock();
 
-app.on("second-instance", () => {
+app.on("second-instance", (event, args) => {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();
   }
+
+  // See if we have a custom scheme notification, and note that Chromium may add its own parameters
+  for (const arg of args) {
+    const value = arg as string;
+    if (value.indexOf("aye-player") !== -1) {
+      AyeLogger.info(`FOUND CUSTOM SCHEME ${value}`);
+      break;
+    }
+  }
+  AyeLogger.info(`EVENT ${JSON.stringify(event, null, 1)}`);
+  AyeLogger.info(`ARGS ${args}`);
 });
 
 if (!gotTheLock) {
   app.quit();
 }
+
+// Custom URI for Mac OS
+app.on("open-url", (event, customSchemeData) => {
+  event.preventDefault();
+  AyeLogger.info(`EVENT ${event}`);
+  AyeLogger.info(`CustomSchemeData ${customSchemeData}`);
+});
 
 // IPC Communication
 
