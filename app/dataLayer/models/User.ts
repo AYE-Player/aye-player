@@ -5,6 +5,11 @@ import { LogType } from "../../types/enums";
 
 export type UserModel = typeof User.Type;
 
+interface IRole {
+  Name: string;
+  Id: string;
+}
+
 const User = types
   .model({
     isAuthenticated: types.optional(types.boolean, false),
@@ -28,7 +33,6 @@ const User = types
               }
             }
           );
-          console.log("ISEROINFO", userInfo, userInfo.Roles.find(role => role.Name === "admin"));
           self.id = userInfo.Id;
           self.email = userInfo.Email;
           self.name = userInfo.Username;
@@ -36,10 +40,8 @@ const User = types
           self.isAnonym = false;
           self.isAuthenticated = true;
           self.hasPremium =
-            !!userInfo.Roles.find(role => role.Name === "admin") ||
-            !!userInfo.Roles.find(role => role.Name === "premium");
-
-          console.log("self", self);
+            !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
+            !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
         } catch (error) {
           // Doesnt matter
         }
@@ -97,16 +99,24 @@ const User = types
     },
 
     updatePassword: flow(function*(password: string) {
-      /* const res = yield axios.post(
-        "https://api.aye-player.de/userIdentity/v1/",
-        [{ op: "replace", path: "/Password", value: password }],
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
+      try {
+        AyeLogger.player(`Trying to set new password for ${self.id}`);
+        yield axios.post(
+          "https://api.aye-player.de/userIdentity/v1/",
+          [{ op: "replace", path: "/Password", value: password }],
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
           }
-        }
-      ); */
-      AyeLogger.player(`NEW PASSWORD ${password}`);
+        );
+        AyeLogger.player(`New Password set.`);
+      } catch (error) {
+        AyeLogger.player(
+          `Error Setting new password ${JSON.stringify(error, null, 2)}`
+        );
+        throw error;
+      }
     }),
 
     updateAvatar: flow(function*(avatar: File) {
@@ -153,12 +163,11 @@ const User = types
 
     register: flow(function*(name: string, email: string, password: string) {
       try {
-        const response = yield axios.post(
-          "https://api.aye-player.de/userIdentity/v1/",
-          { Email: email, Password: password }
-        );
-        AyeLogger.player(`RES ${response}`);
-        AyeLogger.player(`REGISTER EVENT ${name} ${email} ${password}`);
+        yield axios.post("https://api.aye-player.de/userIdentity/v1/", {
+          Email: email,
+          Password: password
+        });
+        AyeLogger.player(`REGISTER EVENT ${name} ${email}`);
       } catch (error) {
         AyeLogger.player(`Failed registration ${error}`, LogType.ERROR);
         throw error;

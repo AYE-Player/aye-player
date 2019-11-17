@@ -46,13 +46,12 @@ const AccountPage: React.FunctionComponent = () => {
     user
   });
 
-
   const { user } = useInject(UserStore);
-  console.log(user);
 
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
-  const [passwordsMatch, setPasswordsMatch] = React.useState("");
+  const [passwordsMatch, setPasswordsMatch] = React.useState(false);
+  const [passwordsMatchText, setPasswordsMatchText] = React.useState("");
   const [avatar, setAvatar] = React.useState("");
   const [avatarFile, setAvatarFile] = React.useState<File>(null);
   const [open, setOpen] = React.useState(false);
@@ -86,11 +85,14 @@ const AccountPage: React.FunctionComponent = () => {
 
   const _checkPasswordsMatch = (pass1: string, pass2: string) => {
     if (pass1.length < 8 && pass2.length > 0) {
-      setPasswordsMatch(t("RegisterPage.minLengthPassword"));
+      setPasswordsMatchText(t("RegisterPage.minLengthPassword"));
+      setPasswordsMatch(false);
     } else if (pass1 !== pass2 && pass1.length >= 8 && pass2.length > 0) {
-      setPasswordsMatch(t("RegisterPage.matchPassword"));
+      setPasswordsMatchText(t("RegisterPage.matchPassword"));
+      setPasswordsMatch(false);
     } else {
-      setPasswordsMatch("");
+      setPasswordsMatchText("");
+      setPasswordsMatch(true);
     }
   };
 
@@ -153,7 +155,7 @@ const AccountPage: React.FunctionComponent = () => {
           <NewPassword
             handlePasswordChange={_handlePasswordChange}
             handlePasswordChange2={_handlePasswordChange2}
-            passwordsMatch={passwordsMatch}
+            passwordsMatch={passwordsMatchText}
           />
           <Divider size={2} />
           <CustomButton onClick={() => _updateUser()} name="Update" />
