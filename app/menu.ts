@@ -36,7 +36,6 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    this.mainWindow.webContents.toggleDevTools();
     this.mainWindow.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
 
@@ -254,7 +253,14 @@ export default class MenuBuilder {
             click() {
               shell.openExternal("https://github.com/atom/electron/issues");
             }
+          },
+        {
+          label: this.i18n.t("macMenu.ToggleDeveloperTools"),
+          accelerator: "Ctrl+Shift+I",
+          click: () => {
+            this.mainWindow.webContents.toggleDevTools();
           }
+        }
         ]
       }
     ];
