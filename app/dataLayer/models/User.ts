@@ -25,6 +25,7 @@ const User = types
       const token = localStorage.getItem("token");
       if (token) {
         try {
+          // @ts-ignore
           const { data: userInfo } = yield axios.get(
             "https://api.aye-player.de/userIdentity/v1/",
             {
@@ -67,7 +68,7 @@ const User = types
         );
         localStorage.setItem("token", token);
 
-        // Authenticate user
+        // Save user information
         self.id = userInfo.Id;
         self.email = userInfo.Email;
         self.name = userInfo.Username;
@@ -122,7 +123,6 @@ const User = types
     updateAvatar: flow(function*(avatar: File) {
       try {
         const data = new FormData();
-
         data.append("avatar", avatar);
 
         // Upload avatar image
@@ -177,8 +177,7 @@ const User = types
     forgotPassword: flow(function*(email: string) {
       try {
         /*const res = yield axios.post(
-        `https://api.aye-player.de/forgotPassword/${email}`,
-          timeout: 30000
+        `https://api.aye-player.de/forgotPassword/${email}`
         }
       );*/
         AyeLogger.player(`FORGOT PASSWORD EVENT ${email}`);
