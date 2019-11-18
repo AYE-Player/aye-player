@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Feel Better",
     duration: 235
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Bad For You",
     duration: 262
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -49,7 +49,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Take It Back",
     duration: 214
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -57,7 +57,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Don't You Know",
     duration: 225
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - I Remember",
     duration: 192
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -73,7 +73,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - At The End",
     duration: 117
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -81,7 +81,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Just Be Me",
     duration: 195
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -89,7 +89,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Let Me Go",
     duration: 198
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -97,7 +97,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Should've Started",
     duration: 225
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -105,7 +105,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Chase Pop",
     duration: 200
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -113,7 +113,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Crash",
     duration: 226
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -121,7 +121,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Your Eyes",
     duration: 212
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -129,7 +129,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Feel You",
     duration: 203
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -137,7 +137,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Serenity",
     duration: 197
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -145,7 +145,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Neovaii - Heart Shaped Box",
     duration: 291
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -153,7 +153,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Legends Never Die",
     duration: 235
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -161,7 +161,7 @@ if (process.env.NODE_ENV === "development") {
     title: "POP/STARS",
     duration: 202
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   track = Track.create({
@@ -169,7 +169,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Phoenix",
     duration: 175
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist.addTrack(track);
 
   const playlist2 = rootStore.playlists.getListById("2");
@@ -179,7 +179,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Nightcore - Cradles (Besomorph)",
     duration: 122
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist2.addTrack(track);
 
   track = Track.create({
@@ -187,7 +187,7 @@ if (process.env.NODE_ENV === "development") {
     title: "Nightcore - Play (Alan Walker, K-391)",
     duration: 148
   });
-  rootStore.tracks.add(track);
+  rootStore.trackCache.add(track);
   playlist2.addTrack(track);
 
   // rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);

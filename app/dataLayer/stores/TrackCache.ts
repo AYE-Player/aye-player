@@ -19,8 +19,8 @@ const TrackStore = types
     },
 
     removeTrack(id: string) {
-      const foundList = self.tracks.find(track => track.id === id);
-      const idx = self.tracks.indexOf(foundList);
+      const foundTrack = self.tracks.find(track => track.id === id);
+      const idx = self.tracks.indexOf(foundTrack);
       self.tracks.splice(idx, 1);
     }
   }));

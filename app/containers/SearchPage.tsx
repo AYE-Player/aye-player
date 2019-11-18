@@ -44,14 +44,19 @@ const Search = styled.div`
 `;
 
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({ player, queue, searchResult, tracks }: RootStoreModel) => ({
+  const Store = ({
     player,
     queue,
     searchResult,
-    tracks
+    trackCache
+  }: RootStoreModel) => ({
+    player,
+    queue,
+    searchResult,
+    trackCache
   });
 
-  const { player, queue, searchResult, tracks } = useInject(Store);
+  const { player, queue, searchResult, trackCache } = useInject(Store);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -86,20 +91,19 @@ const SearchPage: React.FunctionComponent = () => {
       if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
         const track = Track.create(trackInfo);
-        if (!tracks.tracks.find(t => t.id === track.id)) {
-          tracks.add(track);
+        if (!trackCache.tracks.find(t => t.id === track.id)) {
+          trackCache.add(track);
         }
         searchResult.clear();
         queue.addPrivilegedTrack(track);
         player.playTrack(track);
       } else {
         const results = await searchResult.getTracks(term);
-        console.log(results);
         const foundTracks = [];
         for (const result of results) {
           const track = Track.create(result);
-          if (!tracks.tracks.find(t => t.id === track.id)) {
-            tracks.add(track);
+          if (!trackCache.tracks.find(t => t.id === track.id)) {
+            trackCache.add(track);
           }
           foundTracks.push(track);
         }
