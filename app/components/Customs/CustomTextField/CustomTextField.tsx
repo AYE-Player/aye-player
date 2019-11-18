@@ -9,6 +9,7 @@ interface ICustomTextFieldProps {
   helperText?: string;
   error?: boolean;
   required?: boolean;
+  autoFocus?: boolean;
 }
 
 // TODO: Implement correct coloring for error handling
@@ -52,6 +53,7 @@ const CssTextField = withStyles({
 const CustomTextField: React.FunctionComponent<ICustomTextFieldProps> = props => {
   return (
     <CssTextField
+      autoFocus={props.autoFocus}
       id={props.id}
       label={props.label}
       type={props.type}
