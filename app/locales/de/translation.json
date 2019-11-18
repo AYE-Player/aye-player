@@ -28,7 +28,8 @@
     "Window": "Fenster",
     "Minimize": "Minimieren",
     "Close": "Schließen",
-    "BringAllToFront": "Alle Fenster In Vordergrund Bringen"
+    "BringAllToFront": "Alle Fenster In Vordergrund Bringen",
+    "Quit": "Beende AYE-Player"
   },
   "General": {
     "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."

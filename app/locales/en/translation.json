@@ -28,7 +28,8 @@
     "Window": "Window",
     "Minimize": "Minimize",
     "Close": "Close",
-    "BringAllToFront": "Bring All to Front"
+    "BringAllToFront": "Bring All to Front",
+    "Quit": "Quit AYE-Player"
   },
   "General": {
     "error": "Something went wrong, please try again later."
