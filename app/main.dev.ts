@@ -22,7 +22,7 @@ import "v8-compile-cache";
 import config from "./configs/app.config";
 import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
-import MenuBuilder from "./menu";
+import AyeMenu from "./modules/AyeMenu";
 import AyeDiscordRPC from "./modules/AyeDiscordRPC";
 import AyeMediaKeys from "./modules/AyeMediaKeys";
 import AyeMpris from "./modules/AyeMpris";
@@ -145,9 +145,15 @@ const createAppScreen = () => {
     mainWindow.center();
   }
 
-  // Register Modules
-  rpc = new AyeDiscordRPC("621726681140297728");
-  tray = new AyeTray(mainWindow);
+  if (!rpc) {
+    // Create DiscordRPC
+    rpc = new AyeDiscordRPC("621726681140297728");
+  }
+
+  if (!tray) {
+    // Create Tray
+    tray = new AyeTray(mainWindow);
+  }
 
   if (Settings.get("rpcEnabled")) {
     rpc.login();
@@ -205,6 +211,8 @@ const createAppScreen = () => {
 
     // dispose of rpc client
     rpc.dispose();
+    // dispose of tray
+    tray.destroy();
     // unregister shortcuts
     globalShortcut.unregisterAll();
   });
@@ -233,10 +241,10 @@ const createAppScreen = () => {
     event.preventDefault();
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow, i18n);
+  const menuBuilder = new AyeMenu(mainWindow, i18n);
 
   menuBuilder.i18n.on("languageChanged", lng => {
-    menuBuilder.buildMenu();
+    menuBuilder.build();
     mainWindow.webContents.send("language-changed", {
       language: lng,
       namespace: config.namespace,
