@@ -90,7 +90,7 @@
     "forgotPasswordLink": "Forgot password?"
   },
   "AccountPage": {
-    "header": "Account Settings",
+    "header": "Profile",
     "updateSuccessMessage": "Update successfull",
     "username": "Username",
     "email": "E-Mail",

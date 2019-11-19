@@ -75,7 +75,7 @@
     }
   },
   "AppSettingsPage": {
-    "header": "App Einstellungen",
+    "header": "Profile",
     "discord": "Discord Presence anzeigen",
     "tray": "Minimieren *",
     "language": "Sprache",
