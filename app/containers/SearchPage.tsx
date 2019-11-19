@@ -90,7 +90,13 @@ const SearchPage: React.FunctionComponent = () => {
     try {
       if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
-        const track = Track.create(trackInfo);
+        let track: TrackModel;
+        if (trackInfo.duration === 0) {
+          track = Track.create({ ...trackInfo, isLivestream: true });
+        } else {
+          track = Track.create(trackInfo);
+        }
+
         if (!trackCache.tracks.find(t => t.id === track.id)) {
           trackCache.add(track);
         }
@@ -101,7 +107,12 @@ const SearchPage: React.FunctionComponent = () => {
         const results = await searchResult.getTracks(term);
         const foundTracks = [];
         for (const result of results) {
-          const track = Track.create(result);
+          let track: TrackModel;
+          if (result.duration === 0) {
+            track = Track.create({ ...result, isLivestream: true });
+          } else {
+            track = Track.create(result);
+          }
           if (!trackCache.tracks.find(t => t.id === track.id)) {
             trackCache.add(track);
           }

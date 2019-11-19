@@ -1,12 +1,13 @@
 import { types } from "mobx-state-tree";
 
-export type TrackModel = typeof Track.Type
+export type TrackModel = typeof Track.Type;
 
 const Track = types
   .model({
     id: types.identifier,
     title: types.string,
-    duration: types.optional(types.number, 0)
+    duration: types.optional(types.number, 0),
+    isLivestream: types.optional(types.boolean, false)
   })
   .views(self => ({
     get formattedDuration() {

@@ -92,7 +92,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
           {props.isLivestream ? (
             <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
           ) : (
-            <>
+            <span>
               <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
                 Play next
               </MenuItem>
@@ -103,7 +103,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
                 Add to Playlist
               </MenuItem>
               <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
-            </>
+            </span>
           )}
         </StyledMenu>
       </Container>
