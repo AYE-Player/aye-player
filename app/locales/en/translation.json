@@ -56,7 +56,7 @@
     "password": "Password",
     "repeatPassword": "Repeat Password",
     "registerButton": "Register",
-    "success": "We send you an email, to complete your registration."
+    "success": "We sent you an email, to complete your registration."
   },
   "PlaylistPage": {
     "name": "Name",
@@ -74,6 +74,7 @@
   "PasswordForgotPage": {
     "header": "Forgot Password",
     "text": "Please enter your E-Mail to receive a password reset link.",
+    "success": "We sent you an email, to reset your password.",
     "textfield": {
       "label": "E-Mail"
     },

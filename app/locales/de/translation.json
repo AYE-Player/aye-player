@@ -74,6 +74,7 @@
   "PasswordForgotPage": {
     "header": "Passwort vergessen",
     "text": "Bitte gebe uns deine E-Mail addresse, damit wir dir einen Reset-Link schicken können.",
+    "success": "Wir haben dir eine E-Mail gesendet, mit der du dein Passwort resetten kannst",
     "textfield": {
       "label": "E-Mail"
     },
