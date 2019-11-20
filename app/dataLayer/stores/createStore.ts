@@ -6,8 +6,8 @@ import Playlists from "./Playlists";
 import Queue from "./Queue";
 import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";
 import SearchResult from "./SearchResult";
-import TrackHistory from "./TrackHistory";
 import TrackStore from "./TrackCache";
+import TrackHistory from "./TrackHistory";
 
 export const createStore = (): RootStoreModel => {
   const playlists = Playlists.create({ lists: [] });
@@ -48,13 +48,18 @@ export const createStore = (): RootStoreModel => {
 
   const rootStore = RootStore.create(
     {
+      // @ts-ignore
       player,
+      // @ts-ignore
       playlists,
+      // @ts-ignore
       queue,
       user,
       app,
       trackCache,
+      // @ts-ignore
       trackHistory,
+      // @ts-ignore
       searchResult
     },
     env
