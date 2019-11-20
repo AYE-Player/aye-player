@@ -53,8 +53,10 @@ const Title = styled.div<any>`
       return `div {
 
         transform: translateX(0);
-        transition-timing-function: cubic-bezier(0.42,0,0.58,1);
-        transition-duration: 1s;
+        transition-timing-function: linear;
+        transition-duration: ${
+          props.length <= 30 ? "1s" : props.length <= 45 ? "2s" : "3s"
+        };
       }
       :hover div {
         transform: translateX(calc(200px - 100%));

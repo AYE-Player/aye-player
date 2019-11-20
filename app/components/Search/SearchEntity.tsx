@@ -56,11 +56,13 @@ const Title = styled.div<any>`
       return `div {
 
         transform: translateX(0);
-        transition-timing-function: cubic-bezier(0.42,0,0.58,1);
-        transition-duration: 1s;
+        transition-timing-function: linear;
+        transition-duration: ${
+          props.length === 42 ? "1s" : props.length <= 55 ? "2s" : "3s"
+        };
       }
       :hover div {
-        transform: translateX(calc(300px - 100%));
+        transform: translateX(calc(300px - 100%)) translate3d(0,0,0);
       }`;
     }
   }}
