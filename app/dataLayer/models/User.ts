@@ -95,14 +95,30 @@ const User = types
       self.hasPremium = false;
     },
 
-    delete() {
-      AyeLogger.player("DELETING USER");
-    },
+    delete: flow(function*() {
+      try {
+        AyeLogger.player(`Deleting User ${self.id}`);
+        yield axios.delete(`https://api.aye-player.de/userIdentity/v1/`, {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
+        });
+        AyeLogger.player(`Deleted`);
+      } catch (error) {
+        AyeLogger.player(
+          `Error deleting user ${self.id}, ERROR: ${JSON.stringify(
+            error,
+            null,
+            2
+          )}`
+        );
+      }
+    }),
 
     updatePassword: flow(function*(password: string) {
       try {
         AyeLogger.player(`Trying to set new password for ${self.id}`);
-        yield axios.post(
+        yield axios.patch(
           "https://api.aye-player.de/userIdentity/v1/",
           [{ op: "replace", path: "/Password", value: password }],
           {
@@ -143,7 +159,7 @@ const User = types
 
         // Patch userprofile with new URL
         yield axios.patch(
-          `https://api.aye-player.de/userIdentity/v1/${self.id}`,
+          `https://api.aye-player.de/userIdentity/v1/`,
           [{ op: "replace", path: "/Avatar", value: avatarURL }],
           {
             headers: {
@@ -163,26 +179,35 @@ const User = types
 
     register: flow(function*(name: string, email: string, password: string) {
       try {
+        AyeLogger.player(`Trying to register with ${name} ${email}`);
         yield axios.post("https://api.aye-player.de/userIdentity/v1/", {
           Email: email,
           Password: password
         });
-        AyeLogger.player(`REGISTER EVENT ${name} ${email}`);
       } catch (error) {
-        AyeLogger.player(`Failed registration ${error}`, LogType.ERROR);
+        AyeLogger.player(
+          `Failed registration ${JSON.stringify(error, null, 2)}`,
+          LogType.ERROR
+        );
         throw error;
       }
     }),
 
     forgotPassword: flow(function*(email: string) {
       try {
-        /*const res = yield axios.post(
-        `https://api.aye-player.de/forgotPassword/${email}`
-        }
-      );*/
-        AyeLogger.player(`FORGOT PASSWORD EVENT ${email}`);
+        AyeLogger.player(`Trying to reset password for ${email}`);
+        yield axios.put(`https://api.aye-player.de/userIdentity/v1/password`, {
+          Email: email
+        });
       } catch (error) {
-        AyeLogger.player(`Failed to reset password ${error}`, LogType.ERROR);
+        AyeLogger.player(
+          `Failed to start password reset process ${JSON.stringify(
+            error,
+            null,
+            2
+          )}`,
+          LogType.ERROR
+        );
         throw error;
       }
     })
