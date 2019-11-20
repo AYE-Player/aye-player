@@ -4,6 +4,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -46,6 +47,8 @@ const StyledMenu = withStyles({
 ));
 
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ queue }: RootStoreModel) => ({
     queue
   });
@@ -90,19 +93,23 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
           onClose={_handleClose}
         >
           {props.isLivestream ? (
-            <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+            <MenuItem onClick={() => _handleCopyUrl()}>
+              {t("EntityMenu.copyURL")}
+            </MenuItem>
           ) : (
             <span>
               <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-                Play next
+                {t("EntityMenu.playNext")}
               </MenuItem>
               <MenuItem onClick={() => _handleAddTrack(props.id)}>
-                Add to Queue
+                {t("EntityMenu.addToQueue")}
               </MenuItem>
               <MenuItem onClick={() => props.openListDialog()}>
-                Add to Playlist
+                {t("EntityMenu.addToPlaylist")}
               </MenuItem>
-              <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+              <MenuItem onClick={() => _handleCopyUrl()}>
+                {t("EntityMenu.copyURL")}
+              </MenuItem>
             </span>
           )}
         </StyledMenu>

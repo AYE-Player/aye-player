@@ -38,6 +38,12 @@
     "title": "Search",
     "placeholder": "$t(SearchPage.title)"
   },
+  "SearchEntity": {
+    "trackExists": "Track already in list",
+    "trackAdded": "Added track to list",
+    "selectPlaylist": "Select Playlist",
+    "createListText": "Create Playlist"
+  },
   "Navigation": {
     "search": "Search",
     "playlists": "Playlists"
@@ -56,6 +62,7 @@
     "name": "Name",
     "tracks": "Tracks",
     "length": "Length",
+    "noPlaylist": "You have no Playlist. Start by creating one",
     "dialog": {
       "title": "Create Playlist",
       "label": "Playlist Name",
@@ -119,5 +126,14 @@
   },
   "Playlist": {
     "noList": "No active Playlist"
+  },
+  "EntityMenu": {
+    "playNext": "Play Next",
+    "addToQueue": "Add to Queue",
+    "addToPlaylist": "Add to Playlist",
+    "remove": "Remove",
+    "copyURL": "Copy Url",
+    "loadPlaylist": "Load Playlist",
+    "deletePlaylist": "Delete Playlist"
   }
 }

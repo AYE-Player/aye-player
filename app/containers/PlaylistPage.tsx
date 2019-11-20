@@ -229,7 +229,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     <Container>
       <Header>Playlists</Header>
       <PlaylistContainer>
-        You have no Playlist. Start by creating one:
+        {t("PlaylistPage.noPlaylist")}
         <CustomFormDialog
           id="createPlaylistDialog"
           title={t("PlaylistPage.dialog.title")}

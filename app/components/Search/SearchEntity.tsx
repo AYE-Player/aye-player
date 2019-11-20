@@ -8,6 +8,7 @@ import useInject from "../../hooks/useInject";
 import CustomListDialog from "../Customs/CustomListDialog/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage/SnackMessage";
 import SearchEntityMenu from "./SearchEntityMenu";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   duration: string;
@@ -89,6 +90,8 @@ const TrackImage = styled.img`
 `;
 
 const SearchEntity: React.FunctionComponent<IProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ playlists }: RootStoreModel) => ({
     playlists
   });
@@ -111,7 +114,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             <SnackMessage
               id={key}
               variant="warning"
-              message="Track already in list"
+              message={t("SearchEntity.trackExists")}
             />
           )
         });
@@ -122,7 +125,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             <SnackMessage
               id={key}
               variant="info"
-              message={`Added track to list ${playlist.name}`}
+              message={`${t("SearchEntity.trackAdded")} ${playlist.name}`}
             />
           )
         });
@@ -157,11 +160,12 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
         isLivestream={props.track.isLivestream}
       />
       <CustomListDialog
-        dialogTitle="Select Playlist"
+        dialogTitle={t("SearchEntity.selectPlaylist")}
         open={open}
         track={props.track}
         onSelect={_handleClose}
         createListItem={_createListItem}
+        listItemText={t("SearchEntity.createListText")}
         options={playlists.lists.map(list => {
           return {
             name: list.name,

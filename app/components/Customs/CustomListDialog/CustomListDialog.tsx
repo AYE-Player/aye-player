@@ -16,6 +16,7 @@ export interface SimpleDialogProps {
   track: TrackModel;
   onSelect: (id: string, track: TrackModel) => void;
   createListItem: (value: string) => void;
+  listItemText: string;
 }
 
 const CustomListDialog = (props: SimpleDialogProps) => {
@@ -51,7 +52,7 @@ const CustomListDialog = (props: SimpleDialogProps) => {
               <AddIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="create playlist" />
+          <ListItemText primary={props.listItemText} />
         </ListItem>
       </List>
     </Dialog>
