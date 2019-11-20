@@ -7,6 +7,7 @@ import React from "react";
 import styled from "styled-components";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { useTranslation } from "react-i18next";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -44,6 +45,8 @@ const StyledMenu = withStyles({
 ));
 
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ player, playlists, queue }: RootStoreModel) => ({
     player,
     playlists,
@@ -94,10 +97,10 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             onClick={() => _handleLoadClick()}
             disabled={playlists.getListById(props.id).tracks.length === 0}
           >
-            Load Playlist
+            {t("EntityMenu.loadPlaylist")}
           </MenuItem>
           <MenuItem onClick={() => _handleDeleteClick()}>
-            Delete Playlist
+            {t("EntityMenu.deletePlaylist")}
           </MenuItem>
         </StyledMenu>
       </Container>

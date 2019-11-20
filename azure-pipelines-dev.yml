@@ -31,21 +31,28 @@ steps:
     condition: eq(variables['imageName'], 'ubuntu-latest')
     inputs:
       SourceFolder: './release'
-      Contents: 'linux-unpacked'
+      Contents: |
+        linux-unpacked
     displayName: 'Deleting unneeded linux files'
 
   - task: DeleteFiles@1
     condition: eq(variables['imageName'], 'macos-latest')
     inputs:
       SourceFolder: './release'
-      Contents: 'mac'
+      Contents: |
+        mac
+        AYE Player-0.0.1-mac.zip
+        ._AYE Player-0.0.1.dmg
+        AYE Player-0.0.1.dmg.blockmap
     displayName: 'Deleting unneeded mac files'
 
   - task: DeleteFiles@1
     condition: eq(variables['imageName'], 'windows-latest')
     inputs:
       SourceFolder: './release'
-      Contents: 'win-unpacked'
+      Contents: |
+        win-unpacked
+        AYE Player Setup 0.0.1.exe.blockmap
     displayName: 'Deleting unneeded windows files'
 
   - task: ArchiveFiles@2

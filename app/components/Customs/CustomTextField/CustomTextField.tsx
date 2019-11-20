@@ -9,6 +9,7 @@ interface ICustomTextFieldProps {
   helperText?: string;
   error?: boolean;
   required?: boolean;
+  autoFocus?: boolean;
 }
 
 // TODO: Implement correct coloring for error handling
@@ -18,23 +19,23 @@ const CssTextField = withStyles({
       color: "#565f6c"
     },
     "& label.Mui-focused": {
-      color: "#9cf"
+      color: "#4fc3f7"
     },
     "& label.Mui-focused.Mui-error": {
       color: "#f44336"
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "#9cf"
+      borderBottomColor: "#4fc3f7"
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
         borderColor: "#565f6c"
       },
       "&:hover fieldset": {
-        borderColor: "#9cf"
+        borderColor: "#4fc3f7"
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#9cf"
+        borderColor: "#4fc3f7"
       },
       "&.Mui-focused fieldset.Mui-error": {
         borderColor: "#f44336"
@@ -52,6 +53,7 @@ const CssTextField = withStyles({
 const CustomTextField: React.FunctionComponent<ICustomTextFieldProps> = props => {
   return (
     <CssTextField
+      autoFocus={props.autoFocus}
       id={props.id}
       label={props.label}
       type={props.type}

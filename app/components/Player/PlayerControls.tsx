@@ -182,19 +182,21 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         </Grid>
       </Grid>
       <PlaybackControl>
-        <Time>{formattedDuration(player.playbackPosition)}</Time>
-        <PrettoSlider
-          min={0}
-          max={player.currentTrack ? player.currentTrack.duration : 0}
-          value={player.playbackPosition}
-          onChange={_handlePlaybackChange}
-          onMouseUp={_handleSeekingStop}
-        />
-        <Time>
-          {formattedDuration(
-            player.currentTrack ? player.currentTrack.duration : 0
-          )}
-        </Time>
+        {player.currentTrack.isLivestream ? (
+          "🔴 LIVE"
+        ) : (
+          <>
+            <Time>{formattedDuration(player.playbackPosition)}</Time>
+            <PrettoSlider
+              min={0}
+              max={player.currentTrack && player.currentTrack.duration}
+              value={player.currentTrack && player.playbackPosition}
+              onChangeCommitted={_handlePlaybackChange}
+              onMouseUp={_handleSeekingStop}
+            />
+            <Time>{formattedDuration(player.currentTrack.duration)}</Time>
+          </>
+        )}
       </PlaybackControl>
     </Container>
   );

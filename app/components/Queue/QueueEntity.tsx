@@ -36,7 +36,7 @@ const TrackInfoContainer = styled.div<any>`
   width: 224px;
   padding: 8px 0;
   padding-left: 8px;
-  color: ${(props: any) => (props.active ? "#99ccff" : "")};
+  color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
 `;
 
 const Title = styled.div<any>`
@@ -63,6 +63,15 @@ const Duration = styled.div`
   font-size: 12px;
 `;
 
+const Dot = styled.span`
+  height: 8px;
+  width: 8px;
+  background-color: #e53935;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+`;
+
 const DragHandle = withStyles({
   root: {
     opacity: 0,
@@ -71,6 +80,8 @@ const DragHandle = withStyles({
 })(DragHandleIcon);
 
 const QueueEntity: React.FunctionComponent<IProps> = props => {
+  console.log(props.track);
+  
   return (
     <Draggable
       key={props.dragId}
@@ -88,7 +99,16 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
             <Title length={props.track.title.length}>
               <div style={{ display: "inline-block" }}>{props.track.title}</div>
             </Title>
-            <Duration>{props.duration}</Duration>
+            <Duration>
+              {!props.track.isLivestream ? (
+                props.duration
+              ) : (
+                <div>
+                  <Dot />
+                  LIVE
+                </div>
+              )}
+            </Duration>
           </TrackInfoContainer>
           <QueueEntityMenu id={props.track.id} />
         </Container>

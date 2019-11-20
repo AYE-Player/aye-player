@@ -1,7 +1,7 @@
-import { Instance, types } from "mobx-state-tree";
+import { types } from "mobx-state-tree";
 import Track, { TrackModel } from "../models/Track";
 
-export type TrackStoreModel = Instance<typeof TrackStore>;
+export type TrackStoreModel = typeof TrackStore.Type;
 
 const TrackStore = types
   .model({
@@ -19,8 +19,8 @@ const TrackStore = types
     },
 
     removeTrack(id: string) {
-      const foundList = self.tracks.find(track => track.id === id);
-      const idx = self.tracks.indexOf(foundList);
+      const foundTrack = self.tracks.find(track => track.id === id);
+      const idx = self.tracks.indexOf(foundTrack);
       self.tracks.splice(idx, 1);
     }
   }));

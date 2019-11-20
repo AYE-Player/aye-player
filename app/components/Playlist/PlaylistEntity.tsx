@@ -31,7 +31,7 @@ const Container = styled.div<any>`
     opacity: 1;
   }
   &:hover > div {
-    color: #99ccff;
+    color: #4fc3f7;
   }
 `;
 const TrackInfoContainer = styled.div<any>`
@@ -40,7 +40,7 @@ const TrackInfoContainer = styled.div<any>`
   width: 224px;
   padding: 8px 0;
   padding-left: 8px;
-  color: ${(props: any) => (props.active ? "#99ccff" : "")};
+  color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
 `;
 
 const Title = styled.div<any>`
@@ -53,8 +53,10 @@ const Title = styled.div<any>`
       return `div {
 
         transform: translateX(0);
-        transition-timing-function: cubic-bezier(0.42,0,0.58,1);
-        transition-duration: 1s;
+        transition-timing-function: linear;
+        transition-duration: ${
+          props.length <= 30 ? "1s" : props.length <= 45 ? "2s" : "3s"
+        };
       }
       :hover div {
         transform: translateX(calc(200px - 100%));

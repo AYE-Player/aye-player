@@ -28,7 +28,8 @@
     "Window": "Fenster",
     "Minimize": "Minimieren",
     "Close": "Schließen",
-    "BringAllToFront": "Alle Fenster In Vordergrund Bringen"
+    "BringAllToFront": "Alle Fenster In Vordergrund Bringen",
+    "Quit": "Beende AYE-Player"
   },
   "General": {
     "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
@@ -36,6 +37,12 @@
   "SearchPage": {
     "title": "Suchen",
     "placeholder": "$t(SearchPage.title)"
+  },
+  "SearchEntity": {
+    "trackExists": "Track ist schon vorhanden",
+    "trackAdded": "Track wurde hinzugefügt",
+    "selectPlaylist": "Playlist auswählen",
+    "createListText": "Erstelle Playlist"
   },
   "Navigation": {
     "search": "Suchen",
@@ -55,6 +62,7 @@
     "name": "Name",
     "tracks": "Lieder",
     "length": "Länge",
+    "noPlaylist": "Du hast keine Playlist. Erstelle nun deine erste",
     "dialog": {
       "title": "Erstelle Playlist",
       "label": "Name der Playlist",
@@ -66,6 +74,7 @@
   "PasswordForgotPage": {
     "header": "Passwort vergessen",
     "text": "Bitte gebe uns deine E-Mail addresse, damit wir dir einen Reset-Link schicken können.",
+    "success": "Wir haben dir eine E-Mail gesendet, mit der du dein Passwort resetten kannst",
     "textfield": {
       "label": "E-Mail"
     },
@@ -74,7 +83,7 @@
     }
   },
   "AppSettingsPage": {
-    "header": "App Einstellungen",
+    "header": "Profile",
     "discord": "Discord Presence anzeigen",
     "tray": "Minimieren *",
     "language": "Sprache",
@@ -98,6 +107,7 @@
     "password": "Passwort",
     "repeatPassword": "Passwort wiederholen",
     "changeAvatarButton": "Ändern",
+    "avatarToBig": "Dein Avatar ist zu groß. (max size 2MB)",
     "deleteDialog": {
       "confirmButton": "Löschen bestätigen",
       "title": "Account Löschung",
@@ -117,5 +127,14 @@
   },
   "Playlist": {
     "noList": "Keine aktive Playlist"
+  },
+  "EntityMenu": {
+    "playNext": "Als nächstes Spielen",
+    "addToQueue": "Zur Warteschlange hinzufügen",
+    "addToPlaylist": "Zu Playlist hinzufügen",
+    "remove": "Entfernen",
+    "copyURL": "Url kopieren",
+    "loadPlaylist": "Lade Playlist",
+    "deletePlaylist": "Lösche Playlist"
   }
 }

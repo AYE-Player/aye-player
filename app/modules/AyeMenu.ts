@@ -6,17 +6,17 @@ import {
   shell
 } from "electron";
 import { i18n } from "i18next";
+import BaseModule from "./BaseModule";
 
-export default class MenuBuilder {
-  mainWindow: BrowserWindow;
+export default class AyeMenu extends BaseModule {
   i18n: i18n;
 
   constructor(mainWindow: BrowserWindow, i18n: i18n) {
-    this.mainWindow = mainWindow;
+    super(mainWindow);
     this.i18n = i18n;
   }
 
-  buildMenu() {
+  build() {
     if (
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
@@ -36,18 +36,17 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    this.mainWindow.webContents.toggleDevTools();
-    this.mainWindow.webContents.on("context-menu", (e, props) => {
+    this.window.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
 
       Menu.buildFromTemplate([
         {
           label: "Inspect element",
           click: () => {
-            this.mainWindow.webContents.inspectElement(x, y);
+            this.window.webContents.inspectElement(x, y);
           }
         }
-      ]).popup({ window: this.mainWindow });
+      ]).popup({ window: this.window });
     });
   }
 
@@ -129,21 +128,21 @@ export default class MenuBuilder {
           label: this.i18n.t("macMenu.Reload"),
           accelerator: "Command+R",
           click: () => {
-            this.mainWindow.webContents.reload();
+            this.window.webContents.reload();
           }
         },
         {
           label: this.i18n.t("macMenu.ToggleFullScreen"),
           accelerator: "Ctrl+Command+F",
           click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+            this.window.setFullScreen(!this.window.isFullScreen());
           }
         },
         {
           label: this.i18n.t("macMenu.ToggleDeveloperTools"),
           accelerator: "Alt+Command+I",
           click: () => {
-            this.mainWindow.webContents.toggleDevTools();
+            this.window.webContents.toggleDevTools();
           }
         }
       ]
@@ -155,7 +154,7 @@ export default class MenuBuilder {
           label: this.i18n.t("macMenu.ToggleFullScreen"),
           accelerator: "Ctrl+Command+F",
           click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+            this.window.setFullScreen(!this.window.isFullScreen());
           }
         }
       ]
@@ -208,6 +207,13 @@ export default class MenuBuilder {
           click() {
             shell.openExternal("https://github.com/atom/electron/issues");
           }
+        },
+        {
+          label: this.i18n.t("macMenu.ToggleDeveloperTools"),
+          accelerator: "Command+Shift+I",
+          click: () => {
+            this.window.webContents.toggleDevTools();
+          }
         }
       ]
     };
@@ -253,6 +259,13 @@ export default class MenuBuilder {
             label: this.i18n.t("menu.SearchIssues"),
             click() {
               shell.openExternal("https://github.com/atom/electron/issues");
+            }
+          },
+          {
+            label: this.i18n.t("macMenu.ToggleDeveloperTools"),
+            accelerator: "Ctrl+Shift+I",
+            click: () => {
+              this.window.webContents.toggleDevTools();
             }
           }
         ]

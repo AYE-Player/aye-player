@@ -30,23 +30,23 @@ const Container = styled.div`
   bottom: 35px;
 `;
 
-const PlayerOverlayImage = styled.img`
+/*const PlayerOverlayImage = styled.img`
   width: 320px;
   height: 200px;
   background-color: #000;
   position: absolute;
   margin-top: 47px;
   z-index: 999;
-`;
+`;*/
 
-const PlayerOverlay = styled.div`
+/*const PlayerOverlay = styled.div`
   width: 320px;
   height: 200px;
   position: absolute;
   margin-top: 47px;
   border-color: none;
   z-index: 999;
-`;
+`;*/
 
 let playerElement: any;
 let history: any = [];
@@ -140,6 +140,12 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.togglePlayingState();
   };
 
+  const _onPause = () => {
+    if (player.isPlaying) {
+      player.pause();
+    }
+  };
+
   const _playNextTrack = () => {
     const prevTrack = player.currentTrack;
     const track = queue.nextTrack();
@@ -213,7 +219,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _setDuration = (duration: number) => {
     if (duration === player.currentTrack.duration) return;
-    player.currentTrack.setDuration(duration);
+    // player.currentTrack.setDuration(duration);
   };
 
   const _onError = () => {
@@ -233,9 +239,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.isPlaying ? (
-        <PlayerOverlay />
-      ) : queue.isEmpty || !player.currentTrack ? (
+      {player.isPlaying ? null : queue.isEmpty || !player.currentTrack ? ( // <PlayerOverlay />
         <img
           src={AyeLogo}
           style={{
@@ -248,11 +252,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 999
           }}
         />
-      ) : (
-        <PlayerOverlayImage
+      ) : null
+      /*<PlayerOverlayImage
           src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
-        />
-      )}
+        />*/
+      }
       {player.currentTrack ? (
         <ReactPlayer
           ref={_getPlayerElement}
@@ -263,6 +267,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             youtube: {
               playerVars: {
                 modestbranding: 1
+              },
+              embedOptions: {
+                controls: 0
               }
             }
           }}
@@ -272,6 +279,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           muted={player.isMuted}
           onReady={() => _onReady()}
           onStart={() => _onStart()}
+          onPause={() => _onPause()}
           onError={() => _onError()}
           onDuration={_setDuration}
           onProgress={_handleProgress}

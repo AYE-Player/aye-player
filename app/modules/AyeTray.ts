@@ -74,6 +74,10 @@ class AyeTray extends BaseModule {
       AyeLogger.tray(`Error initializing ${error}`, LogType.ERROR);
     }
   }
+
+  destroy() {
+    this.tray.destroy();
+  }
 }
 
 export default AyeTray;

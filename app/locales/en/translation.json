@@ -28,7 +28,8 @@
     "Window": "Window",
     "Minimize": "Minimize",
     "Close": "Close",
-    "BringAllToFront": "Bring All to Front"
+    "BringAllToFront": "Bring All to Front",
+    "Quit": "Quit AYE-Player"
   },
   "General": {
     "error": "Something went wrong, please try again later."
@@ -36,6 +37,12 @@
   "SearchPage": {
     "title": "Search",
     "placeholder": "$t(SearchPage.title)"
+  },
+  "SearchEntity": {
+    "trackExists": "Track already in list",
+    "trackAdded": "Added track to list",
+    "selectPlaylist": "Select Playlist",
+    "createListText": "Create Playlist"
   },
   "Navigation": {
     "search": "Search",
@@ -49,12 +56,13 @@
     "password": "Password",
     "repeatPassword": "Repeat Password",
     "registerButton": "Register",
-    "success": "We send you an email, to complete your registration."
+    "success": "We sent you an email, to complete your registration."
   },
   "PlaylistPage": {
     "name": "Name",
     "tracks": "Tracks",
     "length": "Length",
+    "noPlaylist": "You have no Playlist. Start by creating one",
     "dialog": {
       "title": "Create Playlist",
       "label": "Playlist Name",
@@ -66,6 +74,7 @@
   "PasswordForgotPage": {
     "header": "Forgot Password",
     "text": "Please enter your E-Mail to receive a password reset link.",
+    "success": "We sent you an email, to reset your password.",
     "textfield": {
       "label": "E-Mail"
     },
@@ -89,7 +98,7 @@
     "forgotPasswordLink": "Forgot password?"
   },
   "AccountPage": {
-    "header": "Account Settings",
+    "header": "Profile",
     "updateSuccessMessage": "Update successfull",
     "username": "Username",
     "email": "E-Mail",
@@ -98,6 +107,7 @@
     "password": "Password",
     "repeatPassword": "Repeat Password",
     "changeAvatarButton": "Change",
+    "avatarToBig": "Your avatar is to big. (max size 2MB)",
     "deleteDialog": {
       "confirmButton": "Confirm Delete",
       "title": "Account Deletion",
@@ -117,5 +127,14 @@
   },
   "Playlist": {
     "noList": "No active Playlist"
+  },
+  "EntityMenu": {
+    "playNext": "Play Next",
+    "addToQueue": "Add to Queue",
+    "addToPlaylist": "Add to Playlist",
+    "remove": "Remove",
+    "copyURL": "Copy Url",
+    "loadPlaylist": "Load Playlist",
+    "deletePlaylist": "Delete Playlist"
   }
 }

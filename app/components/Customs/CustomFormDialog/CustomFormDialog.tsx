@@ -22,6 +22,7 @@ interface ICustomFormDialogProps {
   type: string;
 }
 
+// TODO: Style this accordingly to theme
 const CustomFormDialog: React.FunctionComponent<ICustomFormDialogProps> = props => {
   return (
     <>
@@ -45,7 +46,7 @@ const CustomFormDialog: React.FunctionComponent<ICustomFormDialogProps> = props 
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.handleClose} color="primary">
+          <Button onClick={props.handleClose} color="secondary">
             {props.cancelButtonText}
           </Button>
           <Button onClick={props.handleConfirm} color="primary">

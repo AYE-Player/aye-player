@@ -4,6 +4,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -11,6 +12,7 @@ import useInject from "../../hooks/useInject";
 interface ISearchEntityMenuProps {
   id: string;
   openListDialog: any;
+  isLivestream: boolean;
 }
 
 const Container = styled.div`
@@ -45,6 +47,8 @@ const StyledMenu = withStyles({
 ));
 
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ queue }: RootStoreModel) => ({
     queue
   });
@@ -88,16 +92,26 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-            Play next
-          </MenuItem>
-          <MenuItem onClick={() => _handleAddTrack(props.id)}>
-            Add to Queue
-          </MenuItem>
-          <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
-          <MenuItem onClick={() => props.openListDialog()}>
-            Add to Playlist...
-          </MenuItem>
+          {props.isLivestream ? (
+            <MenuItem onClick={() => _handleCopyUrl()}>
+              {t("EntityMenu.copyURL")}
+            </MenuItem>
+          ) : (
+            <span>
+              <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
+                {t("EntityMenu.playNext")}
+              </MenuItem>
+              <MenuItem onClick={() => _handleAddTrack(props.id)}>
+                {t("EntityMenu.addToQueue")}
+              </MenuItem>
+              <MenuItem onClick={() => props.openListDialog()}>
+                {t("EntityMenu.addToPlaylist")}
+              </MenuItem>
+              <MenuItem onClick={() => _handleCopyUrl()}>
+                {t("EntityMenu.copyURL")}
+              </MenuItem>
+            </span>
+          )}
         </StyledMenu>
       </Container>
     </ClickAwayListener>

@@ -44,14 +44,19 @@ const Search = styled.div`
 `;
 
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({ player, queue, searchResult, tracks }: RootStoreModel) => ({
+  const Store = ({
     player,
     queue,
     searchResult,
-    tracks
+    trackCache
+  }: RootStoreModel) => ({
+    player,
+    queue,
+    searchResult,
+    trackCache
   });
 
-  const { player, queue, searchResult, tracks } = useInject(Store);
+  const { player, queue, searchResult, trackCache } = useInject(Store);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -85,9 +90,15 @@ const SearchPage: React.FunctionComponent = () => {
     try {
       if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
-        const track = Track.create(trackInfo);
-        if (!tracks.tracks.find(t => t.id === track.id)) {
-          tracks.add(track);
+        let track: TrackModel;
+        if (trackInfo.duration === 0) {
+          track = Track.create({ ...trackInfo, isLivestream: true });
+        } else {
+          track = Track.create(trackInfo);
+        }
+
+        if (!trackCache.tracks.find(t => t.id === track.id)) {
+          trackCache.add(track);
         }
         searchResult.clear();
         queue.addPrivilegedTrack(track);
@@ -96,9 +107,14 @@ const SearchPage: React.FunctionComponent = () => {
         const results = await searchResult.getTracks(term);
         const foundTracks = [];
         for (const result of results) {
-          const track = Track.create(result);
-          if (!tracks.tracks.find(t => t.id === track.id)) {
-            tracks.add(track);
+          let track: TrackModel;
+          if (result.duration === 0) {
+            track = Track.create({ ...result, isLivestream: true });
+          } else {
+            track = Track.create(result);
+          }
+          if (!trackCache.tracks.find(t => t.id === track.id)) {
+            trackCache.add(track);
           }
           foundTracks.push(track);
         }
@@ -143,7 +159,9 @@ const SearchPage: React.FunctionComponent = () => {
             : searchResult.tracks.map((track, index) => {
                 return (
                   <SearchEntity
-                    duration={track.formattedDuration}
+                    duration={
+                      track.duration === 0 ? "LIVE" : track.formattedDuration
+                    }
                     track={track}
                     key={track.id}
                     index={index}

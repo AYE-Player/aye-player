@@ -22,11 +22,12 @@ import "v8-compile-cache";
 import config from "./configs/app.config";
 import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
-import MenuBuilder from "./menu";
+import AyeMenu from "./modules/AyeMenu";
 import AyeDiscordRPC from "./modules/AyeDiscordRPC";
 import AyeMediaKeys from "./modules/AyeMediaKeys";
 import AyeMpris from "./modules/AyeMpris";
 import AyeTray from "./modules/AyeTray";
+import AyeLogger from "./modules/AyeLogger";
 
 export default class AppUpdater {
   constructor() {
@@ -66,6 +67,8 @@ let rpc: AyeDiscordRPC;
 // Fix the player not being able to play audio when the user did not interact
 // with the page
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+// Set default protocol, to open pages/songs with an external link
+app.setAsDefaultProtocolClient("aye-player");
 
 // Catch all unhandled errors
 unhandled();
@@ -142,9 +145,15 @@ const createAppScreen = () => {
     mainWindow.center();
   }
 
-  // Register Modules
-  rpc = new AyeDiscordRPC("621726681140297728");
-  tray = new AyeTray(mainWindow);
+  if (!rpc) {
+    // Create DiscordRPC
+    rpc = new AyeDiscordRPC("621726681140297728");
+  }
+
+  if (!tray) {
+    // Create Tray
+    tray = new AyeTray(mainWindow);
+  }
 
   if (Settings.get("rpcEnabled")) {
     rpc.login();
@@ -202,6 +211,8 @@ const createAppScreen = () => {
 
     // dispose of rpc client
     rpc.dispose();
+    // dispose of tray
+    tray.destroy();
     // unregister shortcuts
     globalShortcut.unregisterAll();
   });
@@ -230,10 +241,10 @@ const createAppScreen = () => {
     event.preventDefault();
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow, i18n);
+  const menuBuilder = new AyeMenu(mainWindow, i18n);
 
   menuBuilder.i18n.on("languageChanged", lng => {
-    menuBuilder.buildMenu();
+    menuBuilder.build();
     mainWindow.webContents.send("language-changed", {
       language: lng,
       namespace: config.namespace,
@@ -277,24 +288,45 @@ app.on("ready", async () => {
 
 // macOS only
 app.on("activate", () => {
-  mainWindow.show();
-  mainWindow.focus();
+  if (mainWindow === null) {
+    createAppScreen();
+  } else {
+    mainWindow.show();
+  }
 });
 
 // Make the app a single-instance app
 const gotTheLock = app.requestSingleInstanceLock();
 
-app.on("second-instance", () => {
+app.on("second-instance", (event, args) => {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();
   }
+
+  // See if we have a custom scheme notification, and note that Chromium may add its own parameters
+  for (const arg of args) {
+    const value = arg as string;
+    if (value.indexOf("aye-player") !== -1) {
+      AyeLogger.info(`FOUND CUSTOM SCHEME ${value}`);
+      break;
+    }
+  }
+  AyeLogger.info(`EVENT ${JSON.stringify(event, null, 1)}`);
+  AyeLogger.info(`ARGS ${args}`);
 });
 
 if (!gotTheLock) {
   app.quit();
 }
+
+// Custom URI for Mac OS
+app.on("open-url", (event, customSchemeData) => {
+  event.preventDefault();
+  AyeLogger.info(`EVENT ${event}`);
+  AyeLogger.info(`CustomSchemeData ${customSchemeData}`);
+});
 
 // IPC Communication
 

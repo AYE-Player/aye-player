@@ -4,6 +4,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -44,6 +45,8 @@ const StyledMenu = withStyles({
 ));
 
 const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ queue, player }: RootStoreModel) => ({
     queue,
     player
@@ -89,12 +92,14 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
           onClose={_handleClose}
         >
           <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
-            Remove
+            {t("EntityMenu.remove")}
           </MenuItem>
           <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-            Play next
+            {t("EntityMenu.playNext")}
           </MenuItem>
-          <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+          <MenuItem onClick={() => _handleCopyUrl()}>
+            {t("EntityMenu.copyURL")}
+          </MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

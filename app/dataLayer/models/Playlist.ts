@@ -1,7 +1,7 @@
-import { clone, Instance, types } from "mobx-state-tree";
+import { clone, types } from "mobx-state-tree";
 import Track, { TrackModel } from "./Track";
 
-export type PlaylistModel = Instance<typeof Playlist>;
+export type PlaylistModel = typeof Playlist.Type;
 
 const Playlist = types
   .model({

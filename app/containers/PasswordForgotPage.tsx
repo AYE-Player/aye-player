@@ -1,9 +1,11 @@
 import { Grid } from "@material-ui/core";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
+import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
 import Divider from "../components/Divider/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
@@ -25,6 +27,7 @@ const PasswordForgotPage: React.FunctionComponent<any> = () => {
   const [invalidEmail, setInvalidEmail] = React.useState(false);
 
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const _handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -33,7 +36,28 @@ const PasswordForgotPage: React.FunctionComponent<any> = () => {
   };
 
   const _handleOnClick = (event: React.MouseEvent) => {
-    user.forgotPassword(email);
+    try {
+      user.forgotPassword(email);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="info"
+            message={t("PasswordForgotPage.success")}
+          />
+        )
+      });
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("General.error")}
+          />
+        )
+      });
+    }
   };
 
   return (

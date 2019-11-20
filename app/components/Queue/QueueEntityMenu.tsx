@@ -4,6 +4,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -44,6 +45,8 @@ const StyledMenu = withStyles({
 ));
 
 const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ queue }: RootStoreModel) => ({
     queue
   });
@@ -88,12 +91,14 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
           onClose={_handleClose}
         >
           <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
-            Remove
+            {t("EnitiyMenu.remove")}
           </MenuItem>
           <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-            Play next
+            {t("EnitiyMenu.playNext")}
           </MenuItem>
-          <MenuItem onClick={() => _handleCopyUrl()}>Copy Url</MenuItem>
+          <MenuItem onClick={() => _handleCopyUrl()}>
+            {t("EnitiyMenu.copyURL")}
+          </MenuItem>
         </StyledMenu>
       </Container>
     </ClickAwayListener>

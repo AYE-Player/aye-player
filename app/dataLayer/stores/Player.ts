@@ -1,10 +1,10 @@
 import { ipcRenderer } from "electron";
-import { Instance, types } from "mobx-state-tree";
+import { types } from "mobx-state-tree";
 import { Repeat } from "../../types/enums";
 import Playlist, { PlaylistModel } from "../models/Playlist";
 import Track, { TrackModel } from "../models/Track";
 
-export type PlayerModel = Instance<typeof Player>;
+export type PlayerModel = typeof Player.Type;
 
 interface IRPCState {
   track?: TrackModel;
@@ -85,6 +85,10 @@ const Player = types
 
     setReadyState() {
       self.isReady = true;
+    },
+
+    pause() {
+      self.isPlaying = false;
     },
 
     togglePlayingState() {

@@ -39,7 +39,7 @@ const TrackInfoContainer = styled.div<any>`
   padding: 8px;
   padding-left: 8px;
   width: 100%;
-  color: ${(props: any) => (props.active ? "#99ccff" : "")};
+  color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
 `;
 
 const Title = styled.div<any>`

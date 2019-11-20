@@ -69,7 +69,6 @@ const PlaylistPage: React.FunctionComponent = () => {
   const { playlists } = useInject(Store);
 
   const _createPlaylist = () => {
-    console.log("CREATE PLAYLIST");
     setOpen(false);
     playlists.add(
       Playlist.create({
@@ -78,7 +77,6 @@ const PlaylistPage: React.FunctionComponent = () => {
         id: shortid.generate()
       })
     );
-    console.log("playlists", playlists.lists);
   };
 
   const calculateTracksDuration = (playlist: PlaylistModel) => {
@@ -231,7 +229,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     <Container>
       <Header>Playlists</Header>
       <PlaylistContainer>
-        You have no Playlist. Start by creating one:
+        {t("PlaylistPage.noPlaylist")}
         <CustomFormDialog
           id="createPlaylistDialog"
           title={t("PlaylistPage.dialog.title")}

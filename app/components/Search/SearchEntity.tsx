@@ -8,6 +8,7 @@ import useInject from "../../hooks/useInject";
 import CustomListDialog from "../Customs/CustomListDialog/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage/SnackMessage";
 import SearchEntityMenu from "./SearchEntityMenu";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   duration: string;
@@ -33,7 +34,7 @@ const Container = styled.div<any>`
     border-bottom: none;
   }
   &:hover > div {
-    color: #99ccff;
+    color: #4fc3f7;
   }
 `;
 const TrackInfoContainer = styled.div<any>`
@@ -56,11 +57,13 @@ const Title = styled.div<any>`
       return `div {
 
         transform: translateX(0);
-        transition-timing-function: cubic-bezier(0.42,0,0.58,1);
-        transition-duration: 1s;
+        transition-timing-function: linear;
+        transition-duration: ${
+          props.length === 42 ? "1s" : props.length <= 55 ? "2s" : "3s"
+        };
       }
       :hover div {
-        transform: translateX(calc(300px - 100%));
+        transform: translateX(calc(300px - 100%)) translate3d(0,0,0);
       }`;
     }
   }}
@@ -87,6 +90,8 @@ const TrackImage = styled.img`
 `;
 
 const SearchEntity: React.FunctionComponent<IProps> = props => {
+  const { t } = useTranslation();
+
   const Store = ({ playlists }: RootStoreModel) => ({
     playlists
   });
@@ -109,7 +114,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             <SnackMessage
               id={key}
               variant="warning"
-              message="Track already in list"
+              message={t("SearchEntity.trackExists")}
             />
           )
         });
@@ -120,7 +125,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             <SnackMessage
               id={key}
               variant="info"
-              message={`Added track to list ${playlist.name}`}
+              message={`${t("SearchEntity.trackAdded")} ${playlist.name}`}
             />
           )
         });
@@ -149,13 +154,18 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
         </Title>
         <Duration>{props.duration}</Duration>
       </TrackInfoContainer>
-      <SearchEntityMenu id={props.track.id} openListDialog={_handleClickOpen} />
+      <SearchEntityMenu
+        id={props.track.id}
+        openListDialog={_handleClickOpen}
+        isLivestream={props.track.isLivestream}
+      />
       <CustomListDialog
-        dialogTitle="Select Playlist"
+        dialogTitle={t("SearchEntity.selectPlaylist")}
         open={open}
         track={props.track}
         onSelect={_handleClose}
         createListItem={_createListItem}
+        listItemText={t("SearchEntity.createListText")}
         options={playlists.lists.map(list => {
           return {
             name: list.name,

@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import { useSnackbar } from "notistack";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton/CustomButton";
@@ -29,6 +29,14 @@ const LoginPage: React.FunctionComponent<any> = () => {
   const [name, setName] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  useEffect(() => {
+    document.addEventListener("keypress", _handleKeyPress);
+
+    return function cleanup() {
+      document.removeEventListener("keypress", _handleKeyPress);
+    };
+  });
+
   const _handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -45,13 +53,15 @@ const LoginPage: React.FunctionComponent<any> = () => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage
-            id={key}
-            variant="error"
-            message={t("General.error")}
-          />
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
         )
       });
+    }
+  };
+
+  const _handleKeyPress = async (event: any) => {
+    if (event.key === "Enter" && name && password) {
+      await user.authenticate(name, password);
     }
   };
 
@@ -66,6 +76,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
       <Header>{t("LoginPage.header")}</Header>
       <Divider size={2} />
       <CustomTextField
+        autoFocus
         label={t("LoginPage.username")}
         id="username"
         onChange={_handleNameChange}

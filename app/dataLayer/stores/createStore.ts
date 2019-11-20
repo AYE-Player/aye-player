@@ -6,8 +6,8 @@ import Playlists from "./Playlists";
 import Queue from "./Queue";
 import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";
 import SearchResult from "./SearchResult";
+import TrackStore from "./TrackCache";
 import TrackHistory from "./TrackHistory";
-import TrackStore from "./Tracks";
 
 export const createStore = (): RootStoreModel => {
   const playlists = Playlists.create({ lists: [] });
@@ -19,7 +19,9 @@ export const createStore = (): RootStoreModel => {
     isPlaying: false,
     isMuted: false,
     isSeeking: false,
-    playbackPosition: 0
+    playbackPosition: 0,
+    currentTrack: undefined,
+    currentPlaylist: undefined
   });
   const queue = Queue.create({ tracks: [] });
   const user = User.create();
@@ -29,7 +31,7 @@ export const createStore = (): RootStoreModel => {
     minimizeToTray: Settings.get("minimizeToTray"),
     language: Settings.get("language")
   });
-  const tracks = TrackStore.create({ tracks: [] });
+  const trackCache = TrackStore.create({ tracks: [] });
   const trackHistory = TrackHistory.create({ tracks: [] });
   const searchResult = SearchResult.create({ tracks: [] });
 
@@ -39,20 +41,25 @@ export const createStore = (): RootStoreModel => {
     queue,
     user,
     app,
-    tracks,
+    trackCache,
     trackHistory,
     searchResult
   };
 
   const rootStore = RootStore.create(
     {
+      // @ts-ignore
       player,
+      // @ts-ignore
       playlists,
+      // @ts-ignore
       queue,
       user,
       app,
-      tracks,
+      trackCache,
+      // @ts-ignore
       trackHistory,
+      // @ts-ignore
       searchResult
     },
     env

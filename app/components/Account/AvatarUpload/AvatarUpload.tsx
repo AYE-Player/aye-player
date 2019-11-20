@@ -1,6 +1,8 @@
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import SnackMessage from "../../../components/Customs/SnackMessage/SnackMessage";
 import { UserModel } from "../../../dataLayer/models/User";
 import CustomButton from "../../Customs/CustomButton/CustomButton";
 const placeholder = require("../../../images/placeholder.png");
@@ -8,6 +10,7 @@ const placeholder = require("../../../images/placeholder.png");
 interface IAvatarUploadProps {
   avatar: any;
   setAvatar: Function;
+  setAvatarFile: Function;
   user?: UserModel;
 }
 
@@ -30,9 +33,25 @@ const Image = styled.img`
 
 const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    props.setAvatar(URL.createObjectURL(event.target.files[0]));
+    const file = event.target.files[0];
+    const fileSize = file.size / 1024 / 1024;
+    if (fileSize > 2) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="warning"
+            message={t("AccountPage.avatarToBig")}
+          />
+        )
+      });
+      return;
+    }
+    props.setAvatarFile(file);
+    props.setAvatar(URL.createObjectURL(file));
   };
 
   const _clickInputFaker = () => {
@@ -40,30 +59,28 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
   };
 
   return (
-    <>
-      <Aligner>
-        <input
-          accept="image/*"
-          style={{ display: "none" }}
-          id="file-input-element"
-          type="file"
-          onChange={fileSelectedHandler}
-        />
-        <Image
-          src={
-            props.avatar
-              ? props.avatar
-              : props.user
-              ? props.user.avatar
-              : placeholder
-          }
-          onClick={() => _clickInputFaker()}
-        />
-        <CustomButton onClick={() => _clickInputFaker()}>
-          {t("AccountPage.changeAvatarButton")}
-        </CustomButton>
-      </Aligner>
-    </>
+    <Aligner>
+      <input
+        accept="image/png, image/jpeg, image/gif, image/webp"
+        style={{ display: "none" }}
+        id="file-input-element"
+        type="file"
+        onChange={fileSelectedHandler}
+      />
+      <Image
+        src={
+          props.avatar
+            ? props.avatar
+            : props.user
+            ? props.user.avatar
+            : placeholder
+        }
+        onClick={() => _clickInputFaker()}
+      />
+      <CustomButton onClick={() => _clickInputFaker()}>
+        {t("AccountPage.changeAvatarButton")}
+      </CustomButton>
+    </Aligner>
   );
 };
 
