@@ -37,7 +37,7 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
 
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
-    const fileSize = (file.size / 1024 / 1024);
+    const fileSize = file.size / 1024 / 1024;
     if (fileSize > 2) {
       enqueueSnackbar("", {
         content: key => (
@@ -59,30 +59,28 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
   };
 
   return (
-    <>
-      <Aligner>
-        <input
-          accept="image/png, image/jpeg, image/gif, image/webp"
-          style={{ display: "none" }}
-          id="file-input-element"
-          type="file"
-          onChange={fileSelectedHandler}
-        />
-        <Image
-          src={
-            props.avatar
-              ? props.avatar
-              : props.user
-              ? props.user.avatar
-              : placeholder
-          }
-          onClick={() => _clickInputFaker()}
-        />
-        <CustomButton onClick={() => _clickInputFaker()}>
-          {t("AccountPage.changeAvatarButton")}
-        </CustomButton>
-      </Aligner>
-    </>
+    <Aligner>
+      <input
+        accept="image/png, image/jpeg, image/gif, image/webp"
+        style={{ display: "none" }}
+        id="file-input-element"
+        type="file"
+        onChange={fileSelectedHandler}
+      />
+      <Image
+        src={
+          props.avatar
+            ? props.avatar
+            : props.user
+            ? props.user.avatar
+            : placeholder
+        }
+        onClick={() => _clickInputFaker()}
+      />
+      <CustomButton onClick={() => _clickInputFaker()}>
+        {t("AccountPage.changeAvatarButton")}
+      </CustomButton>
+    </Aligner>
   );
 };
 
