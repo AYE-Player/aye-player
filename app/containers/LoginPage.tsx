@@ -47,7 +47,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
-  const _handleOnClick = async (event: React.MouseEvent) => {
+  const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
       await user.authenticate(name, password);
     } catch (error) {
@@ -61,7 +61,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const _handleKeyPress = async (event: any) => {
     if (event.key === "Enter" && name && password) {
-      await user.authenticate(name, password);
+      _handleOnClick();
     }
   };
 
