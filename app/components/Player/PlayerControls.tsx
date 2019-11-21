@@ -183,7 +183,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
       </Grid>
       <PlaybackControl>
         {player.currentTrack?.isLivestream ? (
-          `🔴 LIVE for ${formattedDuration(player.playbackPosition)}`
+          `🔴 Listening for ${formattedDuration(player.playbackPosition)}`
         ) : (
           <>
             <Time>{formattedDuration(player.playbackPosition)}</Time>

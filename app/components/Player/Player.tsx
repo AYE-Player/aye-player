@@ -206,7 +206,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _handleProgress = (state: IPlayerState) => {
-    player.setPlaybackPosition(Math.round(state.playedSeconds));
+    if (player.currentTrack.isLivestream) {
+      player.setPlaybackPosition(player.playbackPosition + 1);
+    } else {
+      player.setPlaybackPosition(Math.round(state.playedSeconds));
+    }
     if (
       Math.round(state.playedSeconds) >= player.currentTrack.duration - 2 &&
       player.repeat === Repeat.ONE
