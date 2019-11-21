@@ -85,7 +85,7 @@
   "AppSettingsPage": {
     "header": "Profile",
     "discord": "Discord Presence anzeigen",
-    "tray": "Minimieren *",
+    "tray": "Minimieren",
     "language": "Sprache",
     "infoText": "* App wird neugestartet"
   },

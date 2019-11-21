@@ -22,12 +22,12 @@ const SettingsContainer = styled.div`
   padding: 40px;
 `;
 
-const InfoText = styled.div`
+/* const InfoText = styled.div`
   position: absolute;
   bottom: 56px;
   right: 8px;
   font-size: 14px;
-`;
+`; */
 
 const AccountPage: React.FunctionComponent = () => {
   const UserStore = ({ app }: RootStoreModel) => ({
@@ -81,7 +81,7 @@ const AccountPage: React.FunctionComponent = () => {
           handleChange={_handleChange}
         />
       </SettingsContainer>
-      <InfoText>{t("AppSettingsPage.infoText")}</InfoText>
+      {/* <InfoText>{t("AppSettingsPage.infoText")}</InfoText> */}
     </Container>
   );
 };

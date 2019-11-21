@@ -85,7 +85,7 @@
   "AppSettingsPage": {
     "header": "App Settings",
     "discord": "Show Discord Presence",
-    "tray": "Minimize to Tray*",
+    "tray": "Minimize to Tray",
     "language": "Language",
     "infoText": "* App will be restarted"
   },
