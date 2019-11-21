@@ -2,9 +2,9 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import CustomDropDown from "../components/Customs/CustomDropDown/CustomDropDown";
-import CustomSwitch from "../components/Customs/CustomSwitch/CustomSwitch";
-import Divider from "../components/Divider/Divider";
+import CustomDropDown from "../components/Customs/CustomDropDown";
+import CustomSwitch from "../components/Customs/CustomSwitch";
+import Divider from "../components/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 

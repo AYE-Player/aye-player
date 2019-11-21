@@ -10,7 +10,7 @@ import Track, { TrackModel } from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import { detectLink } from "../helpers";
-import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
+import SnackMessage from "../components/Customs/SnackMessage";
 
 const Header = styled.div`
   font-size: 24px;

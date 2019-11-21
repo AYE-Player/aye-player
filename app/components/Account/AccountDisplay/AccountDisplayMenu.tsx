@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
-import Divider from "../../Divider/Divider";
+import Divider from "../../Divider";
 
 interface IAccountDisplayMenuProps {}
 

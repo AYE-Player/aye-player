@@ -2,10 +2,10 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import SnackMessage from "../../../components/Customs/SnackMessage/SnackMessage";
-import { UserModel } from "../../../dataLayer/models/User";
-import CustomButton from "../../Customs/CustomButton/CustomButton";
-const placeholder = require("../../../images/placeholder.png");
+import SnackMessage from "../Customs/SnackMessage";
+import { UserModel } from "../../dataLayer/models/User";
+import CustomButton from "../Customs/CustomButton";
+const placeholder = require("../../images/placeholder.png");
 
 interface IAvatarUploadProps {
   avatar: any;

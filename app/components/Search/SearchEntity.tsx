@@ -5,8 +5,8 @@ import styled from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import CustomListDialog from "../Customs/CustomListDialog/CustomListDialog";
-import SnackMessage from "../Customs/SnackMessage/SnackMessage";
+import CustomListDialog from "../Customs/CustomListDialog";
+import SnackMessage from "../Customs/SnackMessage";
 import SearchEntityMenu from "./SearchEntityMenu";
 import { useTranslation } from "react-i18next";
 
