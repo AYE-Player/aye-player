@@ -107,6 +107,11 @@ const AccountPage: React.FunctionComponent = () => {
         await user.updatePassword(password);
       }
 
+      if (password || password2) {
+        setPassword("");
+        setPassword2("");
+      }
+
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
