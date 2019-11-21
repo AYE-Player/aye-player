@@ -2,8 +2,9 @@ import {
   app,
   BrowserWindow,
   Menu,
-  nativeTheme,
-  Tray
+  Tray,
+  NativeImage,
+  nativeImage
 } from "electron";
 import path from "path";
 import BaseModule from "./BaseModule";
@@ -11,26 +12,39 @@ import AyeLogger from "./AyeLogger";
 import { LogType } from "../types/enums";
 
 class AyeTray extends BaseModule {
-  protected tray: Tray;
   public shouldQuit: boolean;
+
+  private tray: Tray;
+  private icon: string | NativeImage;
+  private appName: string;
+  private contextMenu: Menu;
 
   constructor(window: BrowserWindow) {
     super(window);
 
     AyeLogger.tray("Trying to initialize");
     try {
-      const imgPath =
+      this.shouldQuit = false;
+      this.appName = "AYE - Player";
+      const basePath =
         process.env.NODE_ENV === "development"
           ? "../images/icons/png/"
           : "images/icons/png/";
-      this.tray = new Tray(
-        nativeTheme.shouldUseDarkColors || process.platform === "linux"
-          ? path.resolve(path.join(__dirname, `${imgPath}16x16_w.png`))
-          : path.resolve(path.join(__dirname, `${imgPath}16x16.png`))
-      );
-      this.shouldQuit = false;
+      if (process.platform === "darwin") {
+        const nImage = nativeImage.createFromPath(
+          path.resolve(path.join(__dirname, `${basePath}16x16.png`))
+        );
+        this.icon = nImage;
+      } else if (process.platform === "win32") {
+        this.icon = path.resolve(path.join(__dirname, `${basePath}icon.ico`));
+      } else {
+        this.icon = path.resolve(
+          path.join(__dirname, `${basePath}16x16_w.png`)
+        );
+      }
+      this.tray = new Tray(this.icon);
 
-      const contextMenu = Menu.buildFromTemplate([
+      this.contextMenu = Menu.buildFromTemplate([
         {
           label: "Play/Pause",
           click: () => {
@@ -64,14 +78,65 @@ class AyeTray extends BaseModule {
           }
         }
       ]);
-      this.tray.setContextMenu(contextMenu);
-      this.tray.setToolTip("AYE - Player");
+      this.tray.setContextMenu(this.contextMenu);
+      this.tray.setToolTip(this.appName);
       this.tray.on("click", () => {
-        this.window.show();
-        this.window.focus();
+        this.toggleWindow();
       });
     } catch (error) {
       AyeLogger.tray(`Error initializing ${error}`, LogType.ERROR);
+    }
+  }
+
+  removeTray(showWindow = true) {
+    if (this.tray != null) {
+      this.tray.destroy();
+      this.tray = null;
+    }
+
+    if (showWindow && this.window != null && !this.window.isVisible()) {
+      this.window.show();
+    }
+  }
+
+  hideToTray() {
+    this.showTray();
+    if (this.window != null) {
+      this.window.hide();
+    }
+  }
+
+  showTray() {
+    if (this.tray != null) {
+      return;
+    }
+
+    this.tray = new Tray(this.icon);
+    this.tray.setToolTip(this.appName);
+    this.tray.on("click", () => this.toggleWindow());
+
+    /*if (this.pressedIcon != null) {
+      this.tray.setPressedImage(this.pressedIcon);
+    }*/
+    if (this.contextMenu != null) {
+      this.tray.setContextMenu(this.contextMenu);
+    }
+  }
+
+  private toggleWindow() {
+/*     if (this.window == null) {
+      if (process.platform === "darwin") {
+        // On MacOS, closing the window via the red button destroys the BrowserWindow instance.
+        this.window.createWindow().then(() => {
+          this.window.show();
+        });
+      }
+      return;
+    } */
+    if (this.window.isVisible()) {
+      this.window.hide();
+    } else {
+      this.window.show();
     }
   }
 
