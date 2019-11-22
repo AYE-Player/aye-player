@@ -166,7 +166,6 @@ const SearchPage: React.FunctionComponent = () => {
                     key={track.id}
                     index={index}
                     onDoubleClick={_handleDoubleClick}
-                    sendNotification={enqueueSnackbar}
                   />
                 );
               })}
