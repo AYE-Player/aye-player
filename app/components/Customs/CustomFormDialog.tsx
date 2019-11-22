@@ -11,7 +11,7 @@ interface ICustomFormDialogProps {
   id: string;
   title: string;
   label: string;
-  button: any;
+  button?: any;
   dialogText: string;
   open: boolean;
   handleClose: () => void;

@@ -42,7 +42,8 @@
     "trackExists": "Track ist schon vorhanden",
     "trackAdded": "Track wurde hinzugefügt",
     "selectPlaylist": "Playlist auswählen",
-    "createListText": "Erstelle Playlist"
+    "createListText": "Erstelle Playlist",
+    "createdAndAdded": "Playlist erstellt und Track hinzugefügt"
   },
   "Navigation": {
     "search": "Suchen",

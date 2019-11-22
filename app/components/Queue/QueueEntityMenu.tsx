@@ -11,6 +11,7 @@ import useInject from "../../hooks/useInject";
 
 interface IQueueEntityMenuProps {
   id: string;
+  openListDialog: any;
 }
 
 const Container = styled.div`
@@ -91,13 +92,16 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
           onClose={_handleClose}
         >
           <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
-            {t("EnitiyMenu.remove")}
+            {t("EntityMenu.remove")}
           </MenuItem>
           <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
-            {t("EnitiyMenu.playNext")}
+            {t("EntityMenu.playNext")}
           </MenuItem>
+          <MenuItem onClick={() => props.openListDialog()}>
+                {t("EntityMenu.addToPlaylist")}
+              </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>
-            {t("EnitiyMenu.copyURL")}
+            {t("EntityMenu.copyURL")}
           </MenuItem>
         </StyledMenu>
       </Container>

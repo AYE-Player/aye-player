@@ -42,7 +42,8 @@
     "trackExists": "Track already in list",
     "trackAdded": "Added track to list",
     "selectPlaylist": "Select Playlist",
-    "createListText": "Create Playlist"
+    "createListText": "Create Playlist",
+    "createdAndAdded": "Created Playlist and added Track"
   },
   "Navigation": {
     "search": "Search",
