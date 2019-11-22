@@ -42,7 +42,8 @@
     "trackExists": "Track ist schon vorhanden",
     "trackAdded": "Track wurde hinzugefügt",
     "selectPlaylist": "Playlist auswählen",
-    "createListText": "Erstelle Playlist"
+    "createListText": "Erstelle Playlist",
+    "createdAndAdded": "Playlist erstellt und Track hinzugefügt"
   },
   "Navigation": {
     "search": "Suchen",
@@ -85,7 +86,7 @@
   "AppSettingsPage": {
     "header": "Profile",
     "discord": "Discord Presence anzeigen",
-    "tray": "Minimieren *",
+    "tray": "Minimieren",
     "language": "Sprache",
     "infoText": "* App wird neugestartet"
   },

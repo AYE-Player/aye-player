@@ -1,8 +1,8 @@
 import { ipcRenderer } from "electron";
 import { types } from "mobx-state-tree";
 import { Repeat } from "../../types/enums";
-import Playlist, { PlaylistModel } from "../models/Playlist";
-import Track, { TrackModel } from "../models/Track";
+import Playlist, { PlaylistModel } from "./Playlist";
+import Track, { TrackModel } from "./Track";
 
 export type PlayerModel = typeof Player.Type;
 

@@ -7,7 +7,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import AddIcon from "@material-ui/icons/Add";
 import React from "react";
-import { TrackModel } from "../../../dataLayer/models/Track";
+import { TrackModel } from "../../dataLayer/models/Track";
 
 export interface SimpleDialogProps {
   dialogTitle: string;

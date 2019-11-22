@@ -2,9 +2,9 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import CustomDropDown from "../components/Customs/CustomDropDown/CustomDropDown";
-import CustomSwitch from "../components/Customs/CustomSwitch/CustomSwitch";
-import Divider from "../components/Divider/Divider";
+import CustomDropDown from "../components/Customs/CustomDropDown";
+import CustomSwitch from "../components/Customs/CustomSwitch";
+import Divider from "../components/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 
@@ -22,12 +22,12 @@ const SettingsContainer = styled.div`
   padding: 40px;
 `;
 
-const InfoText = styled.div`
+/* const InfoText = styled.div`
   position: absolute;
   bottom: 56px;
   right: 8px;
   font-size: 14px;
-`;
+`; */
 
 const AccountPage: React.FunctionComponent = () => {
   const UserStore = ({ app }: RootStoreModel) => ({
@@ -81,7 +81,7 @@ const AccountPage: React.FunctionComponent = () => {
           handleChange={_handleChange}
         />
       </SettingsContainer>
-      <InfoText>{t("AppSettingsPage.infoText")}</InfoText>
+      {/* <InfoText>{t("AppSettingsPage.infoText")}</InfoText> */}
     </Container>
   );
 };

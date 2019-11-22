@@ -1,7 +1,7 @@
 import { types } from "mobx-state-tree";
 import User, { UserModel } from "../models/User";
 import AppStore, { AppStoreModel } from "./AppStore";
-import Player, { PlayerModel } from "./Player";
+import Player, { PlayerModel } from "../models/Player";
 import Playlists, { PlaylistsModel } from "./Playlists";
 import Queue, { QueueModel } from "./Queue";
 import SearchResult, { SearchResultModel } from "./SearchResult";

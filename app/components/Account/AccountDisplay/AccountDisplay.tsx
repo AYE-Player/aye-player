@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import routes from "../../../constants/routes.json";
 import AccountDisplayMenu from "./AccountDisplayMenu";
 
 interface IAccountDisplayProps {
@@ -47,7 +48,10 @@ const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = props => {
           <ExpandMoreIcon />
         </AccountDisplayMenu>
       ) : (
-        <Link to="/account" style={{ display: "flex", alignItems: "center" }}>
+        <Link
+          to={routes.LOGIN}
+          style={{ display: "flex", alignItems: "center" }}
+        >
           <AccountCircleIcon style={{ marginRight: "8px" }} />
           {t("AccountDisplay.loginButton")}
         </Link>

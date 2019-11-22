@@ -42,7 +42,8 @@
     "trackExists": "Track already in list",
     "trackAdded": "Added track to list",
     "selectPlaylist": "Select Playlist",
-    "createListText": "Create Playlist"
+    "createListText": "Create Playlist",
+    "createdAndAdded": "Created Playlist and added Track"
   },
   "Navigation": {
     "search": "Search",
@@ -85,7 +86,7 @@
   "AppSettingsPage": {
     "header": "App Settings",
     "discord": "Show Discord Presence",
-    "tray": "Minimize to Tray*",
+    "tray": "Minimize to Tray",
     "language": "Language",
     "infoText": "* App will be restarted"
   },

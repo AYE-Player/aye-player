@@ -3,11 +3,12 @@ import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import CustomButton from "../components/Customs/CustomButton/CustomButton";
-import CustomTextField from "../components/Customs/CustomTextField/CustomTextField";
-import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
-import Divider from "../components/Divider/Divider";
+import CustomButton from "../components/Customs/CustomButton";
+import CustomTextField from "../components/Customs/CustomTextField";
+import SnackMessage from "../components/Customs/SnackMessage";
+import Divider from "../components/Divider";
 import SmallLink from "../components/Link/SmallLink";
+import routes from "../constants/routes.json";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 
@@ -47,9 +48,12 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
-  const _handleOnClick = async (event: React.MouseEvent) => {
+  const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
       await user.authenticate(name, password);
+      window.location.href = `${window.location.href.split("#/")[0]}#${
+        routes.ACCOUNT
+      }`;
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
@@ -61,7 +65,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const _handleKeyPress = async (event: any) => {
     if (event.key === "Enter" && name && password) {
-      await user.authenticate(name, password);
+      _handleOnClick();
     }
   };
 
@@ -97,11 +101,11 @@ const LoginPage: React.FunctionComponent<any> = () => {
         name={t("LoginPage.loginButton")}
       />
       <Divider size={3} />
-      <SmallLink name={t("LoginPage.registerLink")} to="/register" />
+      <SmallLink name={t("LoginPage.registerLink")} to={routes.REGISTER} />
       <Divider />
       <SmallLink
         name={t("LoginPage.forgotPasswordLink")}
-        to="/passwordForgotten"
+        to={routes.FORGOTPASSWORD}
       />
     </Grid>
   );

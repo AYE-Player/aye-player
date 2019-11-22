@@ -109,7 +109,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
         >
           <DragHandle fontSize="small" />
           <TrackInfoContainer
-            active={player.currentTrack.id === props.track.id}
+            active={player.currentTrack?.id === props.track.id || false}
             onClick={() => props.onClick(props.track)}
           >
             <TrackImageContainer>

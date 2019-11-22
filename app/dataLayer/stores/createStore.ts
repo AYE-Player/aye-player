@@ -1,7 +1,7 @@
 import User from "../models/User";
 import AppStore from "./AppStore";
 import Settings from "./PersistentSettings";
-import Player from "./Player";
+import Player from "../models/Player";
 import Playlists from "./Playlists";
 import Queue from "./Queue";
 import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";

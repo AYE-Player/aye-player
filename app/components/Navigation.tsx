@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import routes from "../constants/routes.json";
 
 const Container = styled.div`
   width: calc(100% - 336px);
@@ -37,7 +38,7 @@ const Navigation: React.FunctionComponent<any> = props => {
         <NavLink
           exact
           activeClassName="activeLink"
-          to="/"
+          to={routes.SEARCH}
           style={{
             width: "100%",
             height: "100%",
@@ -53,7 +54,7 @@ const Navigation: React.FunctionComponent<any> = props => {
         <NavLink
           exact
           activeClassName="activeLink"
-          to="/playlist"
+          to={routes.PLAYLIST}
           style={{
             width: "100%",
             height: "100%",

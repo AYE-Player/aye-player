@@ -192,7 +192,7 @@ if (process.env.NODE_ENV === "development") {
 
   // rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
   rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0]);
-  rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
+  //rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
 }
 
 export default class Root extends Component {

@@ -6,12 +6,12 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import AvatarUpload from "../components/Account/AvatarUpload/AvatarUpload";
-import NewPassword from "../components/Account/NewPassword/NewPassword";
-import CustomButton from "../components/Customs/CustomButton/CustomButton";
-import CustomizedDialogs from "../components/Customs/CustomDialog/CustomDialog";
-import SnackMessage from "../components/Customs/SnackMessage/SnackMessage";
-import Divider from "../components/Divider/Divider";
+import AvatarUpload from "../components/Account/AvatarUpload";
+import NewPassword from "../components/Account/NewPassword";
+import CustomButton from "../components/Customs/CustomButton";
+import CustomizedDialogs from "../components/Customs/CustomDialog";
+import SnackMessage from "../components/Customs/SnackMessage";
+import Divider from "../components/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
@@ -105,6 +105,11 @@ const AccountPage: React.FunctionComponent = () => {
         await user.updateAvatar(avatarFile);
       } else if (passwordsMatch) {
         await user.updatePassword(password);
+      }
+
+      if (password || password2) {
+        setPassword("");
+        setPassword2("");
       }
 
       enqueueSnackbar("", {

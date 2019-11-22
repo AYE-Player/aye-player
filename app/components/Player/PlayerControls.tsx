@@ -18,7 +18,7 @@ import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import { debounce } from "../../helpers/";
 import useInject from "../../hooks/useInject";
 import { Repeat } from "../../types/enums";
-import Divider from "../Divider/Divider";
+import Divider from "../Divider";
 
 interface IProps {
   play: () => void;
@@ -182,20 +182,26 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         </Grid>
       </Grid>
       <PlaybackControl>
-        {player.currentTrack.isLivestream ? (
-          "🔴 LIVE"
+        {player.currentTrack ? (
+          player.currentTrack.isLivestream ? (
+            `🔴 Listening for ${formattedDuration(player.playbackPosition)}`
+          ) : (
+            <>
+              <Time>{formattedDuration(player.playbackPosition)}</Time>
+              <PrettoSlider
+                min={0}
+                max={player.currentTrack?.duration || 0}
+                value={player.playbackPosition}
+                onChangeCommitted={_handlePlaybackChange}
+                onMouseUp={_handleSeekingStop}
+              />
+              <Time>
+                {formattedDuration(player.currentTrack?.duration || 0)}
+              </Time>
+            </>
+          )
         ) : (
-          <>
-            <Time>{formattedDuration(player.playbackPosition)}</Time>
-            <PrettoSlider
-              min={0}
-              max={player.currentTrack && player.currentTrack.duration}
-              value={player.currentTrack && player.playbackPosition}
-              onChangeCommitted={_handlePlaybackChange}
-              onMouseUp={_handleSeekingStop}
-            />
-            <Time>{formattedDuration(player.currentTrack.duration)}</Time>
-          </>
+          null
         )}
       </PlaybackControl>
     </Container>

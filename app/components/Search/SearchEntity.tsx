@@ -1,24 +1,23 @@
 import { observer } from "mobx-react-lite";
-import { OptionsObject } from "notistack";
+import { useSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import shortid from "shortid";
 import styled from "styled-components";
+import Playlist from "../../dataLayer/models/Playlist";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import CustomListDialog from "../Customs/CustomListDialog/CustomListDialog";
-import SnackMessage from "../Customs/SnackMessage/SnackMessage";
+import CustomFormDialog from "../Customs/CustomFormDialog";
+import CustomListDialog from "../Customs/CustomListDialog";
+import SnackMessage from "../Customs/SnackMessage";
 import SearchEntityMenu from "./SearchEntityMenu";
-import { useTranslation } from "react-i18next";
 
 interface IProps {
   duration: string;
   track: TrackModel;
   index: number;
   onDoubleClick: Function;
-  sendNotification: (
-    message: React.ReactNode,
-    options?: OptionsObject
-  ) => React.ReactText;
 }
 
 const Container = styled.div<any>`
@@ -91,6 +90,7 @@ const TrackImage = styled.img`
 
 const SearchEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const Store = ({ playlists }: RootStoreModel) => ({
     playlists
@@ -99,6 +99,11 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
   const { playlists } = useInject(Store);
 
   const [open, setOpen] = React.useState(false);
+  const [
+    openCreatePlaylistDialog,
+    setOpenCreatePlaylistDialog
+  ] = React.useState(false);
+  const [newPlaylistName, setNewPlaylistName] = React.useState("");
 
   const _handleClickOpen = () => {
     setOpen(true);
@@ -109,7 +114,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
     const playlist = playlists.getListById(id);
     try {
       if (playlist.tracks.find(track => track.id === givenTrack.id)) {
-        props.sendNotification("", {
+        enqueueSnackbar("", {
           content: key => (
             <SnackMessage
               id={key}
@@ -120,7 +125,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
         });
       } else {
         playlist.addTrack(givenTrack);
-        props.sendNotification("", {
+        enqueueSnackbar("", {
           content: key => (
             <SnackMessage
               id={key}
@@ -137,6 +142,41 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
 
   const _createListItem = (value: string) => {
     setOpen(false);
+    setOpenCreatePlaylistDialog(true);
+  };
+
+  const _createPlaylist = () => {
+    setOpenCreatePlaylistDialog(false);
+    const id = shortid.generate();
+    playlists.add(
+      Playlist.create({
+        name: newPlaylistName,
+        tracks: [],
+        id
+      })
+    );
+
+    const pl = playlists.getListById(id);
+    pl.addTrack(props.track);
+    enqueueSnackbar("", {
+      content: key => (
+        <SnackMessage
+          id={key}
+          variant="info"
+          message={`${t("SearchEntity.createdAndAdded")}`}
+        />
+      )
+    });
+  };
+
+  const _onPlaylistNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewPlaylistName(event.target.value);
+  };
+
+  const _handlePlaylistDialogClose = () => {
+    setOpenCreatePlaylistDialog(false);
   };
 
   return (
@@ -172,6 +212,19 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             id: list.id
           };
         })}
+      />
+      <CustomFormDialog
+        id="createPlaylistDialog"
+        title={t("PlaylistPage.dialog.title")}
+        label={t("PlaylistPage.dialog.label")}
+        dialogText={t("PlaylistPage.dialog.text")}
+        open={openCreatePlaylistDialog}
+        handleClose={() => _handlePlaylistDialogClose()}
+        handleConfirm={() => _createPlaylist()}
+        handleChange={_onPlaylistNameChange}
+        confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
+        cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
+        type="text"
       />
     </Container>
   );
