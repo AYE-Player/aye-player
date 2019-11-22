@@ -4,6 +4,6 @@
   "PLAYLIST": "/playlist",
   "LOGIN": "/login",
   "REGISTER": "/register",
-  "FORGOTPASSWORD": "/passwordForgotten",
+  "FORGOTPASSWORD": "/forgotPassword",
   "APPSETTINGS": "/settings"
 }

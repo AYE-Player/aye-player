@@ -5,9 +5,10 @@ import SearchPage from "./containers/SearchPage";
 import AccountPage from "./containers/AccountPage";
 import PlaylistPage from "./containers/PlaylistPage";
 import RegisterPage from "./containers/RegisterPage";
-import PasswordForgotPage from "./containers/PasswordForgotPage";
+import PasswordForgotPage from "./containers/ForgotPasswordPage";
 import ExtendedPlaylist from "./components/ExtendedPlaylist/ExtendedPlaylist";
 import AppSettingsPage from "./containers/AppSettingsPage";
+import LoginPage from "./containers/LoginPage";
 
 export default () => (
     <Switch>
@@ -17,6 +18,7 @@ export default () => (
       <Route exact path={routes.REGISTER} component={RegisterPage} />
       <Route exact path={routes.FORGOTPASSWORD} component={PasswordForgotPage} />
       <Route exact path={routes.APPSETTINGS} component={AppSettingsPage} />
+      <Route exact path={routes.LOGIN} component={LoginPage} />
       <Route path="/playlist/:id" component={ExtendedPlaylist} />
     </Switch>
 );

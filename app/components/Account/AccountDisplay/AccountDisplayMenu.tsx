@@ -5,6 +5,7 @@ import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import routes from "../../../constants/routes.json";
 import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
 import Divider from "../../Divider";
@@ -69,13 +70,17 @@ const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = pr
   const _handleProfileClick = () => {
     // navigate to the account page AND close the menu
     setAnchorEl(null);
-    window.location.href = `${window.location.href.split("#/")[0]}#/account`;
+    window.location.href = `${window.location.href.split("#/")[0]}#${
+      routes.ACCOUNT
+    }`;
   };
 
   const _handleSettingsClick = () => {
     // navigate to the account page AND close the menu
     setAnchorEl(null);
-    window.location.href = `${window.location.href.split("#/")[0]}#/settings`;
+    window.location.href = `${window.location.href.split("#/")[0]}#${
+      routes.APPSETTINGS
+    }`;
   };
 
   return (
