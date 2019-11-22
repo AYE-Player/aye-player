@@ -8,7 +8,7 @@ import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
-import { debounce, validateEmail } from "../helpers/";
+import { debounce, validateEmail } from "../helpers";
 import useInject from "../hooks/useInject";
 
 const Header = styled.div`
@@ -50,11 +50,7 @@ const PasswordForgotPage: React.FunctionComponent<any> = () => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage
-            id={key}
-            variant="error"
-            message={t("General.error")}
-          />
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
         )
       });
     }
