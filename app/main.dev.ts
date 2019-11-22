@@ -117,6 +117,7 @@ export default class Main {
       AyeLogger.info(`ARGS ${args}`);
     });
 
+    // Quit second instance
     if (!gotTheLock) {
       app.quit();
     }
