@@ -80,7 +80,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   const _handleDeleteClick = () => {
     setAnchorEl(null);
     const playlist = playlists.getListById(props.id);
-    playlists.removePlaylist(playlist.id);
+    playlists.remove(playlist.id);
   };
 
   return (

@@ -17,7 +17,7 @@ const Playlists = types
       self.lists.push(playlist);
     },
 
-    removePlaylist(id: string) {
+    remove(id: string) {
       const foundList = self.lists.find(playlist => playlist.id === id);
       const idx = self.lists.indexOf(foundList);
       self.lists.splice(idx, 1);
