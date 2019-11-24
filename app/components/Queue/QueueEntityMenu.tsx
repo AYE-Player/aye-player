@@ -98,8 +98,8 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
             {t("EntityMenu.playNext")}
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>
-                {t("EntityMenu.addToPlaylist")}
-              </MenuItem>
+            {t("EntityMenu.addToPlaylist")}
+          </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>
             {t("EntityMenu.copyURL")}
           </MenuItem>

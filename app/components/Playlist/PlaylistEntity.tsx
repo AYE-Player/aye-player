@@ -1,12 +1,19 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
+import shortid from "shortid";
 import styled from "styled-components";
+import Playlist from "../../dataLayer/models/Playlist";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import CustomFormDialog from "../Customs/CustomFormDialog";
+import CustomListDialog from "../Customs/CustomListDialog";
+import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
 
 interface IProps {
@@ -77,42 +84,161 @@ const DragHandle = withStyles({
 })(DragHandleIcon);
 
 const PlaylistEntity: React.FunctionComponent<IProps> = props => {
-  const Store = ({ player }: RootStoreModel) => ({
-    player
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const Store = ({ player, playlists }: RootStoreModel) => ({
+    player,
+    playlists
   });
 
-  const { player } = useInject(Store);
+  const { player, playlists } = useInject(Store);
+
+  const [open, setOpen] = React.useState(false);
+  const [
+    openCreatePlaylistDialog,
+    setOpenCreatePlaylistDialog
+  ] = React.useState(false);
+  const [newPlaylistName, setNewPlaylistName] = React.useState("");
+
+  const _handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const _handleClose = (id: string, givenTrack: TrackModel) => {
+    setOpen(false);
+    const playlist = playlists.getListById(id);
+    try {
+      if (playlist.tracks.find(track => track.id === givenTrack.id)) {
+        enqueueSnackbar("", {
+          content: key => (
+            <SnackMessage
+              id={key}
+              variant="warning"
+              message={t("SearchEntity.trackExists")}
+            />
+          )
+        });
+      } else {
+        playlist.addTrack(givenTrack);
+        enqueueSnackbar("", {
+          content: key => (
+            <SnackMessage
+              id={key}
+              variant="info"
+              message={`${t("SearchEntity.trackAdded")} ${playlist.name}`}
+            />
+          )
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const _createListItem = (value: string) => {
+    setOpen(false);
+    setOpenCreatePlaylistDialog(true);
+  };
+
+  const _createPlaylist = () => {
+    setOpenCreatePlaylistDialog(false);
+    const id = shortid.generate();
+    playlists.add(
+      Playlist.create({
+        name: newPlaylistName,
+        tracks: [],
+        id
+      })
+    );
+
+    const pl = playlists.getListById(id);
+    pl.addTrack(props.track);
+    enqueueSnackbar("", {
+      content: key => (
+        <SnackMessage
+          id={key}
+          variant="info"
+          message={`${t("SearchEntity.createdAndAdded")}`}
+        />
+      )
+    });
+  };
+
+  const _onPlaylistNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewPlaylistName(event.target.value);
+  };
+
+  const _handlePlaylistDialogClose = () => {
+    setOpenCreatePlaylistDialog(false);
+  };
 
   return (
-    <Draggable
-      key={props.index}
-      draggableId={props.track.id}
-      index={props.index}
-    >
-      {(provided: any) => (
-        <Container
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <DragHandle fontSize="small" />
-          <TrackInfoContainer
-            active={
-              player.currentTrack
-                ? player.currentTrack.id === props.track.id
-                : false
-            }
-            onClick={() => props.onClick(props.track)}
+    <>
+      <Draggable
+        key={props.index}
+        draggableId={props.track.id}
+        index={props.index}
+      >
+        {(provided: any) => (
+          <Container
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
           >
-            <Title length={props.track.title.length}>
-              <div style={{ display: "inline-block" }}>{props.track.title}</div>
-            </Title>
-            <Duration>{props.duration}</Duration>
-          </TrackInfoContainer>
-          <PlaylistEntityMenu id={props.track.id} />
-        </Container>
-      )}
-    </Draggable>
+            <DragHandle fontSize="small" />
+            <TrackInfoContainer
+              active={
+                player.currentTrack
+                  ? player.currentTrack.id === props.track.id
+                  : false
+              }
+              onClick={() => props.onClick(props.track)}
+            >
+              <Title length={props.track.title.length}>
+                <div style={{ display: "inline-block" }}>
+                  {props.track.title}
+                </div>
+              </Title>
+              <Duration>{props.duration}</Duration>
+            </TrackInfoContainer>
+            <PlaylistEntityMenu
+              id={props.track.id}
+              openListDialog={_handleClickOpen}
+            />
+          </Container>
+        )}
+      </Draggable>
+      <CustomListDialog
+        dialogTitle={t("SearchEntity.selectPlaylist")}
+        open={open}
+        track={props.track}
+        onSelect={_handleClose}
+        createListItem={_createListItem}
+        listItemText={t("SearchEntity.createListText")}
+        options={playlists.lists.map(list => {
+          return {
+            name: list.name,
+            id: list.id
+          };
+        })}
+      />
+      <CustomFormDialog
+        id="createPlaylistDialog"
+        title={t("PlaylistPage.dialog.title")}
+        label={t("PlaylistPage.dialog.label")}
+        dialogText={t("PlaylistPage.dialog.text")}
+        open={openCreatePlaylistDialog}
+        handleClose={() => _handlePlaylistDialogClose()}
+        handleConfirm={() => _createPlaylist()}
+        handleChange={_onPlaylistNameChange}
+        confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
+        cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
+        type="text"
+      />
+    </>
   );
 };
 
