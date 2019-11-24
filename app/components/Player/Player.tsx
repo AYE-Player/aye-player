@@ -172,11 +172,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _toggleRepeat = () => {
     if (player.repeat === Repeat.ONE) {
-      player.setRepeatStatus(Repeat.NONE);
+      player.setRepeat(Repeat.NONE);
     } else if (player.repeat === Repeat.ALL) {
-      player.setRepeatStatus(Repeat.ONE);
+      player.setRepeat(Repeat.ONE);
     } else {
-      player.setRepeatStatus(Repeat.ALL);
+      player.setRepeat(Repeat.ALL);
     }
   };
 

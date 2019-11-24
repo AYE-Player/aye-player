@@ -3,6 +3,7 @@ import { types } from "mobx-state-tree";
 import { Repeat } from "../../types/enums";
 import Playlist, { PlaylistModel } from "./Playlist";
 import Track, { TrackModel } from "./Track";
+import Settings from "../stores/PersistentSettings";
 
 export type PlayerModel = typeof Player.Type;
 
@@ -28,6 +29,8 @@ const Player = types
     playTrack(track: TrackModel) {
       self.playbackPosition = 0;
       self.currentTrack = track;
+      Settings.set("playerSettings.currentTrack", track);
+
       if (!self.isPlaying) self.isPlaying = true;
 
       new Notification(`Now Playing: ${track.title}`, {
@@ -59,7 +62,7 @@ const Player = types
       });
     },
 
-    setRepeatStatus(status: Repeat) {
+    setRepeat(status: Repeat) {
       self.repeat = status;
     },
 
@@ -67,9 +70,18 @@ const Player = types
       self.volume = vol;
     },
 
+    setMute(state: boolean) {
+      self.isMuted = state;
+    },
+
+    setShuffling(state: boolean) {
+      self.isShuffling = state;
+    },
+
     setCurrentTrack(track?: TrackModel) {
       if (track) {
         self.currentTrack = track;
+        Settings.set("playerSettings.currentTrack", track);
       } else {
         self.currentTrack = undefined;
       }
@@ -78,6 +90,7 @@ const Player = types
     setCurrentPlaylist(playlist?: PlaylistModel) {
       if (playlist) {
         self.currentPlaylist = playlist;
+        Settings.set("playerSettings.currentPlaylist.id", playlist.id);
       } else {
         self.currentPlaylist = undefined;
       }
