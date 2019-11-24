@@ -5,10 +5,24 @@ import { HashRouter } from "react-router-dom";
 import Player from "../components/Player/Player";
 import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
 import { StoreProvider } from "../components/StoreProvider";
-import Playlist from "../dataLayer/models/Playlist";
-import Track from "../dataLayer/models/Track";
+import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
+import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
 import MainPage from "./MainPage";
+import Settings from "../dataLayer/stores/PersistentSettings";
+import { ipcRenderer } from "electron";
+import { getSnapshot } from "mobx-state-tree";
+
+
+interface IPlayerSettings {
+  volume: number;
+  playbackPosition: number;
+  repeat: string;
+  isMuted: boolean;
+  isShuffling: boolean;
+  currentTrack: TrackModel;
+  currentPlaylist: PlaylistModel;
+}
 
 const rootStore = createStore();
 
@@ -71,7 +85,7 @@ if (process.env.NODE_ENV === "development") {
   track = Track.create({
     id: "nzhAgfs_Gv4",
     title: "Neovaii - At The End",
-    duration: 117
+    duration: 218
   });
   rootStore.trackCache.add(track);
   playlist.addTrack(track);
@@ -195,8 +209,77 @@ if (process.env.NODE_ENV === "development") {
   //rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
 }
 
+ipcRenderer.on("app-close", (event, message) => {
+  const playerSnap = getSnapshot(rootStore.player);
+
+  Settings.set("playerSettings.volume", playerSnap.volume);
+  Settings.set("playerSettings.playbackPosition", playerSnap.playbackPosition);
+  Settings.set("playerSettings.repeat", playerSnap.repeat);
+  Settings.set("playerSettings.isMuted", playerSnap.isMuted);
+  Settings.set("playerSettings.isShuffling", playerSnap.isShuffling);
+
+  if (playerSnap.currentPlaylist) {
+    Settings.set(
+      "playerSettings.currentPlaylist.id",
+      playerSnap.currentPlaylist
+    );
+  }
+  if (playerSnap.currentTrack) {
+    Settings.set(
+      "playerSettings.currentTrack",
+      rootStore.trackCache.tracks.find(t => t.id === playerSnap.currentTrack)
+    );
+  }
+});
+
 export default class Root extends Component {
   public static stores = rootStore;
+
+  /**
+   *  Fill stores with cached information and sync with server (maybe do this in afterCreate?)
+   */
+  constructor(props: any) {
+    super(props);
+    if (Settings.has("playerSettings")) {
+      const playerSettings: IPlayerSettings = Settings.get("playerSettings");
+
+      console.log(playerSettings);
+      if (playerSettings.currentTrack) {
+        const currentTrack = Track.create(playerSettings.currentTrack);
+        if (
+          !rootStore.trackCache.tracks.find(
+            t => t.id === playerSettings.currentTrack.id
+          )
+        ) {
+          rootStore.trackCache.add(currentTrack);
+        }
+        rootStore.queue.addTrack(currentTrack.id);
+        rootStore.player.setCurrentTrack(currentTrack);
+      }
+
+      if (
+        Object.keys(playerSettings.currentPlaylist).length === 0 &&
+        playerSettings.currentPlaylist.constructor === Object
+      ) {
+        const playlist = rootStore.playlists.getListById(
+          playerSettings.currentPlaylist.id
+        );
+        if (!playlist) return;
+        rootStore.player.setCurrentPlaylist(playlist);
+      }
+
+      rootStore.player.setVolume(playerSettings.volume);
+
+      if (playerSettings.playbackPosition) {
+        rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
+      }
+
+      // TODO: think about a way to set repeta status
+      //rootStore.player.setRepeat(Repeat[playerSettings.repeat as keyof typeof Repeat]);
+      rootStore.player.setShuffling(playerSettings.isShuffling);
+      rootStore.player.setMute(playerSettings.isMuted);
+    }
+  }
 
   render() {
     return (

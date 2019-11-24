@@ -12,6 +12,36 @@ const schema = {
   language: {
     type: "string",
     default: "en"
+  },
+  playerSettings: {
+    volume: {
+      type: "number",
+      default: 0.2
+    },
+    playbackPosition: {
+      type: "number",
+      default: 0
+    },
+    currentTrack: {
+      type: "object",
+      default: {}
+    },
+    currentPlaylist: {
+      type: "object",
+      default: {}
+    },
+    repeat: {
+      type: "string",
+      default: "none"
+    },
+    isShuffling: {
+      type: "boolean",
+      default: false
+    },
+    isMuted: {
+      type: "boolean",
+      default: false
+    }
   }
 };
 

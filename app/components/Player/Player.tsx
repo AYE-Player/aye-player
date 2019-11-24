@@ -122,6 +122,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _onReady = () => {
     console.log("PLAYER READY");
+    if (player.playbackPosition > 0) {
+      playerElement.seekTo(player.playbackPosition);
+    }
   };
 
   const _onStart = () => {
