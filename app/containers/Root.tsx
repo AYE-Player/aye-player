@@ -13,7 +13,6 @@ import Settings from "../dataLayer/stores/PersistentSettings";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-state-tree";
 
-
 interface IPlayerSettings {
   volume: number;
   playbackPosition: number;
@@ -272,6 +271,8 @@ export default class Root extends Component {
 
       if (playerSettings.playbackPosition) {
         rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
+        rootStore.player.togglePlayingState();
+        setTimeout(() => rootStore.player.togglePlayingState(), 500);
       }
 
       // TODO: think about a way to set repeta status
