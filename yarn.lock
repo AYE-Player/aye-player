@@ -578,7 +578,7 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-syntax-function-bind" "^7.7.4"
 
-"@babel/plugin-proposal-function-sent@^7.7.7":
+"@babel/plugin-proposal-function-sent@^7.7.4":
   version "7.7.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-function-sent/-/plugin-proposal-function-sent-7.7.4.tgz#a1aaa820ed5210da7e31edee42f1a4cdc3ec1ba3"
   integrity sha512-vCiie58siJZoGJBQT0WIKORMqCe6CFasTf2X1LOfyAiWYfLFcDCVg+Y4HIiDFH8hKwkMDGKJT6nLYHM0VmQZXA==
