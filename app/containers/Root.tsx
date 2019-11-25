@@ -243,7 +243,7 @@ export default class Root extends Component {
       const playerSettings: IPlayerSettings = Settings.get("playerSettings");
 
       console.log(playerSettings);
-      if (playerSettings.currentTrack) {
+      if (!playerSettings.currentTrack?.isLivestream) {
         const currentTrack = Track.create(playerSettings.currentTrack);
         if (
           !rootStore.trackCache.tracks.find(
@@ -269,7 +269,7 @@ export default class Root extends Component {
 
       rootStore.player.setVolume(playerSettings.volume);
 
-      if (playerSettings.playbackPosition) {
+      if (playerSettings.playbackPosition && !playerSettings.currentTrack?.isLivestream) {
         rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
         rootStore.player.togglePlayingState();
         setTimeout(() => rootStore.player.togglePlayingState(), 500);
