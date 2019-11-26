@@ -223,7 +223,7 @@ ipcRenderer.on("app-close", (event, message) => {
       playerSnap.currentPlaylist
     );
   }
-  if (playerSnap.currentTrack) {
+  if (playerSnap.currentTrack && playerSnap.currentTrack !== Settings.get("playerSettings.currentTrack").id ) {
     Settings.set(
       "playerSettings.currentTrack",
       rootStore.trackCache.tracks.find(t => t.id === playerSnap.currentTrack)
