@@ -12,6 +12,7 @@ const Playlist = types
     name: types.maybe(types.string),
     tracks: types.maybe(types.array(types.reference(Track)))
   })
+  .named("Playlist")
   .views(self => ({
     getTrackById(id: string) {
       if (!self.tracks) return null;
