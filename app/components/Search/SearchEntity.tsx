@@ -69,7 +69,6 @@ const Title = styled.div<any>`
 `;
 
 const Duration = styled.div`
-  font-size: 14px;
   margin-left: 16px;
 `;
 
