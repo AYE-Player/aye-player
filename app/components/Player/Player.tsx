@@ -1,12 +1,14 @@
 import { ipcRenderer } from "electron";
 import { observer } from "mobx-react-lite";
+import { getSnapshot } from "mobx-state-tree";
 import React from "react";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
 import Root from "../../containers/Root";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { Repeat } from "../../types/enums";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType, Repeat } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
@@ -67,9 +69,11 @@ ipcRenderer.on("play-pause", (event, message) => {
 // to have a second local history to get tracks, there should be a way to update the
 // trackHistory on change, even inside a listener
 ipcRenderer.on("play-next", (event, message) => {
+  console.log("PLAY NEXT");
   const { queue, player, trackHistory } = Root.stores;
   const prevTrack = player.currentTrack;
   const track = queue.nextTrack();
+  console.log("NEXT TRACK", track);
 
   if (!track) {
     if (player.repeat === Repeat.ALL && player.isShuffling) {
@@ -86,13 +90,21 @@ ipcRenderer.on("play-next", (event, message) => {
   }
 
   history.push(prevTrack);
+  console.log("STUPID HIST", history);
   trackHistory.addTrack(prevTrack);
+  console.log("REAL HIST", getSnapshot(trackHistory.tracks));
   player.playTrack(track);
 });
 
 ipcRenderer.on("play-previous", (event, message) => {
-  const { player } = Root.stores;
+  console.log("PLAY PREV");
+  const { player, queue } = Root.stores;
   const track = history.pop();
+  console.log("PREV TRACK", track);
+
+  const currTrack = player.currentTrack;
+  queue.addPrivilegedTrack(currTrack);
+
   if (!track) return;
   player.playTrack(track);
 });
@@ -198,8 +210,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playPreviousTrack = () => {
+    console.log("PLAY PREV");
     const track = trackHistory.getLatestTrack();
+    console.log("TRACKHIST", getSnapshot(trackHistory.tracks));
+    console.log("TRACK", track);
     if (!track) return;
+
+    queue.addPrivilegedTrack(track);
     player.playTrack(track);
   };
 
@@ -230,7 +247,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onError = () => {
-    console.log("error playing track, skipping");
+    AyeLogger.player(
+      `error playing track, skipping. TrackInfo: ${JSON.stringify(
+        getSnapshot(player.currentTrack),
+        null,
+        2
+      )}`,
+      LogType.ERROR
+    );
     _playNextTrack();
   };
 
