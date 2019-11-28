@@ -223,7 +223,10 @@ ipcRenderer.on("app-close", (event, message) => {
       playerSnap.currentPlaylist
     );
   }
-  if (playerSnap.currentTrack && playerSnap.currentTrack !== Settings.get("playerSettings.currentTrack").id ) {
+  if (
+    playerSnap.currentTrack &&
+    playerSnap.currentTrack !== Settings.get("playerSettings.currentTrack").id
+  ) {
     Settings.set(
       "playerSettings.currentTrack",
       rootStore.trackCache.tracks.find(t => t.id === playerSnap.currentTrack)
@@ -243,7 +246,7 @@ export default class Root extends Component {
       const playerSettings: IPlayerSettings = Settings.get("playerSettings");
 
       console.log(playerSettings);
-      if (!playerSettings.currentTrack?.isLivestream) {
+      if (playerSettings.currentTrack?.isLivestream) {
         const currentTrack = Track.create(playerSettings.currentTrack);
         if (
           !rootStore.trackCache.tracks.find(
@@ -267,9 +270,14 @@ export default class Root extends Component {
         rootStore.player.setCurrentPlaylist(playlist);
       }
 
-      rootStore.player.setVolume(playerSettings.volume);
+      if (playerSettings.volume) {
+        rootStore.player.setVolume(playerSettings.volume);
+      }
 
-      if (playerSettings.playbackPosition && !playerSettings.currentTrack?.isLivestream) {
+      if (
+        playerSettings.playbackPosition &&
+        !playerSettings.currentTrack?.isLivestream
+      ) {
         rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
         rootStore.player.togglePlayingState();
         setTimeout(() => rootStore.player.togglePlayingState(), 500);
@@ -277,8 +285,12 @@ export default class Root extends Component {
 
       // TODO: think about a way to set repeta status
       //rootStore.player.setRepeat(Repeat[playerSettings.repeat as keyof typeof Repeat]);
-      rootStore.player.setShuffling(playerSettings.isShuffling);
-      rootStore.player.setMute(playerSettings.isMuted);
+      if (playerSettings.isShuffling) {
+        rootStore.player.setShuffling(playerSettings.isShuffling);
+      }
+      if (playerSettings.isMuted) {
+        rootStore.player.setMute(playerSettings.isMuted);
+      }
     }
   }
 
