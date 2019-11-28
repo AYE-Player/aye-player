@@ -64,15 +64,10 @@ ipcRenderer.on("play-pause", (event, message) => {
   player.togglePlayingState();
 });
 
-// TODO: Think about something nicer, while this is working, it feels quite strange
-// to have a second local history to get tracks, there should be a way to update the
-// trackHistory on change, even inside a listener
 ipcRenderer.on("play-next", (event, message) => {
-  console.log("PLAY NEXT");
   const { queue, player, trackHistory } = Root.stores;
   const prevTrack = player.currentTrack;
   const track = queue.nextTrack();
-  console.log("NEXT TRACK", track);
 
   if (!track) {
     if (player.repeat === Repeat.ALL && player.isShuffling) {
@@ -88,21 +83,17 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  trackHistory.addTrack(prevTrack);
-  console.log("REAL HIST", getSnapshot(trackHistory.tracks));
+  trackHistory.addTrack(prevTrack.id);
   player.playTrack(track);
 });
 
 ipcRenderer.on("play-previous", (event, message) => {
-  console.log("PLAY PREV");
   const { player, queue, trackHistory } = Root.stores;
-  const track = trackHistory.getLatestTrack();
-  console.log("PREV TRACK", track);
-
-  const currTrack = player.currentTrack;
-  queue.addPrivilegedTrack(currTrack);
-
+  const track = trackHistory.removeAndGetTrack();
   if (!track) return;
+
+  queue.addPrivilegedTrack(player.currentTrack);
+
   player.playTrack(track);
 });
 
@@ -176,7 +167,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
-    trackHistory.addTrack(prevTrack);
+    trackHistory.addTrack(prevTrack.id);
 
     player.setCurrentTrack();
     player.playTrack(track);
@@ -207,10 +198,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playPreviousTrack = () => {
-    console.log("PLAY PREV");
-    const track = trackHistory.getLatestTrack();
-    console.log("TRACKHIST", getSnapshot(trackHistory.tracks));
-    console.log("TRACK", track);
+    const track = trackHistory.removeAndGetTrack();
     if (!track) return;
 
     queue.addPrivilegedTrack(track);
