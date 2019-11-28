@@ -51,7 +51,6 @@ const Container = styled.div`
 `;*/
 
 let playerElement: any;
-let history: any = [];
 
 // Listeners
 ipcRenderer.on("play-pause", (event, message) => {
@@ -89,8 +88,6 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  history.push(prevTrack);
-  console.log("STUPID HIST", history);
   trackHistory.addTrack(prevTrack);
   console.log("REAL HIST", getSnapshot(trackHistory.tracks));
   player.playTrack(track);
@@ -98,8 +95,8 @@ ipcRenderer.on("play-next", (event, message) => {
 
 ipcRenderer.on("play-previous", (event, message) => {
   console.log("PLAY PREV");
-  const { player, queue } = Root.stores;
-  const track = history.pop();
+  const { player, queue, trackHistory } = Root.stores;
+  const track = trackHistory.getLatestTrack();
   console.log("PREV TRACK", track);
 
   const currTrack = player.currentTrack;
@@ -180,7 +177,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     }
 
     trackHistory.addTrack(prevTrack);
-    history.push(prevTrack);
+
     player.setCurrentTrack();
     player.playTrack(track);
   };
