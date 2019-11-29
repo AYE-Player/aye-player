@@ -186,14 +186,17 @@ class AyeMpris extends BaseModule {
           AyeLogger.media(`Playback status: ${this.player.playbackStatus}`);
           break;
         case "trackInfo":
-          this.player.metadata = {
-            /*"xesam:artist": [args.data.artist],*/
-            "xesam:title": args.data.title,
-            "xesam:url": `https://www.youtube.com/watch?v=${args.data.id}`,
-            "mpris:trackid": this.player.objectPath("track/0"),
-            "mpris:artUrl": `https://img.youtube.com/vi/${args.data.id}/hqdefault.jpg`,
-            "mpris:length": args.data.duration * 1e6 // in microseconds
-          };
+          if (this.player.metadata["xesam:url"] !== `https://www.youtube.com/watch?v=${args.data.id}`) {
+            this.player.metadata = {
+              /*"xesam:artist": [args.data.artist],*/
+              "xesam:title": args.data.title,
+              "xesam:url": `https://www.youtube.com/watch?v=${args.data.id}`,
+              "mpris:trackid": this.player.objectPath("track/0"),
+              "mpris:artUrl": `https://img.youtube.com/vi/${args.data.id}/hqdefault.jpg`,
+              "mpris:length": args.data.duration * 1e6 // in microseconds
+            };
+          }
+
           this.player.playbackStatus = "Playing";
           AyeLogger.media(
             `Track Info:\n${JSON.stringify(this.player.metadata, null, 2)}`
