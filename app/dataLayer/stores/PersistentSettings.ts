@@ -23,12 +23,10 @@ const schema = {
       default: 0
     },
     currentTrack: {
-      type: "object",
-      default: {}
+      type: "object"
     },
     currentPlaylist: {
-      type: "object",
-      default: {}
+      type: "object"
     },
     repeat: {
       type: "number",

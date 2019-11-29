@@ -1,5 +1,4 @@
 import { Grid } from "@material-ui/core";
-import { Repeat } from "../types/enums";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-state-tree";
 import { SnackbarProvider } from "notistack";
@@ -12,6 +11,8 @@ import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
 import Settings from "../dataLayer/stores/PersistentSettings";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
 
 interface IPlayerSettings {
@@ -218,27 +219,29 @@ if (process.env.NODE_ENV === "development") {
 }
 
 ipcRenderer.on("app-close", (event, message) => {
-  const playerSnap = getSnapshot(rootStore.player);
+  Settings.set("playerSettings.volume", rootStore.player.volume);
+  Settings.set(
+    "playerSettings.playbackPosition",
+    rootStore.player.playbackPosition
+  );
+  Settings.set("playerSettings.repeat", rootStore.player.repeat);
+  Settings.set("playerSettings.isMuted", rootStore.player.isMuted);
+  Settings.set("playerSettings.isShuffling", rootStore.player.isShuffling);
 
-  Settings.set("playerSettings.volume", playerSnap.volume);
-  Settings.set("playerSettings.playbackPosition", playerSnap.playbackPosition);
-  Settings.set("playerSettings.repeat", playerSnap.repeat);
-  Settings.set("playerSettings.isMuted", playerSnap.isMuted);
-  Settings.set("playerSettings.isShuffling", playerSnap.isShuffling);
-
-  if (playerSnap.currentPlaylist) {
+  if (rootStore.player.currentPlaylist) {
     Settings.set(
       "playerSettings.currentPlaylist.id",
-      playerSnap.currentPlaylist
+      rootStore.player.currentPlaylist.id
     );
   }
   if (
-    playerSnap.currentTrack &&
-    playerSnap.currentTrack !== Settings.get("playerSettings.currentTrack").id
+    rootStore.player.currentTrack &&
+    rootStore.player.currentTrack.id !==
+      Settings.get("playerSettings.currentTrack").id
   ) {
     Settings.set(
       "playerSettings.currentTrack",
-      rootStore.trackCache.tracks.find(t => t.id === playerSnap.currentTrack)
+      getSnapshot(rootStore.player.currentTrack)
     );
   }
 });
@@ -251,49 +254,60 @@ export default class Root extends Component {
    */
   constructor(props: any) {
     super(props);
-    if (Settings.has("playerSettings")) {
-      const playerSettings: IPlayerSettings = Settings.get("playerSettings");
+    try {
+      if (Settings.has("playerSettings")) {
+        const playerSettings: IPlayerSettings = Settings.get("playerSettings");
 
-      // Check for currentTrack and if it was a liveStream or not
-      if (playerSettings.currentTrack?.isLivestream === false) {
-        const currentTrack = Track.create(playerSettings.currentTrack);
-        if (
-          !rootStore.trackCache.tracks.find(
-            t => t.id === playerSettings.currentTrack.id
-          )
-        ) {
-          rootStore.trackCache.add(currentTrack);
+        // Check for currentTrack and if it was a liveStream or not
+        if (playerSettings.currentTrack?.isLivestream === false) {
+          const currentTrack = Track.create(playerSettings.currentTrack);
+          if (
+            !rootStore.trackCache.tracks.find(
+              t => t.id === playerSettings.currentTrack.id
+            )
+          ) {
+            rootStore.trackCache.add(currentTrack);
+          }
+          rootStore.queue.addTrack(currentTrack.id);
+          rootStore.player.setCurrentTrack(currentTrack);
         }
-        rootStore.queue.addTrack(currentTrack.id);
-        rootStore.player.setCurrentTrack(currentTrack);
-      }
 
-      // Check for last active playlist
-      if (
-        Object.keys(playerSettings.currentPlaylist).length === 0 &&
-        playerSettings.currentPlaylist.constructor === Object
-      ) {
-        const playlist = rootStore.playlists.getListById(
-          playerSettings.currentPlaylist.id
-        );
-        if (!playlist) return;
-        rootStore.player.setCurrentPlaylist(playlist);
-      }
+        // Check for last active playlist
+        if (playerSettings.currentPlaylist) {
+          const playlist = rootStore.playlists.getListById(
+            playerSettings.currentPlaylist.id
+          );
+          if (!playlist) return;
+          rootStore.player.setCurrentPlaylist(playlist);
+        }
 
-      // Check for playbackPosition
-      if (
-        playerSettings.playbackPosition &&
-        !playerSettings.currentTrack?.isLivestream
-      ) {
-        rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
-        rootStore.player.setPlaying(true);
-        setTimeout(() => rootStore.player.setPlaying(false), 500);
-      }
+        // Check for playbackPosition
+        if (
+          playerSettings.playbackPosition &&
+          !playerSettings.currentTrack?.isLivestream
+        ) {
+          rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
+          rootStore.player.setPlaying(true);
+          setTimeout(() => rootStore.player.setPlaying(false), 500);
+        }
 
-      rootStore.player.setRepeat(playerSettings.repeat);
-      rootStore.player.setVolume(playerSettings.volume);
-      rootStore.player.setShuffling(playerSettings.isShuffling);
-      rootStore.player.setMute(playerSettings.isMuted);
+        // TODO: Remove these checks, whenever the electron-store package fixes it,
+        // these should have an default setting, but sometimes the defaults are not saved/returned
+        if (playerSettings.repeat) {
+          rootStore.player.setRepeat(playerSettings.repeat);
+        }
+        if (playerSettings.volume) {
+          rootStore.player.setVolume(playerSettings.volume);
+        }
+        if (playerSettings.isShuffling) {
+          rootStore.player.setShuffling(playerSettings.isShuffling);
+        }
+        if (playerSettings.isMuted) {
+          rootStore.player.setMute(playerSettings.isMuted);
+        }
+      }
+    } catch (error) {
+      AyeLogger.player(`Error loading settings ${error}`, LogType.ERROR);
     }
   }
 
