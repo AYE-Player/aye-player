@@ -1,12 +1,14 @@
 import { ipcRenderer } from "electron";
 import { observer } from "mobx-react-lite";
+import { getSnapshot } from "mobx-state-tree";
 import React from "react";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
 import Root from "../../containers/Root";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import { Repeat } from "../../types/enums";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType, Repeat } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
@@ -49,7 +51,6 @@ const Container = styled.div`
 `;*/
 
 let playerElement: any;
-let history: any = [];
 
 // Listeners
 ipcRenderer.on("play-pause", (event, message) => {
@@ -63,9 +64,6 @@ ipcRenderer.on("play-pause", (event, message) => {
   player.togglePlayingState();
 });
 
-// TODO: Think about something nicer, while this is working, it feels quite strange
-// to have a second local history to get tracks, there should be a way to update the
-// trackHistory on change, even inside a listener
 ipcRenderer.on("play-next", (event, message) => {
   const { queue, player, trackHistory } = Root.stores;
   const prevTrack = player.currentTrack;
@@ -85,15 +83,17 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  history.push(prevTrack);
-  trackHistory.addTrack(prevTrack);
+  trackHistory.addTrack(prevTrack.id);
   player.playTrack(track);
 });
 
 ipcRenderer.on("play-previous", (event, message) => {
-  const { player } = Root.stores;
-  const track = history.pop();
+  const { player, queue, trackHistory } = Root.stores;
+  const track = trackHistory.removeAndGetTrack();
   if (!track) return;
+
+  queue.addPrivilegedTrack(player.currentTrack);
+
   player.playTrack(track);
 });
 
@@ -122,6 +122,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _onReady = () => {
     console.log("PLAYER READY");
+    if (player.playbackPosition > 0) {
+      playerElement.seekTo(player.playbackPosition);
+    }
   };
 
   const _onStart = () => {
@@ -164,19 +167,19 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
-    trackHistory.addTrack(prevTrack);
-    history.push(prevTrack);
+    trackHistory.addTrack(prevTrack.id);
+
     player.setCurrentTrack();
     player.playTrack(track);
   };
 
   const _toggleRepeat = () => {
     if (player.repeat === Repeat.ONE) {
-      player.setRepeatStatus(Repeat.NONE);
+      player.setRepeat(Repeat.NONE);
     } else if (player.repeat === Repeat.ALL) {
-      player.setRepeatStatus(Repeat.ONE);
+      player.setRepeat(Repeat.ONE);
     } else {
-      player.setRepeatStatus(Repeat.ALL);
+      player.setRepeat(Repeat.ALL);
     }
   };
 
@@ -195,8 +198,10 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playPreviousTrack = () => {
-    const track = trackHistory.getLatestTrack();
+    const track = trackHistory.removeAndGetTrack();
     if (!track) return;
+
+    queue.addPrivilegedTrack(track);
     player.playTrack(track);
   };
 
@@ -227,7 +232,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _onError = () => {
-    console.log("error playing track, skipping");
+    AyeLogger.player(
+      `error playing track, skipping. TrackInfo: ${JSON.stringify(
+        getSnapshot(player.currentTrack),
+        null,
+        2
+      )}`,
+      LogType.ERROR
+    );
     _playNextTrack();
   };
 

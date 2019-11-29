@@ -1,5 +1,5 @@
-import { getRoot, resolveIdentifier, types } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
+import { types, clone } from "mobx-state-tree";
+import Track from "../models/Track";
 
 export type TrackHistoryModel = typeof TrackHistory.Type;
 
@@ -8,24 +8,20 @@ const TrackHistory = types
     tracks: types.array(types.reference(Track))
   })
   .views(self => ({
-    get currentTrack() {
-      const root = getRoot(self);
-      if (!self.tracks || self.tracks.length === 0) return null;
-      return resolveIdentifier(Track, root, self.tracks[0].id);
-    },
-
     get isEmpty() {
       return self.tracks.length === 0;
     }
   }))
   .actions(self => ({
-    addTrack(track: TrackModel) {
-      self.tracks.push(track);
+    addTrack(id: string) {
+      self.tracks.push(id);
     },
 
-    getLatestTrack() {
-      if (self.tracks.length === 0) return null;
-      return self.tracks.pop();
+    removeAndGetTrack() {
+      const track = clone(self.tracks[self.tracks.length - 1]);
+      if (!track) return null;
+      self.tracks.splice(self.tracks.length - 1, 1);
+      return track;
     },
 
     clear() {

@@ -1,7 +1,7 @@
 export enum Repeat {
+  NONE = "none",
   ALL = "all",
-  ONE = "one",
-  NONE = "none"
+  ONE = "one"
 }
 
 export enum LogType {

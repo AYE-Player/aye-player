@@ -9,6 +9,7 @@ const Track = types
     duration: types.optional(types.number, 0),
     isLivestream: types.optional(types.boolean, false)
   })
+  .named("Track")
   .views(self => ({
     get formattedDuration() {
       const str_pad_left = (value: number, pad: string, length: number) => {

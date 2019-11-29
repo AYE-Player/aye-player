@@ -1,14 +1,29 @@
 import { Grid } from "@material-ui/core";
+import { ipcRenderer } from "electron";
+import { getSnapshot } from "mobx-state-tree";
 import { SnackbarProvider } from "notistack";
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
 import Player from "../components/Player/Player";
 import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
 import { StoreProvider } from "../components/StoreProvider";
-import Playlist from "../dataLayer/models/Playlist";
-import Track from "../dataLayer/models/Track";
+import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
+import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
+import Settings from "../dataLayer/stores/PersistentSettings";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
+
+interface IPlayerSettings {
+  volume: number;
+  playbackPosition: number;
+  repeat: Repeat;
+  isMuted: boolean;
+  isShuffling: boolean;
+  currentTrack: TrackModel;
+  currentPlaylist: PlaylistModel;
+}
 
 const rootStore = createStore();
 
@@ -29,6 +44,14 @@ if (process.env.NODE_ENV === "development") {
   );
   const playlist = rootStore.playlists.getListById("1");
   let track = Track.create({
+    id: "A0HDitIHMXo",
+    title: "Nightcore - MAYDAY",
+    duration: 215
+  });
+  rootStore.trackCache.add(track);
+  playlist.addTrack(track);
+
+  track = Track.create({
     id: "_8mwWhyjOS0",
     title: "Neovaii - Feel Better",
     duration: 235
@@ -71,7 +94,7 @@ if (process.env.NODE_ENV === "development") {
   track = Track.create({
     id: "nzhAgfs_Gv4",
     title: "Neovaii - At The End",
-    duration: 117
+    duration: 218
   });
   rootStore.trackCache.add(track);
   playlist.addTrack(track);
@@ -195,8 +218,98 @@ if (process.env.NODE_ENV === "development") {
   //rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
 }
 
+ipcRenderer.on("app-close", (event, message) => {
+  Settings.set("playerSettings.volume", rootStore.player.volume);
+  Settings.set(
+    "playerSettings.playbackPosition",
+    rootStore.player.playbackPosition
+  );
+  Settings.set("playerSettings.repeat", rootStore.player.repeat);
+  Settings.set("playerSettings.isMuted", rootStore.player.isMuted);
+  Settings.set("playerSettings.isShuffling", rootStore.player.isShuffling);
+
+  if (rootStore.player.currentPlaylist) {
+    Settings.set(
+      "playerSettings.currentPlaylist.id",
+      rootStore.player.currentPlaylist.id
+    );
+  }
+  if (
+    rootStore.player.currentTrack &&
+    rootStore.player.currentTrack.id !==
+      Settings.get("playerSettings.currentTrack").id
+  ) {
+    Settings.set(
+      "playerSettings.currentTrack",
+      getSnapshot(rootStore.player.currentTrack)
+    );
+  }
+});
+
 export default class Root extends Component {
   public static stores = rootStore;
+
+  /**
+   *  Fill stores with cached information and sync with server (maybe do this in afterCreate?)
+   */
+  constructor(props: any) {
+    super(props);
+    try {
+      if (Settings.has("playerSettings")) {
+        const playerSettings: IPlayerSettings = Settings.get("playerSettings");
+
+        // Check for currentTrack and if it was a liveStream or not
+        if (playerSettings.currentTrack?.isLivestream === false) {
+          const currentTrack = Track.create(playerSettings.currentTrack);
+          if (
+            !rootStore.trackCache.tracks.find(
+              t => t.id === playerSettings.currentTrack.id
+            )
+          ) {
+            rootStore.trackCache.add(currentTrack);
+          }
+          rootStore.queue.addTrack(currentTrack.id);
+          rootStore.player.setCurrentTrack(currentTrack);
+        }
+
+        // Check for last active playlist
+        if (playerSettings.currentPlaylist) {
+          const playlist = rootStore.playlists.getListById(
+            playerSettings.currentPlaylist.id
+          );
+          if (!playlist) return;
+          rootStore.player.setCurrentPlaylist(playlist);
+        }
+
+        // Check for playbackPosition
+        if (
+          playerSettings.playbackPosition &&
+          !playerSettings.currentTrack?.isLivestream
+        ) {
+          rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
+          rootStore.player.setPlaying(true);
+          setTimeout(() => rootStore.player.setPlaying(false), 500);
+        }
+
+        // TODO: Remove these checks, whenever the electron-store package fixes it,
+        // these should have an default setting, but sometimes the defaults are not saved/returned
+        if (playerSettings.repeat) {
+          rootStore.player.setRepeat(playerSettings.repeat);
+        }
+        if (playerSettings.volume) {
+          rootStore.player.setVolume(playerSettings.volume);
+        }
+        if (playerSettings.isShuffling) {
+          rootStore.player.setShuffling(playerSettings.isShuffling);
+        }
+        if (playerSettings.isMuted) {
+          rootStore.player.setMute(playerSettings.isMuted);
+        }
+      }
+    } catch (error) {
+      AyeLogger.player(`Error loading settings ${error}`, LogType.ERROR);
+    }
+  }
 
   render() {
     return (

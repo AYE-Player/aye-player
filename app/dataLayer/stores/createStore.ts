@@ -8,12 +8,13 @@ import RootStore, { RootStoreEnv, RootStoreModel } from "./RootStore";
 import SearchResult from "./SearchResult";
 import TrackStore from "./TrackCache";
 import TrackHistory from "./TrackHistory";
+import { Repeat } from "../../types/enums";
 
 export const createStore = (): RootStoreModel => {
   const playlists = Playlists.create({ lists: [] });
   const player = Player.create({
     volume: 0.2,
-    repeat: "none",
+    repeat: Repeat.NONE,
     isShuffling: false,
     isReady: false,
     isPlaying: false,

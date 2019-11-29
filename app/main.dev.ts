@@ -272,10 +272,13 @@ export default class Main {
       }
 
       let isTrusted: boolean;
-      if (process.platform === "darwin" && !systemPreferences.isTrustedAccessibilityClient(false)) {
+      if (
+        process.platform === "darwin" &&
+        !systemPreferences.isTrustedAccessibilityClient(false)
+      ) {
         isTrusted = systemPreferences.isTrustedAccessibilityClient(true);
       } else {
-        isTrusted = true
+        isTrusted = true;
       }
 
       // Register media keys
@@ -293,6 +296,8 @@ export default class Main {
         this.tray.hideToTray();
         return;
       }
+
+      this.mainWindow.webContents.send("app-close");
 
       const [x, y] = this.mainWindow.getPosition();
       const [width, height] = this.mainWindow.getSize();
