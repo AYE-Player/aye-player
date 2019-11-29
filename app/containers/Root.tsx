@@ -1,4 +1,7 @@
 import { Grid } from "@material-ui/core";
+import { Repeat } from "../types/enums";
+import { ipcRenderer } from "electron";
+import { getSnapshot } from "mobx-state-tree";
 import { SnackbarProvider } from "notistack";
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
@@ -8,15 +11,13 @@ import { StoreProvider } from "../components/StoreProvider";
 import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
-import MainPage from "./MainPage";
 import Settings from "../dataLayer/stores/PersistentSettings";
-import { ipcRenderer } from "electron";
-import { getSnapshot } from "mobx-state-tree";
+import MainPage from "./MainPage";
 
 interface IPlayerSettings {
   volume: number;
   playbackPosition: number;
-  repeat: string;
+  repeat: Repeat;
   isMuted: boolean;
   isShuffling: boolean;
   currentTrack: TrackModel;
@@ -42,6 +43,14 @@ if (process.env.NODE_ENV === "development") {
   );
   const playlist = rootStore.playlists.getListById("1");
   let track = Track.create({
+    id: "A0HDitIHMXo",
+    title: "Nightcore - MAYDAY",
+    duration: 215
+  });
+  rootStore.trackCache.add(track);
+  playlist.addTrack(track);
+
+  track = Track.create({
     id: "_8mwWhyjOS0",
     title: "Neovaii - Feel Better",
     duration: 235
@@ -245,8 +254,8 @@ export default class Root extends Component {
     if (Settings.has("playerSettings")) {
       const playerSettings: IPlayerSettings = Settings.get("playerSettings");
 
-      console.log(playerSettings);
-      if (playerSettings.currentTrack?.isLivestream) {
+      // Check for currentTrack and if it was a liveStream or not
+      if (playerSettings.currentTrack?.isLivestream === false) {
         const currentTrack = Track.create(playerSettings.currentTrack);
         if (
           !rootStore.trackCache.tracks.find(
@@ -259,6 +268,7 @@ export default class Root extends Component {
         rootStore.player.setCurrentTrack(currentTrack);
       }
 
+      // Check for last active playlist
       if (
         Object.keys(playerSettings.currentPlaylist).length === 0 &&
         playerSettings.currentPlaylist.constructor === Object
@@ -270,27 +280,20 @@ export default class Root extends Component {
         rootStore.player.setCurrentPlaylist(playlist);
       }
 
-      if (playerSettings.volume) {
-        rootStore.player.setVolume(playerSettings.volume);
-      }
-
+      // Check for playbackPosition
       if (
         playerSettings.playbackPosition &&
         !playerSettings.currentTrack?.isLivestream
       ) {
         rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
-        rootStore.player.togglePlayingState();
-        setTimeout(() => rootStore.player.togglePlayingState(), 500);
+        rootStore.player.setPlaying(true);
+        setTimeout(() => rootStore.player.setPlaying(false), 500);
       }
 
-      // TODO: think about a way to set repeta status
-      //rootStore.player.setRepeat(Repeat[playerSettings.repeat as keyof typeof Repeat]);
-      if (playerSettings.isShuffling) {
-        rootStore.player.setShuffling(playerSettings.isShuffling);
-      }
-      if (playerSettings.isMuted) {
-        rootStore.player.setMute(playerSettings.isMuted);
-      }
+      rootStore.player.setRepeat(playerSettings.repeat);
+      rootStore.player.setVolume(playerSettings.volume);
+      rootStore.player.setShuffling(playerSettings.isShuffling);
+      rootStore.player.setMute(playerSettings.isMuted);
     }
   }
 

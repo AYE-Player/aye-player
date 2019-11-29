@@ -31,8 +31,8 @@ const schema = {
       default: {}
     },
     repeat: {
-      type: "string",
-      default: "none"
+      type: "number",
+      default: 0
     },
     isShuffling: {
       type: "boolean",
