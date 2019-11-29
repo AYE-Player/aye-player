@@ -142,6 +142,15 @@ const Player = types
 
     setPlaybackPosition(pos: number) {
       self.playbackPosition = pos;
+
+      ipcRenderer.send("player2Win", {
+        type: "currentTime",
+        data: self.playbackPosition
+      });
+    },
+
+    setPlaying(state: boolean) {
+      self.isPlaying = state;
     }
   }));
 
