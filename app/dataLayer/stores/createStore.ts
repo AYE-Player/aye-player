@@ -37,10 +37,10 @@ export const createStore = (): RootStoreModel => {
   const searchResult = SearchResult.create({ tracks: [] });
 
   const env: RootStoreEnv = {
+    user,
     player,
     playlists,
     queue,
-    user,
     app,
     trackCache,
     trackHistory,
@@ -49,13 +49,13 @@ export const createStore = (): RootStoreModel => {
 
   const rootStore = RootStore.create(
     {
+      user,
       // @ts-ignore
       player,
       // @ts-ignore
       playlists,
       // @ts-ignore
       queue,
-      user,
       app,
       trackCache,
       // @ts-ignore

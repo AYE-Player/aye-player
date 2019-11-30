@@ -11,6 +11,7 @@ import useInject from "../../hooks/useInject";
 
 interface IPlaylistEntityMenuProps {
   id: string;
+  openListDialog: any;
 }
 
 const Container = styled.div`
@@ -97,6 +98,9 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
           </MenuItem>
           <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
             {t("EntityMenu.playNext")}
+          </MenuItem>
+          <MenuItem onClick={() => props.openListDialog()}>
+            {t("EntityMenu.addToPlaylist")}
           </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>
             {t("EntityMenu.copyURL")}

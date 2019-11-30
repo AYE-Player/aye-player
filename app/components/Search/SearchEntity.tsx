@@ -2,9 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import shortid from "shortid";
 import styled from "styled-components";
-import Playlist from "../../dataLayer/models/Playlist";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -144,18 +142,10 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
     setOpenCreatePlaylistDialog(true);
   };
 
-  const _createPlaylist = () => {
+  const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
-    const id = shortid.generate();
-    playlists.add(
-      Playlist.create({
-        name: newPlaylistName,
-        tracks: [],
-        id
-      })
-    );
+    const pl = await playlists.createList(newPlaylistName);
 
-    const pl = playlists.getListById(id);
     pl.addTrack(props.track);
     enqueueSnackbar("", {
       content: key => (
