@@ -44,7 +44,8 @@ const User = types
             !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
             !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
         } catch (error) {
-          // Doesnt matter
+          localStorage.removeItem("token");
+          console.error(error);
         }
       }
     }),
@@ -58,6 +59,7 @@ const User = types
             Password: password
           }
         );
+        //@ts-ignore
         const { data: userInfo } = yield axios.get(
           "https://api.aye-player.de/userIdentity/v1/",
           {

@@ -1,4 +1,7 @@
 import { Grid } from "@material-ui/core";
+import Playlist from "../dataLayer/models/Playlist";
+import Track from "../dataLayer/models/Track";
+import axios from "axios";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,11 +23,13 @@ const Header = styled.div`
 const LoginPage: React.FunctionComponent<any> = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user }: RootStoreModel) => ({
-    user
+  const UserStore = ({ user, playlists, trackCache }: RootStoreModel) => ({
+    user,
+    playlists,
+    trackCache
   });
 
-  const { user } = useInject(UserStore);
+  const { user, playlists, trackCache } = useInject(UserStore);
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
@@ -48,9 +53,48 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
+  // TODO: this has to be in its own file or external function
+  const getPlaylists = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const { data: playlistData } = await axios.get(
+          "https://api.aye-player.de/playlists/v1",
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+
+        for (const playlist of playlistData) {
+          const pl = Playlist.create({
+            id: playlist.Id,
+            name: playlist.Name,
+            tracks: []
+          });
+          if (playlist.tracks) {
+            for (const track of playlist.tracks) {
+              const tr = Track.create(track);
+              if (!trackCache.getTrackById(track.id)) {
+                trackCache.add(tr);
+              }
+              pl.addTrack(tr);
+            }
+          }
+
+          playlists.add(pl);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
       await user.authenticate(name, password);
+      await getPlaylists();
       window.location.href = `${window.location.href.split("#/")[0]}#${
         routes.ACCOUNT
       }`;

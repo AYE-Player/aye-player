@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -11,9 +11,17 @@ import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
+import Axios from "axios";
 
 interface IProps {
   match: any;
+}
+
+interface ITrackDto {
+  Id: string;
+  Duration: number;
+  Title: string;
+  IsLivestream: boolean;
 }
 
 const Container = styled.div`
@@ -40,16 +48,44 @@ const Header = styled.div`
 const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ queue, player, playlists }: RootStoreModel) => ({
+  const Store = ({ queue, player, playlists, trackCache }: RootStoreModel) => ({
     queue,
     player,
-    playlists
+    playlists,
+    trackCache
   });
 
-  const { queue, player, playlists } = useInject(Store);
+  const { queue, player, playlists, trackCache } = useInject(Store);
 
   const { id } = props.match.params;
   const playlist = playlists.getListById(id);
+
+  useEffect(() => {
+    Axios.get(
+      `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token")
+        }
+      }
+    ).then(({ data: songs }) => {
+      songs.map((song: ITrackDto) => {
+        const track = Track.create({
+          id: song.Id,
+          title: song.Title,
+          duration: song.Duration,
+          isLivestream: song.IsLivestream
+        });
+        if (!trackCache.getTrackById(track.id)) {
+          trackCache.add(track);
+        }
+        if (!playlist.getTrackById(track.id)) {
+          playlist.addLoadedTrack(track);
+        }
+      });
+      setValue(!value);
+    });
+  });
 
   const _handleClick = (track: TrackModel) => {
     const idx = playlist.getIndexOfTrack(track);

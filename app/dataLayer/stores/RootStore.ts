@@ -11,10 +11,10 @@ import TrackStore, { TrackStoreModel } from "./TrackCache";
 export type RootStoreModel = typeof RootStore.Type;
 
 export type RootStoreEnv = {
+  user: UserModel;
   player: PlayerModel;
   playlists: PlaylistsModel;
   queue: QueueModel;
-  user: UserModel;
   app: AppStoreModel;
   trackCache: TrackStoreModel;
   trackHistory: TrackHistoryModel;
@@ -22,10 +22,10 @@ export type RootStoreEnv = {
 };
 
 const RootStore = types.model("RootStore", {
+  user: User,
   player: Player,
   playlists: Playlists,
   queue: Queue,
-  user: User,
   app: AppStore,
   trackCache: TrackStore,
   trackHistory: TrackHistory,

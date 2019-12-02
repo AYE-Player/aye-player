@@ -1,4 +1,5 @@
 import { Grid } from "@material-ui/core";
+import axios from "axios";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-state-tree";
 import { SnackbarProvider } from "notistack";
@@ -27,7 +28,7 @@ interface IPlayerSettings {
 
 const rootStore = createStore();
 
-if (process.env.NODE_ENV === "development") {
+/*if (process.env.NODE_ENV === "development") {
   rootStore.playlists.add(
     Playlist.create({
       id: "1",
@@ -49,7 +50,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 215
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "_8mwWhyjOS0",
@@ -57,7 +58,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 235
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "BLBiLjQl4uQ",
@@ -65,7 +66,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 262
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "j2QXZD5tk8c",
@@ -73,7 +74,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 214
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "Rz5BHmd4XkE",
@@ -81,7 +82,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 225
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "E3wJFVmyeT4",
@@ -89,7 +90,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 192
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "nzhAgfs_Gv4",
@@ -97,7 +98,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 218
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "mWrrBndTadM",
@@ -105,7 +106,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 195
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "g6xFyd3CMXQ",
@@ -113,7 +114,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 198
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "dQmjxCJFyQA",
@@ -121,7 +122,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 225
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "lJ_TSjn-khU",
@@ -129,7 +130,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 200
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "ijKrFbLXkj8",
@@ -137,7 +138,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 226
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "7bD_r5u3znQ",
@@ -145,7 +146,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 212
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "VSdgdjMnw1k",
@@ -153,7 +154,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 203
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "mXah1eQBUFs",
@@ -161,7 +162,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 197
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "UWzRZ0LgiWc",
@@ -169,7 +170,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 291
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "4Q46xYqUwZQ",
@@ -177,7 +178,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 235
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "UOxkGD8qRB4",
@@ -185,7 +186,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 202
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   track = Track.create({
     id: "RG_DLoKkGsg",
@@ -193,7 +194,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 175
   });
   rootStore.trackCache.add(track);
-  playlist.addTrack(track);
+  playlist.addLoadedTrack(track);
 
   const playlist2 = rootStore.playlists.getListById("2");
 
@@ -203,7 +204,7 @@ if (process.env.NODE_ENV === "development") {
     duration: 122
   });
   rootStore.trackCache.add(track);
-  playlist2.addTrack(track);
+  playlist2.addLoadedTrack(track);
 
   track = Track.create({
     id: "Pre8O2RlbjU",
@@ -211,12 +212,12 @@ if (process.env.NODE_ENV === "development") {
     duration: 148
   });
   rootStore.trackCache.add(track);
-  playlist2.addTrack(track);
+  playlist2.addLoadedTrack(track);
 
   // rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
   rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0]);
   //rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
-}
+}*/
 
 ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.volume", rootStore.player.volume);
@@ -246,6 +247,37 @@ ipcRenderer.on("app-close", (event, message) => {
   }
 });
 
+const getPlaylists = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const { data: playlists } = await axios.get(
+        "https://api.aye-player.de/playlists/v1",
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
+        }
+      );
+
+      for (const playlist of playlists) {
+        console.log("PL", playlist);
+        const pl = Playlist.create({
+          id: playlist.Id,
+          name: playlist.Name,
+          duration: playlist.Duration,
+          trackCount: playlist.SongsCount,
+          tracks: []
+        });
+
+        rootStore.playlists.add(pl);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default class Root extends Component {
   public static stores = rootStore;
 
@@ -255,6 +287,8 @@ export default class Root extends Component {
   constructor(props: any) {
     super(props);
     try {
+      getPlaylists();
+
       if (Settings.has("playerSettings")) {
         const playerSettings: IPlayerSettings = Settings.get("playerSettings");
 

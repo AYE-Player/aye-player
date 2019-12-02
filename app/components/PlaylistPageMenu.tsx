@@ -3,11 +3,13 @@ import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
+import axios from "axios";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Track from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
-import { useTranslation } from "react-i18next";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -47,13 +49,14 @@ const StyledMenu = withStyles({
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ player, playlists, queue }: RootStoreModel) => ({
+  const Store = ({ player, playlists, queue, trackCache }: RootStoreModel) => ({
     player,
     playlists,
-    queue
+    queue,
+    trackCache
   });
 
-  const { player, playlists, queue } = useInject(Store);
+  const { player, playlists, queue, trackCache } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -65,10 +68,32 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     setAnchorEl(null);
   };
 
-  const _handleLoadClick = () => {
+  const _handleLoadClick = async () => {
     const playlist = playlists.getListById(props.id);
 
-    if (playlist.tracks.length === 0) return;
+    if (playlist.tracks.length === 0) {
+      const { data: tracks } = await axios.get(
+        `https://api.aye-player.de/playlists/v1/${props.id}/songs?skip=0&take=20`,
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
+        }
+      );
+      console.log("TRACKS",tracks);
+      for (const track of tracks) {
+        const tr = Track.create({
+          id: track.Id,
+          duration: track.Duration,
+          title: track.Title,
+          isLivestream: track.IsLivestream
+        });
+        if (!trackCache.tracks.find(t => t.id === tr.id)) {
+          trackCache.add(tr);
+        }
+        playlist.addLoadedTrack(tr);
+      }
+    }
 
     queue.clear();
     queue.addTracks(playlist.tracks);
@@ -95,7 +120,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
         >
           <MenuItem
             onClick={() => _handleLoadClick()}
-            disabled={playlists.getListById(props.id).tracks.length === 0}
+            disabled={playlists.getListById(props.id).trackCount === 0}
           >
             {t("EntityMenu.loadPlaylist")}
           </MenuItem>

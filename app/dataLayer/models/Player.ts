@@ -29,6 +29,7 @@ const Player = types
     playTrack(track: TrackModel) {
       self.playbackPosition = 0;
       self.currentTrack = track;
+      Settings.delete("playerSettings.currentTrack");
       Settings.set("playerSettings.currentTrack", track);
 
       if (!self.isPlaying) self.isPlaying = true;
@@ -81,6 +82,7 @@ const Player = types
     setCurrentTrack(track?: TrackModel) {
       if (track) {
         self.currentTrack = track;
+        Settings.delete("playerSettings.currentTrack");
         Settings.set("playerSettings.currentTrack", track);
       } else {
         self.currentTrack = undefined;
@@ -90,6 +92,7 @@ const Player = types
     setCurrentPlaylist(playlist?: PlaylistModel) {
       if (playlist) {
         self.currentPlaylist = playlist;
+        Settings.delete("playerSettings.currentPlaylist");
         Settings.set("playerSettings.currentPlaylist.id", playlist.id);
       } else {
         self.currentPlaylist = undefined;

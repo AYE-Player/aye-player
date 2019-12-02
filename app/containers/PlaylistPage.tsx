@@ -9,12 +9,10 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import shortid from "shortid";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
 import CustomFormDialog from "../components/Customs/CustomFormDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
-import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
@@ -68,25 +66,9 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const { playlists } = useInject(Store);
 
-  const _createPlaylist = () => {
+  const _createPlaylist = async () => {
     setOpen(false);
-    playlists.add(
-      Playlist.create({
-        name: newPlaylistName,
-        tracks: [],
-        id: shortid.generate()
-      })
-    );
-  };
-
-  const calculateTracksDuration = (playlist: PlaylistModel) => {
-    let time = 0;
-
-    for (const track of playlist.tracks) {
-      time += track.duration;
-    }
-
-    return formattedDuration(time);
+    await playlists.createList(newPlaylistName);
   };
 
   const _handleOnClick = () => {
@@ -176,7 +158,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
-                    {playlist.tracks.length}
+                    {playlist.trackCount}
                   </StyledTableCell>
                   <StyledTableCell
                     align="right"
@@ -185,7 +167,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
-                    {calculateTracksDuration(playlist)}
+                    {formattedDuration(playlist.duration)}
                   </StyledTableCell>
                   <StyledTableCell
                     style={{
