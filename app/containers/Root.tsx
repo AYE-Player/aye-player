@@ -28,7 +28,7 @@ interface IPlayerSettings {
 
 const rootStore = createStore();
 
-if (process.env.NODE_ENV === "development") {
+/*if (process.env.NODE_ENV === "development") {
   rootStore.playlists.add(
     Playlist.create({
       id: "1",
@@ -217,7 +217,7 @@ if (process.env.NODE_ENV === "development") {
   // rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
   rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0]);
   //rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
-}
+}*/
 
 ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.volume", rootStore.player.volume);

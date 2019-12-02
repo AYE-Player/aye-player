@@ -46,6 +46,16 @@ const Playlist = types
             }
           }
         );
+
+        const { data } = yield axios.get(`https://api.aye-player.de/playlists/v1/${self.id}`,
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
+        });
+        console.log("NEW PL DATA", data);
+        self.trackCount = data.SongsCount;
+        self.duration = data.Duration;
         self.tracks.push(track);
       } catch (error) {
         AyeLogger.player(
@@ -81,9 +91,14 @@ const Playlist = types
         const foundTrack = self.tracks.find(trk => trk.id === track.id);
         const idx = self.tracks.indexOf(foundTrack);
         self.tracks.splice(idx, 1);
-        /*yield axios.delete(
-          `https://api.aye-player.de/playlists/${self.id}/songs/${track.id}`
-        );*/
+        yield axios.delete(
+          `https://api.aye-player.de/playlists/${self.id}/songs/${track.id}`,
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
       } catch (error) {
         AyeLogger.player(
           `Error remove track from playlist ${self.id} ${JSON.stringify(

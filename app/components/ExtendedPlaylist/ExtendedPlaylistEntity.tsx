@@ -154,6 +154,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
     const pl = await playlists.createList(newPlaylistName);
 
     pl.addTrack(props.track);
+
     enqueueSnackbar("", {
       content: key => (
         <SnackMessage

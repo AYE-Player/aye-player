@@ -21,9 +21,9 @@ const Playlists = types
       try {
         // @ts-ignore
         const { data: id } = yield axios.post(
-          "https://api.aye-player.de/playlists",
+          "https://api.aye-player.de/playlists/v1",
           {
-            name
+            Name: name
           },
           {
             headers: {
@@ -55,7 +55,11 @@ const Playlists = types
 
     remove: flow(function*(id: string) {
       try {
-        // yield axios.delete(`https://api.aye-player.de/playlists/${id}`);
+        yield axios.delete(`https://api.aye-player.de/playlists/v1/${id}`, {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
+        });
         const foundList = self.lists.find(playlist => playlist.id === id);
         const idx = self.lists.indexOf(foundList);
         self.lists.splice(idx, 1);
