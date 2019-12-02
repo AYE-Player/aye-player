@@ -164,7 +164,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         </Control>
       </Grid>
       <Divider size={2} />
-      <Grid container spacing={1}>
+      <Grid container justify="center" alignItems="center" spacing={1}>
         <Grid item>
           <VolumeDown onClick={() => _handleVolumeChange(null, 0)} />
         </Grid>
