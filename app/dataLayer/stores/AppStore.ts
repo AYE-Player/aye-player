@@ -9,7 +9,8 @@ const AppStore = types
     showQueue: types.boolean,
     rpcEnabled: types.boolean,
     minimizeToTray: types.boolean,
-    language: types.string
+    language: types.string,
+    activePlaylist: types.maybe(types.string)
   })
   .actions(self => ({
     toggleQueueDisplay() {
@@ -36,13 +37,17 @@ const AppStore = types
       }
     },
 
-    async setLanguage(lang: string) {
+    setLanguage(lang: string) {
       self.language = lang;
       Settings.set("language", lang);
 
       ipcRenderer.send("changeLang", {
         lang
       })
+    },
+
+    setActivePlaylist(id: string) {
+      self.activePlaylist = id;
     }
   }));
 

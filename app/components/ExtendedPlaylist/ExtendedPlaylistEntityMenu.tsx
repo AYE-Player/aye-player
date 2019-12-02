@@ -49,12 +49,14 @@ const StyledMenu = withStyles({
 const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue, player }: RootStoreModel) => ({
+  const Store = ({ queue, playlists, app }: RootStoreModel) => ({
     queue,
-    player
+    playlists,
+    app
   });
 
-  const { queue, player } = useInject(Store);
+  const { queue, playlists, app } = useInject(Store);
+  const playlist = playlists.getListById(app.activePlaylist);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -67,7 +69,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
   };
 
   const _handleRemoveTrack = (id: string) => {
-    player.currentPlaylist.removeTrackById(id);
+    playlist.removeTrackById(id);
     setAnchorEl(null);
   };
 
