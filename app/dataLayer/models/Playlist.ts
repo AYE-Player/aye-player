@@ -88,17 +88,17 @@ const Playlist = types
 
     removeTrack: flow(function*(track: TrackModel) {
       try {
-        const foundTrack = self.tracks.find(trk => trk.id === track.id);
-        const idx = self.tracks.indexOf(foundTrack);
-        self.tracks.splice(idx, 1);
         yield axios.delete(
-          `https://api.aye-player.de/playlists/${self.id}/songs/${track.id}`,
+          `https://api.aye-player.de/playlists/v1/${self.id}/songs/${track.id}`,
           {
             headers: {
               "x-access-token": localStorage.getItem("token")
             }
           }
         );
+        const foundTrack = self.tracks.find(trk => trk.id === track.id);
+        const idx = self.tracks.indexOf(foundTrack);
+        self.tracks.splice(idx, 1);
       } catch (error) {
         AyeLogger.player(
           `Error remove track from playlist ${self.id} ${JSON.stringify(
@@ -112,11 +112,31 @@ const Playlist = types
       }
     }),
 
-    removeTrackById(id: string) {
-      const foundTrack = self.tracks.find(trk => trk.id === id);
-      const idx = self.tracks.indexOf(foundTrack);
-      self.tracks.splice(idx, 1);
-    },
+    removeTrackById: flow(function*(id: string) {
+      try {
+        yield axios.delete(
+          `https://api.aye-player.de/playlists/v1/${self.id}/songs/${id}`,
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+        const foundTrack = self.tracks.find(trk => trk.id === id);
+        const idx = self.tracks.indexOf(foundTrack);
+        self.tracks.splice(idx, 1);
+      } catch (error) {
+        AyeLogger.player(
+          `Error remove track from playlist ${self.id} ${JSON.stringify(
+            error,
+            null,
+            2
+          )}`,
+          LogType.ERROR
+        );
+        throw error;
+      }
+    }),
 
     removeAndGetTrack(idx: number) {
       const track = clone(self.tracks[idx]);

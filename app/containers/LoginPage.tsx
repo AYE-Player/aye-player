@@ -38,7 +38,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
   useEffect(() => {
     document.addEventListener("keypress", _handleKeyPress);
 
-    return function cleanup() {
+    return () => {
       document.removeEventListener("keypress", _handleKeyPress);
     };
   });

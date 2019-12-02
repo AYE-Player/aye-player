@@ -48,19 +48,30 @@ const Header = styled.div`
 const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ queue, player, playlists, trackCache }: RootStoreModel) => ({
+  const Store = ({
     queue,
     player,
     playlists,
-    trackCache
+    trackCache,
+    app
+  }: RootStoreModel) => ({
+    queue,
+    player,
+    playlists,
+    trackCache,
+    app
   });
 
-  const { queue, player, playlists, trackCache } = useInject(Store);
+  const { queue, player, playlists, trackCache, app } = useInject(Store);
 
   const { id } = props.match.params;
   const playlist = playlists.getListById(id);
+  app.setActivePlaylist(id);
 
   useEffect(() => {
+    const CancelToken = Axios.CancelToken;
+    const source = CancelToken.source();
+
     Axios.get(
       `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
       {
@@ -85,6 +96,10 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
       });
       setValue(!value);
     });
+
+    return () => {
+      source.cancel();
+    };
   });
 
   const _handleClick = (track: TrackModel) => {
