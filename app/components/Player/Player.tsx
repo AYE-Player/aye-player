@@ -231,13 +231,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     // player.currentTrack.setDuration(duration);
   };
 
-  const _onError = () => {
+  const _onError = (error: any) => {
     AyeLogger.player(
       `error playing track, skipping. TrackInfo: ${JSON.stringify(
         getSnapshot(player.currentTrack),
         null,
         2
-      )}`,
+      )}, ERROR: ${error}`,
       LogType.ERROR
     );
     _playNextTrack();
@@ -296,7 +296,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           onReady={() => _onReady()}
           onStart={() => _onStart()}
           onPause={() => _onPause()}
-          onError={() => _onError()}
+          onError={_onError}
           onDuration={_setDuration}
           onProgress={_handleProgress}
           onEnded={() => _playNextTrack()}
