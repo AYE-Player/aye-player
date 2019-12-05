@@ -47,13 +47,15 @@ const Playlist = types
           }
         );
 
-        const { data } = yield axios.get(`https://api.aye-player.de/playlists/v1/${self.id}`,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
+        const { data } = yield axios.get(
+          `https://api.aye-player.de/playlists/v1/${self.id}`,
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
           }
-        });
-        console.log("NEW PL DATA", data);
+        );
+
         self.trackCount = data.SongsCount;
         self.duration = data.Duration;
         self.tracks.push(track);
@@ -96,6 +98,19 @@ const Playlist = types
             }
           }
         );
+
+        const { data } = yield axios.get(
+          `https://api.aye-player.de/playlists/v1/${self.id}`,
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+
+        self.trackCount = data.SongsCount;
+        self.duration = data.Duration;
+
         const foundTrack = self.tracks.find(trk => trk.id === track.id);
         const idx = self.tracks.indexOf(foundTrack);
         self.tracks.splice(idx, 1);
