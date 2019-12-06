@@ -13,6 +13,7 @@ import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlaylistEntity from "./PlaylistEntity";
+import { getSnapshot } from "mobx-state-tree";
 
 interface IProps {}
 
@@ -47,6 +48,7 @@ const Header = styled.div`
 
 const Playlist: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
+  const playerElement = document.querySelector("#embedded-player") as any;
 
   const [value, setValue] = React.useState(true); //boolean state
 
@@ -64,6 +66,13 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     queue.clear();
     queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
     player.playTrack(queue.currentTrack);
+    playerElement.contentWindow.postMessage(
+      {
+        type: "playTrack",
+        track: getSnapshot(queue.currentTrack)
+      },
+      "https://player.aye-player.de"
+    );
     setValue(!value);
   };
 

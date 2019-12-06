@@ -48,7 +48,7 @@ const TrackInfoContainer = styled.div<any>`
 `;
 
 const Title = styled.div<any>`
-  padding-right: 16px;
+  margin-right: 32px;
   width: 300px;
   white-space: nowrap;
   overflow: hidden;
@@ -204,7 +204,10 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
               </Title>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
-            <ExtendedPlaylistEntityMenu id={props.track.id} openListDialog={_handleClickOpen} />
+            <ExtendedPlaylistEntityMenu
+              id={props.track.id}
+              openListDialog={_handleClickOpen}
+            />
           </Container>
         )}
       </Draggable>

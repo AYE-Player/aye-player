@@ -7,6 +7,7 @@ import { TrackModel } from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import SearchBar from "../components/Search/SearchBar";
+import { getSnapshot } from "mobx-state-tree";
 
 const Header = styled.div`
   font-size: 24px;
@@ -45,10 +46,18 @@ const SearchPage: React.FunctionComponent = () => {
   const { player, queue, searchResult } = useInject(Store);
 
   const { t } = useTranslation();
+  const playerElement = document.querySelector("#embedded-player") as any;
 
   const _handleDoubleClick = (track: TrackModel) => {
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
+    playerElement.contentWindow.postMessage(
+      {
+        type: "playTrack",
+        track: getSnapshot(track)
+      },
+      "https://player.aye-player.de"
+    );
   };
 
   return (
