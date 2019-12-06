@@ -1,15 +1,16 @@
 import { InputBase } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import { getSnapshot } from "mobx-state-tree";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import { detectLink } from "../../helpers";
 import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
-import { getSnapshot } from "mobx-state-tree";
 
 const Search = styled.div`
   width: 100%;
@@ -23,7 +24,7 @@ const Search = styled.div`
 
 const SearchBar: React.FunctionComponent = () => {
   const { t } = useTranslation();
-  const playerElement = document.querySelector("#embedded-player") as any;
+  PlayerInterop.init();
 
   const Store = ({
     player,
@@ -59,57 +60,51 @@ const SearchBar: React.FunctionComponent = () => {
     }
   };
 
-    const _search = async (term: string) => {
-      try {
-        if (detectLink(term)) {
-          const trackInfo = await searchResult.getTrackFromUrl(term);
-          let track: TrackModel;
-          if (trackInfo.duration === 0) {
-            track = Track.create({ ...trackInfo, isLivestream: true });
-          } else {
-            track = Track.create(trackInfo);
-          }
+  const _search = async (term: string) => {
+    try {
+      if (detectLink(term)) {
+        const trackInfo = await searchResult.getTrackFromUrl(term);
+        let track: TrackModel;
+        if (trackInfo.duration === 0) {
+          track = Track.create({ ...trackInfo, isLivestream: true });
+        } else {
+          track = Track.create(trackInfo);
+        }
 
+        if (!trackCache.tracks.find(t => t.id === track.id)) {
+          trackCache.add(track);
+        }
+        searchResult.clear();
+        queue.addPrivilegedTrack(track);
+        player.playTrack(track);
+        PlayerInterop.playTrack(getSnapshot(track));
+      } else {
+        const results = await searchResult.getTracks(term);
+        const foundTracks = [];
+        for (const result of results) {
+          let track: TrackModel;
+          if (result.duration === 0) {
+            track = Track.create({ ...result, isLivestream: true });
+          } else {
+            track = Track.create(result);
+          }
           if (!trackCache.tracks.find(t => t.id === track.id)) {
             trackCache.add(track);
           }
-          searchResult.clear();
-          queue.addPrivilegedTrack(track);
-          player.playTrack(track);
-          playerElement.contentWindow.postMessage(
-            {
-              type: "playTrack",
-              track: getSnapshot(track)
-            },
-            "https://player.aye-player.de"
-          );
-        } else {
-          const results = await searchResult.getTracks(term);
-          const foundTracks = [];
-          for (const result of results) {
-            let track: TrackModel;
-            if (result.duration === 0) {
-              track = Track.create({ ...result, isLivestream: true });
-            } else {
-              track = Track.create(result);
-            }
-            if (!trackCache.tracks.find(t => t.id === track.id)) {
-              trackCache.add(track);
-            }
-            foundTracks.push(track);
-          }
-          searchResult.clear();
-          searchResult.addTracks(foundTracks);
+          foundTracks.push(track);
         }
-      } catch (error) {
-        console.log("ERR", error);
-        enqueueSnackbar("", {
-          content: key => (
-            <SnackMessage id={key} variant="error" message={t("General.error")} />
-          )
-        });
+        searchResult.clear();
+        searchResult.addTracks(foundTracks);
       }
-    };
+    } catch (error) {
+      console.log("ERR", error);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
+        )
+      });
+    }
+  };
 
   return (
     <Search>

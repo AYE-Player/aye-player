@@ -13,6 +13,7 @@ import useInject from "../../hooks/useInject";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 import Axios from "axios";
 import { getSnapshot } from "mobx-state-tree";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 
 interface IProps {
   match: any;
@@ -48,7 +49,7 @@ const Header = styled.div`
 
 const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
-  const playerElement = document.querySelector("#embedded-player") as any;
+  PlayerInterop.init();
 
   const Store = ({
     queue,
@@ -111,13 +112,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     queue.addTracks(playlist.getTracksStartingFrom(idx));
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack);
-    playerElement.contentWindow.postMessage(
-      {
-        type: "playTrack",
-        track: getSnapshot(queue.currentTrack)
-      },
-      "https://player.aye-player.de"
-    );
+    PlayerInterop.playTrack(getSnapshot(queue.currentTrack));
     setValue(!value);
   };
 

@@ -1,19 +1,15 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import { observer } from "mobx-react-lite";
+import { getSnapshot } from "mobx-state-tree";
 import React from "react";
-import {
-  DragDropContext,
-  Droppable,
-  DropResult,
-  ResponderProvided
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import PlaylistEntity from "./PlaylistEntity";
-import { getSnapshot } from "mobx-state-tree";
 
 interface IProps {}
 
@@ -48,7 +44,7 @@ const Header = styled.div`
 
 const Playlist: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
-  const playerElement = document.querySelector("#embedded-player") as any;
+  PlayerInterop.init();
 
   const [value, setValue] = React.useState(true); //boolean state
 
@@ -66,13 +62,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     queue.clear();
     queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
     player.playTrack(queue.currentTrack);
-    playerElement.contentWindow.postMessage(
-      {
-        type: "playTrack",
-        track: getSnapshot(queue.currentTrack)
-      },
-      "https://player.aye-player.de"
-    );
+    PlayerInterop.playTrack(getSnapshot(queue.currentTrack));
     setValue(!value);
   };
 
