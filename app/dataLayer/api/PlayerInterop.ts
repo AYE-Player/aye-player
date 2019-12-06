@@ -1,3 +1,5 @@
+import { TrackModel } from "../models/Track";
+
 class PlayerInterop {
   player: any;
 
@@ -8,19 +10,17 @@ class PlayerInterop {
   }
 
   // TODO: why does this have to be any?
-  setTrack(track: any) {
-    console.log(track);
+  setTrack(track?: TrackModel) {
     this.player.contentWindow.postMessage(
       {
         type: "setTrack",
-        track
+        track: track ? track : ""
       },
       "https://player.aye-player.de"
     );
   }
 
-  playTrack(track: any) {
-    console.log(track);
+  playTrack(track: TrackModel) {
     this.player.contentWindow.postMessage(
       {
         type: "playTrack",
@@ -30,11 +30,11 @@ class PlayerInterop {
     );
   }
 
-  seekTo(newValue: number) {
+  seekTo(time: number) {
     this.player.contentWindow.postMessage(
       {
-        type: "volume",
-        volume: newValue / 100
+        type: "seek",
+        time
       },
       "https://player.aye-player.de"
     );

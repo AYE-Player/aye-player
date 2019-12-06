@@ -4,7 +4,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import axios from "axios";
-import { getSnapshot } from "mobx-state-tree";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -102,7 +101,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     queue.addTracks(playlist.tracks);
     player.setCurrentPlaylist(playlist);
     player.playTrack(playlist.tracks[0]);
-    PlayerInterop.playTrack(getSnapshot(playlist.tracks[0]));
+    PlayerInterop.playTrack(playlist.tracks[0]);
     setAnchorEl(null);
   };
 

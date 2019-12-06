@@ -1,6 +1,5 @@
 import { InputBase } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import { getSnapshot } from "mobx-state-tree";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -77,7 +76,7 @@ const SearchBar: React.FunctionComponent = () => {
         searchResult.clear();
         queue.addPrivilegedTrack(track);
         player.playTrack(track);
-        PlayerInterop.playTrack(getSnapshot(track));
+        PlayerInterop.playTrack(track);
       } else {
         const results = await searchResult.getTracks(term);
         const foundTracks = [];
