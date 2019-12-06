@@ -77,34 +77,33 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        console.log("GETTING PLAYLIST")
-        Axios.get(
-          "https://api.aye-player.de/playlists/v1",
-          {
-            headers: {
-              "x-access-token": token
-            }
+        console.log("GETTING PLAYLIST");
+        Axios.get("https://api.aye-player.de/playlists/v1", {
+          headers: {
+            "x-access-token": token
           }
-        ).then(({ data }) => {
+        }).then(({ data }) => {
           console.log("DATA", data);
           for (const playlist of data) {
-          const pl = Playlist.create({
-            id: playlist.Id,
-            name: playlist.Name,
-            tracks: []
-          });
-          if (playlist.tracks) {
-            for (const track of playlist.tracks) {
-              const tr = Track.create(track);
-              if (!trackCache.getTrackById(track.id)) {
-                trackCache.add(tr);
+            if (playlists.lists.find(list => list.id === playlist.Id)) return;
+            const pl = Playlist.create({
+              id: playlist.Id,
+              name: playlist.Name,
+              tracks: []
+            });
+            if (playlist.tracks) {
+              for (const track of playlist.tracks) {
+                const tr = Track.create(track);
+                if (!trackCache.getTrackById(track.id)) {
+                  trackCache.add(tr);
+                }
+                pl.addTrack(tr);
               }
-              pl.addTrack(tr);
             }
-          }
 
-          playlists.add(pl);
-        }});
+            playlists.add(pl);
+          }
+        });
       }
     } catch (error) {
       console.error(error);

@@ -102,7 +102,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     return () => {
       source.cancel();
     };
-  });
+  }, []);
 
   const _handleClick = (track: TrackModel) => {
     const idx = playlist.getIndexOfTrack(track);
