@@ -136,6 +136,7 @@
     "remove": "Remove",
     "copyURL": "Copy Url",
     "loadPlaylist": "Load Playlist",
-    "deletePlaylist": "Delete Playlist"
+    "deletePlaylist": "Delete Playlist",
+    "addPlaylistToQueue": "Add Playlist to Queue"
   }
 }
