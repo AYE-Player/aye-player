@@ -11,6 +11,7 @@ import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Track from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { PlaylistModel } from "app/dataLayer/models/Playlist";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -74,27 +75,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     const playlist = playlists.getListById(props.id);
 
     if (playlist.tracks.length === 0) {
-      const { data: tracks } = await axios.get(
-        `https://api.aye-player.de/playlists/v1/${props.id}/songs?skip=0&take=20`,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
-          }
-        }
-      );
-      console.log("TRACKS", tracks);
-      for (const track of tracks) {
-        const tr = Track.create({
-          id: track.Id,
-          duration: track.Duration,
-          title: track.Title,
-          isLivestream: track.IsLivestream
-        });
-        if (!trackCache.tracks.find(t => t.id === tr.id)) {
-          trackCache.add(tr);
-        }
-        playlist.addLoadedTrack(tr);
-      }
+      await _getTracksOfPlaylist(playlist);
     }
 
     queue.clear();
@@ -111,6 +92,39 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     playlists.remove(playlist.id);
   };
 
+  const _handleAddPlaylistToQueueClick = async () => {
+    const playlist = playlists.getListById(props.id);
+
+    if (playlist.tracks.length === 0) {
+      await _getTracksOfPlaylist(playlist);
+    }
+
+    queue.addTracks(playlist.tracks);
+  }
+
+  const _getTracksOfPlaylist = async (playlist: PlaylistModel) => {
+    const { data: tracks } = await axios.get(
+      `https://api.aye-player.de/playlists/v1/${props.id}/songs?skip=0&take=20`,
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token")
+        }
+      }
+    );
+    for (const track of tracks) {
+      const tr = Track.create({
+        id: track.Id,
+        duration: track.Duration,
+        title: track.Title,
+        isLivestream: track.IsLivestream
+      });
+      if (!trackCache.tracks.find(t => t.id === tr.id)) {
+        trackCache.add(tr);
+      }
+      playlist.addLoadedTrack(tr);
+    }
+  }
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -126,6 +140,12 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             disabled={playlists.getListById(props.id).trackCount === 0}
           >
             {t("EntityMenu.loadPlaylist")}
+          </MenuItem>
+          <MenuItem
+            onClick={() => _handleAddPlaylistToQueueClick()}
+            disabled={playlists.getListById(props.id).trackCount === 0}
+          >
+            {t("EntityMenu.addPlaylistToQueue")}
           </MenuItem>
           <MenuItem onClick={() => _handleDeleteClick()}>
             {t("EntityMenu.deletePlaylist")}
