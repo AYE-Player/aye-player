@@ -1,6 +1,5 @@
 import { ipcRenderer } from "electron";
 import { observer } from "mobx-react-lite";
-import { getSnapshot } from "mobx-state-tree";
 import React from "react";
 import styled from "styled-components";
 import Root from "../../containers/Root";
@@ -32,7 +31,7 @@ ipcRenderer.on("play-pause", (event, message) => {
   if (queue.isEmpty) {
     queue.addTracks(player.currentPlaylist.tracks);
     player.playTrack(queue.currentTrack);
-    PlayerInterop.playTrack(getSnapshot(queue.currentTrack));
+    PlayerInterop.playTrack(queue.currentTrack);
   }
 
   player.togglePlayingState();
@@ -49,11 +48,11 @@ ipcRenderer.on("play-next", (event, message) => {
       queue.addTracks(player.currentPlaylist.tracks);
       queue.shuffel();
       player.playTrack(queue.tracks[0]);
-      PlayerInterop.playTrack(getSnapshot(queue.tracks[0]));
+      PlayerInterop.playTrack(queue.tracks[0]);
     } else if (player.repeat === Repeat.ALL) {
       queue.addTracks(player.currentPlaylist.tracks);
       player.playTrack(player.currentPlaylist.tracks[0]);
-      PlayerInterop.playTrack(getSnapshot(player.currentPlaylist.tracks[0]));
+      PlayerInterop.playTrack(player.currentPlaylist.tracks[0]);
     } else {
       player.togglePlayingState();
       PlayerInterop.togglePlayingState();
@@ -63,7 +62,7 @@ ipcRenderer.on("play-next", (event, message) => {
 
   trackHistory.addTrack(prevTrack.id);
   player.playTrack(track);
-  PlayerInterop.playTrack(getSnapshot(track));
+  PlayerInterop.playTrack(track);
 });
 
 ipcRenderer.on("play-previous", (event, message) => {
@@ -74,7 +73,7 @@ ipcRenderer.on("play-previous", (event, message) => {
   queue.addPrivilegedTrack(player.currentTrack);
 
   player.playTrack(track);
-  PlayerInterop.playTrack(getSnapshot(track));
+  PlayerInterop.playTrack(track);
 });
 
 ipcRenderer.on("position", (event, message) => {
@@ -113,7 +112,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playVideo = () => {
-    PlayerInterop.setTrack(getSnapshot(player.currentTrack));
+    PlayerInterop.setTrack(player.currentTrack);
     PlayerInterop.togglePlayingState();
     player.togglePlayingState();
   };
@@ -146,7 +145,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         player.togglePlayingState();
         PlayerInterop.togglePlayingState();
         player.setCurrentTrack();
-        PlayerInterop.setTrack("");
+        PlayerInterop.setTrack();
       }
       return;
     }
@@ -154,7 +153,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     trackHistory.addTrack(prevTrack.id);
 
     player.setCurrentTrack();
-    PlayerInterop.setTrack("");
+    PlayerInterop.setTrack();
     player.playTrack(track);
     PlayerInterop.setTrack(track);
   };

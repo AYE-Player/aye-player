@@ -13,7 +13,6 @@ import Track from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
-import { getSnapshot } from "mobx-state-tree";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 
 interface IProps {}
@@ -63,7 +62,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
   const _handleClick = (index: number) => {
     queue.jumpTo(index);
     player.playTrack(queue.currentTrack);
-    PlayerInterop.playTrack(getSnapshot(queue.currentTrack))
+    PlayerInterop.playTrack(queue.currentTrack);
 
     setValue(!value);
   };

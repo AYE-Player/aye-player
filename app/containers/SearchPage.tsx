@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import { getSnapshot } from "mobx-state-tree";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -52,7 +51,7 @@ const SearchPage: React.FunctionComponent = () => {
   const _handleDoubleClick = (track: TrackModel) => {
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
-    PlayerInterop.playTrack(getSnapshot(track));
+    PlayerInterop.playTrack(track);
   };
 
   return (

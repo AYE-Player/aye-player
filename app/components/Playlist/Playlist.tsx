@@ -1,6 +1,5 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import { observer } from "mobx-react-lite";
-import { getSnapshot } from "mobx-state-tree";
 import React from "react";
 import { DragDropContext, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -62,7 +61,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     queue.clear();
     queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
     player.playTrack(queue.currentTrack);
-    PlayerInterop.playTrack(getSnapshot(queue.currentTrack));
+    PlayerInterop.playTrack(queue.currentTrack);
     setValue(!value);
   };
 

@@ -12,7 +12,6 @@ import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 import Axios from "axios";
-import { getSnapshot } from "mobx-state-tree";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 
 interface IProps {
@@ -112,7 +111,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     queue.addTracks(playlist.getTracksStartingFrom(idx));
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack);
-    PlayerInterop.playTrack(getSnapshot(queue.currentTrack));
+    PlayerInterop.playTrack(queue.currentTrack);
     setValue(!value);
   };
 
