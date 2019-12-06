@@ -48,6 +48,7 @@ const Header = styled.div`
 
 const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [value, setValue] = React.useState(true); //boolean state
+  const [isLoaded, setIsLoaded] = React.useState(false);
   PlayerInterop.init();
 
   const Store = ({
@@ -74,30 +75,32 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     const CancelToken = Axios.CancelToken;
     const source = CancelToken.source();
 
-    Axios.get(
-      `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
-      {
-        headers: {
-          "x-access-token": localStorage.getItem("token")
+    if (!isLoaded && playlist.tracks.length === 0) {
+      Axios.get(
+        `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token")
+          }
         }
-      }
-    ).then(({ data: songs }) => {
-      songs.map((song: ITrackDto) => {
-        const track = Track.create({
-          id: song.Id,
-          title: song.Title,
-          duration: song.Duration,
-          isLivestream: song.IsLivestream
+      ).then(({ data: songs }) => {
+        songs.map((song: ITrackDto) => {
+          const track = Track.create({
+            id: song.Id,
+            title: song.Title,
+            duration: song.Duration,
+            isLivestream: song.IsLivestream
+          });
+          if (!trackCache.getTrackById(track.id)) {
+            trackCache.add(track);
+          }
+          if (!playlist.getTrackById(track.id)) {
+            playlist.addLoadedTrack(track);
+          }
         });
-        if (!trackCache.getTrackById(track.id)) {
-          trackCache.add(track);
-        }
-        if (!playlist.getTrackById(track.id)) {
-          playlist.addLoadedTrack(track);
-        }
+        setIsLoaded(true);
       });
-      setValue(!value);
-    });
+    }
 
     return () => {
       source.cancel();
@@ -128,6 +131,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   };
 
   player.currentTrack;
+  playlist.tracks;
 
   return (
     <DragDropContext onDragEnd={_onDragEnd}>
