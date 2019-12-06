@@ -92,7 +92,7 @@
   },
   "LoginPage": {
     "header": "Einloggen",
-    "username": "Benutzername",
+    "username": "E-Mail",
     "password": "Passwort",
     "loginButton": "Login",
     "registerLink": "Noch keinen account?",

@@ -6,7 +6,7 @@ import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -16,6 +16,9 @@ import PlaylistPageMenu from "../components/PlaylistPageMenu";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration } from "../helpers";
 import useInject from "../hooks/useInject";
+import Axios from "axios";
+import Track from "../dataLayer/models/Track";
+import Playlist from "../dataLayer/models/Playlist";
 
 const Header = styled.div`
   font-size: 24px;
@@ -60,11 +63,55 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const { t } = useTranslation();
 
-  const Store = ({ playlists }: RootStoreModel) => ({
-    playlists
+  const Store = ({ playlists, trackCache }: RootStoreModel) => ({
+    playlists,
+    trackCache
   });
 
-  const { playlists } = useInject(Store);
+  const { playlists, trackCache } = useInject(Store);
+
+  useEffect(() => {
+    const CancelToken = Axios.CancelToken;
+    const source = CancelToken.source();
+
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        Axios.get(
+          "https://api.aye-player.de/playlists/v1",
+          {
+            headers: {
+              "x-access-token": token
+            }
+          }
+        ).then(({ data }) => {
+          for (const playlist of data) {
+          const pl = Playlist.create({
+            id: playlist.Id,
+            name: playlist.Name,
+            tracks: []
+          });
+          if (playlist.tracks) {
+            for (const track of playlist.tracks) {
+              const tr = Track.create(track);
+              if (!trackCache.getTrackById(track.id)) {
+                trackCache.add(tr);
+              }
+              pl.addTrack(tr);
+            }
+          }
+
+          playlists.add(pl);
+        }});
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return () => {
+      source.cancel();
+    };
+  });
 
   const _createPlaylist = async () => {
     setOpen(false);
