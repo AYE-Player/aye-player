@@ -108,7 +108,15 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
   const { player } = useInject(Store);
 
   const _handleVolumeChange = (event: any, newValue: number) => {
+    const playerElement = document.querySelector("#embedded-player") as any;
     debounce(player.setVolume(newValue / 100), 500);
+    debounce(playerElement.contentWindow.postMessage(
+      {
+        type: "volume",
+        volume: newValue / 100
+      },
+      "https://player.aye-player.de"
+    ), 500);
     if (newValue === 0) {
       player.mute();
     } else {

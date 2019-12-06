@@ -10,6 +10,7 @@ import styled from "styled-components";
 import Track from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { getSnapshot } from "mobx-state-tree";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -48,6 +49,7 @@ const StyledMenu = withStyles({
 
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props => {
   const { t } = useTranslation();
+  const playerElement = document.querySelector("#embedded-player") as any;
 
   const Store = ({ player, playlists, queue, trackCache }: RootStoreModel) => ({
     player,
@@ -99,6 +101,13 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     queue.addTracks(playlist.tracks);
     player.setCurrentPlaylist(playlist);
     player.playTrack(playlist.tracks[0]);
+    playerElement.contentWindow.postMessage(
+      {
+        type: "playTrack",
+        track: getSnapshot(playlist.tracks[0])
+      },
+      "https://player.aye-player.de"
+    );
     setAnchorEl(null);
   };
 

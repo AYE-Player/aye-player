@@ -9,6 +9,7 @@ import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import { detectLink } from "../../helpers";
 import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
+import { getSnapshot } from "mobx-state-tree";
 
 const Search = styled.div`
   width: 100%;
@@ -22,6 +23,7 @@ const Search = styled.div`
 
 const SearchBar: React.FunctionComponent = () => {
   const { t } = useTranslation();
+  const playerElement = document.querySelector("#embedded-player") as any;
 
   const Store = ({
     player,
@@ -74,6 +76,13 @@ const SearchBar: React.FunctionComponent = () => {
           searchResult.clear();
           queue.addPrivilegedTrack(track);
           player.playTrack(track);
+          playerElement.contentWindow.postMessage(
+            {
+              type: "playTrack",
+              track: getSnapshot(track)
+            },
+            "https://player.aye-player.de"
+          );
         } else {
           const results = await searchResult.getTracks(term);
           const foundTracks = [];

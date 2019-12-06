@@ -2,24 +2,16 @@ import { ipcRenderer } from "electron";
 import { observer } from "mobx-react-lite";
 import { getSnapshot } from "mobx-state-tree";
 import React from "react";
-import ReactPlayer from "react-player";
 import styled from "styled-components";
 import Root from "../../containers/Root";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import AyeLogger from "../../modules/AyeLogger";
-import { LogType, Repeat } from "../../types/enums";
+//import AyeLogger from "../../modules/AyeLogger";
+import { /*LogType,*/ Repeat } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
-
-interface IPlayerState {
-  playedSeconds: number;
-  played: number;
-  loadedSeconds: number;
-  loaded: number;
-}
 
 const Container = styled.div`
   width: 320px;
@@ -55,17 +47,33 @@ let playerElement: any;
 // Listeners
 ipcRenderer.on("play-pause", (event, message) => {
   const { queue, player } = Root.stores;
+  const PE = document.querySelector("#embedded-player") as any;
+  console.log("PE", PE);
 
   if (queue.isEmpty) {
     queue.addTracks(player.currentPlaylist.tracks);
     player.playTrack(queue.currentTrack);
+    PE.contentWindow.postMessage(
+      {
+        type: "playTrack",
+        track: getSnapshot(queue.currentTrack)
+      },
+      "https://player.aye-player.de"
+    );
   }
 
   player.togglePlayingState();
+  PE.contentWindow.postMessage(
+    {
+      type: "togglePlayingState"
+    },
+    "https://player.aye-player.de"
+  );
 });
 
 ipcRenderer.on("play-next", (event, message) => {
   const { queue, player, trackHistory } = Root.stores;
+  const PE = document.querySelector("#embedded-player") as any;
   const prevTrack = player.currentTrack;
   const track = queue.nextTrack();
 
@@ -74,31 +82,67 @@ ipcRenderer.on("play-next", (event, message) => {
       queue.addTracks(player.currentPlaylist.tracks);
       queue.shuffel();
       player.playTrack(queue.tracks[0]);
+      PE.contentWindow.postMessage(
+        {
+          type: "playTrack",
+          track: getSnapshot(queue.tracks[0])
+        },
+        "https://player.aye-player.de"
+      );
     } else if (player.repeat === Repeat.ALL) {
       queue.addTracks(player.currentPlaylist.tracks);
       player.playTrack(player.currentPlaylist.tracks[0]);
+      PE.contentWindow.postMessage(
+        {
+          type: "playTrack",
+          track: getSnapshot(player.currentPlaylist.tracks[0])
+        },
+        "https://player.aye-player.de"
+      );
     } else {
       player.togglePlayingState();
+      PE.contentWindow.postMessage(
+        {
+          type: "togglePlayingState"
+        },
+        "https://player.aye-player.de"
+      );
     }
     return;
   }
 
   trackHistory.addTrack(prevTrack.id);
   player.playTrack(track);
+  PE.contentWindow.postMessage(
+    {
+      type: "playTrack",
+      track: getSnapshot(track)
+    },
+    "https://player.aye-player.de"
+  );
 });
 
 ipcRenderer.on("play-previous", (event, message) => {
   const { player, queue, trackHistory } = Root.stores;
+  const PE = document.querySelector("#embedded-player") as any;
   const track = trackHistory.removeAndGetTrack();
   if (!track) return;
 
   queue.addPrivilegedTrack(player.currentTrack);
 
   player.playTrack(track);
+  PE.contentWindow.postMessage(
+    {
+      type: "playTrack",
+      track: getSnapshot(track)
+    },
+    "https://player.aye-player.de"
+  );
 });
 
 ipcRenderer.on("position", (event, message) => {
-  playerElement.seekTo(Math.floor(message.pos));
+  const PE = document.querySelector("#embedded-player") as any;
+  PE.seekTo(Math.floor(message.pos));
 });
 
 const Player: React.FunctionComponent<IPlayerProps> = () => {
@@ -115,38 +159,53 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   });
 
   const { player, queue, trackHistory } = useInject(Store);
+  playerElement = document.querySelector("#embedded-player") as any;
 
-  const _getPlayerElement = (player: any) => {
-    playerElement = player;
-  };
-
-  const _onReady = () => {
-    console.log("PLAYER READY");
-    if (player.playbackPosition > 0) {
-      playerElement.seekTo(player.playbackPosition);
+  window.onmessage = (m: any) => {
+    if (m.origin === "https://player.aye-player.de") {
+      if (m.data.type === "setPlaybackPosition") {
+        player.setPlaybackPosition(m.data.playbackPosition);
+      } else if (m.data.type === "playNextTrack") {
+        _playNextTrack();
+      }
     }
   };
 
-  const _onStart = () => {
-    console.log("STARTING");
-  };
-
   const _playVideo = () => {
+    playerElement.contentWindow.postMessage(
+      {
+        type: "setTrack",
+        track: getSnapshot(player.currentTrack)
+      },
+      "https://player.aye-player.de"
+    );
+    playerElement.contentWindow.postMessage(
+      {
+        type: "togglePlayingState"
+      },
+      "https://player.aye-player.de"
+    );
     player.togglePlayingState();
   };
 
   const _stopVideo = () => {
+    playerElement.contentWindow.postMessage(
+      {
+        type: "togglePlayingState"
+      },
+      "https://player.aye-player.de"
+    );
     player.togglePlayingState();
   };
 
   const _pauseVideo = () => {
+    playerElement.contentWindow.postMessage(
+      {
+        type: "togglePlayingState"
+      },
+      "https://player.aye-player.de"
+    );
     player.togglePlayingState();
-  };
-
-  const _onPause = () => {
-    if (player.isPlaying) {
-      player.pause();
-    }
   };
 
   const _playNextTrack = () => {
@@ -158,11 +217,32 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         queue.addTracks(player.currentPlaylist.tracks);
         queue.shuffel();
         player.playTrack(queue.tracks[0]);
+        playerElement.contentWindow.postMessage(
+          {
+            type: "setTrack",
+            track: queue.tracks[0]
+          },
+          "https://player.aye-player.de"
+        );
       } else if (player.repeat === Repeat.ALL) {
         queue.addTracks(player.currentPlaylist.tracks);
         player.playTrack(player.currentPlaylist.tracks[0]);
+        playerElement.contentWindow.postMessage(
+          {
+            type: "setTrack",
+            track: player.currentPlaylist.tracks[0]
+          },
+          "https://player.aye-player.de"
+        );
       } else {
         player.togglePlayingState();
+        player.setCurrentTrack();
+        playerElement.contentWindow.postMessage(
+          {
+            type: "togglePlayingState"
+          },
+          "https://player.aye-player.de"
+        );
       }
       return;
     }
@@ -170,14 +250,42 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     trackHistory.addTrack(prevTrack.id);
 
     player.setCurrentTrack();
+    playerElement.contentWindow.postMessage(
+      {
+        type: "setTrack",
+        track: ""
+      },
+      "https://player.aye-player.de"
+    );
     player.playTrack(track);
+    playerElement.contentWindow.postMessage(
+      {
+        type: "setTrack",
+        track
+      },
+      "https://player.aye-player.de"
+    );
   };
 
   const _toggleRepeat = () => {
     if (player.repeat === Repeat.ONE) {
       player.setRepeat(Repeat.NONE);
+      playerElement.contentWindow.postMessage(
+        {
+          type: "setLooping",
+          state: false
+        },
+        "https://player.aye-player.de"
+      );
     } else if (player.repeat === Repeat.ALL) {
       player.setRepeat(Repeat.ONE);
+      playerElement.contentWindow.postMessage(
+        {
+          type: "setLooping",
+          state: true
+        },
+        "https://player.aye-player.de"
+      );
     } else {
       player.setRepeat(Repeat.ALL);
     }
@@ -203,44 +311,24 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
+    playerElement.contentWindow.postMessage(
+      {
+        type: "setTrack",
+        track
+      },
+      "https://player.aye-player.de"
+    );
   };
 
   const _handleSeekMouseUp = (value: number) => {
-    playerElement.seekTo(value);
-    player.notifyRPC();
-  };
-
-  const _handleProgress = (state: IPlayerState) => {
-    if (player.currentTrack.isLivestream) {
-      player.setPlaybackPosition(player.playbackPosition + 1);
-    } else {
-      player.setPlaybackPosition(Math.round(state.playedSeconds));
-    }
-    if (
-      Math.round(state.playedSeconds) >= player.currentTrack.duration - 2 &&
-      player.repeat === Repeat.ONE
-    ) {
-      player.setPlaybackPosition(0);
-      player.notifyRPC();
-      return;
-    }
-  };
-
-  const _setDuration = (duration: number) => {
-    if (duration === player.currentTrack.duration) return;
-    // player.currentTrack.setDuration(duration);
-  };
-
-  const _onError = (error: any) => {
-    AyeLogger.player(
-      `error playing track, skipping. TrackInfo: ${JSON.stringify(
-        getSnapshot(player.currentTrack),
-        null,
-        2
-      )}, ERROR: ${error}`,
-      LogType.ERROR
+    playerElement.contentWindow.postMessage(
+      {
+        type: "seek",
+        time: value
+      },
+      "https://player.aye-player.de"
     );
-    _playNextTrack();
+    player.notifyRPC();
   };
 
   return (
@@ -255,7 +343,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         previous={() => _playPreviousTrack()}
         seekingStop={_handleSeekMouseUp}
       />
-      {player.isPlaying ? null : queue.isEmpty || !player.currentTrack ? ( // <PlayerOverlay />
+      {!player.isPlaying && !player.currentTrack ? (
         <img
           src={AyeLogo}
           style={{
@@ -268,45 +356,25 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 999
           }}
         />
-      ) : null
-      /*<PlayerOverlayImage
-          src={`https://img.youtube.com/vi/${player.currentTrack.id}/hqdefault.jpg`}
-        />*/
-      }
-      {player.currentTrack ? (
-        <ReactPlayer
-          ref={_getPlayerElement}
-          url={`https://www.youtube.com/watch?v=${player.currentTrack.id}`}
-          width="320px"
-          height="202px"
-          config={{
-            youtube: {
-              playerVars: {
-                modestbranding: 1
-              },
-              embedOptions: {
-                controls: 0
-              }
-            }
-          }}
-          playing={player.isPlaying}
-          loop={player.repeat === Repeat.ONE}
-          volume={player.volume}
-          muted={player.isMuted}
-          onReady={() => _onReady()}
-          onStart={() => _onStart()}
-          onPause={() => _onPause()}
-          onError={_onError}
-          onDuration={_setDuration}
-          onProgress={_handleProgress}
-          onEnded={() => _playNextTrack()}
+      ) : null}
+      <div
+        style={{
+          width: "320px",
+          height: "215px",
+          overflow: "hidden"
+        }}
+      >
+        <iframe
+          id="embedded-player"
+          src="https://player.aye-player.de"
           style={{
-            zIndex: 2
+            width: "320px",
+            height: "215px",
+            overflow: "hidden",
+            border: "none"
           }}
         />
-      ) : (
-        <div style={{ width: "320px", height: "202px" }}></div>
-      )}
+      </div>
     </Container>
   );
 };
