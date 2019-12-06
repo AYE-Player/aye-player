@@ -13,9 +13,9 @@ import VolumeUp from "@material-ui/icons/VolumeUp";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
-import formattedDuration from "../../../app/helpers/formattedDuration";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
-import { debounce } from "../../helpers/";
+import { debounce, formattedDuration } from "../../helpers/";
 import useInject from "../../hooks/useInject";
 import { Repeat } from "../../types/enums";
 import Divider from "../Divider";
@@ -101,6 +101,8 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 const PlayerControls: React.FunctionComponent<IProps> = props => {
+  PlayerInterop.init();
+
   const Store = ({ player }: RootStoreModel) => ({
     player
   });
@@ -108,19 +110,14 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
   const { player } = useInject(Store);
 
   const _handleVolumeChange = (event: any, newValue: number) => {
-    const playerElement = document.querySelector("#embedded-player") as any;
     debounce(player.setVolume(newValue / 100), 500);
-    debounce(playerElement.contentWindow.postMessage(
-      {
-        type: "volume",
-        volume: newValue / 100
-      },
-      "https://player.aye-player.de"
-    ), 500);
+    debounce(PlayerInterop.setVolume(newValue), 500);
     if (newValue === 0) {
       player.mute();
+      PlayerInterop.mute(true);
     } else {
       player.unmute();
+      PlayerInterop.mute(false);
     }
   };
 
@@ -208,9 +205,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
               </Time>
             </>
           )
-        ) : (
-          null
-        )}
+        ) : null}
       </PlaybackControl>
     </Container>
   );
