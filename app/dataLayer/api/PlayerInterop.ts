@@ -9,12 +9,11 @@ class PlayerInterop {
     }
   }
 
-  // TODO: why does this have to be any?
   setTrack(track?: TrackModel) {
     this.player.contentWindow.postMessage(
       {
         type: "setTrack",
-        track: track ? track : ""
+        track: track ? track : undefined
       },
       "https://player.aye-player.de"
     );
@@ -40,11 +39,11 @@ class PlayerInterop {
     );
   }
 
-  setVolume(newValue: number) {
+  setVolume(newVolume: number) {
     this.player.contentWindow.postMessage(
       {
         type: "volume",
-        volume: newValue / 100
+        volume: newVolume / 100
       },
       "https://player.aye-player.de"
     );
