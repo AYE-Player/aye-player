@@ -77,13 +77,11 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        console.log("GETTING PLAYLIST");
         Axios.get("https://api.aye-player.de/playlists/v1", {
           headers: {
             "x-access-token": token
           }
         }).then(({ data }) => {
-          console.log("DATA", data);
           for (const playlist of data) {
             if (playlists.lists.find(list => list.id === playlist.Id)) return;
             const pl = Playlist.create({

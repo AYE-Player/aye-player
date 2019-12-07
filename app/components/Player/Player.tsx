@@ -112,7 +112,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playVideo = () => {
-    PlayerInterop.playTrack(player.currentTrack);
+    PlayerInterop.togglePlayingState();
     player.togglePlayingState();
   };
 

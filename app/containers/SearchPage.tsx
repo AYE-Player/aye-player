@@ -46,7 +46,6 @@ const SearchPage: React.FunctionComponent = () => {
   const { player, queue, searchResult } = useInject(Store);
 
   const { t } = useTranslation();
-  PlayerInterop.init();
 
   const _handleDoubleClick = (track: TrackModel) => {
     queue.addPrivilegedTrack(track);

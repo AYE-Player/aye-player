@@ -2,10 +2,23 @@ import { TrackModel } from "../models/Track";
 
 class PlayerInterop {
   player: any;
+  initTrack: TrackModel;
 
+  // TODO: refactor/debug this, and only set/init/load player and initTrack, when its needed
   init() {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
+      if (this.initTrack && this.player) {
+        this.setTrack(this.initTrack);
+      }
+    }
+  }
+
+  setInitTrack(track: TrackModel) {
+    if (this.player) {
+      this.setTrack(track);
+    } else {
+      this.initTrack = track;
     }
   }
 
