@@ -2,19 +2,31 @@ import { TrackModel } from "../models/Track";
 
 class PlayerInterop {
   player: any;
+  initTrack: TrackModel;
 
+  // TODO: refactor/debug this, and only set/init/load player and initTrack, when its needed
   init() {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
+      if (this.initTrack && this.player) {
+        this.setTrack(this.initTrack);
+      }
     }
   }
 
-  // TODO: why does this have to be any?
+  setInitTrack(track: TrackModel) {
+    if (this.player) {
+      this.setTrack(track);
+    } else {
+      this.initTrack = track;
+    }
+  }
+
   setTrack(track?: TrackModel) {
     this.player.contentWindow.postMessage(
       {
         type: "setTrack",
-        track: track ? track : ""
+        track: track ? track : undefined
       },
       "https://player.aye-player.de"
     );
@@ -40,11 +52,11 @@ class PlayerInterop {
     );
   }
 
-  setVolume(newValue: number) {
+  setVolume(newVolume: number) {
     this.player.contentWindow.postMessage(
       {
         type: "volume",
-        volume: newValue / 100
+        volume: newVolume / 100
       },
       "https://player.aye-player.de"
     );

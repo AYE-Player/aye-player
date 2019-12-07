@@ -112,7 +112,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   };
 
   const _playVideo = () => {
-    PlayerInterop.setTrack(player.currentTrack);
     PlayerInterop.togglePlayingState();
     player.togglePlayingState();
   };
@@ -154,7 +153,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
     player.setCurrentTrack();
     player.playTrack(track);
-    PlayerInterop.setTrack(track);
+    PlayerInterop.playTrack(track);
   };
 
   const _toggleRepeat = () => {

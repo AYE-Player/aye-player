@@ -15,6 +15,7 @@ import Settings from "../dataLayer/stores/PersistentSettings";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
+import PlayerInterop from "../dataLayer/api/PlayerInterop";
 
 interface IPlayerSettings {
   volume: number;
@@ -261,7 +262,6 @@ const getPlaylists = async () => {
       );
 
       for (const playlist of playlists) {
-        console.log("PL", playlist);
         const pl = Playlist.create({
           id: playlist.Id,
           name: playlist.Name,
@@ -287,59 +287,88 @@ export default class Root extends Component {
   constructor(props: any) {
     super(props);
     try {
-      getPlaylists();
-
-      if (Settings.has("playerSettings")) {
-        const playerSettings: IPlayerSettings = Settings.get("playerSettings");
-
-        // Check for currentTrack and if it was a liveStream or not
-        if (playerSettings.currentTrack?.isLivestream === false) {
-          const currentTrack = Track.create(playerSettings.currentTrack);
-          if (
-            !rootStore.trackCache.tracks.find(
-              t => t.id === playerSettings.currentTrack.id
-            )
-          ) {
-            rootStore.trackCache.add(currentTrack);
-          }
-          rootStore.queue.addTrack(currentTrack.id);
-          rootStore.player.setCurrentTrack(currentTrack);
-        }
-
-        // Check for last active playlist
-        if (playerSettings.currentPlaylist) {
-          const playlist = rootStore.playlists.getListById(
-            playerSettings.currentPlaylist.id
+      getPlaylists().then(() => {
+        if (Settings.has("playerSettings")) {
+          const playerSettings: IPlayerSettings = Settings.get(
+            "playerSettings"
           );
-          if (!playlist) return;
-          rootStore.player.setCurrentPlaylist(playlist);
-        }
 
-        // Check for playbackPosition
-        if (
-          playerSettings.playbackPosition &&
-          !playerSettings.currentTrack?.isLivestream
-        ) {
-          rootStore.player.setPlaybackPosition(playerSettings.playbackPosition);
-          rootStore.player.setPlaying(true);
-          setTimeout(() => rootStore.player.setPlaying(false), 500);
-        }
+          // Check for currentTrack and if it was a liveStream or not
+          if (playerSettings.currentTrack?.isLivestream === false) {
+            const currentTrack = Track.create(playerSettings.currentTrack);
+            if (
+              !rootStore.trackCache.tracks.find(
+                t => t.id === playerSettings.currentTrack.id
+              )
+            ) {
+              rootStore.trackCache.add(currentTrack);
+            }
+            rootStore.queue.addTrack(currentTrack.id);
+            rootStore.player.setCurrentTrack(currentTrack);
+            PlayerInterop.setInitTrack(currentTrack);
+          }
 
-        // TODO: Remove these checks, whenever the electron-store package fixes it,
-        // these should have an default setting, but sometimes the defaults are not saved/returned
-        if (playerSettings.repeat) {
-          rootStore.player.setRepeat(playerSettings.repeat);
+          // Check for last active playlist
+          if (playerSettings.currentPlaylist) {
+            const playlist = rootStore.playlists.getListById(
+              playerSettings.currentPlaylist.id
+            );
+            if (!playlist) return;
+            axios
+              .get(
+                `https://api.aye-player.de/playlists/v1/${playlist.id}/songs?skip=0&take=20`,
+                {
+                  headers: {
+                    "x-access-token": localStorage.getItem("token")
+                  }
+                }
+              )
+              .then(({ data }) => {
+                for (const track of data) {
+                  const tr = Track.create({
+                    id: track.Id,
+                    duration: track.Duration,
+                    title: track.Title,
+                    isLivestream: track.IsLivestream
+                  });
+                  if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
+                    rootStore.trackCache.add(tr);
+                  }
+                  playlist.addLoadedTrack(tr);
+                }
+                rootStore.player.setCurrentPlaylist(playlist);
+                console.log("playerpl", rootStore.player.currentPlaylist);
+              });
+          }
+
+          // Check for playbackPosition
+          if (
+            playerSettings.playbackPosition &&
+            !playerSettings.currentTrack?.isLivestream
+          ) {
+            rootStore.player.setPlaybackPosition(
+              playerSettings.playbackPosition
+            );
+            rootStore.player.setPlaying(true);
+            setTimeout(() => rootStore.player.setPlaying(false), 500);
+          }
+
+          // TODO: Remove these checks, whenever the electron-store package fixes it,
+          // these should have an default setting, but sometimes the defaults are not saved/returned
+          if (playerSettings.repeat) {
+            rootStore.player.setRepeat(playerSettings.repeat);
+          }
+          if (playerSettings.volume) {
+            rootStore.player.setVolume(playerSettings.volume);
+          }
+          if (playerSettings.isShuffling) {
+            rootStore.player.setShuffling(playerSettings.isShuffling);
+          }
+          if (playerSettings.isMuted) {
+            rootStore.player.setMute(playerSettings.isMuted);
+          }
         }
-        if (playerSettings.volume) {
-          rootStore.player.setVolume(playerSettings.volume);
-        }
-        if (playerSettings.isShuffling) {
-          rootStore.player.setShuffling(playerSettings.isShuffling);
-        }
-        if (playerSettings.isMuted) {
-          rootStore.player.setMute(playerSettings.isMuted);
-        }
-      }
+      });
     } catch (error) {
       AyeLogger.player(`Error loading settings ${error}`, LogType.ERROR);
     }
