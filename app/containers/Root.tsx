@@ -337,7 +337,6 @@ export default class Root extends Component {
                   playlist.addLoadedTrack(tr);
                 }
                 rootStore.player.setCurrentPlaylist(playlist);
-                console.log("playerpl", rootStore.player.currentPlaylist);
               });
           }
 
