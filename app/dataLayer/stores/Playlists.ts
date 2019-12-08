@@ -49,6 +49,39 @@ const Playlists = types
       }
     }),
 
+    createListWithSongs: flow(function*(name: string, songs: { Url: string; }[]) {
+      try {
+        // @ts-ignore
+        const { data: id } = yield axios.post(
+          "https://api.aye-player.de/playlists/v1/by-urls",
+          {
+            Name: name,
+            Songs: songs
+          },
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+
+        const playlist = Playlist.create({
+          name,
+          id,
+          tracks: []
+        });
+
+        self.lists.push(playlist);
+
+        return playlist;
+      } catch (error) {
+        AyeLogger.player(
+          `Error setting ID ${JSON.stringify(error, null, 2)}`,
+          LogType.ERROR
+        );
+      }
+    }),
+
     add(playlist: PlaylistModel) {
       self.lists.push(playlist);
     },

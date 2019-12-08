@@ -69,7 +69,11 @@
       "label": "Playlist Name",
       "text": "Enter the name of your new playlist",
       "confirmButton": "Create",
-      "cancelButton": "Cancel"
+      "cancelButton": "Cancel",
+      "textField": {
+        "dialogText": "Directly add some Songs to your playlist",
+        "label": "Songs"
+      }
     }
   },
   "PasswordForgotPage": {
