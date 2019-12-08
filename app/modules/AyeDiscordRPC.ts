@@ -3,12 +3,21 @@ import AyeLogger from "./AyeLogger";
 import { LogType } from "../types/enums";
 
 interface IActivityParameters {
-  details: string;
+  details?: string;
   state?: string;
-  startTimestamp?: number;
-  endTimestamp?: number;
-  largeImageKey: string;
-  instance: boolean;
+  startTimestamp?: number | null;
+  endTimestamp?: number | null;
+  largeImageKey?: string;
+  largeImageText?: string;
+  smallImageKey?: string;
+  smallImageText?: string;
+  partyId?: string;
+  partySize?: number;
+  partyMax?: number;
+  matchSecret?: string;
+  joinSecret?: string;
+  spectateSecret?: string;
+  instance?: boolean;
 }
 
 export default class AyeDiscordRPC {
@@ -62,6 +71,8 @@ export default class AyeDiscordRPC {
           Date.now() / 1000 + (endTimestamp - playbackPosition)
         ),
         largeImageKey: "aye",
+        smallImageKey: "play",
+        smallImageText: "Playing",
         instance: false
       };
     } else if (!endTimestamp && state) {
@@ -69,6 +80,8 @@ export default class AyeDiscordRPC {
         details,
         state,
         largeImageKey: "aye",
+        smallImageKey: state === "Paused" ? "pause" : undefined,
+        smallImageText: state === "Paused" ? "Paused" : undefined,
         instance: false
       };
     } else {
