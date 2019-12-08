@@ -9,7 +9,7 @@ import { i18n } from "i18next";
 import BaseModule from "./BaseModule";
 
 export default class AyeMenu extends BaseModule {
-  i18n: i18n;
+  public i18n: i18n;
 
   constructor(mainWindow: BrowserWindow, i18n: i18n) {
     super(mainWindow);
