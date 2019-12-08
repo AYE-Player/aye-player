@@ -1,6 +1,7 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
 import AyeLogger from "./AyeLogger";
 import { LogType } from "../types/enums";
+import formattedDuration from "../helpers/formattedDuration";
 
 interface IActivityParameters {
   details?: string;
@@ -58,7 +59,8 @@ export default class AyeDiscordRPC {
     playbackPosition: number,
     endTimestamp: number,
     state: string,
-    details: string
+    details: string,
+    duration: number
   ) {
     if (!this._rpc) return;
 
@@ -78,7 +80,10 @@ export default class AyeDiscordRPC {
     } else if (!endTimestamp && state) {
       activityParameters = {
         details,
-        state,
+        state:
+          state === "Paused"
+            ? `${formattedDuration(duration - playbackPosition)} left`
+            : state,
         largeImageKey: "aye",
         smallImageKey: state === "Paused" ? "pause" : undefined,
         smallImageText: state === "Paused" ? "Paused" : undefined,
@@ -118,7 +123,7 @@ export default class AyeDiscordRPC {
         AyeLogger.rpc("Successfully connected to Discord.");
         this.isConnected = true;
 
-        await this.setActivity(0, 0, null, "Idle");
+        await this.setActivity(0, 0, null, "Idle", 0);
       });
 
       this._rpc.transport.once("close", async () => {
