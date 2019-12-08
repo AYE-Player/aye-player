@@ -1,5 +1,6 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
 import AyeLogger from "./AyeLogger";
+import { LogType } from "../types/enums";
 
 interface IActivityParameters {
   details: string;
@@ -26,12 +27,16 @@ export default class AyeDiscordRPC {
     this._clientId = clientId;
     this._activityTimer = setInterval(() => {
       if (this._canSetActivity && this._activity) {
-        this._rpc.setActivity(this._activity);
-        this._activity = null;
-        this._canSetActivity = false;
-        this._activityBlocker = setTimeout(() => {
-          this._canSetActivity = true;
-        }, 10000);
+        try {
+          this._rpc.setActivity(this._activity);
+          this._activity = null;
+          this._canSetActivity = false;
+          this._activityBlocker = setTimeout(() => {
+            this._canSetActivity = true;
+          }, 10000);
+        } catch (error) {
+          AyeLogger.rpc(`Setting activity ${error}`, LogType.ERROR);
+        }
       }
     }, 5000);
   }
@@ -86,7 +91,7 @@ export default class AyeDiscordRPC {
         this._activity = activityParameters;
       }
     } catch (error) {
-      AyeLogger.rpc(error);
+      AyeLogger.rpc("Setting Activity", LogType.ERROR);
     }
   }
 
