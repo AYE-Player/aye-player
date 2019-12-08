@@ -43,7 +43,7 @@ const Playlists = types
         return playlist;
       } catch (error) {
         AyeLogger.player(
-          `Error setting ID ${JSON.stringify(error, null, 2)}`,
+          `[createList] Error setting ID ${JSON.stringify(error, null, 2)}`,
           LogType.ERROR
         );
       }
@@ -76,7 +76,7 @@ const Playlists = types
         return playlist;
       } catch (error) {
         AyeLogger.player(
-          `Error setting ID ${JSON.stringify(error, null, 2)}`,
+          `[createListWithSongs] Error setting ID ${JSON.stringify(error, null, 2)}`,
           LogType.ERROR
         );
       }
