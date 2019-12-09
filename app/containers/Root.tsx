@@ -237,9 +237,8 @@ ipcRenderer.on("app-close", (event, message) => {
     );
   }
   if (
-    rootStore.player.currentTrack &&
-    rootStore.player.currentTrack.id !==
-      Settings.get("playerSettings.currentTrack").id
+    rootStore.player.currentTrack?.id !==
+    Settings.get("playerSettings.currentTrack").id
   ) {
     Settings.set(
       "playerSettings.currentTrack",
