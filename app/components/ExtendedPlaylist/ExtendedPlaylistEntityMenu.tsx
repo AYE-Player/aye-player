@@ -68,19 +68,19 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
     setAnchorEl(null);
   };
 
-  const _handleRemoveTrack = (id: string) => {
-    playlist.removeTrackById(id);
+  const _handleRemoveTrack = () => {
+    playlist.removeTrackById(props.id);
     setAnchorEl(null);
   };
 
-  const _handlePlayNextTrack = (id: string) => {
-    queue.addNextTrack(id);
+  const _handlePlayNextTrack = () => {
+    queue.addNextTrack(props.id);
     setAnchorEl(null);
   };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${queue.currentTrack.id}`
+      `https://www.youtube.com/watch?v=${props.id}`
     );
   };
 
@@ -95,10 +95,10 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
+          <MenuItem onClick={() => _handleRemoveTrack()}>
             {t("EntityMenu.remove")}
           </MenuItem>
-          <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
+          <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>

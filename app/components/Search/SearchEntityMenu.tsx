@@ -65,19 +65,19 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
     setAnchorEl(null);
   };
 
-  const _handlePlayNextTrack = (id: string) => {
-    queue.addNextTrack(id);
+  const _handlePlayNextTrack = () => {
+    queue.addNextTrack(props.id);
     setAnchorEl(null);
   };
 
-  const _handleAddTrack = (id: string) => {
-    queue.addTrack(id);
+  const _handleAddTrack = () => {
+    queue.addTrack(props.id);
     setAnchorEl(null);
   };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${queue.currentTrack.id}`
+      `https://www.youtube.com/watch?v=${props.id}`
     );
   };
 
@@ -98,10 +98,10 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
             </MenuItem>
           ) : (
             <span>
-              <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
+              <MenuItem onClick={() => _handlePlayNextTrack()}>
                 {t("EntityMenu.playNext")}
               </MenuItem>
-              <MenuItem onClick={() => _handleAddTrack(props.id)}>
+              <MenuItem onClick={() => _handleAddTrack()}>
                 {t("EntityMenu.addToQueue")}
               </MenuItem>
               <MenuItem onClick={() => props.openListDialog()}>

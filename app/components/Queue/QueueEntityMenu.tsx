@@ -64,19 +64,19 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
     setAnchorEl(null);
   };
 
-  const _handleRemoveTrack = (id: string) => {
-    queue.removeTrack(id);
+  const _handleRemoveTrack = () => {
+    queue.removeTrack(props.id);
     setAnchorEl(null);
   };
 
-  const _handlePlayNextTrack = (id: string) => {
-    queue.addNextTrack(id);
+  const _handlePlayNextTrack = () => {
+    queue.addNextTrack(props.id);
     setAnchorEl(null);
   };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${queue.currentTrack.id}`
+      `https://www.youtube.com/watch?v=${props.id}`
     );
   };
 
