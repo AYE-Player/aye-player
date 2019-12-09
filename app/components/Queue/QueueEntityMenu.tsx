@@ -91,10 +91,10 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleRemoveTrack(props.id)}>
+          <MenuItem onClick={() => _handleRemoveTrack()}>
             {t("EntityMenu.remove")}
           </MenuItem>
-          <MenuItem onClick={() => _handlePlayNextTrack(props.id)}>
+          <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>
