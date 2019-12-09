@@ -19,6 +19,8 @@ import Axios from "axios";
 import Track from "../dataLayer/models/Track";
 import Playlist from "../dataLayer/models/Playlist";
 import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 
 const Header = styled.div`
   font-size: 24px;
@@ -107,7 +109,10 @@ const PlaylistPage: React.FunctionComponent = () => {
         });
       }
     } catch (error) {
-      console.error(error);
+      AyeLogger.player(
+        `[PlaylistPage] Error retrieving Playlists ${error}`,
+        LogType.ERROR
+      );
     }
 
     return () => {
