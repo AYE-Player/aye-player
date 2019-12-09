@@ -47,17 +47,8 @@ const Playlist = types
           }
         );
 
-        const { data } = yield axios.get(
-          `https://api.aye-player.de/playlists/v1/${self.id}`,
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
-
-        self.trackCount = data.SongsCount;
-        self.duration = data.Duration;
+        self.trackCount = self.trackCount + 1;
+        self.duration = self.duration + track.duration;
         self.tracks.push(track);
       } catch (error) {
         AyeLogger.player(
@@ -99,17 +90,8 @@ const Playlist = types
           }
         );
 
-        const { data } = yield axios.get(
-          `https://api.aye-player.de/playlists/v1/${self.id}`,
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
-
-        self.trackCount = data.SongsCount;
-        self.duration = data.Duration;
+        self.trackCount = self.trackCount - 1;
+        self.duration = self.duration - track.duration;
 
         const foundTrack = self.tracks.find(trk => trk.id === track.id);
         const idx = self.tracks.indexOf(foundTrack);
