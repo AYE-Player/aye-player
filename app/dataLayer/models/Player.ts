@@ -42,6 +42,13 @@ const Player = types
     },
 
     notifyRPC({ state }: IRPCState = {}) {
+      if (state === "Idle") {
+        ipcRenderer.send("setDiscordActivity", {
+          details: "Idle"
+        });
+        return;
+      }
+
       ipcRenderer.send("setDiscordActivity", {
         playbackPosition: self.playbackPosition,
         endTime: state ? null : self.currentTrack.duration,
