@@ -8,6 +8,7 @@ import { HashRouter } from "react-router-dom";
 import Player from "../components/Player/Player";
 import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
 import { StoreProvider } from "../components/StoreProvider";
+import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
 import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
@@ -15,7 +16,7 @@ import Settings from "../dataLayer/stores/PersistentSettings";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
-import PlayerInterop from "../dataLayer/api/PlayerInterop";
+import styled from "styled-components";
 
 interface IPlayerSettings {
   volume: number;
@@ -247,6 +248,12 @@ ipcRenderer.on("app-close", (event, message) => {
   }
 });
 
+const MainGrid = styled.div`
+  height: 100%;
+  width: calc(100% - 330px);
+  flex-direction: row;
+`;
+
 const getPlaylists = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -399,11 +406,11 @@ export default class Root extends Component {
               <QueuePlaylistSwitch />
               <Player />
             </div>
-            <Grid container direction="row" style={{ height: "100%" }} xs={9}>
+            <MainGrid>
               <HashRouter>
                 <MainPage />
               </HashRouter>
-            </Grid>
+            </MainGrid>
           </Grid>
         </SnackbarProvider>
       </StoreProvider>
