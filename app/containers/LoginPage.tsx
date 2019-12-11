@@ -1,5 +1,4 @@
 import { Grid } from "@material-ui/core";
-import Playlist from "../dataLayer/models/Playlist";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
@@ -11,6 +10,7 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import routes from "../constants/routes.json";
+import Playlist from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 
