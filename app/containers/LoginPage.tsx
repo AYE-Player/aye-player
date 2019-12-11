@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core";
-import Playlist from "app/dataLayer/models/Playlist";
+import Playlist from "../dataLayer/models/Playlist";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
