@@ -107,6 +107,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           `Error from External Player ${JSON.stringify(m.data.error)}`,
           LogType.ERROR
         );
+      } else if (m.data.type === "start") {
+        if (!player.isPlaying) {
+          player.togglePlayingState();
+        }
+      } else if (m.data.type === "pause") {
+        if (player.isPlaying) {
+          player.togglePlayingState();
+        }
       }
     }
   };
@@ -140,11 +148,21 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         queue.addTracks(player.currentPlaylist.tracks);
         player.playTrack(player.currentPlaylist.tracks[0]);
         PlayerInterop.setTrack(player.currentPlaylist.tracks[0]);
+      } else if (
+        player.currentPlaylist?.getTrackById(prevTrack.id) &&
+        player.currentPlaylist.getIndexOfTrack(prevTrack) + 1 <
+          player.currentPlaylist.trackCount
+      ) {
+        const idx = player.currentPlaylist.getIndexOfTrack(prevTrack);
+        queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx + 1));
+        player.playTrack(queue.tracks[0]);
+        PlayerInterop.playTrack(queue.tracks[0]);
       } else {
         player.togglePlayingState();
         PlayerInterop.togglePlayingState();
         player.setCurrentTrack();
         PlayerInterop.setTrack();
+        player.notifyRPC({ state: "Idle" });
       }
       return;
     }

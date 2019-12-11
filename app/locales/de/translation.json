@@ -69,7 +69,11 @@
       "label": "Name der Playlist",
       "text": "Gib deiner neuen Playlist einen Namen",
       "confirmButton": "Erstellen",
-      "cancelButton": "Abbrechen"
+      "cancelButton": "Abbrechen",
+      "textField": {
+        "dialogText": "Füge deine Playlist direkt ein paar Songs hinzu",
+        "label": "Songs"
+      }
     }
   },
   "PasswordForgotPage": {

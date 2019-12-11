@@ -38,19 +38,23 @@ const Player = types
         icon: `https://img.youtube.com/vi/${self.currentTrack.id}/hqdefault.jpg`,
         silent: true
       });
-      this.notifyRPC({ track });
+      this.notifyRPC();
     },
 
-    notifyRPC({ track, state }: IRPCState = {}) {
-      if (!track) {
-        track = self.currentTrack;
+    notifyRPC({ state }: IRPCState = {}) {
+      if (state === "Idle") {
+        ipcRenderer.send("setDiscordActivity", {
+          details: "Idle"
+        });
+        return;
       }
 
       ipcRenderer.send("setDiscordActivity", {
         playbackPosition: self.playbackPosition,
-        endTime: state ? null : track.duration,
-        details: track.title,
-        state: state ? state : null
+        endTime: state ? null : self.currentTrack.duration,
+        details: self.currentTrack.title,
+        state: state ? state : null,
+        duration: self.currentTrack.duration
       });
 
       ipcRenderer.send("player2Win", {

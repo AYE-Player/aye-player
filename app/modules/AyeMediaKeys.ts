@@ -4,7 +4,7 @@ import AyeLogger from "./AyeLogger";
 import BaseModule from "./BaseModule";
 
 class AyeMediaKeys extends BaseModule {
-  bus: DBus.MessageBus;
+  private bus: DBus.MessageBus;
 
   constructor(window: BrowserWindow) {
     super(window);

@@ -4,7 +4,7 @@ import AyeLogger from "./AyeLogger";
 import BaseModule from "./BaseModule";
 
 class AyeMpris extends BaseModule {
-  protected player: any;
+  private player: any;
 
   constructor(window: BrowserWindow) {
     super(window);

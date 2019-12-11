@@ -1,13 +1,24 @@
 const { Client } = require("discord-rpc"); // eslint-disable-line
 import AyeLogger from "./AyeLogger";
+import { LogType } from "../types/enums";
+import formattedDuration from "../helpers/formattedDuration";
 
 interface IActivityParameters {
-  details: string;
+  details?: string;
   state?: string;
-  startTimestamp?: number;
-  endTimestamp?: number;
-  largeImageKey: string;
-  instance: boolean;
+  startTimestamp?: number | null;
+  endTimestamp?: number | null;
+  largeImageKey?: string;
+  largeImageText?: string;
+  smallImageKey?: string;
+  smallImageText?: string;
+  partyId?: string;
+  partySize?: number;
+  partyMax?: number;
+  matchSecret?: string;
+  joinSecret?: string;
+  spectateSecret?: string;
+  instance?: boolean;
 }
 
 export default class AyeDiscordRPC {
@@ -26,12 +37,16 @@ export default class AyeDiscordRPC {
     this._clientId = clientId;
     this._activityTimer = setInterval(() => {
       if (this._canSetActivity && this._activity) {
-        this._rpc.setActivity(this._activity);
-        this._activity = null;
-        this._canSetActivity = false;
-        this._activityBlocker = setTimeout(() => {
-          this._canSetActivity = true;
-        }, 10000);
+        try {
+          this._rpc.setActivity(this._activity);
+          this._activity = null;
+          this._canSetActivity = false;
+          this._activityBlocker = setTimeout(() => {
+            this._canSetActivity = true;
+          }, 10000);
+        } catch (error) {
+          AyeLogger.rpc(`Setting activity ${error}`, LogType.ERROR);
+        }
       }
     }, 5000);
   }
@@ -44,7 +59,8 @@ export default class AyeDiscordRPC {
     playbackPosition: number,
     endTimestamp: number,
     state: string,
-    details: string
+    details: string,
+    duration: number
   ) {
     if (!this._rpc) return;
 
@@ -57,13 +73,20 @@ export default class AyeDiscordRPC {
           Date.now() / 1000 + (endTimestamp - playbackPosition)
         ),
         largeImageKey: "aye",
+        smallImageKey: "play",
+        smallImageText: "Playing",
         instance: false
       };
     } else if (!endTimestamp && state) {
       activityParameters = {
         details,
-        state,
+        state:
+          state === "Paused"
+            ? `${formattedDuration(duration - playbackPosition)} left`
+            : state,
         largeImageKey: "aye",
+        smallImageKey: state === "Paused" ? "pause" : undefined,
+        smallImageText: state === "Paused" ? "Paused" : undefined,
         instance: false
       };
     } else {
@@ -86,7 +109,7 @@ export default class AyeDiscordRPC {
         this._activity = activityParameters;
       }
     } catch (error) {
-      AyeLogger.rpc(error);
+      AyeLogger.rpc("Setting Activity", LogType.ERROR);
     }
   }
 
@@ -100,7 +123,7 @@ export default class AyeDiscordRPC {
         AyeLogger.rpc("Successfully connected to Discord.");
         this.isConnected = true;
 
-        await this.setActivity(0, 0, null, "Idle");
+        await this.setActivity(0, 0, null, "Idle", 0);
       });
 
       this._rpc.transport.once("close", async () => {

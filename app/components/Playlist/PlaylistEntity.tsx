@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -48,6 +48,16 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
 `;
 
+const marquee = keyframes`
+  0% { left: 0; }
+  100% { left: -100%; }
+}
+`;
+
+const animation = () => css`
+  ${marquee} 5s linear infinite;
+`;
+
 const Title = styled.div<any>`
   padding-right: 16px;
   width: 200px;
@@ -55,16 +65,10 @@ const Title = styled.div<any>`
   overflow: hidden;
   ${(props: any) => {
     if (props.length >= 30) {
-      return `div {
-
-        transform: translateX(0);
-        transition-timing-function: linear;
-        transition-duration: ${
-          props.length <= 30 ? "1s" : props.length <= 45 ? "2s" : "3s"
-        };
-      }
-      :hover div {
-        transform: translateX(calc(200px - 100%));
+      console.log("props length over 30")
+      return `
+      &:hover div {
+        animation: ${animation}
       }`;
     }
   }}
@@ -161,8 +165,12 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     setNewPlaylistName(event.target.value);
   };
 
-  const _handlePlaylistDialogClose = () => {
+  const _handleCreatePlaylistDialogClose = () => {
     setOpenCreatePlaylistDialog(false);
+  };
+
+  const _handlePlaylistSelectDialogClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -204,6 +212,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
       <CustomListDialog
         dialogTitle={t("SearchEntity.selectPlaylist")}
         open={open}
+        handleClose={() => _handlePlaylistSelectDialogClose()}
         track={props.track}
         onSelect={_handleClose}
         createListItem={_createListItem}
@@ -221,7 +230,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         label={t("PlaylistPage.dialog.label")}
         dialogText={t("PlaylistPage.dialog.text")}
         open={openCreatePlaylistDialog}
-        handleClose={() => _handlePlaylistDialogClose()}
+        handleClose={() => _handleCreatePlaylistDialogClose()}
         handleConfirm={() => _createPlaylist()}
         handleChange={_onPlaylistNameChange}
         confirmButtonText={t("PlaylistPage.dialog.confirmButton")}

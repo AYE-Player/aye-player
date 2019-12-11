@@ -69,13 +69,20 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
 
   const { id } = props.match.params;
   const playlist = playlists.getListById(id);
+
+  if (!playlist) {
+    window.location.href =
+      `file://${__dirname}/app.html#/`;
+    return null;
+  }
+
   app.setActivePlaylist(id);
 
   useEffect(() => {
     const CancelToken = Axios.CancelToken;
     const source = CancelToken.source();
 
-    if (!isLoaded && playlist.tracks.length === 0) {
+    if (!isLoaded) {
       Axios.get(
         `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
         {

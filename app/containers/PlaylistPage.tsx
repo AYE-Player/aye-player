@@ -11,14 +11,16 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
-import CustomFormDialog from "../components/Customs/CustomFormDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
-import { formattedDuration } from "../helpers";
+import { formattedDuration, removeControlCharacters } from "../helpers";
 import useInject from "../hooks/useInject";
 import Axios from "axios";
 import Track from "../dataLayer/models/Track";
 import Playlist from "../dataLayer/models/Playlist";
+import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 
 const Header = styled.div`
   font-size: 24px;
@@ -59,6 +61,9 @@ const StyledTableCell = withStyles({
 
 const PlaylistPage: React.FunctionComponent = () => {
   const [newPlaylistName, setNewPlaylistName] = React.useState("");
+  const [newPlaylistSongs, setNewPlaylistSongs] = React.useState<
+    { Url: string }[]
+  >([]);
   const [open, setOpen] = React.useState(false);
 
   const { t } = useTranslation();
@@ -104,7 +109,10 @@ const PlaylistPage: React.FunctionComponent = () => {
         });
       }
     } catch (error) {
-      console.error(error);
+      AyeLogger.player(
+        `[PlaylistPage] Error retrieving Playlists ${error}`,
+        LogType.ERROR
+      );
     }
 
     return () => {
@@ -114,7 +122,11 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const _createPlaylist = async () => {
     setOpen(false);
-    await playlists.createList(newPlaylistName);
+    if (newPlaylistSongs.length > 0) {
+      await playlists.createListWithSongs(newPlaylistName, newPlaylistSongs);
+    } else {
+      await playlists.createList(newPlaylistName);
+    }
   };
 
   const _handleOnClick = () => {
@@ -129,6 +141,18 @@ const PlaylistPage: React.FunctionComponent = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setNewPlaylistName(event.target.value);
+  };
+
+  const _onPlaylistSongsChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewPlaylistSongs(
+      removeControlCharacters(event.target.value)
+        .split(",")
+        .map(url => ({
+          Url: url
+        }))
+    );
   };
 
   const renderPlaylists = () => (
@@ -228,7 +252,7 @@ const PlaylistPage: React.FunctionComponent = () => {
             </TableBody>
           </Table>
         </ScrollContainer>
-        <CustomFormDialog
+        <PlaylistWithMultiSongDialog
           id="createPlaylistDialog"
           title={t("PlaylistPage.dialog.title")}
           label={t("PlaylistPage.dialog.label")}
@@ -246,6 +270,12 @@ const PlaylistPage: React.FunctionComponent = () => {
           confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
           cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
           type="text"
+          textField={{
+            placeholder: "https://www.youtube.com/watch?v=A3rvyaZFCN4",
+            label: t("PlaylistPage.dialog.textField.label"),
+            dialogText: t("PlaylistPage.dialog.textField.dialogText")
+          }}
+          handleSongsChange={_onPlaylistSongsChange}
         />
       </PlaylistContainer>
     </Container>
@@ -258,7 +288,7 @@ const PlaylistPage: React.FunctionComponent = () => {
       <Header>Playlists</Header>
       <PlaylistContainer>
         {t("PlaylistPage.noPlaylist")}
-        <CustomFormDialog
+        <PlaylistWithMultiSongDialog
           id="createPlaylistDialog"
           title={t("PlaylistPage.dialog.title")}
           label={t("PlaylistPage.dialog.label")}
@@ -279,6 +309,12 @@ const PlaylistPage: React.FunctionComponent = () => {
           confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
           cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
           type="text"
+          textField={{
+            placeholder: "https://www.youtube.com/watch?v=A3rvyaZFCN4",
+            label: t("PlaylistPage.dialog.textField.label"),
+            dialogText: t("PlaylistPage.dialog.textField.dialogText")
+          }}
+          handleSongsChange={_onPlaylistSongsChange}
         />
       </PlaylistContainer>
     </Container>

@@ -10,6 +10,8 @@ import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import { detectLink } from "../../helpers";
 import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 
 const Search = styled.div`
   width: 100%;
@@ -96,7 +98,10 @@ const SearchBar: React.FunctionComponent = () => {
         searchResult.addTracks(foundTracks);
       }
     } catch (error) {
-      console.log("ERR", error);
+      AyeLogger.player(
+        `Error in SearchBar Component ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />

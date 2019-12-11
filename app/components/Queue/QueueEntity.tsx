@@ -165,9 +165,13 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
     setNewPlaylistName(event.target.value);
   };
 
-  const _handlePlaylistDialogClose = () => {
+  const _handlePlaylistCreateDialogClose = () => {
     setOpenCreatePlaylistDialog(false);
   };
+
+  const _handlePlaylistSelectDialogClose = () => {
+    setOpen(false);
+  }
 
   return (
     <>
@@ -210,6 +214,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
       <CustomListDialog
         dialogTitle={t("SearchEntity.selectPlaylist")}
         open={open}
+        handleClose={() => _handlePlaylistSelectDialogClose()}
         track={props.track}
         onSelect={_handleClose}
         createListItem={_createListItem}
@@ -227,7 +232,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
         label={t("PlaylistPage.dialog.label")}
         dialogText={t("PlaylistPage.dialog.text")}
         open={openCreatePlaylistDialog}
-        handleClose={() => _handlePlaylistDialogClose()}
+        handleClose={() => _handlePlaylistCreateDialogClose()}
         handleConfirm={() => _createPlaylist()}
         handleChange={_onPlaylistNameChange}
         confirmButtonText={t("PlaylistPage.dialog.confirmButton")}

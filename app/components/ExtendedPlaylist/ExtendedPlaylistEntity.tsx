@@ -55,14 +55,15 @@ const Title = styled.div<any>`
   ${(props: any) => {
     if (props.length >= 30) {
       return `div {
-
-      transform: translateX(0);
-      transition-timing-function: cubic-bezier(0.42,0,0.58,1);
-      transition-duration: 1s;
-    }
-    :hover div {
-      transform: translateX(calc(300px - 100%));
-    }`;
+        transform: translateX(0);
+        transition-timing-function: linear;
+        transition-duration: ${
+          props.length <= 30 ? "1s" : props.length <= 45 ? "2s" : "3s"
+        };
+      }
+      :hover div {
+        transform: translateX(calc(300px - 100%));
+      }`;
     }
   }}
 `;
@@ -172,9 +173,13 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
     setNewPlaylistName(event.target.value);
   };
 
-  const _handlePlaylistDialogClose = () => {
+  const _handlePlaylistCreateDialogClose = () => {
     setOpenCreatePlaylistDialog(false);
   };
+
+  const _handlePlaylistSelectDialogClose = () => {
+    setOpen(false);
+  }
 
   return (
     <>
@@ -214,6 +219,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
       <CustomListDialog
         dialogTitle={t("SearchEntity.selectPlaylist")}
         open={open}
+        handleClose={() => _handlePlaylistSelectDialogClose()}
         track={props.track}
         onSelect={_handleClose}
         createListItem={_createListItem}
@@ -231,7 +237,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
         label={t("PlaylistPage.dialog.label")}
         dialogText={t("PlaylistPage.dialog.text")}
         open={openCreatePlaylistDialog}
-        handleClose={() => _handlePlaylistDialogClose()}
+        handleClose={() => _handlePlaylistCreateDialogClose()}
         handleConfirm={() => _createPlaylist()}
         handleChange={_onPlaylistNameChange}
         confirmButtonText={t("PlaylistPage.dialog.confirmButton")}

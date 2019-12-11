@@ -137,7 +137,8 @@ export default class Main {
         arg.playbackPosition,
         arg.endTime,
         arg.state,
-        arg.details
+        arg.details,
+        arg.duration
       );
     });
 
