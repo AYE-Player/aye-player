@@ -42,11 +42,13 @@ const AvatarInfoText = styled.div`
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user }: RootStoreModel) => ({
-    user
+  const UserStore = ({ user, player, playlists }: RootStoreModel) => ({
+    user,
+    player,
+    playlists
   });
 
-  const { user } = useInject(UserStore);
+  const { user, player, playlists } = useInject(UserStore);
 
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
@@ -134,6 +136,8 @@ const AccountPage: React.FunctionComponent = () => {
   const _deleteUser = () => {
     user.delete();
     user.logout();
+    player.setCurrentPlaylist(undefined);
+    playlists.clear();
   };
 
   return user.isAuthenticated ? (
