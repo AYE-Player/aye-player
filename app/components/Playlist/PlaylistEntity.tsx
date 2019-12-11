@@ -65,7 +65,7 @@ const Title = styled.div<any>`
   overflow: hidden;
   ${(props: any) => {
     if (props.length >= 30) {
-      console.log("props length over 30")
+      console.log("props length over 30");
       return `
       &:hover div {
         animation: ${animation}
