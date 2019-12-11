@@ -4,6 +4,8 @@ import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import Playlist, { PlaylistModel } from "../models/Playlist";
 import axios from "axios";
+import Track from "../models/Track";
+import Root from "../../containers/Root";
 
 export type PlaylistsModel = typeof Playlists.Type;
 
@@ -19,6 +21,7 @@ const Playlists = types
   .actions(self => ({
     createList: flow(function*(name: string) {
       try {
+        const token = localStorage.getItem("token");
         // @ts-ignore
         const { data: id } = yield axios.post(
           "https://api.aye-player.de/playlists/v1",
@@ -27,7 +30,7 @@ const Playlists = types
           },
           {
             headers: {
-              "x-access-token": localStorage.getItem("token")
+              "x-access-token": token
             }
           }
         );
@@ -49,8 +52,12 @@ const Playlists = types
       }
     }),
 
-    createListWithSongs: flow(function*(name: string, songs: { Url: string; }[]) {
+    createListWithSongs: flow(function*(
+      name: string,
+      songs: { Url: string }[]
+    ) {
       try {
+        const token = localStorage.getItem("token");
         // @ts-ignore
         const { data: id } = yield axios.post(
           "https://api.aye-player.de/playlists/v1/by-urls",
@@ -60,7 +67,16 @@ const Playlists = types
           },
           {
             headers: {
-              "x-access-token": localStorage.getItem("token")
+              "x-access-token": token
+            }
+          }
+        );
+
+        const { data: pl } = yield axios.get(
+          `https://api.aye-player.de/playlists/v1/${id}`,
+          {
+            headers: {
+              "x-access-token": token
             }
           }
         );
@@ -68,15 +84,46 @@ const Playlists = types
         const playlist = Playlist.create({
           name,
           id,
+          duration: pl.Duration,
+          trackCount: pl.SongsCount,
           tracks: []
         });
+
+        const { data: tracks } = yield axios.get(
+          `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
+          {
+            headers: {
+              "x-access-token": token
+            }
+          }
+        );
+
+        for (const track of tracks) {
+          const tr = Track.create({
+            id: track.Id,
+            title: track.Title,
+            duration: track.Duration,
+            isLivestream: false
+          });
+
+          if (!Root.stores.trackCache.getTrackById(track.id)) {
+            Root.stores.trackCache.add(tr);
+          }
+
+          playlist.addLoadedTrack(tr);
+        }
 
         self.lists.push(playlist);
 
         return playlist;
       } catch (error) {
+        console.error(error);
         AyeLogger.player(
-          `[createListWithSongs] Error setting ID ${JSON.stringify(error, null, 2)}`,
+          `[createListWithSongs] Error setting ID ${JSON.stringify(
+            error,
+            null,
+            2
+          )}`,
           LogType.ERROR
         );
       }
