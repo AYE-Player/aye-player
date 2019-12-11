@@ -12,6 +12,7 @@ import useInject from "../../hooks/useInject";
 interface IQueueEntityMenuProps {
   id: string;
   openListDialog: any;
+  isLivestream: boolean;
 }
 
 const Container = styled.div`
@@ -91,18 +92,31 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleRemoveTrack()}>
-            {t("EntityMenu.remove")}
-          </MenuItem>
-          <MenuItem onClick={() => _handlePlayNextTrack()}>
-            {t("EntityMenu.playNext")}
-          </MenuItem>
-          <MenuItem onClick={() => props.openListDialog()}>
-            {t("EntityMenu.addToPlaylist")}
-          </MenuItem>
-          <MenuItem onClick={() => _handleCopyUrl()}>
-            {t("EntityMenu.copyURL")}
-          </MenuItem>
+          {props.isLivestream ? (
+            <span>
+              <MenuItem onClick={() => _handleRemoveTrack()}>
+                {t("EntityMenu.remove")}
+              </MenuItem>
+              <MenuItem onClick={() => _handleCopyUrl()}>
+                {t("EntityMenu.copyURL")}
+              </MenuItem>
+            </span>
+          ) : (
+            <span>
+              <MenuItem onClick={() => _handleRemoveTrack()}>
+                {t("EntityMenu.remove")}
+              </MenuItem>
+              <MenuItem onClick={() => _handlePlayNextTrack()}>
+                {t("EntityMenu.playNext")}
+              </MenuItem>
+              <MenuItem onClick={() => props.openListDialog()}>
+                {t("EntityMenu.addToPlaylist")}
+              </MenuItem>
+              <MenuItem onClick={() => _handleCopyUrl()}>
+                {t("EntityMenu.copyURL")}
+              </MenuItem>
+            </span>
+          )}
         </StyledMenu>
       </Container>
     </ClickAwayListener>

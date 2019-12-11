@@ -206,6 +206,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
             </TrackInfoContainer>
             <QueueEntityMenu
               id={props.track.id}
+              isLivestream={props.track.isLivestream}
               openListDialog={_handleClickOpen}
             />
           </Container>
