@@ -4,8 +4,8 @@ strategy:
       imageName: 'ubuntu-latest'
     mac:
       imageName: 'macos-latest'
-    windows:
-      imageName: 'windows-latest'
+    #windows:
+    #  imageName: 'windows-latest'
 
 pool:
   vmImage: $(imageName)

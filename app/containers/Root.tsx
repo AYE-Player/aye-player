@@ -259,7 +259,7 @@ const getPlaylists = async () => {
     const token = localStorage.getItem("token");
     if (token) {
       const { data: playlists } = await axios.get(
-        "https://api.aye-player.de/playlists/v1",
+        "https://api.aye-player.de/v1/playlists",
         {
           headers: {
             "x-access-token": localStorage.getItem("token")
@@ -322,7 +322,7 @@ export default class Root extends Component {
             if (!playlist) return;
             axios
               .get(
-                `https://api.aye-player.de/playlists/v1/${playlist.id}/songs?skip=0&take=20`,
+                `https://api.aye-player.de/v1/playlists/${playlist.id}/songs?skip=0&take=20`,
                 {
                   headers: {
                     "x-access-token": localStorage.getItem("token")

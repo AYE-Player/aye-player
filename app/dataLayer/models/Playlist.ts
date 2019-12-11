@@ -33,7 +33,7 @@ const Playlist = types
     addTrack: flow(function*(track: TrackModel) {
       try {
         yield axios.put(
-          `https://api.aye-player.de/playlists/v1/${self.id}/songs`,
+          `https://api.aye-player.de/v1/playlists/${self.id}/songs`,
           {
             Id: track.id,
             Duration: track.duration,
@@ -82,7 +82,7 @@ const Playlist = types
     removeTrack: flow(function*(track: TrackModel) {
       try {
         yield axios.delete(
-          `https://api.aye-player.de/playlists/v1/${self.id}/songs/${track.id}`,
+          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${track.id}`,
           {
             headers: {
               "x-access-token": localStorage.getItem("token")
@@ -112,7 +112,7 @@ const Playlist = types
     removeTrackById: flow(function*(id: string) {
       try {
         yield axios.delete(
-          `https://api.aye-player.de/playlists/v1/${self.id}/songs/${id}`,
+          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${id}`,
           {
             headers: {
               "x-access-token": localStorage.getItem("token")

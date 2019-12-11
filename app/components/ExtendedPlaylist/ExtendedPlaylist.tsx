@@ -84,7 +84,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
 
     if (!isLoaded) {
       Axios.get(
-        `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
+        `https://api.aye-player.de/v1/playlists/${id}/songs?skip=0&take=20`,
         {
           headers: {
             "x-access-token": localStorage.getItem("token")

@@ -46,11 +46,13 @@ const StyledMenu = withStyles({
 const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ user }: RootStoreModel) => ({
-    user
+  const Store = ({ user, player, playlists }: RootStoreModel) => ({
+    user,
+    player,
+    playlists
   });
 
-  const { user } = useInject(Store);
+  const { user, player, playlists } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -64,6 +66,8 @@ const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = pr
 
   const _handleLogoutClick = () => {
     user.logout();
+    player.setCurrentPlaylist(undefined);
+    playlists.clear();
     setAnchorEl(null);
   };
 

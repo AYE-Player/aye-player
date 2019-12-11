@@ -24,7 +24,7 @@ const Playlists = types
         const token = localStorage.getItem("token");
         // @ts-ignore
         const { data: id } = yield axios.post(
-          "https://api.aye-player.de/playlists/v1",
+          "https://api.aye-player.de/v1/playlists",
           {
             Name: name
           },
@@ -60,7 +60,7 @@ const Playlists = types
         const token = localStorage.getItem("token");
         // @ts-ignore
         const { data: id } = yield axios.post(
-          "https://api.aye-player.de/playlists/v1/by-urls",
+          "https://api.aye-player.de/v1/playlists/by-urls",
           {
             Name: name,
             Songs: songs
@@ -73,7 +73,7 @@ const Playlists = types
         );
 
         const { data: pl } = yield axios.get(
-          `https://api.aye-player.de/playlists/v1/${id}`,
+          `https://api.aye-player.de/v1/playlists/${id}`,
           {
             headers: {
               "x-access-token": token
@@ -90,7 +90,7 @@ const Playlists = types
         });
 
         const { data: tracks } = yield axios.get(
-          `https://api.aye-player.de/playlists/v1/${id}/songs?skip=0&take=20`,
+          `https://api.aye-player.de/v1/playlists/${id}/songs?skip=0&take=${songs.length}`,
           {
             headers: {
               "x-access-token": token
@@ -135,7 +135,7 @@ const Playlists = types
 
     remove: flow(function*(id: string) {
       try {
-        yield axios.delete(`https://api.aye-player.de/playlists/v1/${id}`, {
+        yield axios.delete(`https://api.aye-player.de/v1/playlists/${id}`, {
           headers: {
             "x-access-token": localStorage.getItem("token")
           }

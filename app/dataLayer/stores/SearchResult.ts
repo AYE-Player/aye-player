@@ -20,7 +20,7 @@ const SearchResult = types
     getTracks: flow(function*(term: string) {
       try {
         const { data } = yield axios.get(
-          `https://api.aye-player.de/search/v1/${term}`
+          `https://api.aye-player.de/v1/search/${term}`
         );
         const tracks = [];
 
@@ -40,7 +40,7 @@ const SearchResult = types
     getTrackFromUrl: flow(function*(url: string) {
       try {
         const { data } = yield axios.get(
-          `https://api.aye-player.de/search/v1/song?songUrl=${encodeURIComponent(
+          `https://api.aye-player.de/v1/search/song?songUrl=${encodeURIComponent(
             url
           )}`
         );

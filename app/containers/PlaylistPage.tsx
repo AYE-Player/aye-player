@@ -82,7 +82,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        Axios.get("https://api.aye-player.de/playlists/v1", {
+        Axios.get("https://api.aye-player.de/v1/playlists", {
           headers: {
             "x-access-token": token
           }
