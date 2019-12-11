@@ -146,13 +146,6 @@ const PlaylistPage: React.FunctionComponent = () => {
   const _onPlaylistSongsChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log(
-      removeControlCharacters(event.target.value)
-        .split(",")
-        .map(url => ({
-          Url: url
-        }))
-    );
     setNewPlaylistSongs(
       removeControlCharacters(event.target.value)
         .split(",")
@@ -160,7 +153,6 @@ const PlaylistPage: React.FunctionComponent = () => {
           Url: url
         }))
     );
-    console.log("statesongs", newPlaylistSongs);
   };
 
   const renderPlaylists = () => (
