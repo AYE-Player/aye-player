@@ -27,7 +27,7 @@ const User = types
         try {
           // @ts-ignore
           const { data: userInfo } = yield axios.get(
-            "https://api.aye-player.de/userIdentity/v1/",
+            "https://api.aye-player.de/v1/userIdentity/",
             {
               headers: {
                 "x-access-token": token
@@ -53,7 +53,7 @@ const User = types
       try {
         AyeLogger.player(`Trying to log in with: ${username}`);
         const { data: token } = yield axios.post(
-          "https://api.aye-player.de/auth/v1/",
+          "https://api.aye-player.de/v1/auth/",
           {
             Email: username,
             Password: password
@@ -61,7 +61,7 @@ const User = types
         );
         //@ts-ignore
         const { data: userInfo } = yield axios.get(
-          "https://api.aye-player.de/userIdentity/v1/",
+          "https://api.aye-player.de/v1/userIdentity/",
           {
             headers: {
               "x-access-token": token
@@ -100,7 +100,7 @@ const User = types
     delete: flow(function*() {
       try {
         AyeLogger.player(`Deleting User ${self.id}`);
-        yield axios.delete(`https://api.aye-player.de/userIdentity/v1/`, {
+        yield axios.delete(`https://api.aye-player.de/v1/userIdentity/`, {
           headers: {
             "x-access-token": localStorage.getItem("token")
           }
@@ -121,7 +121,7 @@ const User = types
       try {
         AyeLogger.player(`Trying to set new password for ${self.id}`);
         yield axios.patch(
-          "https://api.aye-player.de/userIdentity/v1/",
+          "https://api.aye-player.de/v1/userIdentity/",
           [{ op: "replace", path: "/Password", value: password }],
           {
             headers: {
@@ -146,7 +146,7 @@ const User = types
         // Upload avatar image
         // INFO: We have to use fetch here, because axios has problems with formData uploads/requests...
         const res = yield fetch(
-          "https://api.aye-player.de/userIdentity/v1/avatar",
+          "https://api.aye-player.de/v1/userIdentity/avatar",
           {
             method: "POST",
             body: data,
@@ -161,7 +161,7 @@ const User = types
 
         // Patch userprofile with new URL
         yield axios.patch(
-          `https://api.aye-player.de/userIdentity/v1/`,
+          `https://api.aye-player.de/v1/userIdentity/`,
           [{ op: "replace", path: "/Avatar", value: avatarURL }],
           {
             headers: {
@@ -182,7 +182,7 @@ const User = types
     register: flow(function*(name: string, email: string, password: string) {
       try {
         AyeLogger.player(`Trying to register with ${name} ${email}`);
-        yield axios.post("https://api.aye-player.de/userIdentity/v1/", {
+        yield axios.post("https://api.aye-player.de/v1/userIdentity/", {
           Email: email,
           Password: password
         });
@@ -198,7 +198,7 @@ const User = types
     forgotPassword: flow(function*(email: string) {
       try {
         AyeLogger.player(`Trying to reset password for ${email}`);
-        yield axios.put(`https://api.aye-player.de/userIdentity/v1/password`, {
+        yield axios.put(`https://api.aye-player.de/v1/userIdentity/password`, {
           Email: email
         });
       } catch (error) {

@@ -104,7 +104,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
 
   const _getTracksOfPlaylist = async (playlist: PlaylistModel) => {
     const { data: tracks } = await axios.get(
-      `https://api.aye-player.de/playlists/v1/${props.id}/songs?skip=0&take=20`,
+      `https://api.aye-player.de/v1/playlists/${props.id}/songs?skip=0&take=20`,
       {
         headers: {
           "x-access-token": localStorage.getItem("token")
