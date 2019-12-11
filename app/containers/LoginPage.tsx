@@ -55,7 +55,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        const { data: playlists } = await axios.get(
+        const { data } = await axios.get(
           "https://api.aye-player.de/v1/playlists",
           {
             headers: {
@@ -64,7 +64,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
           }
         );
 
-        for (const playlist of playlists) {
+        for (const playlist of data) {
           const pl = Playlist.create({
             id: playlist.Id,
             name: playlist.Name,
