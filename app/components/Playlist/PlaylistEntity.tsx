@@ -38,6 +38,9 @@ const Container = styled.div<any>`
   &:hover > div {
     color: #4fc3f7;
   }
+  &:hover div {
+    animation-play-state: running;
+  }
 `;
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
@@ -63,15 +66,21 @@ const Title = styled.div<any>`
   width: 200px;
   white-space: nowrap;
   overflow: hidden;
-  ${(props: any) => {
-    if (props.length >= 30) {
-      console.log("props length over 30");
-      return `
-      &:hover div {
-        animation: ${animation}
-      }`;
-    }
-  }}
+  margin-bottom: 16px;
+`;
+
+const ScrollText = styled.div`
+  position: absolute;
+  overflow: hidden;
+  width: 200px;
+  margin-left: 36px;
+  animation: ${animation};
+  animation-play-state: paused;
+`;
+
+const TextSpan = styled.span`
+  float: left;
+  width: 50%;
 `;
 
 const Duration = styled.div`
@@ -196,9 +205,9 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
               onClick={() => props.onClick(props.track)}
             >
               <Title length={props.track.title.length}>
-                <div style={{ display: "inline-block" }}>
-                  {props.track.title}
-                </div>
+                <ScrollText>
+                  <TextSpan>{props.track.title}</TextSpan>
+                </ScrollText>
               </Title>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
