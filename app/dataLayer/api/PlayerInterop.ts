@@ -3,6 +3,7 @@ import { TrackModel } from "../models/Track";
 class PlayerInterop {
   player: any;
   initTrack: TrackModel;
+  startAt: number;
 
   // TODO: refactor/debug this, and only set/init/load player and initTrack, when its needed
   init() {
@@ -10,6 +11,10 @@ class PlayerInterop {
       this.player = document.querySelector("#embedded-player") as any;
       if (this.initTrack && this.player) {
         this.setTrack(this.initTrack);
+        if (this.startAt) {
+          setTimeout(this.seekTo(this.startAt), 3000);
+          console.log("setting pbp to (INIT)", this.startAt)
+        }
       }
     }
   }
@@ -17,9 +22,17 @@ class PlayerInterop {
   setInitTrack(track: TrackModel) {
     if (this.player) {
       this.setTrack(track);
+      if (this.startAt) {
+        setTimeout(this.seekTo(this.startAt), 3000);
+        console.log("setting pbp to (SETINTITRACK)", this.startAt);
+      }
     } else {
       this.initTrack = track;
     }
+  }
+
+  setStartTime(val: number) {
+    this.startAt = val;
   }
 
   setTrack(track?: TrackModel) {
