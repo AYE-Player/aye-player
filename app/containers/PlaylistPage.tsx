@@ -44,7 +44,7 @@ const CreatePlaylist = styled.div`
   position: absolute;
   align-items: center;
   cursor: pointer;
-  right: 10px;
+  right: 16px;
   bottom: 56px;
 `;
 

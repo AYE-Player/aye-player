@@ -18,10 +18,10 @@ const Container = styled.div`
   height: 296px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   justify-content: center;
   position: absolute;
-  bottom: 35px;
+  bottom: 32px;
 `;
 
 // Listeners

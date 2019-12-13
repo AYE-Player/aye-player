@@ -44,14 +44,14 @@ const Container = styled.div`
 
 const Control = styled.div`
   display: inline-block;
-  margin: 0 10px;
+  margin: 0 8px;
   width: 24px;
   height: 24px;
 `;
 
 const PlayControl = styled.div`
   display: inline-block;
-  margin: 0 10px;
+  margin: 0 8px;
   width: 32px;
   height: 32px;
 `;

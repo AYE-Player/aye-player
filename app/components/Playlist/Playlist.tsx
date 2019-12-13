@@ -23,7 +23,7 @@ const Container = styled.div`
 `;
 
 const Control = styled.div`
-  margin: 0 10px;
+  margin: 0 8px;
   width: 24px;
   height: 24px;
 `;
