@@ -21,9 +21,19 @@ interface IProps {
   onClick: Function;
 }
 
+const marquee = keyframes`
+  0% { left: 0; }
+  100% { left: -100%; }
+}
+`;
+
+const animation = () => css`
+  ${marquee} 5s linear 2;
+`;
+
 const Container = styled.div<any>`
   height: 48px;
-  width: calc(100% - 10px);
+  width: calc(100% - 8px);
   display: flex;
   position: relative;
   align-items: center;
@@ -38,10 +48,8 @@ const Container = styled.div<any>`
   &:hover > div {
     color: #4fc3f7;
   }
-  &:hover div {
-    animation-play-state: running;
-  }
 `;
+
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
   cursor: pointer;
@@ -51,36 +59,26 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
 `;
 
-const marquee = keyframes`
-  0% { left: 0; }
-  100% { left: -100%; }
-}
-`;
-
-const animation = () => css`
-  ${marquee} 5s linear infinite;
-`;
-
 const Title = styled.div<any>`
   padding-right: 16px;
   width: 200px;
   white-space: nowrap;
   overflow: hidden;
-  margin-bottom: 16px;
+  position: relative;
 `;
 
 const ScrollText = styled.div`
-  position: absolute;
-  overflow: hidden;
   width: 200px;
-  margin-left: 36px;
-  animation: ${animation};
-  animation-play-state: paused;
+  &:hover {
+    animation-play-state: running;
+    animation-fill-mode: none;
+    animation: ${animation};
+  }
 `;
 
-const TextSpan = styled.span`
+const TextSpan = styled.div`
   float: left;
-  width: 50%;
+  display: block;
 `;
 
 const Duration = styled.div`

@@ -88,7 +88,8 @@ const PlaylistPage: React.FunctionComponent = () => {
           }
         }).then(({ data }) => {
           for (const playlist of data) {
-            if (playlists.lists.find(list => list.id === playlist.Id)) return;
+            const oldPl = playlists.lists.find(list => list.id === playlist.Id);
+            if (oldPl || playlist.tracks?.length !== oldPl.trackCount ) continue;
             const pl = Playlist.create({
               id: playlist.Id,
               name: playlist.Name,
@@ -263,7 +264,7 @@ const PlaylistPage: React.FunctionComponent = () => {
           button={
             <CreatePlaylist onClick={() => _handleOnClick()}>
               {t("PlaylistPage.dialog.title")}
-              <ControlPoint style={{ marginLeft: "10px" }} />
+              <ControlPoint style={{ marginLeft: "8px" }} />
             </CreatePlaylist>
           }
           dialogText={t("PlaylistPage.dialog.text")}
