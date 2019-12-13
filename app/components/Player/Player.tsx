@@ -99,6 +99,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   window.onmessage = (m: any) => {
     if (m.origin === "https://player.aye-player.de") {
       if (m.data.type === "setPlaybackPosition") {
+        if (m.data.playbackPosition === 0) return;
         const oldPosition = player.playbackPosition;
         player.setPlaybackPosition(m.data.playbackPosition);
         if (m.data.playbackPosition < oldPosition) {
