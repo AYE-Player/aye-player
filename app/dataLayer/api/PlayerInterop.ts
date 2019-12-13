@@ -11,20 +11,20 @@ class PlayerInterop {
       this.player = document.querySelector("#embedded-player") as any;
       if (this.initTrack && this.player) {
         this.setTrack(this.initTrack);
-        if (this.startAt) {
-          setTimeout(this.seekTo(this.startAt), 500);
-          console.log("setting pbp to (INIT)", this.startAt)
-        }
       }
     }
   }
 
   setInitTrack(track: TrackModel) {
     if (this.player) {
-      this.setTrack(track);
-      if (this.startAt) {
-        setTimeout(this.seekTo(this.startAt), 500);
-      }
+      this.player.contentWindow.postMessage(
+        {
+          type: "setTrack",
+          track: track,
+          startAt: this.startAt ? this.startAt : undefined
+        },
+        "https://player.aye-player.de"
+      );
     } else {
       this.initTrack = track;
     }
