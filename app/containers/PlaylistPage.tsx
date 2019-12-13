@@ -96,7 +96,11 @@ const PlaylistPage: React.FunctionComponent = () => {
             });
             if (playlist.tracks) {
               for (const track of playlist.tracks) {
-                const tr = Track.create(track);
+                const tr = Track.create({
+                  id: track.Id,
+                  title: track.Title,
+                  duration: track.Duration
+                });
                 if (!trackCache.getTrackById(track.id)) {
                   trackCache.add(tr);
                 }
