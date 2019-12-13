@@ -12,7 +12,7 @@ class PlayerInterop {
       if (this.initTrack && this.player) {
         this.setTrack(this.initTrack);
         if (this.startAt) {
-          setTimeout(this.seekTo(this.startAt), 3000);
+          setTimeout(this.seekTo(this.startAt), 500);
           console.log("setting pbp to (INIT)", this.startAt)
         }
       }
@@ -23,8 +23,7 @@ class PlayerInterop {
     if (this.player) {
       this.setTrack(track);
       if (this.startAt) {
-        setTimeout(this.seekTo(this.startAt), 3000);
-        console.log("setting pbp to (SETINTITRACK)", this.startAt);
+        setTimeout(this.seekTo(this.startAt), 500);
       }
     } else {
       this.initTrack = track;
