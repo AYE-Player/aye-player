@@ -41,9 +41,9 @@ steps:
       SourceFolder: './release'
       Contents: |
         mac
-        AYE Player-0.0.1-mac.zip
-        ._AYE Player-0.0.1.dmg
-        AYE Player-0.0.1.dmg.blockmap
+        AYE Player-0.1.0-mac.zip
+        ._AYE Player-0.1.0.dmg
+        AYE Player-0.1.0.dmg.blockmap
     displayName: 'Deleting unneeded mac files'
 
   - task: DeleteFiles@1
@@ -52,7 +52,7 @@ steps:
       SourceFolder: './release'
       Contents: |
         win-unpacked
-        AYE Player Setup 0.0.1.exe.blockmap
+        AYE Player Setup 0.1.0.exe.blockmap
     displayName: 'Deleting unneeded windows files'
 
   - task: ArchiveFiles@2
