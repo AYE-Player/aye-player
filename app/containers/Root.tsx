@@ -299,6 +299,17 @@ export default class Root extends Component {
             "playerSettings"
           );
 
+          // Check for playbackPosition
+          if (
+            playerSettings.playbackPosition &&
+            !playerSettings.currentTrack?.isLivestream
+          ) {
+            rootStore.player.setPlaybackPosition(
+              playerSettings.playbackPosition
+            );
+            PlayerInterop.setStartTime(playerSettings.playbackPosition);
+          }
+
           // Check for currentTrack and if it was a liveStream or not
           if (playerSettings.currentTrack?.isLivestream === false) {
             const currentTrack = Track.create(playerSettings.currentTrack);
@@ -311,6 +322,7 @@ export default class Root extends Component {
             }
             rootStore.queue.addTrack(currentTrack.id);
             rootStore.player.setCurrentTrack(currentTrack);
+            rootStore.player.notifyRPC({ state: "Paused" });
             PlayerInterop.setInitTrack(currentTrack);
           }
 
@@ -344,18 +356,6 @@ export default class Root extends Component {
                 }
                 rootStore.player.setCurrentPlaylist(playlist);
               });
-          }
-
-          // Check for playbackPosition
-          if (
-            playerSettings.playbackPosition &&
-            !playerSettings.currentTrack?.isLivestream
-          ) {
-            rootStore.player.setPlaybackPosition(
-              playerSettings.playbackPosition
-            );
-            rootStore.player.setPlaying(true);
-            setTimeout(() => rootStore.player.setPlaying(false), 500);
           }
 
           // TODO: Remove these checks, whenever the electron-store package fixes it,

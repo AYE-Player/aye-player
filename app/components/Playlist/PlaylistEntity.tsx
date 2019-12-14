@@ -21,9 +21,19 @@ interface IProps {
   onClick: Function;
 }
 
+const marquee = keyframes`
+  0% { left: 0; }
+  100% { left: -100%; }
+}
+`;
+
+const animation = () => css`
+  ${marquee} 5s linear 2;
+`;
+
 const Container = styled.div<any>`
   height: 48px;
-  width: calc(100% - 10px);
+  width: calc(100% - 8px);
   display: flex;
   position: relative;
   align-items: center;
@@ -39,6 +49,7 @@ const Container = styled.div<any>`
     color: #4fc3f7;
   }
 `;
+
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
   cursor: pointer;
@@ -48,30 +59,26 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
 `;
 
-const marquee = keyframes`
-  0% { left: 0; }
-  100% { left: -100%; }
-}
-`;
-
-const animation = () => css`
-  ${marquee} 5s linear infinite;
-`;
-
 const Title = styled.div<any>`
   padding-right: 16px;
   width: 200px;
   white-space: nowrap;
   overflow: hidden;
-  ${(props: any) => {
-    if (props.length >= 30) {
-      console.log("props length over 30");
-      return `
-      &:hover div {
-        animation: ${animation}
-      }`;
-    }
-  }}
+  position: relative;
+`;
+
+const ScrollText = styled.div`
+  width: 200px;
+  &:hover {
+    animation-play-state: running;
+    animation-fill-mode: none;
+    animation: ${animation};
+  }
+`;
+
+const TextSpan = styled.div`
+  float: left;
+  display: block;
 `;
 
 const Duration = styled.div`
@@ -196,9 +203,9 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
               onClick={() => props.onClick(props.track)}
             >
               <Title length={props.track.title.length}>
-                <div style={{ display: "inline-block" }}>
-                  {props.track.title}
-                </div>
+                <ScrollText>
+                  <TextSpan>{props.track.title}</TextSpan>
+                </ScrollText>
               </Title>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>

@@ -44,6 +44,10 @@ const AccountPage: React.FunctionComponent = () => {
     app.toggleMinimizeToTray();
   };
 
+  const _activateDevMode = () => {
+    app.toggleDevMode();
+  }
+
   const [language, setLanguage] = React.useState(app.language);
 
   const { t } = useTranslation();
@@ -79,6 +83,12 @@ const AccountPage: React.FunctionComponent = () => {
           selected={language}
           setSelected={setLanguage}
           handleChange={_handleChange}
+        />
+        <Divider size={2} />
+        <CustomSwitch
+          label={t("AppSettingsPage.devMode")}
+          onChange={_activateDevMode}
+          checked={app.devMode}
         />
       </SettingsContainer>
       {/* <InfoText>{t("AppSettingsPage.infoText")}</InfoText> */}

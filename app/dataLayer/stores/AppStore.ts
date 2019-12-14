@@ -8,6 +8,7 @@ const AppStore = types
   .model({
     showQueue: types.boolean,
     rpcEnabled: types.boolean,
+    devMode: types.optional(types.boolean, false),
     minimizeToTray: types.boolean,
     language: types.string,
     activePlaylist: types.maybe(types.string)
@@ -37,13 +38,22 @@ const AppStore = types
       }
     },
 
+    toggleDevMode() {
+      self.devMode = !self.devMode;
+      if (self.devMode) {
+        Settings.set("devMode", true);
+      } else {
+        Settings.set("devMode", false);
+      }
+    },
+
     setLanguage(lang: string) {
       self.language = lang;
       Settings.set("language", lang);
 
       ipcRenderer.send("changeLang", {
         lang
-      })
+      });
     },
 
     setActivePlaylist(id: string) {

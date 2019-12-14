@@ -92,7 +92,8 @@
     "discord": "Show Discord Presence",
     "tray": "Minimize to Tray",
     "language": "Language",
-    "infoText": "* App will be restarted"
+    "infoText": "* App will be restarted",
+    "devMode": "Development Mode"
   },
   "LoginPage": {
     "header": "Login",

@@ -24,7 +24,7 @@ interface IProps {
 
 const Container = styled.div<any>`
   height: 48px;
-  width: calc(100% - 10px);
+  width: calc(100% - 8px);
   display: flex;
   position: relative;
   align-items: center;

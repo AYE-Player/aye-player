@@ -6,6 +6,7 @@ const Track = types
   .model({
     id: types.identifier,
     title: types.string,
+    source: types.optional(types.string, "youtube"),
     duration: types.optional(types.number, 0),
     isLivestream: types.optional(types.boolean, false)
   })

@@ -1,25 +1,39 @@
 import { TrackModel } from "../models/Track";
+import Root from "../../containers/Root";
 
 class PlayerInterop {
   player: any;
   initTrack: TrackModel;
+  startAt: number;
 
-  // TODO: refactor/debug this, and only set/init/load player and initTrack, when its needed
   init() {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
       if (this.initTrack && this.player) {
-        this.setTrack(this.initTrack);
+        this.setInitTrack(this.initTrack);
       }
     }
   }
 
   setInitTrack(track: TrackModel) {
     if (this.player) {
-      this.setTrack(track);
+      this.player.contentWindow.postMessage(
+        {
+          type: "setTrack",
+          track: track,
+          startAt: this.startAt ? this.startAt : undefined
+        },
+        Root.stores.app.devMode
+          ? "http://localhost:3000"
+          : "https://player.aye-player.de"
+      );
     } else {
       this.initTrack = track;
     }
+  }
+
+  setStartTime(val: number) {
+    this.startAt = val;
   }
 
   setTrack(track?: TrackModel) {
@@ -28,7 +42,9 @@ class PlayerInterop {
         type: "setTrack",
         track: track ? track : undefined
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -38,7 +54,9 @@ class PlayerInterop {
         type: "playTrack",
         track
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -48,7 +66,9 @@ class PlayerInterop {
         type: "seek",
         time
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -58,7 +78,9 @@ class PlayerInterop {
         type: "volume",
         volume: newVolume / 100
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -67,7 +89,9 @@ class PlayerInterop {
       {
         type: "togglePlayingState"
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -77,7 +101,9 @@ class PlayerInterop {
         type: "setLooping",
         state
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -87,7 +113,9 @@ class PlayerInterop {
         type: "toggleMute",
         state
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 }

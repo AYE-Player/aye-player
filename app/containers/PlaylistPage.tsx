@@ -44,7 +44,7 @@ const CreatePlaylist = styled.div`
   position: absolute;
   align-items: center;
   cursor: pointer;
-  right: 10px;
+  right: 16px;
   bottom: 56px;
 `;
 
@@ -88,7 +88,8 @@ const PlaylistPage: React.FunctionComponent = () => {
           }
         }).then(({ data }) => {
           for (const playlist of data) {
-            if (playlists.lists.find(list => list.id === playlist.Id)) return;
+            const oldPl = playlists.lists.find(list => list.id === playlist.Id);
+            if (oldPl || playlist.tracks?.length !== oldPl.trackCount ) continue;
             const pl = Playlist.create({
               id: playlist.Id,
               name: playlist.Name,
@@ -96,7 +97,11 @@ const PlaylistPage: React.FunctionComponent = () => {
             });
             if (playlist.tracks) {
               for (const track of playlist.tracks) {
-                const tr = Track.create(track);
+                const tr = Track.create({
+                  id: track.Id,
+                  title: track.Title,
+                  duration: track.Duration
+                });
                 if (!trackCache.getTrackById(track.id)) {
                   trackCache.add(tr);
                 }
@@ -259,7 +264,7 @@ const PlaylistPage: React.FunctionComponent = () => {
           button={
             <CreatePlaylist onClick={() => _handleOnClick()}>
               {t("PlaylistPage.dialog.title")}
-              <ControlPoint style={{ marginLeft: "10px" }} />
+              <ControlPoint style={{ marginLeft: "8px" }} />
             </CreatePlaylist>
           }
           dialogText={t("PlaylistPage.dialog.text")}
