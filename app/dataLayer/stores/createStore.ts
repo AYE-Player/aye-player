@@ -30,7 +30,8 @@ export const createStore = (): RootStoreModel => {
     showQueue: false,
     rpcEnabled: Settings.get("rpcEnabled"),
     minimizeToTray: Settings.get("minimizeToTray"),
-    language: Settings.get("language")
+    language: Settings.get("language"),
+    devMode: Settings.get("devMode")
   });
   const trackCache = TrackStore.create({ tracks: [] });
   const trackHistory = TrackHistory.create({ tracks: [] });

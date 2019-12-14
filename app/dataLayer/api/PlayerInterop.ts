@@ -1,4 +1,5 @@
 import { TrackModel } from "../models/Track";
+import Root from "../../containers/Root";
 
 class PlayerInterop {
   player: any;
@@ -22,7 +23,9 @@ class PlayerInterop {
           track: track,
           startAt: this.startAt ? this.startAt : undefined
         },
-        "https://player.aye-player.de"
+        Root.stores.app.devMode
+          ? "http://localhost:3000"
+          : "https://player.aye-player.de"
       );
     } else {
       this.initTrack = track;
@@ -39,7 +42,9 @@ class PlayerInterop {
         type: "setTrack",
         track: track ? track : undefined
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -49,7 +54,9 @@ class PlayerInterop {
         type: "playTrack",
         track
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -59,7 +66,9 @@ class PlayerInterop {
         type: "seek",
         time
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -69,7 +78,9 @@ class PlayerInterop {
         type: "volume",
         volume: newVolume / 100
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -78,7 +89,9 @@ class PlayerInterop {
       {
         type: "togglePlayingState"
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -88,7 +101,9 @@ class PlayerInterop {
         type: "setLooping",
         state
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 
@@ -98,7 +113,9 @@ class PlayerInterop {
         type: "toggleMute",
         state
       },
-      "https://player.aye-player.de"
+      Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de"
     );
   }
 }

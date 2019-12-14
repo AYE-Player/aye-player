@@ -92,7 +92,8 @@
     "discord": "Discord Presence anzeigen",
     "tray": "Minimieren",
     "language": "Sprache",
-    "infoText": "* App wird neugestartet"
+    "infoText": "* App wird neugestartet",
+    "devMode": "Entwicklermodus"
   },
   "LoginPage": {
     "header": "Einloggen",

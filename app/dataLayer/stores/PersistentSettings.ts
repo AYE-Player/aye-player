@@ -9,6 +9,10 @@ const schema = {
     type: "boolean",
     default: false
   },
+  devMode: {
+    type: "boolean",
+    default: false
+  },
   language: {
     type: "string",
     default: "en"

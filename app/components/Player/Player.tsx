@@ -85,19 +85,24 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player,
     playlists,
     queue,
-    trackHistory
+    trackHistory,
+    app
   }: RootStoreModel) => ({
     player,
     queue,
     playlists,
-    trackHistory
+    trackHistory,
+    app
   });
 
-  const { player, queue, trackHistory } = useInject(Store);
+  const { player, queue, trackHistory, app } = useInject(Store);
   PlayerInterop.init();
 
   window.onmessage = (m: any) => {
-    if (m.origin === "https://player.aye-player.de") {
+    const playerUrl = app.devMode
+      ? "http://localhost:3000"
+      : "https://player.aye-player.de";
+    if (m.origin === playerUrl) {
       if (m.data.type === "setPlaybackPosition") {
         if (m.data.playbackPosition === 0) return;
         const oldPosition = player.playbackPosition;
@@ -252,16 +257,29 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           overflow: "hidden"
         }}
       >
-        <iframe
-          id="embedded-player"
-          src="https://player.aye-player.de"
-          style={{
-            width: "320px",
-            height: "215px",
-            overflow: "hidden",
-            border: "none"
-          }}
-        />
+        {app.devMode ? (
+          <iframe
+            id="embedded-player"
+            src="http://localhost:3000"
+            style={{
+              width: "320px",
+              height: "215px",
+              overflow: "hidden",
+              border: "none"
+            }}
+          />
+        ) : (
+          <iframe
+            id="embedded-player"
+            src="https://player.aye-player.de"
+            style={{
+              width: "320px",
+              height: "215px",
+              overflow: "hidden",
+              border: "none"
+            }}
+          />
+        )}
       </div>
     </Container>
   );
