@@ -5,12 +5,11 @@ class PlayerInterop {
   initTrack: TrackModel;
   startAt: number;
 
-  // TODO: refactor/debug this, and only set/init/load player and initTrack, when its needed
   init() {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
       if (this.initTrack && this.player) {
-        this.setTrack(this.initTrack);
+        this.setInitTrack(this.initTrack);
       }
     }
   }
