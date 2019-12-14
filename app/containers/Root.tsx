@@ -322,6 +322,7 @@ export default class Root extends Component {
             }
             rootStore.queue.addTrack(currentTrack.id);
             rootStore.player.setCurrentTrack(currentTrack);
+            rootStore.player.notifyRPC({ state: "Paused" });
             PlayerInterop.setInitTrack(currentTrack);
           }
 
