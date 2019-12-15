@@ -145,9 +145,10 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
 
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
-    const pl = await playlists.createList(newPlaylistName);
+    await playlists.createListWithSongs(newPlaylistName, [
+      { Url: `https://www.youtube.com/watch?v${props.track.id}` }
+    ]);
 
-    pl.addTrack(props.track);
     enqueueSnackbar("", {
       content: key => (
         <SnackMessage

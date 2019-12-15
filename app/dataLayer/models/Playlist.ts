@@ -141,9 +141,26 @@ const Playlist = types
       return track;
     },
 
-    addTrackAt(track: TrackModel, newIndex: number) {
-      self.tracks.splice(newIndex, 0, track);
-    }
+    addTrackAt: flow(function*(track: TrackModel, newIndex: number) {
+      try {
+        yield axios.patch(
+          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${track.id}`,
+          [
+            {
+              op: "replace",
+              path: "OrderId",
+              value: newIndex
+            }
+          ],
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+        self.tracks.splice(newIndex, 0, track);
+      } catch (error) {}
+    })
   }));
 
 export default Playlist;

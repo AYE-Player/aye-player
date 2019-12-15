@@ -180,8 +180,8 @@ export default class Main {
       /// define width and height for the window
       width: Settings.has("windowSize")
         ? Settings.get("windowSize").width
-        : 1333,
-      minWidth: 1333,
+        : 1390,
+      minWidth: 1390,
       height: Settings.has("windowSize")
         ? Settings.get("windowSize").height
         : 728,
@@ -218,8 +218,8 @@ export default class Main {
       show: false,
       width: Settings.has("windowSize")
         ? Settings.get("windowSize").width
-        : 1333,
-      minWidth: 1333,
+        : 1390,
+      minWidth: 1390,
       height: Settings.has("windowSize")
         ? Settings.get("windowSize").height
         : 728,

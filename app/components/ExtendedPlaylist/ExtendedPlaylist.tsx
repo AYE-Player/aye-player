@@ -126,7 +126,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   };
 
   const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const track = playlist.removeAndGetTrack(result.source.index);
+    /*const track = playlist.removeAndGetTrack(result.source.index);
     playlist.addTrackAt(
       Track.create({
         id: track.id,
@@ -134,7 +134,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         duration: track.duration
       }),
       result.destination.index
-    );
+    );*/
+    console.log("RES", result);
   };
 
   player.currentTrack;
