@@ -224,7 +224,7 @@ export default class Main {
         ? Settings.get("windowSize").height
         : 728,
       minHeight: 728,
-      frame: true,
+      frame: process.platform === "win32" ? false : true,
       titleBarStyle: "hidden",
       maximizable: false,
       webPreferences: {
@@ -329,7 +329,7 @@ export default class Main {
     this.mainWindow.webContents.on("did-finish-load", () => {
       /// when the content has loaded, hide the loading screen and show the main window
       if (this.loadingScreen) {
-        this.loadingScreen.close();
+        this.loadingScreen.destroy();
       }
 
       const lng = Settings.get("language");
