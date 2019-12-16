@@ -13,6 +13,11 @@ import useInject from "../../hooks/useInject";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 import Axios from "axios";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
+import SnackMessage from "../Customs/SnackMessage";
+import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   match: any;
@@ -47,6 +52,9 @@ const Header = styled.div`
 `;
 
 const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
+  const { enqueueSnackbar } = useSnackbar();
+  const { t } = useTranslation();
+
   const [value, setValue] = React.useState(true); //boolean state
   const [isLoaded, setIsLoaded] = React.useState(false);
   PlayerInterop.init();
@@ -71,8 +79,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const playlist = playlists.getListById(id);
 
   if (!playlist) {
-    window.location.href =
-      `file://${__dirname}/app.html#/`;
+    window.location.href = `file://${__dirname}/app.html#/`;
     return null;
   }
 
@@ -125,16 +132,24 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     setValue(!value);
   };
 
-  const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const track = playlist.removeAndGetTrack(result.source.index);
-    playlist.addTrackAt(
-      Track.create({
-        id: track.id,
-        title: track.title,
-        duration: track.duration
-      }),
-      result.destination.index
-    );
+  const _onDragEnd = async (
+    result: DropResult,
+    provided: ResponderProvided
+  ) => {
+    try {
+      await playlist.moveTrackTo(result.source.index, result.destination.index);
+      setValue(!value);
+    } catch (error) {
+      AyeLogger.player(
+        `Error in Playlist Component ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
+        )
+      });
+    }
   };
 
   player.currentTrack;

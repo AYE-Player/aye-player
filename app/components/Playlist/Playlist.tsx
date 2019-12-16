@@ -1,13 +1,22 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
-import { DragDropContext, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  ResponderProvided
+} from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import Track, { TrackModel } from "../../dataLayer/models/Track";
+import { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
+import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
 
 interface IProps {}
@@ -43,6 +52,7 @@ const Header = styled.div`
 
 const Playlist: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   PlayerInterop.init();
 
   const [value, setValue] = React.useState(true); //boolean state
@@ -71,21 +81,32 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   player.currentTrack;
 
-  const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const track = player.currentPlaylist.removeAndGetTrack(result.source.index);
-    player.currentPlaylist.addTrackAt(
-      Track.create({
-        id: track.id,
-        title: track.title,
-        duration: track.duration
-      }),
-      result.destination.index
-    );
+  const _onDragEnd = async (
+    result: DropResult,
+    provided: ResponderProvided
+  ) => {
+    try {
+      await player.currentPlaylist.moveTrackTo(
+        result.source.index,
+        result.destination.index
+      );
 
-    const idx = player.currentPlaylist.getIndexOfTrack(player.currentTrack);
+      const idx = player.currentPlaylist.getIndexOfTrack(player.currentTrack);
 
-    queue.clear();
-    queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
+      queue.clear();
+      queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
+      setValue(!value);
+    } catch (error) {
+      AyeLogger.player(
+        `Error in Playlist Component ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
+        )
+      });
+    }
   };
 
   const renderPlaylist = () => (

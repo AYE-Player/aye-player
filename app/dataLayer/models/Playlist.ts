@@ -135,15 +135,34 @@ const Playlist = types
       }
     }),
 
-    removeAndGetTrack(idx: number) {
-      const track = clone(self.tracks[idx]);
-      self.tracks.splice(idx, 1);
-      return track;
-    },
+    moveTrackTo: flow(function*(oldIndex: number, newIndex: number) {
+      try {
+        const track = clone(self.tracks[oldIndex]);
+        self.tracks.splice(oldIndex, 1);
 
-    addTrackAt(track: TrackModel, newIndex: number) {
-      self.tracks.splice(newIndex, 0, track);
-    }
+        yield axios.patch(
+          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${track.id}`,
+          [
+            {
+              op: "replace",
+              path: "OrderId",
+              value: newIndex
+            }
+          ],
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("token")
+            }
+          }
+        );
+        self.tracks.splice(newIndex, 0, track);
+      } catch (error) {
+        AyeLogger.player(
+          `Error changing Track order ${JSON.stringify(error, null, 2)}`,
+          LogType.ERROR
+        );
+      }
+    })
   }));
 
 export default Playlist;

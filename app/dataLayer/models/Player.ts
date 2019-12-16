@@ -127,7 +127,6 @@ const Player = types
     },
 
     toggleShuffleState() {
-      // TODO: think whether this is correct or if it should repeat the shuffled list / song
       if (self.repeat === Repeat.ONE || self.repeat === Repeat.ALL) {
         self.repeat = Repeat.NONE;
       }

@@ -180,8 +180,8 @@ export default class Main {
       /// define width and height for the window
       width: Settings.has("windowSize")
         ? Settings.get("windowSize").width
-        : 1333,
-      minWidth: 1333,
+        : 1390,
+      minWidth: 1390,
       height: Settings.has("windowSize")
         ? Settings.get("windowSize").height
         : 728,
@@ -218,13 +218,13 @@ export default class Main {
       show: false,
       width: Settings.has("windowSize")
         ? Settings.get("windowSize").width
-        : 1333,
-      minWidth: 1333,
+        : 1390,
+      minWidth: 1390,
       height: Settings.has("windowSize")
         ? Settings.get("windowSize").height
         : 728,
       minHeight: 728,
-      frame: true,
+      frame: process.platform === "win32" ? false : true,
       titleBarStyle: "hidden",
       maximizable: false,
       webPreferences: {
@@ -329,7 +329,7 @@ export default class Main {
     this.mainWindow.webContents.on("did-finish-load", () => {
       /// when the content has loaded, hide the loading screen and show the main window
       if (this.loadingScreen) {
-        this.loadingScreen.close();
+        this.loadingScreen.destroy();
       }
 
       const lng = Settings.get("language");

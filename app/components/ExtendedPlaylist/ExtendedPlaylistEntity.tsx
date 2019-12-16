@@ -40,6 +40,7 @@ const Container = styled.div`
 const TrackInfoContainer = styled.div<any>`
   display: flex;
   align-items: center;
+  align-content: space-around;
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
@@ -49,7 +50,7 @@ const TrackInfoContainer = styled.div<any>`
 
 const Title = styled.div<any>`
   margin-right: 32px;
-  width: 300px;
+  width: 50%;
   white-space: nowrap;
   overflow: hidden;
   ${(props: any) => {
@@ -152,9 +153,9 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
 
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
-    const pl = await playlists.createList(newPlaylistName);
-
-    pl.addTrack(props.track);
+    await playlists.createListWithSongs(newPlaylistName, [
+      { Url: `https://www.youtube.com/watch?v${props.track.id}` }
+    ]);
 
     enqueueSnackbar("", {
       content: key => (
@@ -179,7 +180,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
 
   const _handlePlaylistSelectDialogClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <>

@@ -7,7 +7,7 @@ import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
-import { LogType, Repeat } from "../../types/enums";
+import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
@@ -98,33 +98,42 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   const { player, queue, trackHistory, app } = useInject(Store);
   PlayerInterop.init();
 
-  window.onmessage = (m: any) => {
+  window.onmessage = (message: any) => {
+    const { data, origin } = message;
     const playerUrl = app.devMode
       ? "http://localhost:3000"
       : "https://player.aye-player.de";
-    if (m.origin === playerUrl) {
-      if (m.data.type === "setPlaybackPosition") {
-        if (m.data.playbackPosition === 0) return;
-        const oldPosition = player.playbackPosition;
-        player.setPlaybackPosition(m.data.playbackPosition);
-        if (m.data.playbackPosition < oldPosition) {
-          player.notifyRPC();
-        }
-      } else if (m.data.type === "playNextTrack") {
-        _playNextTrack();
-      } else if (m.data.type === "error") {
-        AyeLogger.player(
-          `Error from External Player ${JSON.stringify(m.data.error)}`,
-          LogType.ERROR
-        );
-      } else if (m.data.type === "start") {
-        if (!player.isPlaying) {
-          player.togglePlayingState();
-        }
-      } else if (m.data.type === "pause") {
-        if (player.isPlaying) {
-          player.togglePlayingState();
-        }
+    if (origin === playerUrl) {
+      switch (data.type) {
+        case IncomingMessageType.SET_PLAYBACK_POSITION:
+          if (data.playbackPosition === 0) return;
+          const oldPosition = player.playbackPosition;
+          player.setPlaybackPosition(data.playbackPosition);
+          if (data.playbackPosition < oldPosition) {
+            player.notifyRPC();
+          }
+          break;
+        case IncomingMessageType.PLAY_NEXT_TRACK:
+          _playNextTrack();
+          break;
+        case IncomingMessageType.START:
+          if (!player.isPlaying) {
+            player.togglePlayingState();
+          }
+          break;
+        case IncomingMessageType.PAUSE:
+          if (player.isPlaying) {
+            player.togglePlayingState();
+          }
+          break;
+        case IncomingMessageType.ERROR:
+          AyeLogger.player(
+            `Error from External Player ${JSON.stringify(data.error)}`,
+            LogType.ERROR
+          );
+          break;
+        default:
+          break;
       }
     }
   };

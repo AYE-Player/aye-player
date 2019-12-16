@@ -1,5 +1,6 @@
 import { TrackModel } from "../models/Track";
 import Root from "../../containers/Root";
+import { OutgoingMessageType } from "../../types/enums";
 
 class PlayerInterop {
   player: any;
@@ -19,7 +20,7 @@ class PlayerInterop {
     if (this.player) {
       this.player.contentWindow.postMessage(
         {
-          type: "setTrack",
+          type: OutgoingMessageType.SET_TRACK,
           track: track,
           startAt: this.startAt ? this.startAt : undefined
         },
@@ -39,7 +40,7 @@ class PlayerInterop {
   setTrack(track?: TrackModel) {
     this.player.contentWindow.postMessage(
       {
-        type: "setTrack",
+        type: OutgoingMessageType.SET_TRACK,
         track: track ? track : undefined
       },
       Root.stores.app.devMode
@@ -51,7 +52,7 @@ class PlayerInterop {
   playTrack(track: TrackModel) {
     this.player.contentWindow.postMessage(
       {
-        type: "playTrack",
+        type: OutgoingMessageType.PLAY_TRACK,
         track
       },
       Root.stores.app.devMode
@@ -63,7 +64,7 @@ class PlayerInterop {
   seekTo(time: number) {
     this.player.contentWindow.postMessage(
       {
-        type: "seek",
+        type: OutgoingMessageType.SEEK,
         time
       },
       Root.stores.app.devMode
@@ -75,7 +76,7 @@ class PlayerInterop {
   setVolume(newVolume: number) {
     this.player.contentWindow.postMessage(
       {
-        type: "volume",
+        type: OutgoingMessageType.VOLUME,
         volume: newVolume / 100
       },
       Root.stores.app.devMode
@@ -87,7 +88,7 @@ class PlayerInterop {
   togglePlayingState() {
     this.player.contentWindow.postMessage(
       {
-        type: "togglePlayingState"
+        type: OutgoingMessageType.TOGGLE_PLAYING_STATE
       },
       Root.stores.app.devMode
         ? "http://localhost:3000"
@@ -98,7 +99,7 @@ class PlayerInterop {
   setLooping(state: boolean) {
     this.player.contentWindow.postMessage(
       {
-        type: "setLooping",
+        type: OutgoingMessageType.SET_LOOPING,
         state
       },
       Root.stores.app.devMode
@@ -110,7 +111,7 @@ class PlayerInterop {
   mute(state: boolean) {
     this.player.contentWindow.postMessage(
       {
-        type: "toggleMute",
+        type: OutgoingMessageType.MUTE,
         state
       },
       Root.stores.app.devMode
