@@ -4,7 +4,8 @@ import {
   Menu,
   Tray,
   NativeImage,
-  nativeImage
+  nativeImage,
+  systemPreferences
 } from "electron";
 import path from "path";
 import BaseModule from "./BaseModule";
@@ -32,13 +33,21 @@ class AyeTray extends BaseModule {
           : "images/icons/png/";
       if (process.platform === "darwin") {
         const nImage = nativeImage.createFromPath(
-          path.resolve(path.join(__dirname, `${basePath}16x16.png`))
+          path.resolve(
+            path.join(
+              __dirname,
+              `${basePath}${
+                systemPreferences.isDarkMode() ? "16x16_w.png" : "16x16.png"
+              }`
+            )
+          )
         );
         this.icon = nImage;
       } else if (process.platform === "win32") {
-        const winPath = process.env.NODE_ENV === "development"
-        ? "../images/icons/win/"
-        : "images/icons/win/";
+        const winPath =
+          process.env.NODE_ENV === "development"
+            ? "../images/icons/win/"
+            : "images/icons/win/";
         this.icon = path.resolve(path.join(__dirname, `${winPath}icon_w.ico`));
       } else {
         this.icon = path.resolve(
@@ -127,7 +136,7 @@ class AyeTray extends BaseModule {
   }
 
   private toggleWindow() {
-/*     if (this.window == null) {
+    /*     if (this.window == null) {
       if (process.platform === "darwin") {
         // On MacOS, closing the window via the red button destroys the BrowserWindow instance.
         this.window.createWindow().then(() => {
