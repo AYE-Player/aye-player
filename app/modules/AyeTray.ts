@@ -36,7 +36,10 @@ class AyeTray extends BaseModule {
         );
         this.icon = nImage;
       } else if (process.platform === "win32") {
-        this.icon = path.resolve(path.join(__dirname, `${basePath}icon.ico`));
+        const winPath = process.env.NODE_ENV === "development"
+        ? "../images/icons/win/"
+        : "images/icons/win/";
+        this.icon = path.resolve(path.join(__dirname, `${winPath}icon_w.ico`));
       } else {
         this.icon = path.resolve(
           path.join(__dirname, `${basePath}16x16_w.png`)
