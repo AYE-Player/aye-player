@@ -32,7 +32,7 @@ const Container = styled.div`
 `;
 
 const Control = styled.div`
-  margin: 0 8px;
+  margin: 0 16px;
   width: 24px;
   height: 24px;
 `;
