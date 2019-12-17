@@ -1,9 +1,9 @@
-import axios from "axios";
 import { flow, types } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
 import { decodeHTMLEntities } from "../../helpers";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
+import ApiClient from "../api/ApiClient";
+import Track, { TrackModel } from "../models/Track";
 
 export type SearchResultModel = typeof SearchResult.Type;
 
@@ -19,9 +19,7 @@ const SearchResult = types
   .actions(self => ({
     getTracks: flow(function*(term: string) {
       try {
-        const { data } = yield axios.get(
-          `https://api.aye-player.de/v1/search/${term}`
-        );
+        const { data } = yield ApiClient.searchTrack(term);
         const tracks = [];
 
         for (const track of data) {
@@ -39,11 +37,7 @@ const SearchResult = types
     }),
     getTrackFromUrl: flow(function*(url: string) {
       try {
-        const { data } = yield axios.get(
-          `https://api.aye-player.de/v1/search/song?songUrl=${encodeURIComponent(
-            url
-          )}`
-        );
+        const { data } = yield ApiClient.getTrackFromUrl(url);
 
         let parsedData = {
           id: data.Id,

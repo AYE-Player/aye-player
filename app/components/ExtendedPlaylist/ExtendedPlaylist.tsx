@@ -18,6 +18,7 @@ import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
+import ApiClient from "../../dataLayer/api/ApiClient";
 
 interface IProps {
   match: any;
@@ -90,14 +91,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     const source = CancelToken.source();
 
     if (!isLoaded) {
-      Axios.get(
-        `https://api.aye-player.de/v1/playlists/${id}/songs?skip=0&take=20`,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
-          }
-        }
-      ).then(({ data: songs }) => {
+      ApiClient.getTracksFromPlaylist(id, 10000).then(({ data: songs }) => {
         songs.map((song: ITrackDto) => {
           const track = Track.create({
             id: song.Id,

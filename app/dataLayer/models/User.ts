@@ -1,7 +1,7 @@
-import axios from "axios";
 import { flow, types } from "mobx-state-tree";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
+import ApiClient from "../api/ApiClient";
 
 export type UserModel = typeof User.Type;
 
@@ -26,14 +26,7 @@ const User = types
       if (token) {
         try {
           // @ts-ignore
-          const { data: userInfo } = yield axios.get(
-            "https://api.aye-player.de/v1/userIdentity/",
-            {
-              headers: {
-                "x-access-token": token
-              }
-            }
-          );
+          const { data: userInfo } = yield ApiClient.getUserdata();
           self.id = userInfo.Id;
           self.email = userInfo.Email;
           self.name = userInfo.Username;
@@ -52,23 +45,16 @@ const User = types
     authenticate: flow(function*(username: string, password: string) {
       try {
         AyeLogger.player(`Trying to log in with: ${username}`);
-        const { data: token } = yield axios.post(
-          "https://api.aye-player.de/v1/auth/",
-          {
-            Email: username,
-            Password: password
-          }
-        );
         //@ts-ignore
-        const { data: userInfo } = yield axios.get(
-          "https://api.aye-player.de/v1/userIdentity/",
-          {
-            headers: {
-              "x-access-token": token
-            }
-          }
+        const { data: token } = yield ApiClient.authenticate(
+          username,
+          password
         );
+
         localStorage.setItem("token", token);
+        
+        //@ts-ignore
+        const { data: userInfo } = yield ApiClient.getUserdata();
 
         // Save user information
         self.id = userInfo.Id;
@@ -100,11 +86,7 @@ const User = types
     delete: flow(function*() {
       try {
         AyeLogger.player(`Deleting User ${self.id}`);
-        yield axios.delete(`https://api.aye-player.de/v1/userIdentity/`, {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
-          }
-        });
+        yield ApiClient.deleteUser();
         AyeLogger.player(`Deleted`);
       } catch (error) {
         AyeLogger.player(
@@ -120,15 +102,7 @@ const User = types
     updatePassword: flow(function*(password: string) {
       try {
         AyeLogger.player(`Trying to set new password for ${self.id}`);
-        yield axios.patch(
-          "https://api.aye-player.de/v1/userIdentity/",
-          [{ op: "replace", path: "/Password", value: password }],
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        yield ApiClient.updatePassword(password);
         AyeLogger.player(`New Password set.`);
       } catch (error) {
         AyeLogger.player(
@@ -144,31 +118,13 @@ const User = types
         data.append("avatar", avatar);
 
         // Upload avatar image
-        // INFO: We have to use fetch here, because axios has problems with formData uploads/requests...
-        const res = yield fetch(
-          "https://api.aye-player.de/v1/userIdentity/avatar",
-          {
-            method: "POST",
-            body: data,
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        const res = yield ApiClient.updateAvatar(data);
 
         // parse response (gives storage URL)
         const avatarURL = yield res.json();
 
         // Patch userprofile with new URL
-        yield axios.patch(
-          `https://api.aye-player.de/v1/userIdentity/`,
-          [{ op: "replace", path: "/Avatar", value: avatarURL }],
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        yield ApiClient.updateAvatarUrl(avatarURL);
 
         // set local URL for direct effect
         self.avatar = avatarURL;
@@ -182,10 +138,7 @@ const User = types
     register: flow(function*(name: string, email: string, password: string) {
       try {
         AyeLogger.player(`Trying to register with ${name} ${email}`);
-        yield axios.post("https://api.aye-player.de/v1/userIdentity/", {
-          Email: email,
-          Password: password
-        });
+        yield ApiClient.register(email, password);
       } catch (error) {
         AyeLogger.player(
           `Failed registration ${JSON.stringify(error, null, 2)}`,
@@ -198,9 +151,7 @@ const User = types
     forgotPassword: flow(function*(email: string) {
       try {
         AyeLogger.player(`Trying to reset password for ${email}`);
-        yield axios.put(`https://api.aye-player.de/v1/userIdentity/password`, {
-          Email: email
-        });
+        yield ApiClient.forgotPassword(email);
       } catch (error) {
         AyeLogger.player(
           `Failed to start password reset process ${JSON.stringify(

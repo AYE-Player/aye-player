@@ -21,6 +21,7 @@ import Playlist from "../dataLayer/models/Playlist";
 import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
+import ApiClient from "../dataLayer/api/ApiClient";
 
 const Header = styled.div`
   font-size: 24px;
@@ -82,14 +83,10 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        Axios.get("https://api.aye-player.de/v1/playlists", {
-          headers: {
-            "x-access-token": token
-          }
-        }).then(({ data }) => {
+        ApiClient.getPlaylists().then(({ data }) => {
           for (const playlist of data) {
             const oldPl = playlists.lists.find(list => list.id === playlist.Id);
-            if (oldPl || playlist.tracks?.length !== oldPl.trackCount ) continue;
+            if (oldPl || playlist.tracks?.length !== oldPl.trackCount) continue;
             const pl = Playlist.create({
               id: playlist.Id,
               name: playlist.Name,

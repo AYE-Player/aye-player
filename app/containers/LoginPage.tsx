@@ -1,5 +1,4 @@
 import { Grid } from "@material-ui/core";
-import axios from "axios";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,7 +9,6 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import routes from "../constants/routes.json";
-import Playlist from "../dataLayer/models/Playlist";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 
@@ -22,12 +20,11 @@ const Header = styled.div`
 const LoginPage: React.FunctionComponent<any> = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user, playlists }: RootStoreModel) => ({
-    user,
-    playlists
+  const UserStore = ({ user }: RootStoreModel) => ({
+    user
   });
 
-  const { user, playlists } = useInject(UserStore);
+  const { user } = useInject(UserStore);
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
@@ -51,18 +48,9 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
-  const getPlaylists = async () => {
+  /*const getPlaylists = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const { data } = await axios.get(
-          "https://api.aye-player.de/v1/playlists",
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        const { data } = await ApiClient.getPlaylists();
 
         for (const playlist of data) {
           const pl = Playlist.create({
@@ -74,12 +62,11 @@ const LoginPage: React.FunctionComponent<any> = () => {
           });
 
           playlists.add(pl);
-        }
       }
     } catch (error) {
       console.error(error);
     }
-  };
+  };*/
 
   const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
@@ -87,7 +74,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
       window.location.href = `${window.location.href.split("#/")[0]}#${
         routes.ACCOUNT
       }`;
-      await getPlaylists();
+      // await getPlaylists();
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
