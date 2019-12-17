@@ -30,11 +30,12 @@ const SettingsContainer = styled.div`
 `; */
 
 const AccountPage: React.FunctionComponent = () => {
-  const UserStore = ({ app }: RootStoreModel) => ({
-    app
+  const UserStore = ({ app, user }: RootStoreModel) => ({
+    app,
+    user
   });
 
-  const { app } = useInject(UserStore);
+  const { app, user } = useInject(UserStore);
 
   const _switchRPCStatus = () => {
     app.toggleRPC();
@@ -46,7 +47,7 @@ const AccountPage: React.FunctionComponent = () => {
 
   const _activateDevMode = () => {
     app.toggleDevMode();
-  }
+  };
 
   const [language, setLanguage] = React.useState(app.language);
 
@@ -84,12 +85,16 @@ const AccountPage: React.FunctionComponent = () => {
           setSelected={setLanguage}
           handleChange={_handleChange}
         />
-        <Divider size={2} />
-        <CustomSwitch
-          label={t("AppSettingsPage.devMode")}
-          onChange={_activateDevMode}
-          checked={app.devMode}
-        />
+        {user.roles.find((role: string) => role === "admin") && (
+          <>
+            <Divider size={2} />
+            <CustomSwitch
+              label={t("AppSettingsPage.devMode")}
+              onChange={_activateDevMode}
+              checked={app.devMode}
+            />
+          </>
+        )}
       </SettingsContainer>
       {/* <InfoText>{t("AppSettingsPage.infoText")}</InfoText> */}
     </Container>
