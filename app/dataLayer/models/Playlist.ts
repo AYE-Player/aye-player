@@ -111,9 +111,10 @@ const Playlist = types
     moveTrackTo: flow(function*(oldIndex: number, newIndex: number) {
       try {
         const track = clone(self.tracks[oldIndex]);
-        self.tracks.splice(oldIndex, 1);
 
         yield ApiClient.moveTrackTo(self.id, track.id, newIndex);
+
+        self.tracks.splice(oldIndex, 1);
         self.tracks.splice(newIndex, 0, track);
       } catch (error) {
         AyeLogger.player(
