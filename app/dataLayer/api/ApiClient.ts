@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { TrackModel } from "../models/Track";
 
 class ApiClient {
-  axios: AxiosInstance;
+  private axios: AxiosInstance;
   /**
    * Prepares our axios instance, also this checks if a token is present
    * and if a token exists, adds it to every request

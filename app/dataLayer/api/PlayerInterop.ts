@@ -3,11 +3,11 @@ import Root from "../../containers/Root";
 import { OutgoingMessageType } from "../../types/enums";
 
 class PlayerInterop {
-  player: any;
-  initTrack: TrackModel;
-  startAt: number;
-  volume: number;
-  isMuted: boolean;
+  private player: any;
+  private initTrack: TrackModel;
+  private startAt: number;
+  private volume: number;
+  private isMuted: boolean;
 
   init() {
     if (!this.player) {
@@ -40,18 +40,18 @@ class PlayerInterop {
 
   setInitState() {
     if (this.player) {
-        this.player.contentWindow.postMessage(
-          {
-            type: OutgoingMessageType.INIT,
-            track: this.initTrack,
-            startAt: this.startAt ? this.startAt : undefined,
-            volume: this.volume,
-            muted: this.isMuted
-          },
-          Root.stores.app.devMode
-            ? "http://localhost:3000"
-            : "https://player.aye-player.de"
-        );
+      this.player.contentWindow.postMessage(
+        {
+          type: OutgoingMessageType.INIT,
+          track: this.initTrack,
+          startAt: this.startAt ? this.startAt : undefined,
+          volume: this.volume,
+          muted: this.isMuted
+        },
+        Root.stores.app.devMode
+          ? "http://localhost:3000"
+          : "https://player.aye-player.de"
+      );
       this.initTrack = undefined;
       this.startAt = undefined;
       this.volume = undefined;
