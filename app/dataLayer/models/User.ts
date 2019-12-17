@@ -17,6 +17,7 @@ const User = types
     isAnonym: types.optional(types.boolean, true),
     id: types.maybe(types.string),
     email: types.maybe(types.string),
+    roles: types.optional(types.array(types.string), []),
     name: types.maybe(types.string),
     avatar: types.maybe(types.string)
   })
@@ -33,6 +34,7 @@ const User = types
           self.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
           self.isAnonym = false;
           self.isAuthenticated = true;
+          self.roles = userInfo.Roles.map((role: IRole) => role.Name);
           self.hasPremium =
             !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
             !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
@@ -63,8 +65,10 @@ const User = types
         self.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
         self.isAnonym = false;
         self.isAuthenticated = true;
-        // TODO: Really set this
-        self.hasPremium = true;
+        self.roles = userInfo.Roles.map((role: IRole) => role.Name);
+        self.hasPremium =
+          !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
+          !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
         AyeLogger.player(`Logged in user ${username}`);
       } catch (error) {
         AyeLogger.player(`Error logging in ${error}`, LogType.ERROR);
