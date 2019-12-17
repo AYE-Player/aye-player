@@ -91,7 +91,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     const source = CancelToken.source();
 
     if (!isLoaded) {
-      ApiClient.getTracksFromPlaylist(id, 1000).then(({ data: songs }) => {
+      ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(({ data: songs }) => {
         songs.map((song: ITrackDto) => {
           const track = Track.create({
             id: song.Id,

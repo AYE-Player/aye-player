@@ -53,6 +53,8 @@ const Playlist = types
     addLoadedTrack: flow(function*(track: TrackModel) {
       try {
         self.tracks.push(track);
+        self.trackCount = self.trackCount + 1;
+        self.duration = self.duration + track.duration;
       } catch (error) {
         AyeLogger.player(
           `Error adding track to playlist ${self.id} ${JSON.stringify(

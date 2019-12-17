@@ -10,7 +10,7 @@ import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
 import { StoreProvider } from "../components/StoreProvider";
 import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
-import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
+import Playlist from "../dataLayer/models/Playlist";
 import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
 import Settings from "../dataLayer/stores/PersistentSettings";
@@ -25,7 +25,11 @@ interface IPlayerSettings {
   isMuted: boolean;
   isShuffling: boolean;
   currentTrack: TrackModel;
-  currentPlaylist: PlaylistModel;
+  currentPlaylist: {
+    id: string;
+    trackCount: number;
+    duration: number;
+  };
 }
 
 const rootStore = createStore();
@@ -50,6 +54,15 @@ const rootStore = createStore();
     id: "A0HDitIHMXo",
     title: "Nightcore - MAYDAY",
     duration: 215
+  });
+  rootStore.trackCache.add(track);
+  playlist.addLoadedTrack(track);
+
+  let track = Track.create({
+    id: "dj-tiesto/dj-tiesto-forbidden-paradise-deep-trance-mix",
+    title: "Dj tiesto - Forbidden Paradise (Deep Trance Mix)",
+    duration: 255,
+    source: "soundcloud"
   });
   rootStore.trackCache.add(track);
   playlist.addLoadedTrack(track);
@@ -232,10 +245,11 @@ ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.isShuffling", rootStore.player.isShuffling);
 
   if (rootStore.player.currentPlaylist) {
-    Settings.set(
-      "playerSettings.currentPlaylist.id",
-      rootStore.player.currentPlaylist.id
-    );
+    Settings.set("playerSettings.currentPlaylist", {
+      id: rootStore.player.currentPlaylist.id,
+      trackCount: rootStore.player.currentPlaylist.trackCount,
+      duration: rootStore.player.currentPlaylist.duration
+    });
   }
   if (
     rootStore.player.currentTrack?.id !==
@@ -327,7 +341,7 @@ export default class Root extends Component {
             if (!playlist) return;
             ApiClient.getTracksFromPlaylist(
               playerSettings.currentPlaylist.id,
-              1000
+              playerSettings.currentPlaylist.trackCount
             ).then(({ data }) => {
               for (const track of data) {
                 const tr = Track.create({

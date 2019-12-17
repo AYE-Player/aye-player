@@ -105,7 +105,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   const _getTracksOfPlaylist = async (playlist: PlaylistModel) => {
     const { data: tracks } = await ApiClient.getTracksFromPlaylist(
       playlist.id,
-      1000
+      playlist.trackCount
     );
     for (const track of tracks) {
       const tr = Track.create({
