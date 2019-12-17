@@ -316,7 +316,7 @@ export default class Root extends Component {
             rootStore.queue.addTrack(currentTrack.id);
             rootStore.player.setCurrentTrack(currentTrack);
             rootStore.player.notifyRPC({ state: "Paused" });
-            PlayerInterop.setInitState({ track: currentTrack });
+            PlayerInterop.setInitValues({ track: currentTrack });
           }
 
           // Check for last active playlist
@@ -355,15 +355,16 @@ export default class Root extends Component {
           }
           if (playerSettings.volume) {
             rootStore.player.setVolume(playerSettings.volume);
-            PlayerInterop.setInitState({ volume: playerSettings.volume });
+            PlayerInterop.setInitValues({ volume: playerSettings.volume });
           }
           if (playerSettings.isShuffling) {
             rootStore.player.setShuffling(playerSettings.isShuffling);
           }
           if (playerSettings.isMuted) {
             rootStore.player.setMute(playerSettings.isMuted);
-            PlayerInterop.setInitState({ isMuted: playerSettings.isMuted });
+            PlayerInterop.setInitValues({ isMuted: playerSettings.isMuted });
           }
+          PlayerInterop.setInitState();
         }
       });
     } catch (error) {

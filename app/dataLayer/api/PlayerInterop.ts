@@ -13,16 +13,12 @@ class PlayerInterop {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
       if (this.initTrack && this.player) {
-        this.setInitState({
-          track: this.initTrack,
-          volume: this.volume,
-          isMuted: this.isMuted
-        });
+        this.setInitState();
       }
     }
   }
 
-  setInitState({
+  setInitValues({
     track,
     volume,
     isMuted
@@ -31,25 +27,35 @@ class PlayerInterop {
     volume?: number;
     isMuted?: boolean;
   }) {
-    if (this.player) {
-      this.player.contentWindow.postMessage(
-        {
-          type: OutgoingMessageType.SET_TRACK,
-          track: track,
-          startAt: this.startAt ? this.startAt : undefined
-        },
-        Root.stores.app.devMode
-          ? "http://localhost:3000"
-          : "https://player.aye-player.de"
-      );
-      this.setVolume(volume);
-      this.setMute(isMuted);
-      this.initTrack = undefined;
-      this.volume = undefined;
-    } else {
+    if (track) {
       this.initTrack = track;
+    }
+    if (volume) {
       this.volume = volume;
+    }
+    if (isMuted !== undefined) {
       this.isMuted = isMuted;
+    }
+  }
+
+  setInitState() {
+    if (this.player) {
+        this.player.contentWindow.postMessage(
+          {
+            type: OutgoingMessageType.INIT,
+            track: this.initTrack,
+            startAt: this.startAt ? this.startAt : undefined,
+            volume: this.volume,
+            muted: this.isMuted
+          },
+          Root.stores.app.devMode
+            ? "http://localhost:3000"
+            : "https://player.aye-player.de"
+        );
+      this.initTrack = undefined;
+      this.startAt = undefined;
+      this.volume = undefined;
+      this.isMuted = undefined;
     }
   }
 
