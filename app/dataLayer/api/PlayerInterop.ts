@@ -6,17 +6,31 @@ class PlayerInterop {
   player: any;
   initTrack: TrackModel;
   startAt: number;
+  volume: number;
+  isMuted: boolean;
 
   init() {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
       if (this.initTrack && this.player) {
-        this.setInitTrack(this.initTrack);
+        this.setInitState({
+          track: this.initTrack,
+          volume: this.volume,
+          isMuted: this.isMuted
+        });
       }
     }
   }
 
-  setInitTrack(track: TrackModel) {
+  setInitState({
+    track,
+    volume,
+    isMuted
+  }: {
+    track?: TrackModel;
+    volume?: number;
+    isMuted?: boolean;
+  }) {
     if (this.player) {
       this.player.contentWindow.postMessage(
         {
@@ -28,8 +42,14 @@ class PlayerInterop {
           ? "http://localhost:3000"
           : "https://player.aye-player.de"
       );
+      this.setVolume(volume);
+      this.setMute(isMuted);
+      this.initTrack = undefined;
+      this.volume = undefined;
     } else {
       this.initTrack = track;
+      this.volume = volume;
+      this.isMuted = isMuted;
     }
   }
 
@@ -108,7 +128,7 @@ class PlayerInterop {
     );
   }
 
-  mute(state: boolean) {
+  setMute(state: boolean) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.MUTE,
