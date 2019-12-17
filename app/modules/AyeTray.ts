@@ -5,7 +5,7 @@ import {
   Tray,
   NativeImage,
   nativeImage,
-  systemPreferences
+  nativeTheme
 } from "electron";
 import path from "path";
 import BaseModule from "./BaseModule";
@@ -37,7 +37,7 @@ class AyeTray extends BaseModule {
             path.join(
               __dirname,
               `${basePath}${
-                systemPreferences.isDarkMode() ? "16x16_w.png" : "16x16.png"
+                nativeTheme.shouldUseDarkColors ? "16x16_w.png" : "16x16.png"
               }`
             )
           )
