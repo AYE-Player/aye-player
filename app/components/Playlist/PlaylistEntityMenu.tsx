@@ -20,6 +20,7 @@ const Container = styled.div`
   display: block;
   right: 0;
   cursor: pointer;
+  z-index: 10;
 `;
 
 const StyledMenu = withStyles({

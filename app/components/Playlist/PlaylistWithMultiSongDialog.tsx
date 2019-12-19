@@ -65,7 +65,7 @@ const PlaylistWithMultiSongDialog: React.FunctionComponent<ICustomFormDialogProp
             label={props.textField.label}
             placeholder={props.textField.placeholder}
             multiline
-            rows="4"
+            rows={4}
             rowsMax={4}
             className={classes.textField}
             margin="dense"
