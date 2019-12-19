@@ -35,12 +35,11 @@ class ApiClient {
   }
 
   getPlaylist(id: string) {
-    return this.axios.get(`
-    /playlists/${id}`);
+    return this.axios.get(`/playlists/${id}`);
   }
 
   createPlaylist(name: string) {
-    return this.axios.post("/playlists", {
+    return this.axios.post("/playlists/", {
       Name: name
     });
   }
