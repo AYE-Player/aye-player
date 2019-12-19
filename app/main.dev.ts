@@ -230,7 +230,7 @@ export default class Main {
       webPreferences: {
         nodeIntegration: true
       },
-      icon: `${__dirname}/images/icons/png/32x32_w.png`
+      icon: `${__dirname}/images/icons/png/256x256_w.png`
     });
 
     this.mainWindow.loadURL(`file://${__dirname}/app.html`);
