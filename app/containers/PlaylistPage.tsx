@@ -22,6 +22,7 @@ import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMult
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 import ApiClient from "../dataLayer/api/ApiClient";
+import CustomTextareaDialog from "../components/Customs/CustomTextareaDialog";
 
 const Header = styled.div`
   font-size: 24px;
@@ -66,6 +67,12 @@ const PlaylistPage: React.FunctionComponent = () => {
     { Url: string }[]
   >([]);
   const [open, setOpen] = React.useState(false);
+  const [addTracksOpen, setAddTracksOpen] = React.useState(false);
+  // TODO: maybe re-use newPlaylistSongs ?
+  const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
+  const [selectedPlaylist, setSelectedPlaylist] = React.useState<
+    string | undefined
+  >(undefined);
 
   const { t } = useTranslation();
 
@@ -139,6 +146,10 @@ const PlaylistPage: React.FunctionComponent = () => {
     setOpen(false);
   };
 
+  const _handleAddTracksClose = () => {
+    setAddTracksOpen(false);
+  };
+
   const _onPlaylistNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -155,6 +166,22 @@ const PlaylistPage: React.FunctionComponent = () => {
           Url: url
         }))
     );
+  };
+
+  const _onAddTracksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSongsToAdd(
+      removeControlCharacters(event.target.value)
+        .split(",")
+        .map(url => ({
+          Url: url
+        }))
+    );
+  };
+
+  const _addTracksToPlaylist = async () => {
+    setAddTracksOpen(false);
+    const playlist = playlists.getListById(selectedPlaylist);
+    await playlist.addTracksByUrls(songsToAdd);
   };
 
   const renderPlaylists = () => (
@@ -247,7 +274,11 @@ const PlaylistPage: React.FunctionComponent = () => {
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
-                    <PlaylistPageMenu id={playlist.id} />
+                    <PlaylistPageMenu
+                      id={playlist.id}
+                      handleAddTracksToList={() => setAddTracksOpen(true)}
+                      setSelectedPlaylist={setSelectedPlaylist}
+                    />
                   </StyledTableCell>
                 </TableRow>
               ))}
@@ -278,6 +309,20 @@ const PlaylistPage: React.FunctionComponent = () => {
             dialogText: t("PlaylistPage.dialog.textField.dialogText")
           }}
           handleSongsChange={_onPlaylistSongsChange}
+        />
+        <CustomTextareaDialog
+          id="addTracksDialog"
+          title={t("PlaylistPage.addTracks.title")}
+          label={t("PlaylistPage.addTracks.label")}
+          dialogText={t("PlaylistPage.addTracks.text")}
+          open={addTracksOpen}
+          handleClose={() => _handleAddTracksClose()}
+          handleChange={_onAddTracksChange}
+          handleConfirm={_addTracksToPlaylist}
+          confirmButtonText={t("PlaylistPage.addTracks.confirmButton")}
+          cancelButtonText={t("PlaylistPage.addTracks.cancelButton")}
+          type="text"
+          placeholder="https://www.youtube.com/watch?v=A3rvyaZFCN4"
         />
       </PlaylistContainer>
     </Container>

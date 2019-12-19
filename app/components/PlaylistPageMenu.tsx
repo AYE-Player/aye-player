@@ -15,6 +15,8 @@ import useInject from "../hooks/useInject";
 
 interface IPlaylistPageMenuProps {
   id: string;
+  handleAddTracksToList: any;
+  setSelectedPlaylist: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Container = styled.div`
@@ -136,6 +138,14 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             disabled={playlists.getListById(props.id).trackCount === 0}
           >
             {t("EntityMenu.loadPlaylist")}
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              props.setSelectedPlaylist(props.id);
+              props.handleAddTracksToList();
+            }}
+          >
+            {t("EntityMenu.addTracksToPlaylist")}
           </MenuItem>
           <MenuItem
             onClick={() => _handleAddPlaylistToQueueClick()}
