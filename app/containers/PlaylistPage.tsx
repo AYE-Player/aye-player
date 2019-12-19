@@ -5,24 +5,24 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { withStyles } from "@material-ui/styles";
+import Axios from "axios";
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
+import CustomTextareaDialog from "../components/Customs/CustomTextareaDialog";
+import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
+import ApiClient from "../dataLayer/api/ApiClient";
+import Playlist from "../dataLayer/models/Playlist";
+import Track from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration, removeControlCharacters } from "../helpers";
 import useInject from "../hooks/useInject";
-import Axios from "axios";
-import Track from "../dataLayer/models/Track";
-import Playlist from "../dataLayer/models/Playlist";
-import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
-import ApiClient from "../dataLayer/api/ApiClient";
-import CustomTextareaDialog from "../components/Customs/CustomTextareaDialog";
 
 const Header = styled.div`
   font-size: 24px;
@@ -38,16 +38,6 @@ const PlaylistContainer = styled.div`
   flex-direction: column;
   padding: 40px;
   height: 100%;
-`;
-
-const CreatePlaylist = styled.div`
-  margin-top: 8px;
-  display: flex;
-  position: absolute;
-  align-items: center;
-  cursor: pointer;
-  right: 16px;
-  bottom: 56px;
 `;
 
 const ScrollContainer = styled.div`
@@ -290,10 +280,19 @@ const PlaylistPage: React.FunctionComponent = () => {
           title={t("PlaylistPage.dialog.title")}
           label={t("PlaylistPage.dialog.label")}
           button={
-            <CreatePlaylist onClick={() => _handleOnClick()}>
+            <CustomButton
+              onClick={() => _handleOnClick()}
+              style={{
+                width: "196px",
+                height: "40px",
+                position: "absolute",
+                bottom: "56px",
+                right: "24px"
+              }}
+            >
               {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "8px" }} />
-            </CreatePlaylist>
+            </CustomButton>
           }
           dialogText={t("PlaylistPage.dialog.text")}
           open={open}
@@ -342,7 +341,13 @@ const PlaylistPage: React.FunctionComponent = () => {
           button={
             <CustomButton
               onClick={() => _handleOnClick()}
-              style={{ width: "250px", marginTop: "16px" }}
+              style={{
+                width: "196px",
+                height: "40px",
+                position: "absolute",
+                bottom: "56px",
+                right: "24px"
+              }}
             >
               {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "16px" }} />
