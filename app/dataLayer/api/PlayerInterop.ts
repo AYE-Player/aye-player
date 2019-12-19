@@ -4,6 +4,7 @@ import { OutgoingMessageType } from "../../types/enums";
 
 class PlayerInterop {
   private player: any;
+  private apiUrl: string;
   private initTrack: TrackModel;
   private startAt: number;
   private volume: number;
@@ -12,6 +13,9 @@ class PlayerInterop {
   init() {
     if (!this.player) {
       this.player = document.querySelector("#embedded-player") as any;
+      this.apiUrl = Root.stores.app.devMode
+        ? "http://localhost:3000"
+        : "https://player.aye-player.de";
       if (this.initTrack && this.player) {
         this.setInitState();
       }
@@ -48,9 +52,7 @@ class PlayerInterop {
           volume: this.volume,
           muted: this.isMuted
         },
-        Root.stores.app.devMode
-          ? "http://localhost:3000"
-          : "https://player.aye-player.de"
+        this.apiUrl
       );
       this.initTrack = undefined;
       this.startAt = undefined;
@@ -69,9 +71,7 @@ class PlayerInterop {
         type: OutgoingMessageType.SET_TRACK,
         track: track ? track : undefined
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 
@@ -81,9 +81,7 @@ class PlayerInterop {
         type: OutgoingMessageType.PLAY_TRACK,
         track
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 
@@ -93,9 +91,7 @@ class PlayerInterop {
         type: OutgoingMessageType.SEEK,
         time
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 
@@ -105,9 +101,7 @@ class PlayerInterop {
         type: OutgoingMessageType.VOLUME,
         volume: newVolume / 100
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 
@@ -116,9 +110,7 @@ class PlayerInterop {
       {
         type: OutgoingMessageType.TOGGLE_PLAYING_STATE
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 
@@ -128,9 +120,7 @@ class PlayerInterop {
         type: OutgoingMessageType.SET_LOOPING,
         state
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 
@@ -140,9 +130,7 @@ class PlayerInterop {
         type: OutgoingMessageType.MUTE,
         state
       },
-      Root.stores.app.devMode
-        ? "http://localhost:3000"
-        : "https://player.aye-player.de"
+      this.apiUrl
     );
   }
 }
