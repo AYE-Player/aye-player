@@ -92,11 +92,11 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
           open={Boolean(anchorEl)}
           onClose={_handleClose}
         >
-          <MenuItem onClick={() => _handleRemoveTrack()}>
-            {t("EntityMenu.remove")}
-          </MenuItem>
           <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
+          </MenuItem>
+          <MenuItem onClick={() => _handleRemoveTrack()}>
+            {t("EntityMenu.remove")}
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>
             {t("EntityMenu.addToPlaylist")}
