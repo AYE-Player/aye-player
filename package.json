@@ -56,8 +56,8 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "AYE Player",
-    "appId": "com.electron.AYEPlayer",
+    "productName": "aye-player",
+    "appId": "aye-player",
     "files": [
       "app/dist/",
       "app/images/",
