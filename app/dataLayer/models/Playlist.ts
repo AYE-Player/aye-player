@@ -71,12 +71,15 @@ const Playlist = types
       }
     }),
 
-    addTracksByUrls: flow(function*(name: string, songs: { Url: string }[]) {
+    addTracksByUrls: flow(function*(songs: { Url: string }[]) {
       try {
+        // Add tracks to the playlist
         yield ApiClient.addTracksToPlaylistByUrls(self.id, songs);
 
+        // get new Playlist information
         const { data: pl } = yield ApiClient.getPlaylist(self.id);
 
+        // Get track information of the playlist
         //@ts-ignore
         const { data: tracks } = yield ApiClient.getTracksFromPlaylist(
           self.id,
