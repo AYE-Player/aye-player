@@ -69,6 +69,12 @@ class ApiClient {
     });
   }
 
+  addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
+    return this.axios.put(`/playlists/${id}/songs/by-urls`, {
+      Songs: songs
+    });
+  }
+
   removeTrackFromPlaylist(id: string, track: TrackModel) {
     return this.axios.delete(`/playlists/${id}/songs/${track.id}`);
   }

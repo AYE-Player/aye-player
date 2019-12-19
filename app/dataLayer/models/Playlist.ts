@@ -3,6 +3,7 @@ import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import Track, { TrackModel } from "./Track";
 import ApiClient from "../api/ApiClient";
+import Root from "../../containers/Root";
 
 export type PlaylistModel = typeof Playlist.Type;
 
@@ -53,8 +54,10 @@ const Playlist = types
     addLoadedTrack: flow(function*(track: TrackModel) {
       try {
         self.tracks.push(track);
-        self.trackCount = self.trackCount + 1;
-        self.duration = self.duration + track.duration;
+        if (self.tracks.length > self.trackCount) {
+          self.trackCount = self.trackCount + 1;
+          self.duration = self.duration + track.duration;
+        }
       } catch (error) {
         AyeLogger.player(
           `Error adding track to playlist ${self.id} ${JSON.stringify(
@@ -65,6 +68,49 @@ const Playlist = types
           LogType.ERROR
         );
         throw error;
+      }
+    }),
+
+    addTracksByUrls: flow(function*(name: string, songs: { Url: string }[]) {
+      try {
+        yield ApiClient.addTracksToPlaylistByUrls(self.id, songs);
+
+        const { data: pl } = yield ApiClient.getPlaylist(self.id);
+
+        //@ts-ignore
+        const { data: tracks } = yield ApiClient.getTracksFromPlaylist(
+          self.id,
+          pl.SongsCount
+        );
+
+        for (const track of tracks) {
+          let tr = Root.stores.trackCache.getTrackById(track.id);
+
+          if (!tr) {
+            tr = Track.create({
+              id: track.Id,
+              title: track.Title,
+              duration: track.Duration,
+              isLivestream: false
+            });
+            Root.stores.trackCache.add(tr);
+          }
+
+          self.tracks.push(tr);
+        }
+
+        self.duration = pl.Duration;
+        self.trackCount = pl.SongsCount;
+      } catch (error) {
+        console.error(error);
+        AyeLogger.player(
+          `[addTracksByUrls] Error adding Tracks ${JSON.stringify(
+            error,
+            null,
+            2
+          )}`,
+          LogType.ERROR
+        );
       }
     }),
 
