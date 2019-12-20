@@ -192,7 +192,8 @@ export default class Main {
       transparent: true,
       webPreferences: {
         nodeIntegration: true
-      }
+      },
+      icon: `${__dirname}/images/icons/png/256x256_w.png`
     });
 
     this.loadingScreen.loadURL(`file://${__dirname}/loading.html`);
