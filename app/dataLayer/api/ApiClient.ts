@@ -96,14 +96,14 @@ class ApiClient {
    * User
    */
   register(email: string, password: string) {
-    return this.axios.post("/userIdentity", {
+    return this.axios.post("/userIdentity/", {
       Email: email,
       Password: password
     });
   }
 
   authenticate(username: string, password: string) {
-    return this.axios.post(`/auth`, {
+    return this.axios.post(`/auth/`, {
       Email: username,
       Password: password
     });
@@ -116,11 +116,11 @@ class ApiClient {
   }
 
   getUserdata() {
-    return this.axios.get("/userIdentity");
+    return this.axios.get("/userIdentity/");
   }
 
   updatePassword(password: string) {
-    return this.axios.patch("https://api.aye-player.de/v1/userIdentity/", [
+    return this.axios.patch("https://api.aye-player.de/v1/userIdentity", [
       { op: "replace", path: "/Password", value: password }
     ]);
   }
@@ -143,7 +143,7 @@ class ApiClient {
   }
 
   deleteUser() {
-    return this.axios.delete("/userIdentity");
+    return this.axios.delete("/userIdentity/");
   }
 
   /**
