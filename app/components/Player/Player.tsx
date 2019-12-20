@@ -252,7 +252,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             width: "320px",
             height: "200px",
             position: "absolute",
-            marginTop: "48px",
+            marginTop: "45px",
             borderColor: "none",
             backgroundColor: "#232c39",
             zIndex: 999

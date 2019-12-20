@@ -35,12 +35,20 @@ const Container = styled.div<any>`
   height: 48px;
   width: calc(100% - 8px);
   display: flex;
-  position: relative;
   align-items: center;
-  border-bottom: 1px solid #565f6c;
   padding-left: 8px;
-  &:last-child {
+  &:after {
+    content: "";
+    margin: 0 auto;
+    width: calc(100% - 8px);
+    padding-top: 46px;
+    border-bottom: 1px solid #565f6c;
+    margin-left: -278px;
+    z-index: 1;
+  }
+  &:last-child:after {
     border-bottom: none;
+    z-index: 1;
   }
   &:hover > svg {
     opacity: 1;
@@ -65,10 +73,12 @@ const Title = styled.div<any>`
   white-space: nowrap;
   overflow: hidden;
   position: relative;
+  z-index: 10;
 `;
 
 const ScrollText = styled.div`
   width: 200px;
+  z-index: 10;
   &:hover {
     animation-play-state: running;
     animation-fill-mode: none;
@@ -88,7 +98,8 @@ const Duration = styled.div`
 const DragHandle = withStyles({
   root: {
     opacity: 0,
-    cursor: "grab"
+    cursor: "grab",
+    zIndex: 10
   }
 })(DragHandleIcon);
 

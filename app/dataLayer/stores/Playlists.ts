@@ -1,11 +1,10 @@
-// import axios from "axios";
 import { flow, types } from "mobx-state-tree";
+import Root from "../../containers/Root";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
+import ApiClient from "../api/ApiClient";
 import Playlist, { PlaylistModel } from "../models/Playlist";
-import axios from "axios";
 import Track from "../models/Track";
-import Root from "../../containers/Root";
 
 export type PlaylistsModel = typeof Playlists.Type;
 
@@ -21,19 +20,8 @@ const Playlists = types
   .actions(self => ({
     createList: flow(function*(name: string) {
       try {
-        const token = localStorage.getItem("token");
         // @ts-ignore
-        const { data: id } = yield axios.post(
-          "https://api.aye-player.de/v1/playlists",
-          {
-            Name: name
-          },
-          {
-            headers: {
-              "x-access-token": token
-            }
-          }
-        );
+        const { data: id } = yield ApiClient.createPlaylist(name);
 
         const playlist = Playlist.create({
           name,
@@ -57,29 +45,13 @@ const Playlists = types
       songs: { Url: string }[]
     ) {
       try {
-        const token = localStorage.getItem("token");
         // @ts-ignore
-        const { data: id } = yield axios.post(
-          "https://api.aye-player.de/v1/playlists/by-urls",
-          {
-            Name: name,
-            Songs: songs
-          },
-          {
-            headers: {
-              "x-access-token": token
-            }
-          }
+        const { data: id } = yield ApiClient.createPlaylistWithSongs(
+          name,
+          songs
         );
 
-        const { data: pl } = yield axios.get(
-          `https://api.aye-player.de/v1/playlists/${id}`,
-          {
-            headers: {
-              "x-access-token": token
-            }
-          }
-        );
+        const { data: pl } = yield ApiClient.getPlaylist(id);
 
         const playlist = Playlist.create({
           name,
@@ -89,13 +61,10 @@ const Playlists = types
           tracks: []
         });
 
-        const { data: tracks } = yield axios.get(
-          `https://api.aye-player.de/v1/playlists/${id}/songs?skip=0&take=${songs.length}`,
-          {
-            headers: {
-              "x-access-token": token
-            }
-          }
+        //@ts-ignore
+        const { data: tracks } = yield ApiClient.getTracksFromPlaylist(
+          id,
+          pl.SongsCount
         );
 
         for (const track of tracks) {
@@ -135,11 +104,7 @@ const Playlists = types
 
     remove: flow(function*(id: string) {
       try {
-        yield axios.delete(`https://api.aye-player.de/v1/playlists/${id}`, {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
-          }
-        });
+        yield ApiClient.deletePlaylist(id);
         const foundList = self.lists.find(playlist => playlist.id === id);
         const idx = self.lists.indexOf(foundList);
         self.lists.splice(idx, 1);

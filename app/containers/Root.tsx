@@ -1,22 +1,22 @@
 import { Grid } from "@material-ui/core";
-import axios from "axios";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-state-tree";
 import { SnackbarProvider } from "notistack";
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
+import styled from "styled-components";
 import Player from "../components/Player/Player";
 import QueuePlaylistSwitch from "../components/QueuePlaylistSwitch";
 import { StoreProvider } from "../components/StoreProvider";
+import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
-import Playlist, { PlaylistModel } from "../dataLayer/models/Playlist";
+import Playlist from "../dataLayer/models/Playlist";
 import Track, { TrackModel } from "../dataLayer/models/Track";
 import { createStore } from "../dataLayer/stores/createStore";
 import Settings from "../dataLayer/stores/PersistentSettings";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
-import styled from "styled-components";
 
 interface IPlayerSettings {
   volume: number;
@@ -25,7 +25,11 @@ interface IPlayerSettings {
   isMuted: boolean;
   isShuffling: boolean;
   currentTrack: TrackModel;
-  currentPlaylist: PlaylistModel;
+  currentPlaylist: {
+    id: string;
+    trackCount: number;
+    duration: number;
+  };
 }
 
 const rootStore = createStore();
@@ -50,6 +54,15 @@ const rootStore = createStore();
     id: "A0HDitIHMXo",
     title: "Nightcore - MAYDAY",
     duration: 215
+  });
+  rootStore.trackCache.add(track);
+  playlist.addLoadedTrack(track);
+
+  let track = Track.create({
+    id: "dj-tiesto/dj-tiesto-forbidden-paradise-deep-trance-mix",
+    title: "Dj tiesto - Forbidden Paradise (Deep Trance Mix)",
+    duration: 255,
+    source: "soundcloud"
   });
   rootStore.trackCache.add(track);
   playlist.addLoadedTrack(track);
@@ -232,10 +245,11 @@ ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.isShuffling", rootStore.player.isShuffling);
 
   if (rootStore.player.currentPlaylist) {
-    Settings.set(
-      "playerSettings.currentPlaylist.id",
-      rootStore.player.currentPlaylist.id
-    );
+    Settings.set("playerSettings.currentPlaylist", {
+      id: rootStore.player.currentPlaylist.id,
+      trackCount: rootStore.player.currentPlaylist.trackCount,
+      duration: rootStore.player.currentPlaylist.duration
+    });
   }
   if (
     rootStore.player.currentTrack?.id !==
@@ -258,14 +272,7 @@ const getPlaylists = async () => {
   try {
     const token = localStorage.getItem("token");
     if (token) {
-      const { data: playlists } = await axios.get(
-        "https://api.aye-player.de/v1/playlists",
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
-          }
-        }
-      );
+      const { data: playlists } = await ApiClient.getPlaylists();
 
       for (const playlist of playlists) {
         const pl = Playlist.create({
@@ -323,7 +330,7 @@ export default class Root extends Component {
             rootStore.queue.addTrack(currentTrack.id);
             rootStore.player.setCurrentTrack(currentTrack);
             rootStore.player.notifyRPC({ state: "Paused" });
-            PlayerInterop.setInitTrack(currentTrack);
+            PlayerInterop.setInitValues({ track: currentTrack });
           }
 
           // Check for last active playlist
@@ -332,46 +339,46 @@ export default class Root extends Component {
               playerSettings.currentPlaylist.id
             );
             if (!playlist) return;
-            axios
-              .get(
-                `https://api.aye-player.de/v1/playlists/${playlist.id}/songs?skip=0&take=20`,
-                {
-                  headers: {
-                    "x-access-token": localStorage.getItem("token")
-                  }
+            ApiClient.getTracksFromPlaylist(
+              playerSettings.currentPlaylist.id,
+              playerSettings.currentPlaylist.trackCount
+            ).then(({ data }) => {
+              for (const track of data) {
+                const tr = Track.create({
+                  id: track.Id,
+                  duration: track.Duration,
+                  title: track.Title,
+                  isLivestream: track.IsLivestream
+                });
+                if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
+                  rootStore.trackCache.add(tr);
                 }
-              )
-              .then(({ data }) => {
-                for (const track of data) {
-                  const tr = Track.create({
-                    id: track.Id,
-                    duration: track.Duration,
-                    title: track.Title,
-                    isLivestream: track.IsLivestream
-                  });
-                  if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
-                    rootStore.trackCache.add(tr);
-                  }
-                  playlist.addLoadedTrack(tr);
-                }
-                rootStore.player.setCurrentPlaylist(playlist);
-              });
+                playlist.addLoadedTrack(tr);
+              }
+              rootStore.player.setCurrentPlaylist(playlist);
+            });
           }
 
           // TODO: Remove these checks, whenever the electron-store package fixes it,
           // these should have an default setting, but sometimes the defaults are not saved/returned
           if (playerSettings.repeat) {
             rootStore.player.setRepeat(playerSettings.repeat);
+            if (playerSettings.repeat === Repeat.ONE) {
+              PlayerInterop.setLooping(true);
+            }
           }
           if (playerSettings.volume) {
             rootStore.player.setVolume(playerSettings.volume);
+            PlayerInterop.setInitValues({ volume: playerSettings.volume });
           }
           if (playerSettings.isShuffling) {
             rootStore.player.setShuffling(playerSettings.isShuffling);
           }
           if (playerSettings.isMuted) {
             rootStore.player.setMute(playerSettings.isMuted);
+            PlayerInterop.setInitValues({ isMuted: playerSettings.isMuted });
           }
+          PlayerInterop.setInitState();
         }
       });
     } catch (error) {

@@ -114,10 +114,12 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
     debounce(PlayerInterop.setVolume(newValue), 500);
     if (newValue === 0) {
       player.mute();
-      PlayerInterop.mute(true);
+      PlayerInterop.setMute(true);
     } else {
-      player.unmute();
-      PlayerInterop.mute(false);
+      if (player.isMuted) {
+        player.unmute();
+        PlayerInterop.setMute(false);
+      }
     }
   };
 

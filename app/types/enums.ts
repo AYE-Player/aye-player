@@ -17,7 +17,8 @@ export enum OutgoingMessageType {
   SET_LOOPING,
   SEEK,
   VOLUME,
-  MUTE
+  MUTE,
+  INIT
 }
 
 export enum IncomingMessageType {

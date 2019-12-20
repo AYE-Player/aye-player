@@ -3,7 +3,8 @@ import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
-import axios from "axios";
+import ApiClient from "../dataLayer/api/ApiClient";
+import { PlaylistModel } from "../dataLayer/models/Playlist";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -11,10 +12,11 @@ import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Track from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
-import { PlaylistModel } from "app/dataLayer/models/Playlist";
 
 interface IPlaylistPageMenuProps {
   id: string;
+  handleAddTracksToList: any;
+  setSelectedPlaylist: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Container = styled.div`
@@ -100,16 +102,12 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     }
 
     queue.addTracks(playlist.tracks);
-  }
+  };
 
   const _getTracksOfPlaylist = async (playlist: PlaylistModel) => {
-    const { data: tracks } = await axios.get(
-      `https://api.aye-player.de/v1/playlists/${props.id}/songs?skip=0&take=20`,
-      {
-        headers: {
-          "x-access-token": localStorage.getItem("token")
-        }
-      }
+    const { data: tracks } = await ApiClient.getTracksFromPlaylist(
+      playlist.id,
+      playlist.trackCount
     );
     for (const track of tracks) {
       const tr = Track.create({
@@ -123,7 +121,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
       }
       playlist.addLoadedTrack(tr);
     }
-  }
+  };
 
   return (
     <ClickAwayListener onClickAway={_handleClose}>
@@ -140,6 +138,14 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             disabled={playlists.getListById(props.id).trackCount === 0}
           >
             {t("EntityMenu.loadPlaylist")}
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              props.setSelectedPlaylist(props.id);
+              props.handleAddTracksToList();
+            }}
+          >
+            {t("EntityMenu.addTracksToPlaylist")}
           </MenuItem>
           <MenuItem
             onClick={() => _handleAddPlaylistToQueueClick()}

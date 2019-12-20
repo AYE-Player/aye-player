@@ -28,6 +28,8 @@ const Player = types
   .actions(self => ({
     playTrack(track: TrackModel) {
       self.playbackPosition = 0;
+      Settings.set("playerSettings.playbackPosition", 0);
+
       self.currentTrack = track;
       Settings.delete("playerSettings.currentTrack");
       Settings.set("playerSettings.currentTrack", track);

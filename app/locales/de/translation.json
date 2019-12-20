@@ -74,6 +74,13 @@
         "dialogText": "Füge deine Playlist direkt ein paar Songs hinzu",
         "label": "Songs"
       }
+    },
+    "addTracks": {
+      "title": "Füge deiner Playlist Songs hinzu",
+      "label": "Songs",
+      "text": "Gib hier die Urls an - mit einem Komma getrennt - welche zur playlist hinzugefügt werden sollen",
+      "confirmButton": "Songs hinzufügen",
+      "cancelButton": "Abbrechen"
     }
   },
   "PasswordForgotPage": {
@@ -142,6 +149,7 @@
     "copyURL": "Url kopieren",
     "loadPlaylist": "Lade Playlist",
     "deletePlaylist": "Lösche Playlist",
-    "addPlaylistToQueue": "Lade Playlist in Queue"
+    "addPlaylistToQueue": "Lade Playlist in Queue",
+    "addTracksToPlaylist": "Tracks hinzufügen"
   }
 }

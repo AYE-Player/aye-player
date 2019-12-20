@@ -74,6 +74,13 @@
         "dialogText": "Directly add some Songs to your playlist",
         "label": "Songs"
       }
+    },
+    "addTracks": {
+      "title": "Add Tracks to Playlist",
+      "label": "Tracks",
+      "text": "Enter the Urls - seperated by Comma - which you want to add",
+      "confirmButton": "Add Tracks",
+      "cancelButton": "Cancel"
     }
   },
   "PasswordForgotPage": {
@@ -142,6 +149,7 @@
     "copyURL": "Copy Url",
     "loadPlaylist": "Load Playlist",
     "deletePlaylist": "Delete Playlist",
-    "addPlaylistToQueue": "Add Playlist to Queue"
+    "addPlaylistToQueue": "Add Playlist to Queue",
+    "addTracksToPlaylist": "Add Tracks"
   }
 }

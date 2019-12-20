@@ -1,8 +1,9 @@
-import { clone, types, flow } from "mobx-state-tree";
-import Track, { TrackModel } from "./Track";
-import axios from "axios";
+import { clone, flow, types } from "mobx-state-tree";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
+import Track, { TrackModel } from "./Track";
+import ApiClient from "../api/ApiClient";
+import Root from "../../containers/Root";
 
 export type PlaylistModel = typeof Playlist.Type;
 
@@ -32,20 +33,7 @@ const Playlist = types
   .actions(self => ({
     addTrack: flow(function*(track: TrackModel) {
       try {
-        yield axios.put(
-          `https://api.aye-player.de/v1/playlists/${self.id}/songs`,
-          {
-            Id: track.id,
-            Duration: track.duration,
-            Title: track.title,
-            IsLivestream: track.isLivestream
-          },
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        yield ApiClient.addTrackToPlaylist(self.id, track);
 
         self.trackCount = self.trackCount + 1;
         self.duration = self.duration + track.duration;
@@ -66,6 +54,10 @@ const Playlist = types
     addLoadedTrack: flow(function*(track: TrackModel) {
       try {
         self.tracks.push(track);
+        if (self.tracks.length > self.trackCount) {
+          self.trackCount = self.trackCount + 1;
+          self.duration = self.duration + track.duration;
+        }
       } catch (error) {
         AyeLogger.player(
           `Error adding track to playlist ${self.id} ${JSON.stringify(
@@ -79,16 +71,55 @@ const Playlist = types
       }
     }),
 
+    addTracksByUrls: flow(function*(songs: { Url: string }[]) {
+      try {
+        // Add tracks to the playlist
+        yield ApiClient.addTracksToPlaylistByUrls(self.id, songs);
+
+        // get new Playlist information
+        const { data: pl } = yield ApiClient.getPlaylist(self.id);
+
+        // Get track information of the playlist
+        //@ts-ignore
+        const { data: tracks } = yield ApiClient.getTracksFromPlaylist(
+          self.id,
+          pl.SongsCount
+        );
+
+        for (const track of tracks) {
+          let tr = Root.stores.trackCache.getTrackById(track.id);
+
+          if (!tr) {
+            tr = Track.create({
+              id: track.Id,
+              title: track.Title,
+              duration: track.Duration,
+              isLivestream: false
+            });
+            Root.stores.trackCache.add(tr);
+          }
+
+          self.tracks.push(tr);
+        }
+
+        self.duration = pl.Duration;
+        self.trackCount = pl.SongsCount;
+      } catch (error) {
+        console.error(error);
+        AyeLogger.player(
+          `[addTracksByUrls] Error adding Tracks ${JSON.stringify(
+            error,
+            null,
+            2
+          )}`,
+          LogType.ERROR
+        );
+      }
+    }),
+
     removeTrack: flow(function*(track: TrackModel) {
       try {
-        yield axios.delete(
-          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${track.id}`,
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        yield ApiClient.removeTrackFromPlaylistById(self.id, track.id);
 
         self.trackCount = self.trackCount - 1;
         self.duration = self.duration - track.duration;
@@ -111,14 +142,7 @@ const Playlist = types
 
     removeTrackById: flow(function*(id: string) {
       try {
-        yield axios.delete(
-          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${id}`,
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        yield ApiClient.removeTrackFromPlaylistById(self.id, id);
         const foundTrack = self.tracks.find(trk => trk.id === id);
         const idx = self.tracks.indexOf(foundTrack);
         self.tracks.splice(idx, 1);
@@ -138,29 +162,17 @@ const Playlist = types
     moveTrackTo: flow(function*(oldIndex: number, newIndex: number) {
       try {
         const track = clone(self.tracks[oldIndex]);
-        self.tracks.splice(oldIndex, 1);
 
-        yield axios.patch(
-          `https://api.aye-player.de/v1/playlists/${self.id}/songs/${track.id}`,
-          [
-            {
-              op: "replace",
-              path: "OrderId",
-              value: newIndex
-            }
-          ],
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("token")
-            }
-          }
-        );
+        yield ApiClient.moveTrackTo(self.id, track.id, newIndex);
+
+        self.tracks.splice(oldIndex, 1);
         self.tracks.splice(newIndex, 0, track);
       } catch (error) {
         AyeLogger.player(
           `Error changing Track order ${JSON.stringify(error, null, 2)}`,
           LogType.ERROR
         );
+        throw error;
       }
     })
   }));

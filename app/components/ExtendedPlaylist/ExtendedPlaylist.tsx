@@ -1,4 +1,7 @@
+import ControlPoint from "@material-ui/icons/ControlPoint";
+import Axios from "axios";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import {
   DragDropContext,
@@ -6,18 +9,20 @@ import {
   DropResult,
   ResponderProvided
 } from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track, { TrackModel } from "../../dataLayer/models/Track";
 import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import { removeControlCharacters } from "../../helpers";
 import useInject from "../../hooks/useInject";
-import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
-import Axios from "axios";
-import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
+import CustomButton from "../Customs/CustomButton";
+import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
-import { useSnackbar } from "notistack";
-import { useTranslation } from "react-i18next";
+import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 
 interface IProps {
   match: any;
@@ -40,7 +45,7 @@ const Container = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 20px);
+  height: calc(100% - 96px);
 `;
 
 const Header = styled.div`
@@ -57,6 +62,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
 
   const [value, setValue] = React.useState(true); //boolean state
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [addTracksOpen, setAddTracksOpen] = React.useState(false);
+  const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   PlayerInterop.init();
 
   const Store = ({
@@ -90,30 +97,25 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     const source = CancelToken.source();
 
     if (!isLoaded) {
-      Axios.get(
-        `https://api.aye-player.de/v1/playlists/${id}/songs?skip=0&take=20`,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("token")
-          }
-        }
-      ).then(({ data: songs }) => {
-        songs.map((song: ITrackDto) => {
-          const track = Track.create({
-            id: song.Id,
-            title: song.Title,
-            duration: song.Duration,
-            isLivestream: song.IsLivestream
+      ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(
+        ({ data: songs }) => {
+          songs.map((song: ITrackDto) => {
+            const track = Track.create({
+              id: song.Id,
+              title: song.Title,
+              duration: song.Duration,
+              isLivestream: song.IsLivestream
+            });
+            if (!trackCache.getTrackById(track.id)) {
+              trackCache.add(track);
+            }
+            if (!playlist.getTrackById(track.id)) {
+              playlist.addLoadedTrack(track);
+            }
           });
-          if (!trackCache.getTrackById(track.id)) {
-            trackCache.add(track);
-          }
-          if (!playlist.getTrackById(track.id)) {
-            playlist.addLoadedTrack(track);
-          }
-        });
-        setIsLoaded(true);
-      });
+          setIsLoaded(true);
+        }
+      );
     }
 
     return () => {
@@ -152,36 +154,86 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     }
   };
 
+  const _onAddTracksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSongsToAdd(
+      removeControlCharacters(event.target.value)
+        .split(",")
+        .map(url => ({
+          Url: url
+        }))
+    );
+  };
+
+  const _addTracksToPlaylist = async () => {
+    setAddTracksOpen(false);
+    await playlist.addTracksByUrls(songsToAdd);
+  };
+
+  const _handleAddTracksClose = () => {
+    setAddTracksOpen(false);
+  };
+
   player.currentTrack;
   playlist.tracks;
 
   return (
-    <DragDropContext onDragEnd={_onDragEnd}>
-      <Container>
-        <Header>{playlist.name}</Header>
-        <Droppable droppableId="droppable">
-          {(provided: any) => (
-            <ScrollContainer
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {playlist.tracks.map((Track, index) => {
-                return (
-                  <ExtendedPlaylistEntity
-                    duration={Track.formattedDuration}
-                    track={Track}
-                    key={Track.id}
-                    index={index}
-                    onClick={_handleClick}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </ScrollContainer>
-          )}
-        </Droppable>
-      </Container>
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={_onDragEnd}>
+        <Container>
+          <Header>{playlist.name}</Header>
+          <Droppable droppableId="droppable">
+            {(provided: any) => (
+              <ScrollContainer
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {playlist.tracks.map((Track, index) => {
+                  return (
+                    <ExtendedPlaylistEntity
+                      duration={Track.formattedDuration}
+                      track={Track}
+                      key={Track.id}
+                      index={index}
+                      onClick={_handleClick}
+                    />
+                  );
+                })}
+                {provided.placeholder}
+              </ScrollContainer>
+            )}
+          </Droppable>
+        </Container>
+      </DragDropContext>
+      <CustomTextareaDialog
+        id="addTracksDialog"
+        title={t("PlaylistPage.addTracks.title")}
+        label={t("PlaylistPage.addTracks.label")}
+        dialogText={t("PlaylistPage.addTracks.text")}
+        button={
+          <CustomButton
+            onClick={() => setAddTracksOpen(true)}
+            style={{
+              width: "160px",
+              height: "40px",
+              position: "absolute",
+              bottom: "56px",
+              right: "24px"
+            }}
+          >
+            {t("PlaylistPage.addTracks.confirmButton")}
+            <ControlPoint style={{ marginLeft: "8px" }} />
+          </CustomButton>
+        }
+        open={addTracksOpen}
+        handleClose={() => _handleAddTracksClose()}
+        handleChange={_onAddTracksChange}
+        handleConfirm={_addTracksToPlaylist}
+        confirmButtonText={t("PlaylistPage.addTracks.confirmButton")}
+        cancelButtonText={t("PlaylistPage.addTracks.cancelButton")}
+        type="text"
+        placeholder="https://www.youtube.com/watch?v=A3rvyaZFCN4"
+      />
+    </>
   );
 };
 

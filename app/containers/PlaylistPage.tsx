@@ -5,20 +5,22 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { withStyles } from "@material-ui/styles";
+import Axios from "axios";
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
+import CustomTextareaDialog from "../components/Customs/CustomTextareaDialog";
+import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
+import ApiClient from "../dataLayer/api/ApiClient";
+import Playlist from "../dataLayer/models/Playlist";
+import Track from "../dataLayer/models/Track";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import { formattedDuration, removeControlCharacters } from "../helpers";
 import useInject from "../hooks/useInject";
-import Axios from "axios";
-import Track from "../dataLayer/models/Track";
-import Playlist from "../dataLayer/models/Playlist";
-import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 
@@ -38,16 +40,6 @@ const PlaylistContainer = styled.div`
   height: 100%;
 `;
 
-const CreatePlaylist = styled.div`
-  margin-top: 8px;
-  display: flex;
-  position: absolute;
-  align-items: center;
-  cursor: pointer;
-  right: 16px;
-  bottom: 56px;
-`;
-
 const ScrollContainer = styled.div`
   overflow: auto;
   height: calc(100% - 128px);
@@ -65,6 +57,12 @@ const PlaylistPage: React.FunctionComponent = () => {
     { Url: string }[]
   >([]);
   const [open, setOpen] = React.useState(false);
+  const [addTracksOpen, setAddTracksOpen] = React.useState(false);
+  // TODO: maybe re-use newPlaylistSongs ?
+  const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
+  const [selectedPlaylist, setSelectedPlaylist] = React.useState<
+    string | undefined
+  >(undefined);
 
   const { t } = useTranslation();
 
@@ -82,14 +80,10 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        Axios.get("https://api.aye-player.de/v1/playlists", {
-          headers: {
-            "x-access-token": token
-          }
-        }).then(({ data }) => {
+        ApiClient.getPlaylists().then(({ data }) => {
           for (const playlist of data) {
             const oldPl = playlists.lists.find(list => list.id === playlist.Id);
-            if (oldPl || playlist.tracks?.length !== oldPl.trackCount ) continue;
+            if (oldPl || playlist.tracks?.length !== oldPl.trackCount) continue;
             const pl = Playlist.create({
               id: playlist.Id,
               name: playlist.Name,
@@ -142,6 +136,10 @@ const PlaylistPage: React.FunctionComponent = () => {
     setOpen(false);
   };
 
+  const _handleAddTracksClose = () => {
+    setAddTracksOpen(false);
+  };
+
   const _onPlaylistNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -158,6 +156,22 @@ const PlaylistPage: React.FunctionComponent = () => {
           Url: url
         }))
     );
+  };
+
+  const _onAddTracksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSongsToAdd(
+      removeControlCharacters(event.target.value)
+        .split(",")
+        .map(url => ({
+          Url: url
+        }))
+    );
+  };
+
+  const _addTracksToPlaylist = async () => {
+    setAddTracksOpen(false);
+    const playlist = playlists.getListById(selectedPlaylist);
+    await playlist.addTracksByUrls(songsToAdd);
   };
 
   const renderPlaylists = () => (
@@ -250,7 +264,11 @@ const PlaylistPage: React.FunctionComponent = () => {
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
-                    <PlaylistPageMenu id={playlist.id} />
+                    <PlaylistPageMenu
+                      id={playlist.id}
+                      handleAddTracksToList={() => setAddTracksOpen(true)}
+                      setSelectedPlaylist={setSelectedPlaylist}
+                    />
                   </StyledTableCell>
                 </TableRow>
               ))}
@@ -262,10 +280,19 @@ const PlaylistPage: React.FunctionComponent = () => {
           title={t("PlaylistPage.dialog.title")}
           label={t("PlaylistPage.dialog.label")}
           button={
-            <CreatePlaylist onClick={() => _handleOnClick()}>
+            <CustomButton
+              onClick={() => _handleOnClick()}
+              style={{
+                width: "197px",
+                height: "40px",
+                position: "absolute",
+                bottom: "56px",
+                right: "24px"
+              }}
+            >
               {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "8px" }} />
-            </CreatePlaylist>
+            </CustomButton>
           }
           dialogText={t("PlaylistPage.dialog.text")}
           open={open}
@@ -281,6 +308,20 @@ const PlaylistPage: React.FunctionComponent = () => {
             dialogText: t("PlaylistPage.dialog.textField.dialogText")
           }}
           handleSongsChange={_onPlaylistSongsChange}
+        />
+        <CustomTextareaDialog
+          id="addTracksDialog"
+          title={t("PlaylistPage.addTracks.title")}
+          label={t("PlaylistPage.addTracks.label")}
+          dialogText={t("PlaylistPage.addTracks.text")}
+          open={addTracksOpen}
+          handleClose={() => _handleAddTracksClose()}
+          handleChange={_onAddTracksChange}
+          handleConfirm={_addTracksToPlaylist}
+          confirmButtonText={t("PlaylistPage.addTracks.confirmButton")}
+          cancelButtonText={t("PlaylistPage.addTracks.cancelButton")}
+          type="text"
+          placeholder="https://www.youtube.com/watch?v=A3rvyaZFCN4"
         />
       </PlaylistContainer>
     </Container>
@@ -300,7 +341,13 @@ const PlaylistPage: React.FunctionComponent = () => {
           button={
             <CustomButton
               onClick={() => _handleOnClick()}
-              style={{ width: "250px", marginTop: "16px" }}
+              style={{
+                width: "197px",
+                height: "40px",
+                position: "absolute",
+                bottom: "56px",
+                right: "24px"
+              }}
             >
               {t("PlaylistPage.dialog.title")}
               <ControlPoint style={{ marginLeft: "16px" }} />
