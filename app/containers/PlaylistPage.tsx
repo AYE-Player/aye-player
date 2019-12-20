@@ -283,7 +283,7 @@ const PlaylistPage: React.FunctionComponent = () => {
             <CustomButton
               onClick={() => _handleOnClick()}
               style={{
-                width: "196px",
+                width: "197px",
                 height: "40px",
                 position: "absolute",
                 bottom: "56px",
@@ -342,7 +342,7 @@ const PlaylistPage: React.FunctionComponent = () => {
             <CustomButton
               onClick={() => _handleOnClick()}
               style={{
-                width: "196px",
+                width: "197px",
                 height: "40px",
                 position: "absolute",
                 bottom: "56px",
