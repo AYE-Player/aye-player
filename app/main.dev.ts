@@ -234,6 +234,7 @@ export default class Main {
       icon: `${__dirname}/images/icons/png/256x256_w.png`
     });
 
+    this.mainWindow.setMenuBarVisibility(false);
     this.mainWindow.loadURL(`file://${__dirname}/app.html`);
 
     if (Settings.has("windowPosition")) {
