@@ -23,6 +23,7 @@ import { formattedDuration, removeControlCharacters } from "../helpers";
 import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
+import { IPlaylistDto } from "../types/response";
 
 const Header = styled.div`
   font-size: 24px;
@@ -80,26 +81,26 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        ApiClient.getPlaylists().then(({ data }) => {
+        ApiClient.getPlaylists().then(({ data }: { data: IPlaylistDto[]}) => {
           for (const playlist of data) {
             const oldPl = playlists.lists.find(list => list.id === playlist.Id);
-            if (oldPl || playlist.tracks?.length !== oldPl.trackCount) continue;
+            if (oldPl || playlist.Tracks?.length !== oldPl.trackCount) continue;
             const pl = Playlist.create({
               id: playlist.Id,
               name: playlist.Name,
               tracks: []
             });
-            if (playlist.tracks) {
-              for (const track of playlist.tracks) {
+            if (playlist.Tracks) {
+              for (const track of playlist.Tracks) {
                 const tr = Track.create({
                   id: track.Id,
                   title: track.Title,
                   duration: track.Duration
                 });
-                if (!trackCache.getTrackById(track.id)) {
+                if (!trackCache.getTrackById(track.Id)) {
                   trackCache.add(tr);
                 }
-                pl.addTrack(tr);
+                pl.addLoadedTrack(tr);
               }
             }
 
