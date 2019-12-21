@@ -11,6 +11,8 @@ import SmallLink from "../components/Link/SmallLink";
 import routes from "../constants/routes.json";
 import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import ApiClient from "../dataLayer/api/ApiClient";
+import Playlist from "../dataLayer/models/Playlist";
 
 const Header = styled.div`
   font-size: 24px;
@@ -20,11 +22,12 @@ const Header = styled.div`
 const LoginPage: React.FunctionComponent<any> = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user }: RootStoreModel) => ({
-    user
+  const UserStore = ({ user, playlists }: RootStoreModel) => ({
+    user,
+    playlists
   });
 
-  const { user } = useInject(UserStore);
+  const { user, playlists } = useInject(UserStore);
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
@@ -48,33 +51,33 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
-  /*const getPlaylists = async () => {
+  const getPlaylists = async () => {
     try {
-        const { data } = await ApiClient.getPlaylists();
+      const { data } = await ApiClient.getPlaylists();
 
-        for (const playlist of data) {
-          const pl = Playlist.create({
-            id: playlist.Id,
-            name: playlist.Name,
-            duration: playlist.Duration,
-            trackCount: playlist.SongsCount,
-            tracks: []
-          });
+      for (const playlist of data) {
+        const pl = Playlist.create({
+          id: playlist.Id,
+          name: playlist.Name,
+          duration: playlist.Duration,
+          trackCount: playlist.SongsCount,
+          tracks: []
+        });
 
-          playlists.add(pl);
+        playlists.add(pl);
       }
     } catch (error) {
       console.error(error);
     }
-  };*/
+  };
 
   const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
       await user.authenticate(name, password);
+      await getPlaylists();
       window.location.href = `${window.location.href.split("#/")[0]}#${
-        routes.ACCOUNT
+        routes.SEARCH
       }`;
-      // await getPlaylists();
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
