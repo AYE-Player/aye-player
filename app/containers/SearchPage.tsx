@@ -5,9 +5,10 @@ import styled from "styled-components";
 import SearchBar from "../components/Search/SearchBar";
 import SearchEntity from "../components/Search/SearchEntity";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
-import { TrackModel } from "../dataLayer/models/Track";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import Track from "../dataLayer/models/Track";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { Ref } from "mobx-keystone";
 
 const Header = styled.div`
   font-size: 24px;
@@ -31,12 +32,7 @@ const ScrollContainer = styled.div`
 `;
 
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({
-    player,
-    queue,
-    searchResult,
-    trackCache
-  }: RootStoreModel) => ({
+  const Store = ({ player, queue, searchResult, trackCache }: RootStore) => ({
     player,
     queue,
     searchResult,
@@ -47,7 +43,7 @@ const SearchPage: React.FunctionComponent = () => {
 
   const { t } = useTranslation();
 
-  const _handleDoubleClick = (track: TrackModel) => {
+  const _handleDoubleClick = (track: Ref<Track>) => {
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
     PlayerInterop.playTrack(track);
@@ -65,7 +61,9 @@ const SearchPage: React.FunctionComponent = () => {
                 return (
                   <SearchEntity
                     duration={
-                      track.duration === 0 ? "LIVE" : track.formattedDuration
+                      track.current.duration === 0
+                        ? "LIVE"
+                        : track.current.formattedDuration
                     }
                     track={track}
                     key={track.id}

@@ -18,7 +18,7 @@ import PlaylistPageMenu from "../components/PlaylistPageMenu";
 import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import { formattedDuration, removeControlCharacters } from "../helpers";
 import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
@@ -67,7 +67,7 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const { t } = useTranslation();
 
-  const Store = ({ playlists, trackCache }: RootStoreModel) => ({
+  const Store = ({ playlists, trackCache }: RootStore) => ({
     playlists,
     trackCache
   });
@@ -81,18 +81,24 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        ApiClient.getPlaylists().then(({ data }: { data: IPlaylistDto[]}) => {
+        ApiClient.getPlaylists().then(({ data }: { data: IPlaylistDto[] }) => {
           for (const playlist of data) {
             const oldPl = playlists.lists.find(list => list.id === playlist.Id);
-            if (oldPl || playlist.Tracks?.length !== oldPl.trackCount) continue;
-            const pl = Playlist.create({
+            if (
+              oldPl ||
+              (oldPl && playlist.Tracks?.length !== oldPl.trackCount)
+            )
+              continue;
+            const pl = new Playlist({
               id: playlist.Id,
               name: playlist.Name,
+              trackCount: playlist.SongsCount,
+              duration: playlist.Duration,
               tracks: []
             });
             if (playlist.Tracks) {
               for (const track of playlist.Tracks) {
-                const tr = Track.create({
+                const tr = new Track({
                   id: track.Id,
                   title: track.Title,
                   duration: track.Duration

@@ -1,7 +1,7 @@
 {
   "name": "aye-player",
   "productName": "AYE Player",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A new Youtube Music Player to deliver you the best experience possible.",
   "private": true,
   "scripts": {
@@ -105,7 +105,9 @@
       {
         "name": "aye-player-deeplinking",
         "role": "Viewer",
-        "schemes": ["aye-player"]
+        "schemes": [
+          "aye-player"
+        ]
       }
     ]
   },
@@ -281,8 +283,8 @@
     "i18next": "^19.0.2",
     "i18next-node-fs-backend": "^2.1.3",
     "mobx": "^5.15.1",
+    "mobx-keystone": "^0.28.4",
     "mobx-react-lite": "^1.5.2",
-    "mobx-state-tree": "^3.15.0",
     "mpris-service": "^2.1.0",
     "notistack": "^0.9.7",
     "pj-custom-electron-titlebar": "^3.1.6",

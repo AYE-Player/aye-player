@@ -7,14 +7,15 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import AddIcon from "@material-ui/icons/Add";
 import React from "react";
-import { TrackModel } from "../../dataLayer/models/Track";
+import Track from "../../dataLayer/models/Track";
+import { Ref } from "mobx-keystone";
 
 export interface SimpleDialogProps {
   dialogTitle: string;
   open: boolean;
   options: { id: string; name: string }[];
-  track: TrackModel;
-  onSelect: (id: string, track: TrackModel) => void;
+  track: Ref<Track>;
+  onSelect: (id: string, track: Track) => void;
   handleClose: () => void;
   createListItem: (value: string) => void;
   listItemText: string;
@@ -28,7 +29,7 @@ const CustomListDialog: React.FunctionComponent<SimpleDialogProps> = props => {
         {props.options.map(option => (
           <ListItem
             button
-            onClick={() => props.onSelect(option.id, props.track)}
+            onClick={() => props.onSelect(option.id, props.track.current)}
             key={option.id}
           >
             <ListItemText primary={option.name} />

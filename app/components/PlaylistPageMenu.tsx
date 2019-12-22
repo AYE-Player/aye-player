@@ -4,14 +4,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
 import ApiClient from "../dataLayer/api/ApiClient";
-import { PlaylistModel } from "../dataLayer/models/Playlist";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Track from "../dataLayer/models/Track";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import RootStore from "../dataLayer/stores/RootStore";
+import Playlist from "../dataLayer/models/Playlist";
+import { ITrackDto } from "../types/response";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -54,7 +55,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   const { t } = useTranslation();
   PlayerInterop.init();
 
-  const Store = ({ player, playlists, queue, trackCache }: RootStoreModel) => ({
+  const Store = ({ player, playlists, queue, trackCache }: RootStore) => ({
     player,
     playlists,
     queue,
@@ -104,17 +105,18 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     queue.addTracks(playlist.tracks);
   };
 
-  const _getTracksOfPlaylist = async (playlist: PlaylistModel) => {
-    const { data: tracks } = await ApiClient.getTracksFromPlaylist(
+  const _getTracksOfPlaylist = async (playlist: Playlist) => {
+    const {
+      data: tracks
+    }: { data: ITrackDto[] } = await ApiClient.getTracksFromPlaylist(
       playlist.id,
       playlist.trackCount
     );
     for (const track of tracks) {
-      const tr = Track.create({
+      const tr = new Track({
         id: track.Id,
         duration: track.Duration,
-        title: track.Title,
-        isLivestream: track.IsLivestream
+        title: track.Title
       });
       if (!trackCache.tracks.find(t => t.id === tr.id)) {
         trackCache.add(tr);

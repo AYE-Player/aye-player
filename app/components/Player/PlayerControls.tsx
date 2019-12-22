@@ -14,7 +14,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import RootStore from "../../dataLayer/stores/RootStore";
 import { debounce, formattedDuration } from "../../helpers/";
 import useInject from "../../hooks/useInject";
 import { Repeat } from "../../types/enums";
@@ -103,7 +103,7 @@ const PrettoSlider = withStyles({
 const PlayerControls: React.FunctionComponent<IProps> = props => {
   PlayerInterop.init();
 
-  const Store = ({ player }: RootStoreModel) => ({
+  const Store = ({ player }: RootStore) => ({
     player
   });
 
@@ -190,20 +190,20 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
       </Grid>
       <PlaybackControl>
         {player.currentTrack ? (
-          player.currentTrack.isLivestream ? (
+          player.currentTrack.current.isLivestream ? (
             `🔴 Listening for ${formattedDuration(player.playbackPosition)}`
           ) : (
             <>
               <Time>{formattedDuration(player.playbackPosition)}</Time>
               <PrettoSlider
                 min={0}
-                max={player.currentTrack?.duration || 0}
+                max={player.currentTrack?.current.duration || 0}
                 value={player.playbackPosition}
                 onChangeCommitted={_handlePlaybackChange}
                 onMouseUp={_handleSeekingStop}
               />
               <Time>
-                {formattedDuration(player.currentTrack?.duration || 0)}
+                {formattedDuration(player.currentTrack?.current.duration || 0)}
               </Time>
             </>
           )

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { TrackModel } from "../models/Track";
+import Track from "../models/Track";
 
 class ApiClient {
   private axios: AxiosInstance;
@@ -59,7 +59,7 @@ class ApiClient {
     return this.axios.get(`/playlists/${id}/songs?skip=0&take=${amount}`);
   }
 
-  addTrackToPlaylist(id: string, track: TrackModel) {
+  addTrackToPlaylist(id: string, track: Track) {
     return this.axios.put(`/playlists/${id}/songs`, {
       Id: track.id,
       Duration: track.duration,
@@ -74,7 +74,7 @@ class ApiClient {
     });
   }
 
-  removeTrackFromPlaylist(id: string, track: TrackModel) {
+  removeTrackFromPlaylist(id: string, track: Track) {
     return this.axios.delete(`/playlists/${id}/songs/${track.id}`);
   }
 

@@ -6,11 +6,13 @@ import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import { Ref } from "mobx-keystone";
+import Track from "../../dataLayer/models/Track";
 
 interface IPlaylistEntityMenuProps {
-  id: string;
+  trackRef: Ref<Track>
   openListDialog: any;
 }
 
@@ -49,7 +51,7 @@ const StyledMenu = withStyles({
 const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue, player }: RootStoreModel) => ({
+  const Store = ({ queue, player }: RootStore) => ({
     queue,
     player
   });
@@ -67,18 +69,18 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
   };
 
   const _handleRemoveTrack = () => {
-    player.currentPlaylist.removeTrackById(props.id);
+    player.currentPlaylist.current.removeTrackById(props.trackRef.id);
     setAnchorEl(null);
   };
 
   const _handlePlayNextTrack = () => {
-    queue.addNextTrack(props.id);
+    queue.addNextTrack(props.trackRef);
     setAnchorEl(null);
   };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.id}`
     );
   };
 

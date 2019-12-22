@@ -6,17 +6,18 @@ import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import ExtendedPlaylistEntityMenu from "./ExtendedPlaylistEntityMenu";
+import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
-  track: TrackModel;
+  track: Ref<Track>;
   index: number;
   onClick: Function;
 }
@@ -97,7 +98,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ player, playlists }: RootStoreModel) => ({
+  const Store = ({ player, playlists }: RootStore) => ({
     player,
     playlists
   });
@@ -115,7 +116,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpen(true);
   };
 
-  const _handleClose = (id: string, givenTrack: TrackModel) => {
+  const _handleClose = (id: string, givenTrack: Track) => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
@@ -205,13 +206,13 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
                   src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`}
                 />
               </TrackImageContainer>
-              <Title length={props.track.title.length}>
-                {props.track.title}
+              <Title length={props.track.current.title.length}>
+                {props.track.current.title}
               </Title>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
             <ExtendedPlaylistEntityMenu
-              id={props.track.id}
+              trackRef={props.track}
               openListDialog={_handleClickOpen}
             />
           </Container>

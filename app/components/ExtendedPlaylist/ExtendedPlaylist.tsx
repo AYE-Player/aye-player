@@ -13,8 +13,8 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import Track, { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import { removeControlCharacters } from "../../helpers";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
@@ -23,16 +23,11 @@ import CustomButton from "../Customs/CustomButton";
 import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
+import { ITrackDto } from "../../types/response";
+import { Ref } from "mobx-keystone";
 
 interface IProps {
   match: any;
-}
-
-interface ITrackDto {
-  Id: string;
-  Duration: number;
-  Title: string;
-  IsLivestream: boolean;
 }
 
 const Container = styled.div`
@@ -66,13 +61,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   PlayerInterop.init();
 
-  const Store = ({
-    queue,
-    player,
-    playlists,
-    trackCache,
-    app
-  }: RootStoreModel) => ({
+  const Store = ({ queue, player, playlists, trackCache, app }: RootStore) => ({
     queue,
     player,
     playlists,
@@ -100,11 +89,10 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
       ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(
         ({ data: songs }) => {
           songs.map((song: ITrackDto) => {
-            const track = Track.create({
+            const track = new Track({
               id: song.Id,
               title: song.Title,
-              duration: song.Duration,
-              isLivestream: song.IsLivestream
+              duration: song.Duration
             });
             if (!trackCache.getTrackById(track.id)) {
               trackCache.add(track);
@@ -123,11 +111,15 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     };
   }, []);
 
-  const _handleClick = (track: TrackModel) => {
+  const _handleClick = (track: Ref<Track>) => {
+    console.log("TRACK", track);
     const idx = playlist.getIndexOfTrack(track);
+    console.log("IDX", idx);
 
     queue.clear();
-    queue.addTracks(playlist.getTracksStartingFrom(idx));
+    queue.addTracks(
+      playlist.getTracksStartingFrom(idx)
+    );
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack);
     PlayerInterop.playTrack(queue.currentTrack);
@@ -187,12 +179,12 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {playlist.tracks.map((Track, index) => {
+                {playlist.tracks.map((track, index) => {
                   return (
                     <ExtendedPlaylistEntity
-                      duration={Track.formattedDuration}
-                      track={Track}
-                      key={Track.id}
+                      duration={track.current.formattedDuration}
+                      track={track}
+                      key={track.id}
                       index={index}
                       onClick={_handleClick}
                     />

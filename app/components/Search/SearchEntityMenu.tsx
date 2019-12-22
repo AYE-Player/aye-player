@@ -6,11 +6,13 @@ import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import RootStore from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import { Ref } from "mobx-keystone";
 
 interface ISearchEntityMenuProps {
-  id: string;
+  trackRef: Ref<Track>;
   openListDialog: any;
   isLivestream: boolean;
 }
@@ -49,7 +51,7 @@ const StyledMenu = withStyles({
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue }: RootStoreModel) => ({
+  const Store = ({ queue }: RootStore) => ({
     queue
   });
 
@@ -66,18 +68,18 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
   };
 
   const _handlePlayNextTrack = () => {
-    queue.addNextTrack(props.id);
+    queue.addNextTrack(props.trackRef);
     setAnchorEl(null);
   };
 
   const _handleAddTrack = () => {
-    queue.addTrack(props.id);
+    queue.addTrack(props.trackRef);
     setAnchorEl(null);
   };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.id}`
     );
   };
 

@@ -1,11 +1,12 @@
-import { TrackModel } from "../models/Track";
+import Track from "../models/Track";
 import Root from "../../containers/Root";
 import { OutgoingMessageType } from "../../types/enums";
+import { getSnapshot, Ref } from "mobx-keystone";
 
 class PlayerInterop {
   private player: any;
   private apiUrl: string;
-  private initTrack: TrackModel;
+  private initTrack: Ref<Track>;
   private startAt: number;
   private volume: number;
   private isMuted: boolean;
@@ -27,7 +28,7 @@ class PlayerInterop {
     volume,
     isMuted
   }: {
-    track?: TrackModel;
+    track?: Ref<Track>;
     volume?: number;
     isMuted?: boolean;
   }) {
@@ -47,7 +48,7 @@ class PlayerInterop {
       this.player.contentWindow.postMessage(
         {
           type: OutgoingMessageType.INIT,
-          track: this.initTrack,
+          track: getSnapshot(this.initTrack),
           startAt: this.startAt ? this.startAt : undefined,
           volume: this.volume,
           muted: this.isMuted
@@ -65,21 +66,21 @@ class PlayerInterop {
     this.startAt = val;
   }
 
-  setTrack(track?: TrackModel) {
+  setTrack(track?: Ref<Track>) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.SET_TRACK,
-        track: track ? track : undefined
+        track: track ? getSnapshot(track) : undefined
       },
       this.apiUrl
     );
   }
 
-  playTrack(track: TrackModel) {
+  playTrack(track: Ref<Track>) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.PLAY_TRACK,
-        track
+        track: getSnapshot(track)
       },
       this.apiUrl
     );

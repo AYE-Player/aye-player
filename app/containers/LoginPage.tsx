@@ -9,10 +9,13 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import routes from "../constants/routes.json";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
+import { IPlaylistDto } from "../types/response";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 
 const Header = styled.div`
   font-size: 24px;
@@ -22,7 +25,7 @@ const Header = styled.div`
 const LoginPage: React.FunctionComponent<any> = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user, playlists }: RootStoreModel) => ({
+  const UserStore = ({ user, playlists }: RootStore) => ({
     user,
     playlists
   });
@@ -53,10 +56,10 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const getPlaylists = async () => {
     try {
-      const { data } = await ApiClient.getPlaylists();
+      const { data }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
 
       for (const playlist of data) {
-        const pl = Playlist.create({
+        const pl = new Playlist({
           id: playlist.Id,
           name: playlist.Name,
           duration: playlist.Duration,
@@ -67,7 +70,11 @@ const LoginPage: React.FunctionComponent<any> = () => {
         playlists.add(pl);
       }
     } catch (error) {
-      console.error(error);
+      AyeLogger.player(
+        `[LoginPage]Error retrieving PLaylists ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      throw error;
     }
   };
 

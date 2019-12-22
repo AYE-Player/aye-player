@@ -6,11 +6,13 @@ import withStyles from "@material-ui/styles/withStyles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import Track from "../../dataLayer/models/Track";
+import { Ref } from "mobx-keystone";
 
 interface IPlaylistEntityMenuProps {
-  id: string;
+  trackRef: Ref<Track>;
   openListDialog: any;
 }
 
@@ -49,14 +51,14 @@ const StyledMenu = withStyles({
 const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue, playlists, app }: RootStoreModel) => ({
+  const Store = ({ queue, playlists, app }: RootStore) => ({
     queue,
     playlists,
     app
   });
 
   const { queue, playlists, app } = useInject(Store);
-  const playlist = playlists.getListById(app.activePlaylist);
+  const playlist = playlists.getListById(app.selectedPlaylist);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -69,18 +71,18 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
   };
 
   const _handleRemoveTrack = () => {
-    playlist.removeTrackById(props.id);
+    playlist.removeTrackById(props.trackRef.id);
     setAnchorEl(null);
   };
 
   const _handlePlayNextTrack = () => {
-    queue.addNextTrack(props.id);
+    queue.addNextTrack(props.trackRef);
     setAnchorEl(null);
   };
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.id}`
     );
   };
 

@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import Root from "../../containers/Root";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
@@ -29,7 +29,9 @@ ipcRenderer.on("play-pause", (event, message) => {
   const { queue, player } = Root.stores;
 
   if (queue.isEmpty) {
-    queue.addTracks(player.currentPlaylist.tracks);
+    queue.addTracks(
+      player.currentPlaylist.current.tracks
+    );
     player.playTrack(queue.currentTrack);
     PlayerInterop.playTrack(queue.currentTrack);
   }
@@ -45,14 +47,18 @@ ipcRenderer.on("play-next", (event, message) => {
 
   if (!track) {
     if (player.repeat === Repeat.ALL && player.isShuffling) {
-      queue.addTracks(player.currentPlaylist.tracks);
+      queue.addTracks(
+        player.currentPlaylist.current.tracks
+      );
       queue.shuffel();
       player.playTrack(queue.tracks[0]);
       PlayerInterop.playTrack(queue.tracks[0]);
     } else if (player.repeat === Repeat.ALL) {
-      queue.addTracks(player.currentPlaylist.tracks);
-      player.playTrack(player.currentPlaylist.tracks[0]);
-      PlayerInterop.playTrack(player.currentPlaylist.tracks[0]);
+      queue.addTracks(
+        player.currentPlaylist.current.tracks
+      );
+      player.playTrack(player.currentPlaylist.current.tracks[0]);
+      PlayerInterop.playTrack(player.currentPlaylist.current.tracks[0]);
     } else {
       player.togglePlayingState();
       PlayerInterop.togglePlayingState();
@@ -60,7 +66,7 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  trackHistory.addTrack(prevTrack.id);
+  trackHistory.addTrack(prevTrack);
   player.playTrack(track);
   PlayerInterop.playTrack(track);
 });
@@ -87,7 +93,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     queue,
     trackHistory,
     app
-  }: RootStoreModel) => ({
+  }: RootStore) => ({
     player,
     queue,
     playlists,
@@ -159,21 +165,29 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
     if (!track) {
       if (player.repeat === Repeat.ALL && player.isShuffling) {
-        queue.addTracks(player.currentPlaylist.tracks);
+        queue.addTracks(
+          player.currentPlaylist.current.tracks
+        );
         queue.shuffel();
         player.playTrack(queue.tracks[0]);
         PlayerInterop.setTrack(queue.tracks[0]);
       } else if (player.repeat === Repeat.ALL) {
-        queue.addTracks(player.currentPlaylist.tracks);
-        player.playTrack(player.currentPlaylist.tracks[0]);
-        PlayerInterop.setTrack(player.currentPlaylist.tracks[0]);
+        queue.addTracks(
+          player.currentPlaylist.current.tracks
+        );
+        player.playTrack(player.currentPlaylist.current.tracks[0]);
+        PlayerInterop.setTrack(
+          player.currentPlaylist.current.tracks[0]
+        );
       } else if (
-        player.currentPlaylist?.getTrackById(prevTrack.id) &&
-        player.currentPlaylist.getIndexOfTrack(prevTrack) + 1 <
-          player.currentPlaylist.trackCount
+        player.currentPlaylist.current?.getTrackById(prevTrack.id) &&
+        player.currentPlaylist.current.getIndexOfTrack(prevTrack) + 1 <
+          player.currentPlaylist.current.trackCount
       ) {
-        const idx = player.currentPlaylist.getIndexOfTrack(prevTrack);
-        queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx + 1));
+        const idx = player.currentPlaylist.current.getIndexOfTrack(prevTrack);
+        queue.addTracks(
+          player.currentPlaylist.current.getTracksStartingFrom(idx + 1)
+        );
         player.playTrack(queue.tracks[0]);
         PlayerInterop.playTrack(queue.tracks[0]);
       } else {
@@ -186,7 +200,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
-    trackHistory.addTrack(prevTrack.id);
+    trackHistory.addTrack(prevTrack);
 
     player.setCurrentTrack();
     player.playTrack(track);
@@ -209,13 +223,19 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.toggleShuffleState();
     if (player.isShuffling) {
       queue.clear();
-      queue.addTracks(player.currentPlaylist.tracks);
+      queue.addTracks(
+        player.currentPlaylist.current.tracks
+      );
       queue.shuffel();
     } else {
-      const idx = player.currentPlaylist.getIndexOfTrack(player.currentTrack);
+      const idx = player.currentPlaylist.current.getIndexOfTrack(
+        player.currentTrack
+      );
 
       queue.clear();
-      queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
+      queue.addTracks(
+        player.currentPlaylist.current.getTracksStartingFrom(idx)
+      );
     }
   };
 

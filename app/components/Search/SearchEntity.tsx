@@ -3,17 +3,18 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import SearchEntityMenu from "./SearchEntityMenu";
+import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
-  track: TrackModel;
+  track: Ref<Track>;
   index: number;
   onDoubleClick: Function;
 }
@@ -89,7 +90,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ playlists }: RootStoreModel) => ({
+  const Store = ({ playlists }: RootStore) => ({
     playlists
   });
 
@@ -106,7 +107,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
     setOpen(true);
   };
 
-  const _handleClose = (id: string, givenTrack: TrackModel) => {
+  const _handleClose = (id: string, givenTrack: Track) => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
@@ -183,15 +184,15 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`}
           />
         </TrackImageContainer>
-        <Title length={props.track.title.length}>
-          <div style={{ display: "inline-block" }}>{props.track.title}</div>
+        <Title length={props.track.current.title.length}>
+          <div style={{ display: "inline-block" }}>{props.track.current.title}</div>
         </Title>
         <Duration>{props.duration}</Duration>
       </TrackInfoContainer>
       <SearchEntityMenu
-        id={props.track.id}
+        trackRef={props.track}
         openListDialog={_handleClickOpen}
-        isLivestream={props.track.isLivestream}
+        isLivestream={props.track.current.isLivestream}
       />
       <CustomListDialog
         dialogTitle={t("SearchEntity.selectPlaylist")}

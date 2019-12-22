@@ -1,32 +1,21 @@
-import { types, clone } from "mobx-state-tree";
+import { model, Model, modelAction, prop, Ref } from "mobx-keystone";
 import Track from "../models/Track";
 
-export type TrackHistoryModel = typeof TrackHistory.Type;
+@model("TrackHistory")
+export default class TrackHistory extends Model({
+  tracks: prop<Ref<Track>[]>()
+}) {
+  get isEmpty() {
+    return this.tracks.length === 0;
+  }
 
-const TrackHistory = types
-  .model({
-    tracks: types.array(types.reference(Track))
-  })
-  .views(self => ({
-    get isEmpty() {
-      return self.tracks.length === 0;
-    }
-  }))
-  .actions(self => ({
-    addTrack(id: string) {
-      self.tracks.push(id);
-    },
+  @modelAction
+  addTrack(id: Ref<Track>) {
+    this.tracks.push(id);
+  }
 
-    removeAndGetTrack() {
-      const track = clone(self.tracks[self.tracks.length - 1]);
-      if (!track) return null;
-      self.tracks.splice(self.tracks.length - 1, 1);
-      return track;
-    },
-
-    clear() {
-      self.tracks.length = 0;
-    }
-  }));
-
-export default TrackHistory;
+  @modelAction
+  removeAndGetTrack() {
+    return this.tracks.splice(this.tracks.length - 1, 1)[0];
+  }
+}

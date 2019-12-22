@@ -1,99 +1,97 @@
-import { clone, getRoot, resolveIdentifier, types } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
+import { model, Model, modelAction, prop, Ref, clone } from "mobx-keystone";
+import Track from "../models/Track";
 
-export type QueueModel = typeof Queue.Type;
+@model("Queue")
+export default class Queue extends Model({
+  tracks: prop<Ref<Track>[] | undefined>()
+}) {
+  get currentTrack() {
+    if (!this.tracks || this.tracks.length === 0) return null;
+    return this.tracks[0];
+  }
 
-const Queue = types
-  .model({
-    tracks: types.array(types.reference(Track))
-  })
-  .views(self => ({
-    get currentTrack() {
-      const root = getRoot(self);
-      if (!self.tracks || self.tracks.length === 0) return null;
-      return resolveIdentifier(Track, root, self.tracks[0].id);
-    },
+  get isEmpty() {
+    return this.tracks.length === 0;
+  }
 
-    get randomTrack() {
-      const idx = Math.floor(Math.random() * self.tracks.length);
-      const track = self.tracks[idx];
-      self.tracks.splice(idx, 1);
-      return track;
-    },
-
-    get isEmpty() {
-      return self.tracks.length === 0;
+  @modelAction
+  addTracks(tracks: Ref<Track>[]) {
+    for (const track of tracks) {
+      this.tracks.push(track);
     }
-  }))
-  .actions(self => ({
-    addTracks(tracks: TrackModel[]) {
-      for (const track of tracks) {
-        self.tracks.push(track.id);
-      }
-    },
+  }
 
-    addTrack(id: string) {
-      self.tracks.push(id);
-    },
+  @modelAction
+  addTrack(id: Ref<Track>) {
+    this.tracks.push(id);
+  }
 
-    addTrackAt(track: TrackModel, newIndex: number) {
-      self.tracks.splice(newIndex, 0, track);
-    },
+  @modelAction
+  addTrackAt(track: Ref<Track>, newIndex: number) {
+    this.tracks.splice(newIndex, 0, track);
+  }
 
-    removeTrack(id: string) {
-      const foundList = self.tracks.find(track => track.id === id);
-      const idx = self.tracks.indexOf(foundList);
-      self.tracks.splice(idx, 1);
-    },
+  @modelAction
+  removeTrack(id: string) {
+    const foundList = this.tracks.find(track => track.id === id);
+    const idx = this.tracks.indexOf(foundList);
+    this.tracks.splice(idx, 1);
+  }
 
-    jumpTo(idx: number) {
-      self.tracks.splice(0, idx);
-    },
+  @modelAction
+  jumpTo(idx: number) {
+    this.tracks.splice(0, idx);
+  }
 
-    addPrivilegedTrack(track: TrackModel) {
-      self.tracks.unshift(track.id);
-    },
+  @modelAction
+  addPrivilegedTrack(track: Ref<Track>) {
+    this.tracks.unshift(track);
+  }
 
-    addNextTrack(id: string) {
-      self.tracks.splice(1, 0, id);
-    },
+  @modelAction
+  addNextTrack(id: Ref<Track>) {
+    this.tracks.splice(1, 0, id);
+  }
 
-    nextTrack() {
-      self.tracks.shift();
-      if (self.tracks.length === 0) return null;
+  @modelAction
+  nextTrack() {
+    this.tracks.shift();
+    if (this.tracks.length === 0) return null;
 
-      return self.tracks[0];
-    },
+    return this.tracks[0];
+  }
 
-    removeAndGetTrack(index: number) {
-      const track = clone(self.tracks[index]);
-      self.tracks.splice(index, 1);
-      return track;
-    },
+  @modelAction
+  removeAndGetTrack(index: number) {
+    const track = clone(this.tracks[index]);
+    this.tracks.splice(index, 1);
+    return track;
+  }
 
-    moveTrack(oldIndex: number, newIndex: number) {
-      const track = self.tracks[oldIndex].id;
-      self.tracks.splice(oldIndex, 1);
-      self.tracks.splice(newIndex, 0, track);
-    },
+  @modelAction
+  moveTrack(oldIndex: number, newIndex: number) {
+    const track = this.tracks[oldIndex];
+    this.tracks.splice(oldIndex, 1);
+    this.tracks.splice(newIndex, 0, track);
+  }
 
-    clear() {
-      self.tracks.length = 0;
-    },
+  @modelAction
+  clear() {
+    this.tracks.length = 0;
+  }
 
-    shuffel() {
-      // https://www.frankmitchell.org/2015/01/fisher-yates/
-      let i = 0;
-      let j = 0;
-      let temp = null;
+  @modelAction
+  shuffel() {
+    // https://www.frankmitchell.org/2015/01/fisher-yates/
+    let i = 0;
+    let j = 0;
+    let temp = null;
 
-      for (i = self.tracks.length - 1; i > 0; i -= 1) {
-        j = Math.floor(Math.random() * (i + 1));
-        temp = self.tracks[i];
-        self.tracks[i] = self.tracks[j];
-        self.tracks[j] = temp;
-      }
+    for (i = this.tracks.length - 1; i > 0; i -= 1) {
+      j = Math.floor(Math.random() * (i + 1));
+      temp = this.tracks[i];
+      this.tracks[i] = this.tracks[j];
+      this.tracks[j] = temp;
     }
-  }));
-
-export default Queue;
+  }
+}

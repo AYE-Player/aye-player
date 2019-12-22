@@ -1,180 +1,185 @@
-import { clone, flow, types } from "mobx-state-tree";
+import {
+  model,
+  Model,
+  modelFlow,
+  prop,
+  Ref,
+  _async,
+  _await,
+  clone
+} from "mobx-keystone";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
-import Track, { TrackModel } from "./Track";
 import ApiClient from "../api/ApiClient";
+import trackRef from "../references/TrackRef";
+import Track from "./Track";
 import Root from "../../containers/Root";
+import { ITrackDto } from "../../types/response";
 
-export type PlaylistModel = typeof Playlist.Type;
+@model("Playlist")
+export default class Playlist extends Model({
+  id: prop<string>(),
+  name: prop<string>(),
+  tracks: prop<Ref<Track>[]>(),
+  duration: prop(0),
+  trackCount: prop(0)
+}) {
+  getTrackById(id: string) {
+    if (!this.tracks) return null;
+    return this.tracks.find(track => track.id === id);
+  }
 
-const Playlist = types
-  .model({
-    id: types.identifier,
-    name: types.maybe(types.string),
-    tracks: types.maybe(types.array(types.reference(Track))),
-    trackCount: types.optional(types.number, 0),
-    duration: types.optional(types.number, 0)
-  })
-  .named("Playlist")
-  .views(self => ({
-    getTrackById(id: string) {
-      if (!self.tracks) return null;
-      return self.tracks.find(track => track.id === id);
-    },
+  getIndexOfTrack(track: Ref<Track>) {
+    return this.tracks.indexOf(track);
+  }
 
-    getIndexOfTrack(track: TrackModel) {
-      return self.tracks.indexOf(track);
-    },
+  getTracksStartingFrom(idx: number) {
+    return this.tracks.slice(idx);
+  }
 
-    getTracksStartingFrom(idx: number) {
-      return self.tracks.slice(idx);
+  @modelFlow
+  addTrack = _async(function*(this: Playlist, track: Track) {
+    try {
+      yield* _await(ApiClient.addTrackToPlaylist(this.id, track));
+
+      this.trackCount = this.trackCount + 1;
+      this.duration = this.duration + track.duration;
+      this.tracks.push(trackRef(track));
+    } catch (error) {
+      AyeLogger.player(
+        `Error adding track to playlist ${this.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      throw error;
     }
-  }))
-  .actions(self => ({
-    addTrack: flow(function*(track: TrackModel) {
-      try {
-        yield ApiClient.addTrackToPlaylist(self.id, track);
+  });
 
-        self.trackCount = self.trackCount + 1;
-        self.duration = self.duration + track.duration;
-        self.tracks.push(track);
-      } catch (error) {
-        AyeLogger.player(
-          `Error adding track to playlist ${self.id} ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`,
-          LogType.ERROR
-        );
-        throw error;
+  @modelFlow
+  addLoadedTrack = _async(function*(this: Playlist, track: Track) {
+    try {
+      this.tracks.push(trackRef(track));
+      if (this.tracks.length > this.trackCount) {
+        this.trackCount = this.trackCount + 1;
+        this.duration = this.duration + track.duration;
       }
-    }),
+    } catch (error) {
+      AyeLogger.player(
+        `Error adding track to playlist ${this.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      throw error;
+    }
+  });
 
-    addLoadedTrack: flow(function*(track: TrackModel) {
-      try {
-        self.tracks.push(track);
-        if (self.tracks.length > self.trackCount) {
-          self.trackCount = self.trackCount + 1;
-          self.duration = self.duration + track.duration;
-        }
-      } catch (error) {
-        AyeLogger.player(
-          `Error adding track to playlist ${self.id} ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`,
-          LogType.ERROR
-        );
-        throw error;
-      }
-    }),
+  @modelFlow
+  addTracksByUrls = _async(function*(this: Playlist, songs: { Url: string }[]) {
+    try {
+      // Add tracks to the playlist
+      yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
 
-    addTracksByUrls: flow(function*(songs: { Url: string }[]) {
-      try {
-        // Add tracks to the playlist
-        yield ApiClient.addTracksToPlaylistByUrls(self.id, songs);
+      // get new Playlist information
+      const { data: pl } = yield* _await(ApiClient.getPlaylist(this.id));
 
-        // get new Playlist information
-        const { data: pl } = yield ApiClient.getPlaylist(self.id);
+      // Get track information of the playlist
+      const { data: tracks }: { data: ITrackDto[] } = yield* _await(
+        ApiClient.getTracksFromPlaylist(this.id, pl.SongsCount)
+      );
 
-        // Get track information of the playlist
-        //@ts-ignore
-        const { data: tracks } = yield ApiClient.getTracksFromPlaylist(
-          self.id,
-          pl.SongsCount
-        );
+      for (const track of tracks) {
+        let tr = Root.stores.trackCache.getTrackById(track.Id);
 
-        for (const track of tracks) {
-          let tr = Root.stores.trackCache.getTrackById(track.id);
-
-          if (!tr) {
-            tr = Track.create({
-              id: track.Id,
-              title: track.Title,
-              duration: track.Duration,
-              isLivestream: false
-            });
-            Root.stores.trackCache.add(tr);
-          }
-
-          self.tracks.push(tr);
+        if (!tr) {
+          tr = new Track({
+            id: track.Id,
+            title: track.Title,
+            duration: track.Duration,
+            isLivestream: false
+          });
+          Root.stores.trackCache.add(tr);
         }
 
-        self.duration = pl.Duration;
-        self.trackCount = pl.SongsCount;
-      } catch (error) {
-        console.error(error);
-        AyeLogger.player(
-          `[addTracksByUrls] Error adding Tracks ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`,
-          LogType.ERROR
-        );
+        this.tracks.push(trackRef(tr));
       }
-    }),
 
-    removeTrack: flow(function*(track: TrackModel) {
-      try {
-        yield ApiClient.removeTrackFromPlaylistById(self.id, track.id);
+      this.duration = pl.Duration;
+      this.trackCount = pl.SongsCount;
+    } catch (error) {
+      AyeLogger.player(
+        `[addTracksByUrls] Error adding Tracks to playlist ${
+          this.id
+        } ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+    }
+  });
 
-        self.trackCount = self.trackCount - 1;
-        self.duration = self.duration - track.duration;
+  @modelFlow
+  removeTrack = _async(function*(this: Playlist, track: Track) {
+    try {
+      yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, track.id));
 
-        const foundTrack = self.tracks.find(trk => trk.id === track.id);
-        const idx = self.tracks.indexOf(foundTrack);
-        self.tracks.splice(idx, 1);
-      } catch (error) {
-        AyeLogger.player(
-          `Error remove track from playlist ${self.id} ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`,
-          LogType.ERROR
-        );
-        throw error;
-      }
-    }),
+      this.trackCount = this.trackCount - 1;
+      this.duration = this.duration - track.duration;
+    } catch (error) {
+      AyeLogger.player(
+        `Error remove track from playlist ${this.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      throw error;
+    }
+  });
 
-    removeTrackById: flow(function*(id: string) {
-      try {
-        yield ApiClient.removeTrackFromPlaylistById(self.id, id);
-        const foundTrack = self.tracks.find(trk => trk.id === id);
-        const idx = self.tracks.indexOf(foundTrack);
-        self.tracks.splice(idx, 1);
-      } catch (error) {
-        AyeLogger.player(
-          `Error remove track from playlist ${self.id} ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`,
-          LogType.ERROR
-        );
-        throw error;
-      }
-    }),
+  @modelFlow
+  removeTrackById = _async(function*(this: Playlist, id: string) {
+    try {
+      yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, id));
+      const foundTrack = this.tracks.find(trk => trk.id === id);
+      const idx = this.tracks.indexOf(foundTrack);
+      this.tracks.splice(idx, 1);
+    } catch (error) {
+      AyeLogger.player(
+        `Error remove track from playlist ${this.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      throw error;
+    }
+  });
 
-    moveTrackTo: flow(function*(oldIndex: number, newIndex: number) {
-      try {
-        const track = clone(self.tracks[oldIndex]);
+  @modelFlow
+  moveTrackTo = _async(function*(
+    this: Playlist,
+    oldIndex: number,
+    newIndex: number
+  ) {
+    try {
+      const track = clone(this.tracks[oldIndex]);
 
-        yield ApiClient.moveTrackTo(self.id, track.id, newIndex);
+      yield ApiClient.moveTrackTo(this.id, track.id, newIndex);
 
-        self.tracks.splice(oldIndex, 1);
-        self.tracks.splice(newIndex, 0, track);
-      } catch (error) {
-        AyeLogger.player(
-          `Error changing Track order ${JSON.stringify(error, null, 2)}`,
-          LogType.ERROR
-        );
-        throw error;
-      }
-    })
-  }));
-
-export default Playlist;
+      this.tracks.splice(oldIndex, 1);
+      this.tracks.splice(newIndex, 0, track);
+    } catch (error) {
+      AyeLogger.player(
+        `Error changing Track order ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      throw error;
+    }
+  });
+}

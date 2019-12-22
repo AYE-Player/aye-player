@@ -11,13 +11,14 @@ import {
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
+import { Ref } from "mobx-keystone";
 
 interface IProps {}
 
@@ -57,7 +58,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ app, queue, player }: RootStoreModel) => ({
+  const Store = ({ app, queue, player }: RootStore) => ({
     app,
     queue,
     player
@@ -65,11 +66,14 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   const { app, queue, player } = useInject(Store);
 
-  const _handleClick = (track: TrackModel) => {
-    const idx = player.currentPlaylist.getIndexOfTrack(track);
+  const _handleClick = (track: Ref<Track>) => {
+    const idx = player.currentPlaylist.current.getIndexOfTrack(track);
 
     queue.clear();
-    queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
+    queue.addTracks(
+      player.currentPlaylist.current
+        .getTracksStartingFrom(idx)
+    );
     player.playTrack(queue.currentTrack);
     PlayerInterop.playTrack(queue.currentTrack);
     setValue(!value);
@@ -86,15 +90,19 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     provided: ResponderProvided
   ) => {
     try {
-      await player.currentPlaylist.moveTrackTo(
+      await player.currentPlaylist.current.moveTrackTo(
         result.source.index,
         result.destination.index
       );
 
-      const idx = player.currentPlaylist.getIndexOfTrack(player.currentTrack);
+      const idx = player.currentPlaylist.current.getIndexOfTrack(
+        player.currentTrack
+      );
 
       queue.clear();
-      queue.addTracks(player.currentPlaylist.getTracksStartingFrom(idx));
+      queue.addTracks(
+        player.currentPlaylist.current.getTracksStartingFrom(idx)
+      );
       setValue(!value);
     } catch (error) {
       AyeLogger.player(
@@ -124,10 +132,10 @@ const Playlist: React.FunctionComponent<IProps> = props => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {player.currentPlaylist.tracks.map((track, index) => {
+              {player.currentPlaylist.current.tracks.map((track, index) => {
                 return (
                   <PlaylistEntity
-                    duration={track.formattedDuration}
+                    duration={track.current.formattedDuration}
                     track={track}
                     key={track.id}
                     index={index}
