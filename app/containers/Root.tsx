@@ -346,8 +346,8 @@ export default class Root extends Component {
             );
             if (!playlist) return;
             ApiClient.getTracksFromPlaylist(
-              playerSettings.currentPlaylist.id,
-              playerSettings.currentPlaylist.trackCount
+              playlist.id,
+              playlist.trackCount
             ).then(({ data }) => {
               for (const track of data) {
                 const tr = new Track({
