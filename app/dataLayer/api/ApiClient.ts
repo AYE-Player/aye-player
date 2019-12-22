@@ -9,11 +9,13 @@ class ApiClient {
    */
   constructor() {
     this.axios = axios.create({
-      baseURL: "https://api.aye-player.de/v1"
+      baseURL: "https://api.aye-player.de/v1",
+      timeout: 5000
     });
     this.axios.interceptors.request.use(
       config => {
         const token = localStorage.getItem("token");
+        console.log("TOKEN", token);
 
         if (token != null) {
           config.headers["x-access-token"] = token;
@@ -31,7 +33,8 @@ class ApiClient {
    * Playlist
    */
   getPlaylists() {
-    return this.axios.get("/playlists");
+    console.log("STARTING REQUEST")
+    return this.axios.get("/playlists/");
   }
 
   getPlaylist(id: string) {
