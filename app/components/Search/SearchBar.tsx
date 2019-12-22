@@ -12,7 +12,6 @@ import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
-import trackRef from "../../dataLayer/references/TrackRef";
 
 const Search = styled.div`
   width: 100%;
@@ -77,9 +76,9 @@ const SearchBar: React.FunctionComponent = () => {
           trackCache.add(track);
         }
         searchResult.clear();
-        queue.addPrivilegedTrack(trackRef(track));
-        player.playTrack(trackRef(track));
-        PlayerInterop.playTrack(trackRef(track));
+        queue.addPrivilegedTrack(track);
+        player.playTrack(track);
+        PlayerInterop.playTrack(track);
       } else {
         const results = await searchResult.getTracks(term);
         const foundTracks = [];

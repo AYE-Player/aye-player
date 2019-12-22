@@ -1,7 +1,7 @@
 import Track from "../models/Track";
 import Root from "../../containers/Root";
 import { OutgoingMessageType } from "../../types/enums";
-import { getSnapshot, Ref, SnapshotOutOfModel } from "mobx-keystone";
+import { getSnapshot, SnapshotOutOfModel } from "mobx-keystone";
 
 class PlayerInterop {
   private player: any;
@@ -66,21 +66,21 @@ class PlayerInterop {
     this.startAt = val;
   }
 
-  setTrack(track?: Ref<Track>) {
+  setTrack(track?: Track) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.SET_TRACK,
-        track: track ? getSnapshot(track.current) : undefined
+        track: track ? getSnapshot(track) : undefined
       },
       this.apiUrl
     );
   }
 
-  playTrack(track: Ref<Track>) {
+  playTrack(track: Track) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.PLAY_TRACK,
-        track: getSnapshot(track.current)
+        track: getSnapshot(track)
       },
       this.apiUrl
     );

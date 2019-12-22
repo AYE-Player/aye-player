@@ -1,5 +1,6 @@
 import { model, Model, modelAction, prop, Ref, clone } from "mobx-keystone";
 import Track from "../models/Track";
+import trackRef from "../references/TrackRef";
 
 @model("Queue")
 export default class Queue extends Model({
@@ -15,20 +16,20 @@ export default class Queue extends Model({
   }
 
   @modelAction
-  addTracks(tracks: Ref<Track>[]) {
+  addTracks(tracks: Track[]) {
     for (const track of tracks) {
-      this.tracks.push(track);
+      this.tracks.push(trackRef(track));
     }
   }
 
   @modelAction
-  addTrack(id: Ref<Track>) {
-    this.tracks.push(id);
+  addTrack(track: Track) {
+    this.tracks.push(trackRef(track));
   }
 
   @modelAction
-  addTrackAt(track: Ref<Track>, newIndex: number) {
-    this.tracks.splice(newIndex, 0, track);
+  addTrackAt(track: Track, newIndex: number) {
+    this.tracks.splice(newIndex, 0, trackRef(track));
   }
 
   @modelAction
@@ -44,13 +45,13 @@ export default class Queue extends Model({
   }
 
   @modelAction
-  addPrivilegedTrack(track: Ref<Track>) {
-    this.tracks.unshift(track);
+  addPrivilegedTrack(track: Track) {
+    this.tracks.unshift(trackRef(track));
   }
 
   @modelAction
-  addNextTrack(id: Ref<Track>) {
-    this.tracks.splice(1, 0, id);
+  addNextTrack(track: Track) {
+    this.tracks.splice(1, 0, trackRef(track));
   }
 
   @modelAction

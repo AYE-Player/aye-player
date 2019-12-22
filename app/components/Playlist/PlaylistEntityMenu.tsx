@@ -74,7 +74,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
   };
 
   const _handlePlayNextTrack = () => {
-    queue.addNextTrack(props.trackRef);
+    queue.addNextTrack(props.trackRef.current);
     setAnchorEl(null);
   };
 

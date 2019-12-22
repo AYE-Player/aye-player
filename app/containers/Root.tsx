@@ -12,7 +12,6 @@ import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
-import trackRef from "../dataLayer/references/TrackRef";
 import Settings from "../dataLayer/stores/PersistentSettings";
 import createStore from "../dataLayer/stores/createStore";
 import AyeLogger from "../modules/AyeLogger";
@@ -334,8 +333,8 @@ export default class Root extends Component {
             ) {
               rootStore.trackCache.add(currentTrack);
             }
-            rootStore.queue.addTrack(trackRef(currentTrack));
-            rootStore.player.setCurrentTrack(trackRef(currentTrack));
+            rootStore.queue.addTrack(currentTrack);
+            rootStore.player.setCurrentTrack(currentTrack);
             rootStore.player.notifyRPC({ state: "Paused" });
             PlayerInterop.setInitValues({ track: currentTrack });
           }

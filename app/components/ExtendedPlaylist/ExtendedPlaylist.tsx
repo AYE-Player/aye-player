@@ -25,7 +25,7 @@ import SnackMessage from "../Customs/SnackMessage";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 import { ITrackDto } from "../../types/response";
 import { Ref } from "mobx-keystone";
-import trackRef from "../../dataLayer/references/TrackRef";
+
 
 interface IProps {
   match: any;
@@ -117,11 +117,11 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
 
     queue.clear();
     queue.addTracks(
-      playlist.getTracksStartingFrom(idx).map(track => trackRef(track.current))
+      playlist.getTracksStartingFrom(idx).map(track => track.current)
     );
     player.setCurrentPlaylist(playlist);
-    player.playTrack(trackRef(queue.currentTrack.current));
-    PlayerInterop.playTrack(queue.currentTrack);
+    player.playTrack(queue.currentTrack.current);
+    PlayerInterop.playTrack(queue.currentTrack.current);
     setValue(!value);
   };
 

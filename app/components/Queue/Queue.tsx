@@ -13,7 +13,6 @@ import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import trackRef from "../../dataLayer/references/TrackRef";
 
 interface IProps {}
 
@@ -61,15 +60,15 @@ const Queue: React.FunctionComponent<IProps> = props => {
 
   const _handleClick = (index: number) => {
     queue.jumpTo(index);
-    player.playTrack(trackRef(queue.currentTrack.current));
-    PlayerInterop.playTrack(queue.currentTrack);
+    player.playTrack(queue.currentTrack.current);
+    PlayerInterop.playTrack(queue.currentTrack.current);
 
     setValue(!value);
   };
 
   const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const track = queue.removeAndGetTrack(result.source.index);
-    queue.addTrackAt(track, result.destination.index);
+    queue.addTrackAt(track.current, result.destination.index);
   };
 
   const _showQueue = () => {

@@ -44,9 +44,9 @@ const SearchPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   const _handleDoubleClick = (track: Ref<Track>) => {
-    queue.addPrivilegedTrack(track);
-    player.playTrack(track);
-    PlayerInterop.playTrack(track);
+    queue.addPrivilegedTrack(track.current);
+    player.playTrack(track.current);
+    PlayerInterop.playTrack(track.current);
   };
 
   return (

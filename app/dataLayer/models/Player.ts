@@ -5,6 +5,7 @@ import Playlist from "./Playlist";
 import Track from "./Track";
 import playlistRef from "../references/PlaylistRef";
 import Settings from "../stores/PersistentSettings";
+import trackRef from "../references/TrackRef";
 
 interface IRPCState {
   track?: Track;
@@ -25,13 +26,13 @@ export default class Player extends Model({
   currentPlaylist: prop<Ref<Playlist> | undefined>()
 }) {
   @modelAction
-  playTrack(track: Ref<Track>) {
+  playTrack(track: Track) {
     this.playbackPosition = 0;
     Settings.set("playerSettings.playbackPosition", 0);
 
-    this.currentTrack = track;
+    this.currentTrack = trackRef(track);
     Settings.delete("playerSettings.currentTrack");
-    Settings.set("playerSettings.currentTrack", getSnapshot(track.current));
+    Settings.set("playerSettings.currentTrack", getSnapshot(track));
 
     if (!this.isPlaying) this.isPlaying = true;
 
@@ -89,11 +90,11 @@ export default class Player extends Model({
   }
 
   @modelAction
-  setCurrentTrack(track?: Ref<Track>) {
+  setCurrentTrack(track?: Track) {
     if (track) {
-      this.currentTrack = track;
+      this.currentTrack = trackRef(track);
       Settings.delete("playerSettings.currentTrack");
-      Settings.set("playerSettings.currentTrack", getSnapshot(track.current));
+      Settings.set("playerSettings.currentTrack", getSnapshot(track));
     } else {
       this.currentTrack = undefined;
     }
