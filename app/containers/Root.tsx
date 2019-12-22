@@ -335,9 +335,9 @@ export default class Root extends Component {
               rootStore.trackCache.add(currentTrack);
             }
             rootStore.queue.addTrack(trackRef(currentTrack));
-            rootStore.player.setCurrentTrack(currentTrack);
+            rootStore.player.setCurrentTrack(trackRef(currentTrack));
             rootStore.player.notifyRPC({ state: "Paused" });
-            PlayerInterop.setInitValues({ track: trackRef(currentTrack) });
+            PlayerInterop.setInitValues({ track: currentTrack });
           }
 
           // Check for last active playlist

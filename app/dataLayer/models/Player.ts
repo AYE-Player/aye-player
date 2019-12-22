@@ -4,7 +4,6 @@ import { Repeat } from "../../types/enums";
 import Playlist from "./Playlist";
 import Track from "./Track";
 import playlistRef from "../references/PlaylistRef";
-import trackRef from "../references/TrackRef";
 import Settings from "../stores/PersistentSettings";
 
 interface IRPCState {
@@ -90,11 +89,11 @@ export default class Player extends Model({
   }
 
   @modelAction
-  setCurrentTrack(track?: Track) {
+  setCurrentTrack(track?: Ref<Track>) {
     if (track) {
-      this.currentTrack = trackRef(track);
+      this.currentTrack = track;
       Settings.delete("playerSettings.currentTrack");
-      Settings.set("playerSettings.currentTrack", getSnapshot(track));
+      Settings.set("playerSettings.currentTrack", getSnapshot(track.current));
     } else {
       this.currentTrack = undefined;
     }

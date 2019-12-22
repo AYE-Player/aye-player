@@ -19,6 +19,7 @@ import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
 import { Ref } from "mobx-keystone";
+import trackRef from "../../dataLayer/references/TrackRef";
 
 interface IProps {}
 
@@ -73,8 +74,9 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     queue.addTracks(
       player.currentPlaylist.current
         .getTracksStartingFrom(idx)
+        .map(track => trackRef(track.current))
     );
-    player.playTrack(queue.currentTrack);
+    player.playTrack(trackRef(queue.currentTrack.current));
     PlayerInterop.playTrack(queue.currentTrack);
     setValue(!value);
   };

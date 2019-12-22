@@ -25,6 +25,7 @@ import SnackMessage from "../Customs/SnackMessage";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 import { ITrackDto } from "../../types/response";
 import { Ref } from "mobx-keystone";
+import trackRef from "../../dataLayer/references/TrackRef";
 
 interface IProps {
   match: any;
@@ -112,16 +113,14 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   }, []);
 
   const _handleClick = (track: Ref<Track>) => {
-    console.log("TRACK", track);
     const idx = playlist.getIndexOfTrack(track);
-    console.log("IDX", idx);
 
     queue.clear();
     queue.addTracks(
-      playlist.getTracksStartingFrom(idx)
+      playlist.getTracksStartingFrom(idx).map(track => trackRef(track.current))
     );
     player.setCurrentPlaylist(playlist);
-    player.playTrack(queue.currentTrack);
+    player.playTrack(trackRef(queue.currentTrack.current));
     PlayerInterop.playTrack(queue.currentTrack);
     setValue(!value);
   };

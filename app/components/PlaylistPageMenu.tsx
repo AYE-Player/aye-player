@@ -13,6 +13,7 @@ import useInject from "../hooks/useInject";
 import RootStore from "../dataLayer/stores/RootStore";
 import Playlist from "../dataLayer/models/Playlist";
 import { ITrackDto } from "../types/response";
+import trackRef from "../dataLayer/references/TrackRef";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -82,9 +83,9 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     }
 
     queue.clear();
-    queue.addTracks(playlist.tracks);
+    queue.addTracks(playlist.tracks.map(track => trackRef(track.current)));
     player.setCurrentPlaylist(playlist);
-    player.playTrack(playlist.tracks[0]);
+    player.playTrack(trackRef(playlist.tracks[0].current));
     PlayerInterop.playTrack(playlist.tracks[0]);
     setAnchorEl(null);
   };
