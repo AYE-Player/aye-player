@@ -1,5 +1,6 @@
 import { model, Model, modelAction, prop, Ref } from "mobx-keystone";
 import Track from "../models/Track";
+import trackRef from "../references/TrackRef";
 
 @model("TrackHistory")
 export default class TrackHistory extends Model({
@@ -10,12 +11,14 @@ export default class TrackHistory extends Model({
   }
 
   @modelAction
-  addTrack(id: Ref<Track>) {
-    this.tracks.push(id);
+  addTrack(track: Track) {
+    this.tracks.push(trackRef(track));
   }
 
   @modelAction
   removeAndGetTrack() {
-    return this.tracks.splice(this.tracks.length - 1, 1)[0];
+    const track = this.tracks[this.tracks.length - 1].current;
+    this.tracks.splice(this.tracks.length - 1, 1);
+    return track;
   }
 }
