@@ -15,7 +15,6 @@ class ApiClient {
     this.axios.interceptors.request.use(
       config => {
         const token = localStorage.getItem("token");
-        console.log("TOKEN", token);
 
         if (token != null) {
           config.headers["x-access-token"] = token;
@@ -32,9 +31,17 @@ class ApiClient {
   /**
    * Playlist
    */
-  getPlaylists() {
-    console.log("STARTING REQUEST")
-    return this.axios.get("/playlists/");
+  async getPlaylists() {
+    const res = await fetch("https://api.aye-player.de/v1/playlists/", {
+      method: "get",
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    });
+    const json = await res.json();
+    return ({
+      data: json
+    });
   }
 
   getPlaylist(id: string) {
