@@ -9,7 +9,6 @@ import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
-import trackRef from "../../dataLayer/references/TrackRef";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
@@ -61,7 +60,7 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  trackHistory.addTrack(prevTrack);
+  trackHistory.addTrack(prevTrack.current);
   player.playTrack(track.current);
   PlayerInterop.playTrack(track.current);
 });
@@ -73,8 +72,8 @@ ipcRenderer.on("play-previous", (event, message) => {
 
   queue.addPrivilegedTrack(player.currentTrack.current);
 
-  player.playTrack(track.current);
-  PlayerInterop.playTrack(track.current);
+  player.playTrack(track);
+  PlayerInterop.playTrack(track);
 });
 
 ipcRenderer.on("position", (event, message) => {
@@ -156,9 +155,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   const _playNextTrack = () => {
     const prevTrack = player.currentTrack;
-    console.log("PREV TRACK", prevTrack);
     const track = queue.nextTrack();
-    console.log("NEXT RACK", track);
 
     if (!track) {
       if (player.repeat === Repeat.ALL && player.isShuffling) {
@@ -191,11 +188,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       return;
     }
 
-    console.log("ADD TRRACK TO HIST");
-    trackHistory.addTrack(trackRef(prevTrack.current));
+    trackHistory.addTrack(prevTrack.current);
 
     player.setCurrentTrack();
-    console.log("PLAY TRACK");
     player.playTrack(track.current);
     PlayerInterop.playTrack(track.current);
   };
@@ -234,9 +229,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     const track = trackHistory.removeAndGetTrack();
     if (!track) return;
 
-    queue.addPrivilegedTrack(track.current);
-    player.playTrack(track.current);
-    PlayerInterop.setTrack(track.current);
+    queue.addPrivilegedTrack(track);
+    player.playTrack(track);
+    PlayerInterop.setTrack(track);
   };
 
   const _handleSeekMouseUp = (value: number) => {
