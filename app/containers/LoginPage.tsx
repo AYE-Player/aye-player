@@ -56,12 +56,9 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const getPlaylists = async () => {
     try {
-      console.log("INSIDE GET PLAYLISTS")
       const { data }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
-      console.log("RES DATA", data);
 
       for (const playlist of data) {
-        console.log("PLAYLISTS", playlist);
         const pl = new Playlist({
           id: playlist.Id,
           name: playlist.Name,
@@ -83,9 +80,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
-      console.log("LNG")
       await user.authenticate(name, password);
-      console.log("GET PL")
       await getPlaylists();
       window.location.href = `${window.location.href.split("#/")[0]}#${
         routes.SEARCH
