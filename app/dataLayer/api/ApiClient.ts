@@ -38,9 +38,9 @@ class ApiClient {
         "x-access-token": localStorage.getItem("token")
       }
     });
-    const json = await res.json();
+    const data = await res.json();
     return ({
-      data: json
+      data
     });
   }
 
