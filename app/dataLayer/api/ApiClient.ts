@@ -32,16 +32,7 @@ class ApiClient {
    * Playlist
    */
   async getPlaylists() {
-    const res = await fetch("https://api.aye-player.de/v1/playlists/", {
-      method: "get",
-      headers: {
-        "x-access-token": localStorage.getItem("token")
-      }
-    });
-    const data = await res.json();
-    return ({
-      data
-    });
+    return this.axios.get(`/playlists/`);
   }
 
   getPlaylist(id: string) {
