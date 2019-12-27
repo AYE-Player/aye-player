@@ -7,6 +7,7 @@ import CustomSwitch from "../components/Customs/CustomSwitch";
 import Divider from "../components/Divider";
 import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { remote } from "electron";
 
 const Header = styled.div`
   font-size: 24px;
@@ -47,6 +48,7 @@ const AccountPage: React.FunctionComponent = () => {
 
   const _activateDevMode = () => {
     app.toggleDevMode();
+    remote.getCurrentWindow().reload();
   };
 
   const [language, setLanguage] = React.useState(app.language);
