@@ -9,8 +9,13 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import routes from "../constants/routes.json";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import ApiClient from "../dataLayer/api/ApiClient";
+import Playlist from "../dataLayer/models/Playlist";
+import { IPlaylistDto } from "../types/response";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 
 const Header = styled.div`
   font-size: 24px;
@@ -20,11 +25,12 @@ const Header = styled.div`
 const LoginPage: React.FunctionComponent<any> = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user }: RootStoreModel) => ({
-    user
+  const UserStore = ({ user, playlists }: RootStore) => ({
+    user,
+    playlists
   });
 
-  const { user } = useInject(UserStore);
+  const { user, playlists } = useInject(UserStore);
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
@@ -48,33 +54,37 @@ const LoginPage: React.FunctionComponent<any> = () => {
     setPassword(event.target.value);
   };
 
-  /*const getPlaylists = async () => {
+  const getPlaylists = async () => {
     try {
-        const { data } = await ApiClient.getPlaylists();
+      const { data }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
 
-        for (const playlist of data) {
-          const pl = Playlist.create({
-            id: playlist.Id,
-            name: playlist.Name,
-            duration: playlist.Duration,
-            trackCount: playlist.SongsCount,
-            tracks: []
-          });
+      for (const playlist of data) {
+        const pl = new Playlist({
+          id: playlist.Id,
+          name: playlist.Name,
+          duration: playlist.Duration,
+          trackCount: playlist.SongsCount,
+          tracks: []
+        });
 
-          playlists.add(pl);
+        playlists.add(pl);
       }
     } catch (error) {
-      console.error(error);
+      AyeLogger.player(
+        `[LoginPage]Error retrieving PLaylists ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      throw error;
     }
-  };*/
+  };
 
   const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
       await user.authenticate(name, password);
+      await getPlaylists();
       window.location.href = `${window.location.href.split("#/")[0]}#${
-        routes.ACCOUNT
+        routes.SEARCH
       }`;
-      // await getPlaylists();
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (

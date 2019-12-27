@@ -1,7 +1,7 @@
 import { useStore } from "../components/StoreProvider";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 
-export type MapStore<T> = (store: RootStoreModel) => T;
+export type MapStore<T> = (store: RootStore) => T;
 
 const useInject = <T>(mapStore: MapStore<T>) => {
   const store = useStore();

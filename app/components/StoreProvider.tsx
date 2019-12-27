@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 
-const StoreContext = createContext<RootStoreModel>({} as RootStoreModel);
+const StoreContext = createContext<RootStore>({} as RootStore);
 
 export const useStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;

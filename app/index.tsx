@@ -6,6 +6,7 @@ import "./configs/i18next.config.client";
 import "./app.global.css";
 import { ipcRenderer } from "electron";
 import i18n from "./configs/i18next.config.client";
+import unhandled from "electron-unhandled";
 
 ipcRenderer.on("language-changed", (event, message) => {
   if (!i18n.hasResourceBundle(message.language, message.namespace)) {
@@ -18,6 +19,8 @@ ipcRenderer.on("language-changed", (event, message) => {
 
   i18n.changeLanguage(message.language);
 });
+
+unhandled();
 
 render(
   <Suspense fallback={<div>Loading...</div>}>

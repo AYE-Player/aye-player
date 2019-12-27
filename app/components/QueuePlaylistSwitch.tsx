@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import Playlist from "./Playlist/Playlist";
 import Queue from "./Queue/Queue";
@@ -8,7 +8,7 @@ import Queue from "./Queue/Queue";
 interface IQueuePlaylistSwitchProps {}
 
 const QueuePlaylistSwitch: React.FunctionComponent<IQueuePlaylistSwitchProps> = props => {
-  const Store = ({ app }: RootStoreModel) => ({
+  const Store = ({ app }: RootStore) => ({
     app
   });
 

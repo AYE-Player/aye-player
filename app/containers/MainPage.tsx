@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import AccountDisplay from "../components/Account/AccountDisplay/AccountDisplay";
 import Navigation from "../components/Navigation";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import Routes from "../Routes";
 
@@ -15,11 +15,11 @@ const StyledGrid = styled(Grid)`
 `;
 
 const MainPage: React.FunctionComponent = () => {
-  const UserStore = ({ user }: RootStoreModel) => ({
+  const store = ({ user }: RootStore) => ({
     user
   });
 
-  const { user } = useInject(UserStore);
+  const { user } = useInject(store);
 
   return (
     <>

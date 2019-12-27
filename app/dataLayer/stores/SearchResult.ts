@@ -1,65 +1,79 @@
-import { flow, types } from "mobx-state-tree";
+import {
+  model,
+  Model,
+  modelAction,
+  prop,
+  Ref,
+  _async,
+  _await,
+  modelFlow
+} from "mobx-keystone";
 import { decodeHTMLEntities } from "../../helpers";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import ApiClient from "../api/ApiClient";
-import Track, { TrackModel } from "../models/Track";
+import Track from "../models/Track";
+import trackRef from "../references/TrackRef";
+import { ITrackDto } from "../../types/response";
 
-export type SearchResultModel = typeof SearchResult.Type;
+@model("SearchResult")
+export default class SearchResult extends Model({
+  tracks: prop<Ref<Track>[]>()
+}) {
+  get isEmpty() {
+    return this.tracks.length === 0;
+  }
 
-const SearchResult = types
-  .model({
-    tracks: types.array(types.reference(Track))
-  })
-  .views(self => ({
-    get isEmpty() {
-      return self.tracks.length === 0;
+  @modelFlow
+  getTracks = _async(function*(term: string) {
+    try {
+      const { data }: { data: ITrackDto[] } = yield* _await(
+        ApiClient.searchTrack(term)
+      );
+      const tracks = [];
+
+      for (const track of data) {
+        tracks.push({
+          id: track.Id,
+          duration: track.Duration,
+          title: decodeHTMLEntities(track.Title)
+        });
+      }
+
+      return tracks;
+    } catch (error) {
+      throw error;
     }
-  }))
-  .actions(self => ({
-    getTracks: flow(function*(term: string) {
-      try {
-        const { data } = yield ApiClient.searchTrack(term);
-        const tracks = [];
+  });
 
-        for (const track of data) {
-          tracks.push({
-            id: track.Id,
-            duration: track.Duration,
-            title: decodeHTMLEntities(track.Title)
-          });
-        }
+  @modelFlow
+  getTrackFromUrl = _async(function*(this: SearchResult, url: string) {
+    try {
+      const { data }: { data: ITrackDto } = yield* _await(
+        ApiClient.getTrackFromUrl(url)
+      );
 
-        return tracks;
-      } catch (error) {
-        throw error;
-      }
-    }),
-    getTrackFromUrl: flow(function*(url: string) {
-      try {
-        const { data } = yield ApiClient.getTrackFromUrl(url);
-
-        let parsedData = {
-          id: data.Id,
-          title: data.Title,
-          duration: data.Duration
-        };
-        return parsedData;
-      } catch (error) {
-        AyeLogger.player(error, LogType.ERROR);
-        throw error;
-      }
-    }),
-
-    addTracks(tracks: TrackModel[]) {
-      for (const track of tracks) {
-        self.tracks.push(track.id);
-      }
-    },
-
-    clear() {
-      self.tracks.length = 0;
+      let parsedData = {
+        id: data.Id,
+        title: decodeHTMLEntities(data.Title),
+        duration: data.Duration
+      };
+      return parsedData;
+    } catch (error) {
+      AyeLogger.player(error, LogType.ERROR);
+      throw error;
     }
-  }));
+  });
 
-export default SearchResult;
+  @modelAction
+  addTracks(tracks: Track[]) {
+    for (const track of tracks) {
+      this.tracks.push(trackRef(track.id));
+    }
+  }
+
+  @modelAction
+  clear() {
+    this.tracks.length = 0;
+  }
+}

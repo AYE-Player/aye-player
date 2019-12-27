@@ -6,17 +6,18 @@ import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import QueueEntityMenu from "./QueueEntityMenu";
+import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
-  track: TrackModel;
+  track: Ref<Track>;
   index: number;
   onClick: Function;
   dragId: string;
@@ -90,7 +91,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ playlists }: RootStoreModel) => ({
+  const Store = ({ playlists }: RootStore) => ({
     playlists
   });
 
@@ -107,7 +108,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
     setOpen(true);
   };
 
-  const _handleClose = (id: string, givenTrack: TrackModel) => {
+  const _handleClose = (id: string, givenTrack: Track) => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
@@ -189,13 +190,13 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
           >
             <DragHandle fontSize="small" />
             <TrackInfoContainer onClick={() => props.onClick(props.index)}>
-              <Title length={props.track.title.length}>
+              <Title length={props.track.current.title.length}>
                 <div style={{ display: "inline-block" }}>
-                  {props.track.title}
+                  {props.track.current.title}
                 </div>
               </Title>
               <Duration>
-                {!props.track.isLivestream ? (
+                {!props.track.current.isLivestream ? (
                   props.duration
                 ) : (
                   <div>
@@ -206,8 +207,8 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
               </Duration>
             </TrackInfoContainer>
             <QueueEntityMenu
-              id={props.track.id}
-              isLivestream={props.track.isLivestream}
+              trackRef={props.track}
+              isLivestream={props.track.current.isLivestream}
               openListDialog={_handleClickOpen}
             />
           </Container>

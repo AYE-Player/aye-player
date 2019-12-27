@@ -5,8 +5,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import Track, { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import { detectLink } from "../../helpers";
 import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
@@ -32,7 +32,7 @@ const SearchBar: React.FunctionComponent = () => {
     queue,
     searchResult,
     trackCache
-  }: RootStoreModel) => ({
+  }: RootStore) => ({
     player,
     queue,
     searchResult,
@@ -65,11 +65,11 @@ const SearchBar: React.FunctionComponent = () => {
     try {
       if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
-        let track: TrackModel;
+        let track: Track;
         if (trackInfo.duration === 0) {
-          track = Track.create({ ...trackInfo, isLivestream: true });
+          track = new Track({ ...trackInfo, isLivestream: true });
         } else {
-          track = Track.create(trackInfo);
+          track = new Track(trackInfo);
         }
 
         if (!trackCache.tracks.find(t => t.id === track.id)) {
@@ -83,11 +83,11 @@ const SearchBar: React.FunctionComponent = () => {
         const results = await searchResult.getTracks(term);
         const foundTracks = [];
         for (const result of results) {
-          let track: TrackModel;
+          let track: Track;
           if (result.duration === 0) {
-            track = Track.create({ ...result, isLivestream: true });
+            track = new Track({ ...result, isLivestream: true });
           } else {
-            track = Track.create(result);
+            track = new Track(result);
           }
           if (!trackCache.tracks.find(t => t.id === track.id)) {
             trackCache.add(track);

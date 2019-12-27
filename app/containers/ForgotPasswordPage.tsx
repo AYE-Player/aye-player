@@ -7,7 +7,7 @@ import CustomButton from "../components/Customs/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers";
 import useInject from "../hooks/useInject";
 
@@ -17,11 +17,11 @@ const Header = styled.div`
 `;
 
 const PasswordForgotPage: React.FunctionComponent<any> = () => {
-  const UserStore = ({ user }: RootStoreModel) => ({
+  const store = ({ user }: RootStore) => ({
     user
   });
 
-  const { user } = useInject(UserStore);
+  const { user } = useInject(store);
 
   const [email, setEmail] = React.useState("");
   const [invalidEmail, setInvalidEmail] = React.useState(false);

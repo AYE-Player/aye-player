@@ -9,8 +9,7 @@ import {
 } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import Track from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
@@ -51,7 +50,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
 
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ app, queue, player }: RootStoreModel) => ({
+  const Store = ({ app, queue, player }: RootStore) => ({
     app,
     queue,
     player
@@ -61,22 +60,15 @@ const Queue: React.FunctionComponent<IProps> = props => {
 
   const _handleClick = (index: number) => {
     queue.jumpTo(index);
-    player.playTrack(queue.currentTrack);
-    PlayerInterop.playTrack(queue.currentTrack);
+    player.playTrack(queue.currentTrack.current);
+    PlayerInterop.playTrack(queue.currentTrack.current);
 
     setValue(!value);
   };
 
   const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const track = queue.removeAndGetTrack(result.source.index);
-    queue.addTrackAt(
-      Track.create({
-        id: track.id,
-        title: track.title,
-        duration: track.duration
-      }),
-      result.destination.index
-    );
+    queue.addTrackAt(track.current, result.destination.index);
   };
 
   const _showQueue = () => {
@@ -103,7 +95,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
               {queue.tracks.map((track, index) => {
                 return (
                   <QueueEntity
-                    duration={track.formattedDuration}
+                    duration={track.current.formattedDuration}
                     track={track}
                     key={`${track.id}-${index}`}
                     dragId={`${track.id}-${index}`}

@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import { ipcRenderer } from "electron";
-import { getSnapshot } from "mobx-state-tree";
+import { getSnapshot } from "mobx-keystone";
 import { SnackbarProvider } from "notistack";
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
@@ -11,11 +11,12 @@ import { StoreProvider } from "../components/StoreProvider";
 import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Playlist from "../dataLayer/models/Playlist";
-import Track, { TrackModel } from "../dataLayer/models/Track";
-import { createStore } from "../dataLayer/stores/createStore";
+import Track from "../dataLayer/models/Track";
 import Settings from "../dataLayer/stores/PersistentSettings";
+import createStore from "../dataLayer/stores/createStore";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
+import { IPlaylistDto } from "../types/response";
 import MainPage from "./MainPage";
 
 interface IPlayerSettings {
@@ -24,7 +25,7 @@ interface IPlayerSettings {
   repeat: Repeat;
   isMuted: boolean;
   isShuffling: boolean;
-  currentTrack: TrackModel;
+  currentTrack: Track;
   currentPlaylist: {
     id: string;
     trackCount: number;
@@ -247,8 +248,8 @@ ipcRenderer.on("app-close", (event, message) => {
   if (rootStore.player.currentPlaylist) {
     Settings.set("playerSettings.currentPlaylist", {
       id: rootStore.player.currentPlaylist.id,
-      trackCount: rootStore.player.currentPlaylist.trackCount,
-      duration: rootStore.player.currentPlaylist.duration
+      trackCount: rootStore.player.currentPlaylist.current.trackCount,
+      duration: rootStore.player.currentPlaylist.current.duration
     });
   }
   if (
@@ -257,7 +258,7 @@ ipcRenderer.on("app-close", (event, message) => {
   ) {
     Settings.set(
       "playerSettings.currentTrack",
-      getSnapshot(rootStore.player.currentTrack)
+      getSnapshot(rootStore.player.currentTrack.current)
     );
   }
 });
@@ -272,10 +273,12 @@ const getPlaylists = async () => {
   try {
     const token = localStorage.getItem("token");
     if (token) {
-      const { data: playlists } = await ApiClient.getPlaylists();
+      const {
+        data: playlists
+      }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
 
       for (const playlist of playlists) {
-        const pl = Playlist.create({
+        const pl = new Playlist({
           id: playlist.Id,
           name: playlist.Name,
           duration: playlist.Duration,
@@ -287,7 +290,10 @@ const getPlaylists = async () => {
       }
     }
   } catch (error) {
-    console.error(error);
+    AyeLogger.player(
+      `[Root] Error retrieving Playlists ${error}`,
+      LogType.ERROR
+    );
   }
 };
 
@@ -319,7 +325,7 @@ export default class Root extends Component {
 
           // Check for currentTrack and if it was a liveStream or not
           if (playerSettings.currentTrack?.isLivestream === false) {
-            const currentTrack = Track.create(playerSettings.currentTrack);
+            const currentTrack = new Track(playerSettings.currentTrack);
             if (
               !rootStore.trackCache.tracks.find(
                 t => t.id === playerSettings.currentTrack.id
@@ -327,7 +333,7 @@ export default class Root extends Component {
             ) {
               rootStore.trackCache.add(currentTrack);
             }
-            rootStore.queue.addTrack(currentTrack.id);
+            rootStore.queue.addTrack(currentTrack);
             rootStore.player.setCurrentTrack(currentTrack);
             rootStore.player.notifyRPC({ state: "Paused" });
             PlayerInterop.setInitValues({ track: currentTrack });
@@ -340,15 +346,14 @@ export default class Root extends Component {
             );
             if (!playlist) return;
             ApiClient.getTracksFromPlaylist(
-              playerSettings.currentPlaylist.id,
-              playerSettings.currentPlaylist.trackCount
+              playlist.id,
+              playlist.trackCount
             ).then(({ data }) => {
               for (const track of data) {
-                const tr = Track.create({
+                const tr = new Track({
                   id: track.Id,
                   duration: track.Duration,
-                  title: track.Title,
-                  isLivestream: track.IsLivestream
+                  title: track.Title
                 });
                 if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
                   rootStore.trackCache.add(tr);

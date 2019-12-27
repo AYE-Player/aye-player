@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { TrackModel } from "../models/Track";
+import Track from "../models/Track";
 
 class ApiClient {
   private axios: AxiosInstance;
@@ -9,7 +9,8 @@ class ApiClient {
    */
   constructor() {
     this.axios = axios.create({
-      baseURL: "https://api.aye-player.de/v1"
+      baseURL: "https://api.aye-player.de/v1",
+      timeout: 5000
     });
     this.axios.interceptors.request.use(
       config => {
@@ -30,8 +31,8 @@ class ApiClient {
   /**
    * Playlist
    */
-  getPlaylists() {
-    return this.axios.get("/playlists");
+  async getPlaylists() {
+    return this.axios.get(`/playlists/`);
   }
 
   getPlaylist(id: string) {
@@ -59,7 +60,7 @@ class ApiClient {
     return this.axios.get(`/playlists/${id}/songs?skip=0&take=${amount}`);
   }
 
-  addTrackToPlaylist(id: string, track: TrackModel) {
+  addTrackToPlaylist(id: string, track: Track) {
     return this.axios.put(`/playlists/${id}/songs`, {
       Id: track.id,
       Duration: track.duration,
@@ -74,7 +75,7 @@ class ApiClient {
     });
   }
 
-  removeTrackFromPlaylist(id: string, track: TrackModel) {
+  removeTrackFromPlaylist(id: string, track: Track) {
     return this.axios.delete(`/playlists/${id}/songs/${track.id}`);
   }
 

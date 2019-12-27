@@ -12,7 +12,7 @@ import CustomButton from "../components/Customs/CustomButton";
 import CustomizedDialogs from "../components/Customs/CustomDialog";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
 
@@ -42,13 +42,13 @@ const AvatarInfoText = styled.div`
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user, player, playlists }: RootStoreModel) => ({
+  const store = ({ user, player, playlists }: RootStore) => ({
     user,
     player,
     playlists
   });
 
-  const { user, player, playlists } = useInject(UserStore);
+  const { user, player, playlists } = useInject(store);
 
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");

@@ -6,7 +6,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import routes from "../../../constants/routes.json";
-import { RootStoreModel } from "../../../dataLayer/stores/RootStore";
+import RootStore from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
 import Divider from "../../Divider";
 
@@ -46,7 +46,7 @@ const StyledMenu = withStyles({
 const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ user, player, playlists }: RootStoreModel) => ({
+  const Store = ({ user, player, playlists }: RootStore) => ({
     user,
     player,
     playlists

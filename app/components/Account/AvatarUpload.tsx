@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import SnackMessage from "../Customs/SnackMessage";
-import { UserModel } from "../../dataLayer/models/User";
+import User from "../../dataLayer/models/User";
 import CustomButton from "../Customs/CustomButton";
 const placeholder = require("../../images/placeholder.png");
 
@@ -11,7 +11,7 @@ interface IAvatarUploadProps {
   avatar: any;
   setAvatar: Function;
   setAvatarFile: Function;
-  user?: UserModel;
+  user?: User;
 }
 
 const Aligner = styled.div`

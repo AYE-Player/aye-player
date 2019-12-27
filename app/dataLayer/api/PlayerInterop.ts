@@ -1,11 +1,12 @@
-import { TrackModel } from "../models/Track";
+import Track from "../models/Track";
 import Root from "../../containers/Root";
 import { OutgoingMessageType } from "../../types/enums";
+import { getSnapshot, SnapshotOutOfModel } from "mobx-keystone";
 
 class PlayerInterop {
   private player: any;
   private apiUrl: string;
-  private initTrack: TrackModel;
+  private initTrack: SnapshotOutOfModel<Track>;
   private startAt: number;
   private volume: number;
   private isMuted: boolean;
@@ -27,12 +28,12 @@ class PlayerInterop {
     volume,
     isMuted
   }: {
-    track?: TrackModel;
+    track?: Track;
     volume?: number;
     isMuted?: boolean;
   }) {
     if (track) {
-      this.initTrack = track;
+      this.initTrack = getSnapshot(track);
     }
     if (volume) {
       this.volume = volume;
@@ -65,21 +66,21 @@ class PlayerInterop {
     this.startAt = val;
   }
 
-  setTrack(track?: TrackModel) {
+  setTrack(track?: Track) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.SET_TRACK,
-        track: track ? track : undefined
+        track: track ? getSnapshot(track) : undefined
       },
       this.apiUrl
     );
   }
 
-  playTrack(track: TrackModel) {
+  playTrack(track: Track) {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.PLAY_TRACK,
-        track
+        track: getSnapshot(track)
       },
       this.apiUrl
     );

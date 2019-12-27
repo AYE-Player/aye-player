@@ -1,173 +1,195 @@
-import { flow, types } from "mobx-state-tree";
+import {
+  model,
+  Model,
+  prop,
+  _async,
+  _await,
+  modelFlow,
+  modelAction
+} from "mobx-keystone";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import ApiClient from "../api/ApiClient";
-
-export type UserModel = typeof User.Type;
 
 interface IRole {
   Name: string;
   Id: string;
 }
 
-const User = types
-  .model({
-    isAuthenticated: types.optional(types.boolean, false),
-    hasPremium: types.optional(types.boolean, false),
-    isAnonym: types.optional(types.boolean, true),
-    id: types.maybe(types.string),
-    email: types.maybe(types.string),
-    roles: types.optional(types.array(types.string), []),
-    name: types.maybe(types.string),
-    avatar: types.maybe(types.string)
-  })
-  .actions(self => ({
-    afterCreate: flow(function*() {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          // @ts-ignore
-          const { data: userInfo } = yield ApiClient.getUserdata();
-          self.id = userInfo.Id;
-          self.email = userInfo.Email;
-          self.name = userInfo.Username;
-          self.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
-          self.isAnonym = false;
-          self.isAuthenticated = true;
-          self.roles = userInfo.Roles.map((role: IRole) => role.Name);
-          self.hasPremium =
-            !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
-            !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
-        } catch (error) {
-          localStorage.removeItem("token");
-          console.error(error);
-        }
-      }
-    }),
-    authenticate: flow(function*(username: string, password: string) {
+@model("User")
+export default class User extends Model({
+  id: prop<string>(),
+  email: prop<string>(),
+  roles: prop<string[]>(() => []),
+  name: prop<string>(),
+  avatar: prop<string>(),
+  isAuthenticated: prop(false),
+  hasPremium: prop(false)
+}) {
+  getRefId() {
+    return this.id;
+  }
+
+  @modelFlow
+  onInit = _async(function*(this: User) {
+    const token = localStorage.getItem("token");
+    if (token) {
       try {
-        AyeLogger.player(`Trying to log in with: ${username}`);
-        //@ts-ignore
-        const { data: token } = yield ApiClient.authenticate(
-          username,
-          password
-        );
-
-        localStorage.setItem("token", token);
-        
-        //@ts-ignore
-        const { data: userInfo } = yield ApiClient.getUserdata();
-
-        // Save user information
-        self.id = userInfo.Id;
-        self.email = userInfo.Email;
-        self.name = userInfo.Username;
-        self.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
-        self.isAnonym = false;
-        self.isAuthenticated = true;
-        self.roles = userInfo.Roles.map((role: IRole) => role.Name);
-        self.hasPremium =
+        const { data: userInfo } = yield* _await(ApiClient.getUserdata());
+        this.id = userInfo.Id;
+        this.email = userInfo.Email;
+        this.name = userInfo.Username;
+        this.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
+        this.isAuthenticated = true;
+        this.roles = userInfo.Roles.map((role: IRole) => role.Name);
+        this.hasPremium =
           !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
           !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
-        AyeLogger.player(`Logged in user ${username}`);
       } catch (error) {
-        AyeLogger.player(`Error logging in ${error}`, LogType.ERROR);
-        throw error;
+        localStorage.removeItem("token");
+        console.error(error);
       }
-    }),
+    }
+  });
 
-    logout() {
-      localStorage.removeItem("token");
-      self.id = undefined;
-      self.email = undefined;
-      self.name = undefined;
-      self.avatar = undefined;
-      self.isAnonym = true;
-      self.isAuthenticated = false;
-      self.hasPremium = false;
-    },
+  @modelFlow
+  authenticate = _async(function*(
+    this: User,
+    username: string,
+    password: string
+  ) {
+    try {
+      AyeLogger.player(`Trying to log in with: ${username}`);
+      const { data: token } = yield* _await(
+        ApiClient.authenticate(username, password)
+      );
 
-    delete: flow(function*() {
-      try {
-        AyeLogger.player(`Deleting User ${self.id}`);
-        yield ApiClient.deleteUser();
-        AyeLogger.player(`Deleted`);
-      } catch (error) {
-        AyeLogger.player(
-          `Error deleting user ${self.id}, ERROR: ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`
-        );
-      }
-    }),
+      localStorage.setItem("token", token);
 
-    updatePassword: flow(function*(password: string) {
-      try {
-        AyeLogger.player(`Trying to set new password for ${self.id}`);
-        yield ApiClient.updatePassword(password);
-        AyeLogger.player(`New Password set.`);
-      } catch (error) {
-        AyeLogger.player(
-          `Error Setting new password ${JSON.stringify(error, null, 2)}`
-        );
-        throw error;
-      }
-    }),
+      const { data: userInfo } = yield* _await(ApiClient.getUserdata());
 
-    updateAvatar: flow(function*(avatar: File) {
-      try {
-        const data = new FormData();
-        data.append("avatar", avatar);
+      // Save user information
+      this.id = userInfo.Id;
+      this.email = userInfo.Email;
+      this.name = userInfo.Username;
+      this.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
+      this.isAuthenticated = true;
+      this.roles = userInfo.Roles.map((role: IRole) => role.Name);
+      this.hasPremium =
+        !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
+        !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
+      AyeLogger.player(`Logged in user ${username}`);
+    } catch (error) {
+      AyeLogger.player(`Error logging in ${error}`, LogType.ERROR);
+      throw error;
+    }
+  });
 
-        // Upload avatar image
-        const res = yield ApiClient.updateAvatar(data);
+  @modelAction
+  logout() {
+    localStorage.removeItem("token");
+    this.id = undefined;
+    this.email = undefined;
+    this.name = undefined;
+    this.avatar = undefined;
+    this.isAuthenticated = false;
+    this.hasPremium = false;
+  }
 
-        // parse response (gives storage URL)
-        const avatarURL = yield res.json();
+  @modelFlow
+  delete = _async(function*(this: User) {
+    try {
+      AyeLogger.player(`Deleting User ${this.id}`);
+      yield* _await(ApiClient.deleteUser());
+      this.logout();
+      AyeLogger.player(`Deleted`);
+    } catch (error) {
+      AyeLogger.player(
+        `Error deleting user ${this.id}, ERROR: ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`
+      );
+    }
+  });
 
-        // Patch userprofile with new URL
-        yield ApiClient.updateAvatarUrl(avatarURL);
+  @modelFlow
+  updatePassword = _async(function*(this: User, password: string) {
+    try {
+      AyeLogger.player(`Trying to set new password for ${this.id}`);
+      yield* _await(ApiClient.updatePassword(password));
+      AyeLogger.player(`New Password set.`);
+    } catch (error) {
+      AyeLogger.player(
+        `Error Setting new password for user ${this.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`
+      );
+      throw error;
+    }
+  });
 
-        // set local URL for direct effect
-        self.avatar = avatarURL;
-        AyeLogger.player(`Updated User Avatar ${avatarURL}`);
-      } catch (error) {
-        AyeLogger.player(`Error Updating user avatar ${error}`, LogType.ERROR);
-        throw error;
-      }
-    }),
+  @modelFlow
+  updateAvatar = _async(function*(this: User, avatar: File) {
+    try {
+      const data = new FormData();
+      data.append("avatar", avatar);
 
-    register: flow(function*(name: string, email: string, password: string) {
-      try {
-        AyeLogger.player(`Trying to register with ${name} ${email}`);
-        yield ApiClient.register(email, password);
-      } catch (error) {
-        AyeLogger.player(
-          `Failed registration ${JSON.stringify(error, null, 2)}`,
-          LogType.ERROR
-        );
-        throw error;
-      }
-    }),
+      // Upload avatar image
+      const res = yield* _await(ApiClient.updateAvatar(data));
 
-    forgotPassword: flow(function*(email: string) {
-      try {
-        AyeLogger.player(`Trying to reset password for ${email}`);
-        yield ApiClient.forgotPassword(email);
-      } catch (error) {
-        AyeLogger.player(
-          `Failed to start password reset process ${JSON.stringify(
-            error,
-            null,
-            2
-          )}`,
-          LogType.ERROR
-        );
-        throw error;
-      }
-    })
-  }));
+      // parse response (gives storage URL)
+      const avatarURL = yield* _await(res.json());
 
-export default User;
+      // Patch userprofile with new URL
+      yield* _await(ApiClient.updateAvatarUrl(avatarURL));
+
+      // set local URL for direct effect
+      this.avatar = avatarURL;
+      AyeLogger.player(`Updated User Avatar ${avatarURL}`);
+    } catch (error) {
+      AyeLogger.player(`Error Updating user avatar ${error}`, LogType.ERROR);
+      throw error;
+    }
+  });
+
+  @modelFlow
+  register = _async(function*(
+    this: User,
+    name: string,
+    email: string,
+    password: string
+  ) {
+    try {
+      AyeLogger.player(`Trying to register with ${name} ${email}`);
+      yield* _await(ApiClient.register(email, password));
+    } catch (error) {
+      AyeLogger.player(
+        `Failed registration ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      throw error;
+    }
+  });
+
+  @modelFlow
+  forgotPassword = _async(function*(this: User, email: string) {
+    try {
+      AyeLogger.player(`Trying to reset password for ${email}`);
+      yield* _await(ApiClient.forgotPassword(email));
+    } catch (error) {
+      AyeLogger.player(
+        `Failed to start password reset process ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      throw error;
+    }
+  });
+}

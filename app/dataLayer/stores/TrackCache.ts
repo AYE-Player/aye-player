@@ -1,28 +1,23 @@
-import { types } from "mobx-state-tree";
-import Track, { TrackModel } from "../models/Track";
+import { model, Model, modelAction, prop } from "mobx-keystone";
+import Track from "../models/Track";
 
-export type TrackStoreModel = typeof TrackStore.Type;
+@model("TrackCache")
+export default class TrackCache extends Model({
+  tracks: prop<Track[]>()
+}) {
+  getTrackById(id: string) {
+    return this.tracks.find(track => track.id === id);
+  }
 
-const TrackStore = types
-  .model({
-    tracks: types.array(Track)
-  })
-  .views(self => ({
-    getTrackById(id: string) {
-      return self.tracks.find(track => track.id === id);
-    }
-  }))
-  .actions(self => ({
-    add(track: TrackModel) {
-      self.tracks.push(track);
-      return track;
-    },
+  @modelAction
+  add(track: Track) {
+    this.tracks.push(track);
+  }
 
-    removeTrack(id: string) {
-      const foundTrack = self.tracks.find(track => track.id === id);
-      const idx = self.tracks.indexOf(foundTrack);
-      self.tracks.splice(idx, 1);
-    }
-  }));
-
-export default TrackStore;
+  @modelAction
+  removeTrack(id: string) {
+    const foundTrack = this.tracks.find(track => track.id === id);
+    const idx = this.tracks.indexOf(foundTrack);
+    this.tracks.splice(idx, 1);
+  }
+}

@@ -6,17 +6,18 @@ import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled, { keyframes, css } from "styled-components";
-import { TrackModel } from "../../dataLayer/models/Track";
-import { RootStoreModel } from "../../dataLayer/stores/RootStore";
+import Track from "../../dataLayer/models/Track";
+import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
+import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
-  track: TrackModel;
+  track: Ref<Track>;
   index: number;
   onClick: Function;
 }
@@ -107,7 +108,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ player, playlists }: RootStoreModel) => ({
+  const Store = ({ player, playlists }: RootStore) => ({
     player,
     playlists
   });
@@ -125,7 +126,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpen(true);
   };
 
-  const _handleClose = (id: string, givenTrack: TrackModel) => {
+  const _handleClose = (id: string, givenTrack: Track) => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
@@ -214,15 +215,15 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
               }
               onClick={() => props.onClick(props.track)}
             >
-              <Title length={props.track.title.length}>
+              <Title length={props.track.current.title.length}>
                 <ScrollText>
-                  <TextSpan>{props.track.title}</TextSpan>
+                  <TextSpan>{props.track.current.title}</TextSpan>
                 </ScrollText>
               </Title>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
             <PlaylistEntityMenu
-              id={props.track.id}
+              trackRef={props.track}
               openListDialog={_handleClickOpen}
             />
           </Container>

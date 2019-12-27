@@ -5,8 +5,9 @@ import styled from "styled-components";
 import CustomDropDown from "../components/Customs/CustomDropDown";
 import CustomSwitch from "../components/Customs/CustomSwitch";
 import Divider from "../components/Divider";
-import { RootStoreModel } from "../dataLayer/stores/RootStore";
+import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
+import { remote } from "electron";
 
 const Header = styled.div`
   font-size: 24px;
@@ -30,12 +31,12 @@ const SettingsContainer = styled.div`
 `; */
 
 const AccountPage: React.FunctionComponent = () => {
-  const UserStore = ({ app, user }: RootStoreModel) => ({
+  const store = ({ app, user }: RootStore) => ({
     app,
     user
   });
 
-  const { app, user } = useInject(UserStore);
+  const { app, user } = useInject(store);
 
   const _switchRPCStatus = () => {
     app.toggleRPC();
@@ -47,6 +48,7 @@ const AccountPage: React.FunctionComponent = () => {
 
   const _activateDevMode = () => {
     app.toggleDevMode();
+    remote.getCurrentWindow().reload();
   };
 
   const [language, setLanguage] = React.useState(app.language);
