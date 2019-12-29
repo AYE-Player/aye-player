@@ -4,8 +4,7 @@ import {
   Menu,
   Tray,
   NativeImage,
-  nativeImage,
-  nativeTheme
+  nativeImage
 } from "electron";
 import path from "path";
 import BaseModule from "./BaseModule";
@@ -37,7 +36,7 @@ class AyeTray extends BaseModule {
             path.join(
               __dirname,
               `${basePath}${
-                "32x32_Template.png"
+                "16x16_Template.png"
               }`
             )
           )
