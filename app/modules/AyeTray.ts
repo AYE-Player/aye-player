@@ -5,7 +5,7 @@ import {
   Tray,
   NativeImage,
   nativeImage,
-  systemPreferences
+  nativeTheme
 } from "electron";
 import path from "path";
 import BaseModule from "./BaseModule";
@@ -25,6 +25,7 @@ class AyeTray extends BaseModule {
 
     AyeLogger.tray("Trying to initialize");
     try {
+      console.log("DD", nativeTheme.shouldUseDarkColors);
       this.shouldQuit = false;
       this.appName = "AYE - Player";
       const basePath =
@@ -32,17 +33,19 @@ class AyeTray extends BaseModule {
           ? "../images/icons/png/"
           : "images/icons/png/";
       if (process.platform === "darwin") {
+        console.log("DARWIN");
         const nImage = nativeImage.createFromPath(
           path.resolve(
             path.join(
               __dirname,
               `${basePath}${
-                systemPreferences.isDarkMode() ? "16x16_w.png" : "16x16.png"
+                nativeTheme.shouldUseDarkColors ? "16x16_w.png" : "16x16.png"
               }`
             )
           )
         );
         this.icon = nImage;
+        console.log("ICON", this.icon);
       } else if (process.platform === "win32") {
         const winPath =
           process.env.NODE_ENV === "development"
@@ -54,6 +57,7 @@ class AyeTray extends BaseModule {
           path.join(__dirname, `${basePath}16x16_w.png`)
         );
       }
+      console.log("ICON AFTER", this.icon);
       this.tray = new Tray(this.icon);
 
       this.contextMenu = Menu.buildFromTemplate([
