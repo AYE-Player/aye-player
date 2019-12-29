@@ -198,9 +198,9 @@ class AyeMpris extends BaseModule {
           }
 
           this.player.playbackStatus = "Playing";
-          AyeLogger.media(
+          /* AyeLogger.media(
             `Track Info:\n${JSON.stringify(this.player.metadata, null, 2)}`
-          );
+          ); */
           break;
         default:
       }
