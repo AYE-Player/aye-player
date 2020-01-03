@@ -2,29 +2,32 @@ import {
   app,
   BrowserWindow,
   Menu,
-  Tray,
   NativeImage,
-  nativeImage
+  nativeImage,
+  Tray
 } from "electron";
+import { i18n } from "i18next";
 import path from "path";
-import BaseModule from "./BaseModule";
-import AyeLogger from "./AyeLogger";
 import { LogType } from "../types/enums";
+import AyeLogger from "./AyeLogger";
+import BaseModule from "./BaseModule";
 
 class AyeTray extends BaseModule {
   public shouldQuit: boolean;
+  public i18n: i18n;
 
   private tray: Tray;
   private icon: string | NativeImage;
   private appName: string;
   private contextMenu: Menu;
 
-  constructor(window: BrowserWindow) {
+  constructor(window: BrowserWindow, i18n: i18n) {
     super(window);
 
     AyeLogger.tray("Trying to initialize");
     try {
       this.shouldQuit = false;
+      this.i18n = i18n;
       this.appName = "AYE - Player";
       const basePath =
         process.env.NODE_ENV === "development"
@@ -33,12 +36,7 @@ class AyeTray extends BaseModule {
       if (process.platform === "darwin") {
         const nImage = nativeImage.createFromPath(
           path.resolve(
-            path.join(
-              __dirname,
-              `${basePath}${
-                "16x16_Template.png"
-              }`
-            )
+            path.join(__dirname, `${basePath}${"16x16_Template.png"}`)
           )
         );
         this.icon = nImage;
@@ -55,40 +53,7 @@ class AyeTray extends BaseModule {
       }
       this.tray = new Tray(this.icon);
 
-      this.contextMenu = Menu.buildFromTemplate([
-        {
-          label: "Play/Pause",
-          click: () => {
-            this.window.webContents.send("play-pause");
-          }
-        },
-        {
-          label: "Skip",
-          click: () => {
-            this.window.webContents.send("play-next");
-          }
-        },
-        {
-          label: "Previous",
-          click: () => {
-            this.window.webContents.send("play-previous");
-          }
-        },
-        { type: "separator" },
-        {
-          label: "Show AYE",
-          click: () => {
-            this.window.show();
-          }
-        },
-        {
-          label: "Quit AYE",
-          click: () => {
-            this.shouldQuit = true;
-            app.quit();
-          }
-        }
-      ]);
+      this.buildContextMenu();
       this.tray.setContextMenu(this.contextMenu);
       this.tray.setToolTip(this.appName);
       this.tray.on("click", () => {
@@ -99,7 +64,7 @@ class AyeTray extends BaseModule {
     }
   }
 
-  removeTray(showWindow = true) {
+  public removeTray(showWindow = true) {
     if (this.tray != null) {
       this.tray.destroy();
       this.tray = null;
@@ -110,14 +75,14 @@ class AyeTray extends BaseModule {
     }
   }
 
-  hideToTray() {
+  public hideToTray() {
     this.showTray();
     if (this.window != null) {
       this.window.hide();
     }
   }
 
-  showTray() {
+  public showTray() {
     if (this.tray != null) {
       return;
     }
@@ -151,7 +116,49 @@ class AyeTray extends BaseModule {
     }
   }
 
-  destroy() {
+  public buildContextMenu() {
+    this.contextMenu = Menu.buildFromTemplate([
+      {
+        label: this.i18n.t("Tray.play_pause"),
+        click: () => {
+          this.window.webContents.send("play-pause");
+        }
+      },
+      {
+        label: this.i18n.t("Tray.skip"),
+        click: () => {
+          this.window.webContents.send("play-next");
+        }
+      },
+      {
+        label: this.i18n.t("Tray.previous"),
+        click: () => {
+          this.window.webContents.send("play-previous");
+        }
+      },
+      { type: "separator" },
+      {
+        label: this.i18n.t("Tray.show"),
+        click: () => {
+          this.window.show();
+        }
+      },
+      {
+        label: this.i18n.t("Tray.quit"),
+        click: () => {
+          this.shouldQuit = true;
+          app.quit();
+        }
+      }
+    ]);
+  }
+
+  public rebuild() {
+    this.buildContextMenu();
+    this.tray.setContextMenu(this.contextMenu);
+  }
+
+  public destroy() {
     this.tray.destroy();
   }
 }
