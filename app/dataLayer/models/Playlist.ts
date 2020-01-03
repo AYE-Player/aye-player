@@ -30,7 +30,7 @@ export default class Playlist extends Model({
   }
 
   getIndexOfTrack(track: Ref<Track>) {
-    return this.tracks.indexOf(track);
+    return this.tracks.map(t => t.id).indexOf(track.id);
   }
 
   getTracksStartingFrom(idx: number) {
