@@ -183,7 +183,7 @@ class AyeMpris extends BaseModule {
         case "onStateChange":
           if (args.data === true) this.player.playbackStatus = "Playing";
           if (args.data === false) this.player.playbackStatus = "Paused";
-          AyeLogger.media(`Playback status: ${this.player.playbackStatus}`);
+          // AyeLogger.media(`Playback status: ${this.player.playbackStatus}`);
           break;
         case "trackInfo":
           if (this.player.metadata["xesam:url"] !== `https://www.youtube.com/watch?v=${args.data.id}`) {
