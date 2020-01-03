@@ -168,7 +168,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         player.playTrack(player.currentPlaylist.current.tracks[0].current);
         PlayerInterop.setTrack(player.currentPlaylist.current.tracks[0].current);
       } else if (
-        player.currentPlaylist.current?.getTrackById(prevTrack.id) &&
+        player.currentPlaylist?.current.getTrackById(prevTrack.id) &&
         player.currentPlaylist.current.getIndexOfTrack(prevTrack) + 1 <
           player.currentPlaylist.current.trackCount
       ) {
