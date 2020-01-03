@@ -34,12 +34,11 @@ class AyeTray extends BaseModule {
           ? "../images/icons/png/"
           : "images/icons/png/";
       if (process.platform === "darwin") {
-        const nImage = nativeImage.createFromPath(
+        this.icon = nativeImage.createFromPath(
           path.resolve(
             path.join(__dirname, `${basePath}${"16x16_Template.png"}`)
           )
         );
-        this.icon = nImage;
       } else if (process.platform === "win32") {
         const winPath =
           process.env.NODE_ENV === "development"
