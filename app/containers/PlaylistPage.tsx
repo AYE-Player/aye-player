@@ -59,7 +59,6 @@ const PlaylistPage: React.FunctionComponent = () => {
   >([]);
   const [open, setOpen] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
-  // TODO: maybe re-use newPlaylistSongs ?
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] = React.useState<
     string | undefined
