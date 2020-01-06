@@ -3,7 +3,7 @@
     "target": "es6",
     "rootDir": "./",
     "jsx": "react",
-    "module": "es2015",
+    "module": "es6",
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "experimentalDecorators": true,
@@ -12,7 +12,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "lib": ["es2015", "dom"]
+    "lib": ["es2016", "dom"]
   },
   "exclude": ["node_modules", "**/node_modules/*"]
 }

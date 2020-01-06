@@ -86,10 +86,12 @@ export default class Playlist extends Model({
       yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
 
       // get new Playlist information
-      const { data: pl } = yield* _await(ApiClient.getPlaylist(this.id));
+      const pl = yield* _await(
+        ApiClient.getPlaylist(this.id)
+      );
 
       // Get track information of the playlist
-      const { data: tracks }: { data: ITrackDto[] } = yield* _await(
+      const tracks: ITrackDto[] = yield* _await(
         ApiClient.getTracksFromPlaylist(this.id, pl.SongsCount)
       );
 

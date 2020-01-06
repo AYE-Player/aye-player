@@ -80,7 +80,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        ApiClient.getPlaylists().then(({ data }: { data: IPlaylistDto[] }) => {
+        ApiClient.getPlaylists().then((data: IPlaylistDto[]) => {
           for (const playlist of data) {
             const oldPl = playlists.lists.find(list => list.id === playlist.Id);
             if (

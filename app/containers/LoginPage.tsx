@@ -56,7 +56,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const getPlaylists = async () => {
     try {
-      const { data }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
+      const data: IPlaylistDto[] = await ApiClient.getPlaylists();
 
       for (const playlist of data) {
         const pl = new Playlist({
@@ -71,7 +71,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
       }
     } catch (error) {
       AyeLogger.player(
-        `[LoginPage]Error retrieving PLaylists ${JSON.stringify(error, null, 2)}`,
+        `[LoginPage] Error retrieving Playlists ${JSON.stringify(error, null, 2)}`,
         LogType.ERROR
       );
       throw error;

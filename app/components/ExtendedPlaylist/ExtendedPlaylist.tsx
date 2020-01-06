@@ -88,7 +88,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
 
     if (!isLoaded) {
       ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(
-        ({ data: songs }) => {
+        (songs) => {
           songs.map((song: ITrackDto) => {
             const track = new Track({
               id: song.Id,
