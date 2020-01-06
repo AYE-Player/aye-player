@@ -12,7 +12,7 @@ interface ICustomFormDialogProps {
   id: string;
   title: string;
   label: string;
-  button?: any;
+  button?: JSX.Element;
   dialogText: string;
   open: boolean;
   handleClose: () => void;

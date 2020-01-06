@@ -11,7 +11,7 @@ const Container = styled.div<any>`
   ${props => {
     if (props.length >= 25) {
       return "width: 500px";
-    } else if (props.lenght >= 15) {
+    } else if (props.length >= 15) {
       return "width: 350px";
     } else {
       return "width: 256px";
