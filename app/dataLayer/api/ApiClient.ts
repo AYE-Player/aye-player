@@ -54,37 +54,33 @@ class ApiClient {
    * Playlist
    */
   async getPlaylists(): Promise<IPlaylistDto[]> {
-    const res = await this.ky.get(`playlists/`);
-    return await res.json();
+    return await this.ky.get(`playlists/`).json();
     // return this.axios.get(`/playlists/`);
   }
 
   async getPlaylist(id: string): Promise<IPlaylistDto> {
-    const res = await this.ky.get(`playlists/${id}`);
-    return await res.json();
+    return await this.ky.get(`playlists/${id}`).json();
     // return this.axios.get(`/playlists/${id}`);
   }
 
   async createPlaylist(name: string): Promise<string> {
-    const res = await this.ky.post(`playlists/`, {
+    return await this.ky.post(`playlists/`, {
       json: {
         Name: name
       }
-    });
-    return await res.json();
+    }).json();
     /* return this.axios.post("/playlists/", {
       Name: name
     }); */
   }
 
   async createPlaylistWithSongs(name: string, songs: { Url: string }[]): Promise<string> {
-    const res = await this.ky.post("playlists/by-urls", {
+    return await this.ky.post("playlists/by-urls", {
       json: {
         Name: name,
         Songs: songs
       }
-    });
-    return await res.json();
+    }).json();
     /*     return this.axios.post("/playlists/by-urls", {
       Name: name,
       Songs: songs
@@ -97,10 +93,9 @@ class ApiClient {
   }
 
   async getTracksFromPlaylist(id: string, amount: number = 20): Promise<ITrackDto[]> {
-    const res = await this.ky.get(
+    return await this.ky.get(
       `playlists/${id}/songs?skip=0&take=${amount}`
-    );
-    return await res.json();
+    ).json();
     // return this.axios.get(`/playlists/${id}/songs?skip=0&take=${amount}`);
   }
 
@@ -178,13 +173,12 @@ class ApiClient {
   }
 
   async authenticate(username: string, password: string): Promise<string> {
-    const res = await this.ky.post("auth/", {
+    return await this.ky.post("auth/", {
       json: {
         Email: username,
         Password: password
       }
-    });
-    return await res.json();
+    }).json();
     /* return this.axios.post(`/auth/`, {
       Email: username,
       Password: password
@@ -203,8 +197,7 @@ class ApiClient {
   }
 
   async getUserdata(): Promise<IUserInfoDto> {
-    const res = await this.ky.get("userIdentity/");
-    return await res.json();
+    return await this.ky.get("userIdentity/").json();
     // return this.axios.get("/userIdentity/");
   }
 
@@ -223,11 +216,10 @@ class ApiClient {
     ]); */
   }
 
-  async updateAvatar(data: FormData) {
-    const res = await this.ky.post("userIdentity/avatar", {
+  async updateAvatar(data: FormData): Promise<string> {
+    return await this.ky.post("userIdentity/avatar", {
       body: data
-    });
-    return await res.json();
+    }).json();
     /*     return fetch("https://api.aye-player.de/v1/userIdentity/avatar", {
       method: "POST",
       body: data,
@@ -261,16 +253,14 @@ class ApiClient {
    * Search
    */
   async searchTrack(term: string): Promise<ITrackDto[]> {
-    const res = await this.ky.get(`search/${term}`);
-    return await res.json();
+    return await this.ky.get(`search/${term}`).json();
     // return axios.get(`https://api.aye-player.de/v1/search/${term}`);
   }
 
   async getTrackFromUrl(url: string): Promise<ITrackDto> {
-    const res = await this.ky.get(
+    return await this.ky.get(
       `search/song?songUrl=${encodeURIComponent(url)}`
-    );
-    return await res.json();
+    ).json();
     /*    return axios.get(
       `https://api.aye-player.de/v1/search/song?songUrl=${encodeURIComponent(
         url
