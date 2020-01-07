@@ -1,5 +1,4 @@
 import ControlPoint from "@material-ui/icons/ControlPoint";
-import Axios from "axios";
 import { observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
@@ -23,9 +22,7 @@ import CustomButton from "../Customs/CustomButton";
 import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
-import { ITrackDto } from "../../types/response";
 import { Ref } from "mobx-keystone";
-
 
 interface IProps {
   match: any;
@@ -83,32 +80,29 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   app.setActivePlaylist(id);
 
   useEffect(() => {
-    const CancelToken = Axios.CancelToken;
-    const source = CancelToken.source();
+    const controller = new AbortController();
 
     if (!isLoaded) {
-      ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(
-        (songs) => {
-          songs.map((song: ITrackDto) => {
-            const track = new Track({
-              id: song.Id,
-              title: song.Title,
-              duration: song.Duration
-            });
-            if (!trackCache.getTrackById(track.id)) {
-              trackCache.add(track);
-            }
-            if (!playlist.getTrackById(track.id)) {
-              playlist.addLoadedTrack(track);
-            }
+      ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(songs => {
+        songs.map(song => {
+          const track = new Track({
+            id: song.Id,
+            title: song.Title,
+            duration: song.Duration
           });
-          setIsLoaded(true);
-        }
-      );
+          if (!trackCache.getTrackById(track.id)) {
+            trackCache.add(track);
+          }
+          if (!playlist.getTrackById(track.id)) {
+            playlist.addLoadedTrack(track);
+          }
+        });
+        setIsLoaded(true);
+      });
     }
 
     return () => {
-      source.cancel();
+      controller.abort();
     };
   }, []);
 

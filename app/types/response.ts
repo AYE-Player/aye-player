@@ -9,7 +9,20 @@ export interface ITrackDto {
 export interface IPlaylistDto {
   Id: string;
   Name: string;
-  Tracks: ITrackDto[];
+  Tracks?: ITrackDto[];
   Duration: number;
   SongsCount: number;
+}
+
+export interface IRole {
+  Id: string;
+  Name: string;
+}
+
+export interface IUserInfoDto {
+  Id: string;
+  Avatar: string;
+  Email: string;
+  Username: string;
+  Roles: IRole[];
 }

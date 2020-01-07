@@ -14,7 +14,6 @@ import ApiClient from "../api/ApiClient";
 import trackRef from "../references/TrackRef";
 import Track from "./Track";
 import Root from "../../containers/Root";
-import { ITrackDto } from "../../types/response";
 
 @model("Playlist")
 export default class Playlist extends Model({
@@ -91,7 +90,7 @@ export default class Playlist extends Model({
       );
 
       // Get track information of the playlist
-      const tracks: ITrackDto[] = yield* _await(
+      const tracks = yield* _await(
         ApiClient.getTracksFromPlaylist(this.id, pl.SongsCount)
       );
 

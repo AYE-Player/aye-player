@@ -74,7 +74,7 @@ export default class Playlists extends Model({
           isLivestream: false
         });
 
-        if (!Root.stores.trackCache.getTrackById(track.id)) {
+        if (!Root.stores.trackCache.getTrackById(track.Id)) {
           Root.stores.trackCache.add(tr);
         }
 
