@@ -8,7 +8,7 @@ import CustomButton from "../Customs/CustomButton";
 const placeholder = require("../../images/placeholder.png");
 
 interface IAvatarUploadProps {
-  avatar: any;
+  avatar: string;
   setAvatar: Function;
   setAvatarFile: Function;
   user?: User;

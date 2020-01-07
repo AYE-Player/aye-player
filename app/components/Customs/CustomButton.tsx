@@ -6,7 +6,7 @@ interface ICustomButtonProps {
   onClick?: (event: React.MouseEvent) => void;
   name?: string;
   disabled?: boolean;
-  style?: any;
+  style?: React.CSSProperties;
 }
 
 const CssButton = withStyles({

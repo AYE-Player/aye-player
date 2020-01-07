@@ -108,6 +108,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
   });
 
   const { player } = useInject(Store);
+  let seekTo: number;
 
   const _handleVolumeChange = (event: any, newValue: number) => {
     debounce(player.setVolume(newValue / 100), 500);
@@ -127,8 +128,14 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
     debounce(player.setPlaybackPosition(newValue), 500);
   };
 
+  const _handleSeek = (event: any, newValue: number) => {
+    seekTo = newValue;
+  };
+
   const _handleSeekingStop = (event: any) => {
-    props.seekingStop(player.playbackPosition);
+    if (seekTo) {
+      props.seekingStop(seekTo);
+    }
   };
 
   return (
@@ -199,6 +206,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
                 min={0}
                 max={player.currentTrack?.current.duration || 0}
                 value={player.playbackPosition}
+                onChange={_handleSeek}
                 onChangeCommitted={_handlePlaybackChange}
                 onMouseUp={_handleSeekingStop}
               />

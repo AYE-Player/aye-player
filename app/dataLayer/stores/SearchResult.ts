@@ -14,7 +14,6 @@ import { LogType } from "../../types/enums";
 import ApiClient from "../api/ApiClient";
 import Track from "../models/Track";
 import trackRef from "../references/TrackRef";
-import { ITrackDto } from "../../types/response";
 
 @model("SearchResult")
 export default class SearchResult extends Model({
@@ -27,7 +26,7 @@ export default class SearchResult extends Model({
   @modelFlow
   getTracks = _async(function*(term: string) {
     try {
-      const { data }: { data: ITrackDto[] } = yield* _await(
+      const data = yield* _await(
         ApiClient.searchTrack(term)
       );
       const tracks = [];
@@ -49,7 +48,7 @@ export default class SearchResult extends Model({
   @modelFlow
   getTrackFromUrl = _async(function*(this: SearchResult, url: string) {
     try {
-      const { data }: { data: ITrackDto } = yield* _await(
+      const data = yield* _await(
         ApiClient.getTrackFromUrl(url)
       );
 

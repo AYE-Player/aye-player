@@ -13,7 +13,6 @@ import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
-import { IPlaylistDto } from "../types/response";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 
@@ -56,7 +55,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
 
   const getPlaylists = async () => {
     try {
-      const { data }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
+      const data = await ApiClient.getPlaylists();
 
       for (const playlist of data) {
         const pl = new Playlist({
@@ -71,7 +70,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
       }
     } catch (error) {
       AyeLogger.player(
-        `[LoginPage]Error retrieving PLaylists ${JSON.stringify(error, null, 2)}`,
+        `[LoginPage] Error retrieving Playlists ${JSON.stringify(error, null, 2)}`,
         LogType.ERROR
       );
       throw error;

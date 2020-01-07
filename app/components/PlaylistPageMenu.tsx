@@ -12,7 +12,6 @@ import Track from "../dataLayer/models/Track";
 import useInject from "../hooks/useInject";
 import RootStore from "../dataLayer/stores/RootStore";
 import Playlist from "../dataLayer/models/Playlist";
-import { ITrackDto } from "../types/response";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -106,9 +105,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   };
 
   const _getTracksOfPlaylist = async (playlist: Playlist) => {
-    const {
-      data: tracks
-    }: { data: ITrackDto[] } = await ApiClient.getTracksFromPlaylist(
+    const tracks = await ApiClient.getTracksFromPlaylist(
       playlist.id,
       playlist.trackCount
     );

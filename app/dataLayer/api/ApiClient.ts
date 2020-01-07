@@ -1,165 +1,186 @@
-import axios, { AxiosInstance } from "axios";
+import ky from "ky/umd";
 import Track from "../models/Track";
+import { ITrackDto, IUserInfoDto, IPlaylistDto } from "../../types/response";
 
 class ApiClient {
-  private axios: AxiosInstance;
+  private ky: typeof ky;
   /**
-   * Prepares our axios instance, also this checks if a token is present
+   * Prepares our ky instance, also this checks if a token is present
    * and if a token exists, adds it to every request
    */
   constructor() {
-    this.axios = axios.create({
-      baseURL: "https://api.aye-player.de/v1",
-      timeout: 5000
-    });
-    this.axios.interceptors.request.use(
-      config => {
-        const token = localStorage.getItem("token");
+    this.ky = ky.extend({
+      prefixUrl: "https://api.aye-player.de/v1/",
+      timeout: 5000,
+      hooks: {
+        beforeRequest: [
+          request => {
+            const token = localStorage.getItem("token");
 
-        if (token != null) {
-          config.headers["x-access-token"] = token;
-        }
-
-        return config;
-      },
-      err => {
-        return Promise.reject(err);
+            if (token != null) {
+              request.headers.set("x-access-token", token);
+            }
+          }
+        ]
       }
-    );
+    });
   }
 
   /**
    * Playlist
    */
-  async getPlaylists() {
-    return this.axios.get(`/playlists/`);
+  async getPlaylists(): Promise<IPlaylistDto[]> {
+    return this.ky.get(`playlists/`).json();
   }
 
-  getPlaylist(id: string) {
-    return this.axios.get(`/playlists/${id}`);
+  async getPlaylist(id: string): Promise<IPlaylistDto> {
+    return this.ky.get(`playlists/${id}`).json();
   }
 
-  createPlaylist(name: string) {
-    return this.axios.post("/playlists/", {
-      Name: name
-    });
-  }
-
-  createPlaylistWithSongs(name: string, songs: { Url: string }[]) {
-    return this.axios.post("/playlists/by-urls", {
-      Name: name,
-      Songs: songs
-    });
-  }
-
-  deletePlaylist(id: string) {
-    return this.axios.delete(`/playlists/${id}`);
-  }
-
-  getTracksFromPlaylist(id: string, amount: number = 20) {
-    return this.axios.get(`/playlists/${id}/songs?skip=0&take=${amount}`);
-  }
-
-  addTrackToPlaylist(id: string, track: Track) {
-    return this.axios.put(`/playlists/${id}/songs`, {
-      Id: track.id,
-      Duration: track.duration,
-      Title: track.title,
-      IsLivestream: track.isLivestream
-    });
-  }
-
-  addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
-    return this.axios.put(`/playlists/${id}/songs/by-urls`, {
-      Songs: songs
-    });
-  }
-
-  removeTrackFromPlaylist(id: string, track: Track) {
-    return this.axios.delete(`/playlists/${id}/songs/${track.id}`);
-  }
-
-  removeTrackFromPlaylistById(id: string, trackId: string) {
-    return this.axios.delete(`/playlists/${id}/songs/${trackId}`);
-  }
-
-  moveTrackTo(id: string, trackId: string, index: number) {
-    return this.axios.patch(`/playlists/${id}/songs/${trackId}`, [
-      {
-        op: "replace",
-        path: "OrderId",
-        value: index
+  async createPlaylist(name: string): Promise<string> {
+    return this.ky.post(`playlists/`, {
+      json: {
+        Name: name
       }
-    ]);
+    }).json();
+  }
+
+  async createPlaylistWithSongs(name: string, songs: { Url: string }[]): Promise<string> {
+    return this.ky.post("playlists/by-urls", {
+      json: {
+        Name: name,
+        Songs: songs
+      }
+    }).json();
+   }
+
+  async deletePlaylist(id: string) {
+    return this.ky.delete(`playlists/${id}`);
+  }
+
+  async getTracksFromPlaylist(id: string, amount: number = 20): Promise<ITrackDto[]> {
+    return this.ky.get(
+      `playlists/${id}/songs?skip=0&take=${amount}`
+    ).json();
+  }
+
+  async addTrackToPlaylist(id: string, track: Track) {
+    return this.ky.put(`playlists/${id}/songs`, {
+      json: {
+        Id: track.id,
+        Duration: track.duration,
+        Title: track.title,
+        IsLivestream: track.isLivestream
+      }
+    });
+  }
+
+  async addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
+    return this.ky.put(`playlists/${id}/songs/by-urls`, {
+      json: {
+        Songs: songs
+      }
+    });
+  }
+
+  async removeTrackFromPlaylist(id: string, track: Track) {
+    return this.ky.delete(`playlists/${id}/songs/${track.id}`);
+  }
+
+  async removeTrackFromPlaylistById(id: string, trackId: string) {
+    return this.ky.delete(`playlists/${id}/songs/${trackId}`);
+  }
+
+  async moveTrackTo(id: string, trackId: string, index: number) {
+    return this.ky.patch(`playlists/${id}/songs/${trackId}`, {
+      json: [
+        {
+          op: "replace",
+          path: "OrderId",
+          value: index
+        }
+      ]
+    });
   }
 
   /**
    * User
    */
-  register(email: string, password: string) {
-    return this.axios.post("/userIdentity/", {
-      Email: email,
-      Password: password
-    });
-  }
-
-  authenticate(username: string, password: string) {
-    return this.axios.post(`/auth/`, {
-      Email: username,
-      Password: password
-    });
-  }
-
-  forgotPassword(email: string) {
-    return this.axios.put("/userIdentity/password", {
-      Email: email
-    });
-  }
-
-  getUserdata() {
-    return this.axios.get("/userIdentity/");
-  }
-
-  updatePassword(password: string) {
-    return this.axios.patch("https://api.aye-player.de/v1/userIdentity", [
-      { op: "replace", path: "/Password", value: password }
-    ]);
-  }
-
-  // INFO: We have to use fetch here, because axios has problems with formData uploads/requests...
-  updateAvatar(data: FormData) {
-    return fetch("https://api.aye-player.de/v1/userIdentity/avatar", {
-      method: "POST",
-      body: data,
-      headers: {
-        "x-access-token": localStorage.getItem("token")
+  async register(email: string, password: string) {
+    return this.ky.post("userIdentity/", {
+      json: {
+        Email: email,
+        Password: password
       }
     });
   }
 
-  updateAvatarUrl(url: string) {
-    return axios.patch("/userIdentity/", [
-      { op: "replace", path: "/Avatar", value: url }
-    ]);
+  async authenticate(username: string, password: string): Promise<string> {
+    return this.ky.post("auth/", {
+      json: {
+        Email: username,
+        Password: password
+      }
+    }).json();
   }
 
-  deleteUser() {
-    return this.axios.delete("/userIdentity/");
+  async forgotPassword(email: string) {
+    return this.ky.put("userIdentity/password", {
+      json: {
+        Email: email
+      }
+    });
+  }
+
+  async getUserdata(): Promise<IUserInfoDto> {
+    return this.ky.get("userIdentity/").json();
+  }
+
+  async updatePassword(password: string) {
+    return this.ky.patch("userIdentity/", {
+      json: [
+        {
+          op: "replace",
+          path: "/Password",
+          value: password
+        }
+      ]
+    });
+  }
+
+  async updateAvatar(data: FormData): Promise<string> {
+    return await this.ky.post("userIdentity/avatar", {
+      body: data
+    }).json();
+  }
+
+  async updateAvatarUrl(url: string) {
+    return this.ky.patch("userIdentity/", {
+      json: [
+        {
+          op: "replace",
+          path: "/Avatar",
+          value: url
+        }
+      ]
+    });
+  }
+
+  async deleteUser() {
+    return this.ky.delete("userIdentity/");
   }
 
   /**
    * Search
    */
-  searchTrack(term: string) {
-    return axios.get(`https://api.aye-player.de/v1/search/${term}`);
+  async searchTrack(term: string): Promise<ITrackDto[]> {
+    return this.ky.get(`search/${term}`).json();
   }
 
-  getTrackFromUrl(url: string) {
-    return axios.get(
-      `https://api.aye-player.de/v1/search/song?songUrl=${encodeURIComponent(
-        url
-      )}`
-    );
+  async getTrackFromUrl(url: string): Promise<ITrackDto> {
+    return this.ky.get(
+      `search/song?songUrl=${encodeURIComponent(url)}`
+    ).json();
   }
 }
 

@@ -14,7 +14,6 @@ import ApiClient from "../api/ApiClient";
 import trackRef from "../references/TrackRef";
 import Track from "./Track";
 import Root from "../../containers/Root";
-import { ITrackDto } from "../../types/response";
 
 @model("Playlist")
 export default class Playlist extends Model({
@@ -30,7 +29,7 @@ export default class Playlist extends Model({
   }
 
   getIndexOfTrack(track: Ref<Track>) {
-    return this.tracks.indexOf(track);
+    return this.tracks.map(t => t.id).indexOf(track.id);
   }
 
   getTracksStartingFrom(idx: number) {
@@ -86,10 +85,12 @@ export default class Playlist extends Model({
       yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
 
       // get new Playlist information
-      const { data: pl } = yield* _await(ApiClient.getPlaylist(this.id));
+      const pl = yield* _await(
+        ApiClient.getPlaylist(this.id)
+      );
 
       // Get track information of the playlist
-      const { data: tracks }: { data: ITrackDto[] } = yield* _await(
+      const tracks = yield* _await(
         ApiClient.getTracksFromPlaylist(this.id, pl.SongsCount)
       );
 

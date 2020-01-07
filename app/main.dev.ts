@@ -225,7 +225,7 @@ export default class Main {
         ? Settings.get("windowSize").height
         : 728,
       minHeight: 728,
-      frame: process.platform === "win32" ? false : true,
+      frame: process.platform !== "win32",
       titleBarStyle: "hidden",
       maximizable: false,
       webPreferences: {
@@ -251,7 +251,11 @@ export default class Main {
 
     if (!this.tray) {
       // Create Tray
-      this.tray = new AyeTray(this.mainWindow);
+      this.tray = new AyeTray(this.mainWindow, i18n);
+
+      this.tray.i18n.on("languageChanged", lng => {
+        this.tray.rebuild();
+      });
     }
 
     if (Settings.get("rpcEnabled")) {
@@ -348,19 +352,20 @@ export default class Main {
       event.preventDefault();
     });
 
-    const menuBuilder = new AyeMenu(this.mainWindow, i18n);
+    this.menu = new AyeMenu(this.mainWindow, i18n);
 
-    menuBuilder.i18n.on("languageChanged", lng => {
-      menuBuilder.build();
+    this.menu.i18n.on("languageChanged", lng => {
+      this.menu.build();
       this.mainWindow.webContents.send("language-changed", {
         language: lng,
         namespace: config.namespace,
-        resource: menuBuilder.i18n.getResourceBundle(lng, config.namespace)
+        resource: this.menu.i18n.getResourceBundle(lng, config.namespace)
       });
     });
 
     ipcMain.on("changeLang", (_event: any, arg: any) => {
-      menuBuilder.i18n.changeLanguage(arg.lang);
+      this.menu.i18n.changeLanguage(arg.lang);
+      this.tray.i18n.changeLanguage(arg.lang);
     });
   };
 }

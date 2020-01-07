@@ -16,7 +16,6 @@ import Settings from "../dataLayer/stores/PersistentSettings";
 import createStore from "../dataLayer/stores/createStore";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
-import { IPlaylistDto } from "../types/response";
 import MainPage from "./MainPage";
 
 interface IPlayerSettings {
@@ -273,9 +272,7 @@ const getPlaylists = async () => {
   try {
     const token = localStorage.getItem("token");
     if (token) {
-      const {
-        data: playlists
-      }: { data: IPlaylistDto[] } = await ApiClient.getPlaylists();
+      const playlists = await ApiClient.getPlaylists();
 
       for (const playlist of playlists) {
         const pl = new Playlist({
@@ -348,8 +345,8 @@ export default class Root extends Component {
             ApiClient.getTracksFromPlaylist(
               playlist.id,
               playlist.trackCount
-            ).then(({ data }) => {
-              for (const track of data) {
+            ).then(tracks => {
+              for (const track of tracks) {
                 const tr = new Track({
                   id: track.Id,
                   duration: track.Duration,

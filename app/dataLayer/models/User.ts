@@ -35,7 +35,9 @@ export default class User extends Model({
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const { data: userInfo } = yield* _await(ApiClient.getUserdata());
+        const userInfo = yield* _await(
+          ApiClient.getUserdata()
+        );
         this.id = userInfo.Id;
         this.email = userInfo.Email;
         this.name = userInfo.Username;
@@ -60,13 +62,15 @@ export default class User extends Model({
   ) {
     try {
       AyeLogger.player(`Trying to log in with: ${username}`);
-      const { data: token } = yield* _await(
+      const token = yield* _await(
         ApiClient.authenticate(username, password)
       );
 
       localStorage.setItem("token", token);
 
-      const { data: userInfo } = yield* _await(ApiClient.getUserdata());
+      const userInfo = yield* _await(
+        ApiClient.getUserdata()
+      );
 
       // Save user information
       this.id = userInfo.Id;
@@ -138,11 +142,8 @@ export default class User extends Model({
       const data = new FormData();
       data.append("avatar", avatar);
 
-      // Upload avatar image
-      const res = yield* _await(ApiClient.updateAvatar(data));
-
-      // parse response (gives storage URL)
-      const avatarURL = yield* _await(res.json());
+      // Upload avatar image and get storage URL
+      const avatarURL = yield* _await(ApiClient.updateAvatar(data));
 
       // Patch userprofile with new URL
       yield* _await(ApiClient.updateAvatarUrl(avatarURL));

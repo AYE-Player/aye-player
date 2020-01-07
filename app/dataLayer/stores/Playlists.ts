@@ -25,7 +25,7 @@ export default class Playlists extends Model({
   @modelFlow
   createList = _async(function*(this: Playlists, name: string) {
     try {
-      const { data: id } = yield* _await(ApiClient.createPlaylist(name));
+      const id = yield* _await(ApiClient.createPlaylist(name));
 
       const playlist = new Playlist({
         name,
@@ -50,11 +50,9 @@ export default class Playlists extends Model({
     songs: { Url: string }[]
   ) {
     try {
-      const { data: id } = yield* _await(
-        ApiClient.createPlaylistWithSongs(name, songs)
-      );
+      const id = yield* _await(ApiClient.createPlaylistWithSongs(name, songs));
 
-      const { data: pl } = yield* _await(ApiClient.getPlaylist(id));
+      const pl = yield* _await(ApiClient.getPlaylist(id));
 
       const playlist = new Playlist({
         name,
@@ -64,7 +62,7 @@ export default class Playlists extends Model({
         tracks: []
       });
 
-      const { data: tracks } = yield* _await(
+      const tracks = yield* _await(
         ApiClient.getTracksFromPlaylist(id, pl.SongsCount)
       );
 
@@ -76,7 +74,7 @@ export default class Playlists extends Model({
           isLivestream: false
         });
 
-        if (!Root.stores.trackCache.getTrackById(track.id)) {
+        if (!Root.stores.trackCache.getTrackById(track.Id)) {
           Root.stores.trackCache.add(tr);
         }
 

@@ -5,7 +5,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { withStyles } from "@material-ui/styles";
-import Axios from "axios";
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,7 +22,6 @@ import { formattedDuration, removeControlCharacters } from "../helpers";
 import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
-import { IPlaylistDto } from "../types/response";
 
 const Header = styled.div`
   font-size: 24px;
@@ -43,7 +41,7 @@ const PlaylistContainer = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 128px);
+  height: calc(100% - 136px);
 `;
 
 const StyledTableCell = withStyles({
@@ -59,7 +57,6 @@ const PlaylistPage: React.FunctionComponent = () => {
   >([]);
   const [open, setOpen] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
-  // TODO: maybe re-use newPlaylistSongs ?
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] = React.useState<
     string | undefined
@@ -75,13 +72,12 @@ const PlaylistPage: React.FunctionComponent = () => {
   const { playlists, trackCache } = useInject(Store);
 
   useEffect(() => {
-    const CancelToken = Axios.CancelToken;
-    const source = CancelToken.source();
+    const controller = new AbortController();
 
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        ApiClient.getPlaylists().then(({ data }: { data: IPlaylistDto[] }) => {
+        ApiClient.getPlaylists().then(data => {
           for (const playlist of data) {
             const oldPl = playlists.lists.find(list => list.id === playlist.Id);
             if (
@@ -122,7 +118,7 @@ const PlaylistPage: React.FunctionComponent = () => {
     }
 
     return () => {
-      source.cancel();
+      controller.abort();
     };
   }, []);
 
