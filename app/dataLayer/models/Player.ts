@@ -1,5 +1,12 @@
 import { ipcRenderer } from "electron";
-import { model, Model, modelAction, prop, Ref, getSnapshot } from "mobx-keystone";
+import {
+  model,
+  Model,
+  modelAction,
+  prop,
+  Ref,
+  getSnapshot
+} from "mobx-keystone";
 import { Repeat } from "../../types/enums";
 import Playlist from "./Playlist";
 import Track from "./Track";
@@ -22,6 +29,7 @@ export default class Player extends Model({
   isMuted: prop<boolean>(),
   isSeeking: prop<boolean>(),
   playbackPosition: prop<number>(),
+  radioActive: prop<boolean>(),
   currentTrack: prop<Ref<Track> | undefined>(),
   currentPlaylist: prop<Ref<Playlist> | undefined>()
 }) {
@@ -174,5 +182,10 @@ export default class Player extends Model({
   @modelAction
   setPlaying(state: boolean) {
     this.isPlaying = state;
+  }
+
+  @modelAction
+  toggleRadioMode() {
+    this.radioActive = !this.radioActive;
   }
 }

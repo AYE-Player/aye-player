@@ -182,6 +182,10 @@ class ApiClient {
       `search/song?songUrl=${encodeURIComponent(url)}`
     ).json();
   }
+
+/*   async getSimilarTrack(term: string): Promise<ITrackDto> {
+    return this.ky.get(`search/similarSong?artist=${}`)
+  } */
 }
 
 export default new ApiClient();
