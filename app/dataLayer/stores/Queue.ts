@@ -86,13 +86,13 @@ export default class Queue extends Model({
     // https://www.frankmitchell.org/2015/01/fisher-yates/
     let i = 0;
     let j = 0;
-    let temp = null;
+    let temp: Track;
 
     for (i = this.tracks.length - 1; i > 0; i -= 1) {
       j = Math.floor(Math.random() * (i + 1));
-      temp = this.tracks[i];
-      this.tracks[i] = this.tracks[j];
-      this.tracks[j] = temp;
+      temp = this.tracks[i].current;
+      this.tracks[i] = trackRef(this.tracks[j].current);
+      this.tracks[j] = trackRef(temp);
     }
   }
 }
