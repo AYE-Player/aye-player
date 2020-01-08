@@ -40,7 +40,7 @@ const PlaylistContainer = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 136px);
+  height: calc(100% - 112px);
 `;
 
 const StyledTableCell = withStyles({
