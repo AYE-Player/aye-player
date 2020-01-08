@@ -27,12 +27,7 @@ const SearchBar: React.FunctionComponent = () => {
   const { t } = useTranslation();
   PlayerInterop.init();
 
-  const Store = ({
-    player,
-    queue,
-    searchResult,
-    trackCache
-  }: RootStore) => ({
+  const Store = ({ player, queue, searchResult, trackCache }: RootStore) => ({
     player,
     queue,
     searchResult,
@@ -117,7 +112,7 @@ const SearchBar: React.FunctionComponent = () => {
         onChange={_handleChange}
         placeholder={t("SearchPage.placeholder")}
         inputProps={{ "aria-label": t("SearchPage.title") }}
-        style={{ color: "#fbfbfb", marginLeft: "16px", width: "100%" }}
+        style={{ color: "#f2f5f4", marginLeft: "16px", width: "100%" }}
       />
       <SearchIcon
         style={{

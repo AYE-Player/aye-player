@@ -38,7 +38,7 @@ const Container = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 96px);
+  height: calc(100%);
 `;
 
 const Header = styled.div`
@@ -164,8 +164,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   return (
     <>
       <DragDropContext onDragEnd={_onDragEnd}>
+        <Header>{playlist.name}</Header>
         <Container>
-          <Header>{playlist.name}</Header>
           <Droppable droppableId="droppable">
             {(provided: any) => (
               <ScrollContainer
@@ -198,11 +198,11 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
           <CustomButton
             onClick={() => setAddTracksOpen(true)}
             style={{
-              width: "160px",
+              width: "206px",
               height: "40px",
               position: "absolute",
               bottom: "56px",
-              right: "24px"
+              right: "16px"
             }}
           >
             {t("PlaylistPage.addTracks.confirmButton")}

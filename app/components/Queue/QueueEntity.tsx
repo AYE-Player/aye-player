@@ -44,7 +44,7 @@ const TrackInfoContainer = styled.div<any>`
   width: 224px;
   padding: 8px 0;
   padding-left: 8px;
-  color: ${(props: any) => (props.active ? "#4fc3f7" : "")};
+  color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
 `;
 
 const Title = styled.div<any>`
@@ -173,7 +173,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
 
   const _handlePlaylistSelectDialogClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <>

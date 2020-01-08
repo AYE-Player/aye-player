@@ -278,7 +278,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             position: "absolute",
             marginTop: "45px",
             borderColor: "none",
-            backgroundColor: "#232c39",
+            backgroundColor: "#161618",
             zIndex: 999
           }}
         />

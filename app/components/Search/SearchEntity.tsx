@@ -32,7 +32,7 @@ const Container = styled.div<any>`
     border-bottom: none;
   }
   &:hover > div {
-    color: #4fc3f7;
+    color: #f0ad4e;
   }
 `;
 const TrackInfoContainer = styled.div<any>`
@@ -185,7 +185,9 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
           />
         </TrackImageContainer>
         <Title length={props.track.current.title.length}>
-          <div style={{ display: "inline-block" }}>{props.track.current.title}</div>
+          <div style={{ display: "inline-block" }}>
+            {props.track.current.title}
+          </div>
         </Title>
         <Duration>{props.duration}</Duration>
       </TrackInfoContainer>

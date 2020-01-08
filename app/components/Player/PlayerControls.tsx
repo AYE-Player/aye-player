@@ -39,7 +39,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #232c39;
+  background-color: #161618;
 `;
 
 const Control = styled.div`
@@ -63,7 +63,7 @@ const PlaybackControl = styled.div`
   justify-content: space-around;
   margin-top: 266px;
   width: 320px;
-  background-color: #232c39;
+  background-color: #161618;
 `;
 
 const Time = styled.span`
@@ -72,7 +72,7 @@ const Time = styled.span`
 
 const PrettoSlider = withStyles({
   root: {
-    color: "#3f51b5",
+    color: "#f0ad4e",
     height: 8,
     width: 200
   },
@@ -97,6 +97,12 @@ const PrettoSlider = withStyles({
   rail: {
     height: 8,
     borderRadius: 4
+  }
+})(Slider);
+
+const VolumeSlider = withStyles({
+  root: {
+    color: "#f0ad4e"
   }
 })(Slider);
 
@@ -143,12 +149,12 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
       <Grid container justify="center" alignItems="center" spacing={2}>
         {player.repeat === Repeat.ONE ? (
           <Control onClick={props.toggleRepeat}>
-            <RepeatOneIcon color="primary" />
+            <RepeatOneIcon htmlColor="#f0ad4e" />
           </Control>
         ) : (
           <Control onClick={props.toggleRepeat}>
             {player.repeat === Repeat.ALL ? (
-              <RepeatIcon color="primary" />
+              <RepeatIcon htmlColor="#f0ad4e" />
             ) : (
               <RepeatIcon />
             )}
@@ -171,7 +177,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         </Control>
         <Control onClick={props.shuffle}>
           {player.isShuffling ? (
-            <ShuffleIcon color="primary" />
+            <ShuffleIcon htmlColor="#f0ad4e" />
           ) : (
             <ShuffleIcon />
           )}
@@ -183,7 +189,7 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
           <VolumeDown onClick={() => _handleVolumeChange(null, 0)} />
         </Grid>
         <Grid item xs>
-          <Slider
+          <VolumeSlider
             min={0}
             max={100}
             value={player.volume * 100}

@@ -46,14 +46,14 @@ const CustomDropDown: React.FunctionComponent<ICustomDropDownProps> = props => {
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel style={{ color: "#FBFBFB" }} htmlFor={props.id}>
+        <InputLabel style={{ color: "#f2f5f4" }} htmlFor={props.id}>
           {props.name}
         </InputLabel>
         <StyledSelect
           value={props.selected}
           onChange={props.handleChange}
           style={{
-            color: "#FBFBFB"
+            color: "#f2f5f4"
           }}
           inputProps={{
             name: props.name,

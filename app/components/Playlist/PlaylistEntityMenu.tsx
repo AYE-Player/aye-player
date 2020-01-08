@@ -30,7 +30,7 @@ const StyledMenu = withStyles({
     backgroundColor: "#3D4653",
     boxShadow:
       "0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)",
-    color: "#FBFBFB"
+    color: "#f2f5f4"
   }
 })((props: MenuProps) => (
   <Menu

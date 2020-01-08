@@ -35,7 +35,6 @@ const Container = styled.div`
 const PlaylistContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 40px;
   height: 100%;
 `;
 
@@ -46,7 +45,7 @@ const ScrollContainer = styled.div`
 
 const StyledTableCell = withStyles({
   body: {
-    color: "#fbfbfb"
+    color: "#f2f5f4"
   }
 })(TableCell);
 
@@ -191,7 +190,7 @@ const PlaylistPage: React.FunctionComponent = () => {
               <TableRow>
                 <TableCell
                   style={{
-                    color: "#FBFBFB",
+                    color: "#f2f5f4",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -201,7 +200,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 <TableCell
                   align="right"
                   style={{
-                    color: "#FBFBFB",
+                    color: "#f2f5f4",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -211,7 +210,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 <TableCell
                   align="right"
                   style={{
-                    color: "#FBFBFB",
+                    color: "#f2f5f4",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -221,7 +220,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 <TableCell
                   align="right"
                   style={{
-                    color: "#FBFBFB",
+                    color: "#f2f5f4",
                     backgroundColor: "#3d4653",
                     borderBottom: "none"
                   }}
@@ -238,7 +237,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   >
                     <Link
                       to={`/playlist/${playlist.id}`}
-                      style={{ color: "#FBFBFB" }}
+                      style={{ color: "#f2f5f4" }}
                     >
                       {playlist.name}
                     </Link>
@@ -246,7 +245,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   <StyledTableCell
                     align="right"
                     style={{
-                      color: "#FBFBFB",
+                      color: "#f2f5f4",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
@@ -255,7 +254,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   <StyledTableCell
                     align="right"
                     style={{
-                      color: "#FBFBFB",
+                      color: "#f2f5f4",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
@@ -263,7 +262,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   </StyledTableCell>
                   <StyledTableCell
                     style={{
-                      color: "#FBFBFB",
+                      color: "#f2f5f4",
                       borderBottom: "1px solid #565f6c"
                     }}
                   >
@@ -286,11 +285,11 @@ const PlaylistPage: React.FunctionComponent = () => {
             <CustomButton
               onClick={() => _handleOnClick()}
               style={{
-                width: "197px",
+                width: "206px",
                 height: "40px",
                 position: "absolute",
                 bottom: "56px",
-                right: "24px"
+                right: "16px"
               }}
             >
               {t("PlaylistPage.dialog.title")}

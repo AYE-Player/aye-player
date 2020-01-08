@@ -6,9 +6,9 @@
 
 body {
   position: relative;
-  color: #fbfbfb;
+  color: #f2f5f4;
   height: 100vh;
-  background-color: #232c39 !important;
+  background-color: #161618 !important;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
   overflow-x: hidden;
@@ -32,13 +32,13 @@ li {
 }
 
 a {
-  color: #fbfbfb;
+  color: #f2f5f4;
   opacity: 0.75;
   text-decoration: none;
 }
 
 .activeLink {
-  color: #4fc3f7;
+  color: #f0ad4e;
   opacity: 1;
 }
 
@@ -46,7 +46,7 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
-  color: #4fc3f7 !important;
+  color: #f0ad4e !important;
 }
 
 :not(input):not(textarea),
