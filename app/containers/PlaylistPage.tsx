@@ -12,8 +12,10 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
 import CustomTextareaDialog from "../components/Customs/CustomTextareaDialog";
+import Divider from "../components/Divider";
 import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
+import routes from "../constants/routes.json";
 import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
@@ -63,12 +65,13 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const { t } = useTranslation();
 
-  const Store = ({ playlists, trackCache }: RootStore) => ({
+  const Store = ({ playlists, trackCache, user }: RootStore) => ({
     playlists,
-    trackCache
+    trackCache,
+    user
   });
 
-  const { playlists, trackCache } = useInject(Store);
+  const { playlists, trackCache, user } = useInject(Store);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -335,41 +338,75 @@ const PlaylistPage: React.FunctionComponent = () => {
     <Container>
       <Header>Playlists</Header>
       <PlaylistContainer>
-        {t("PlaylistPage.noPlaylist")}
-        <PlaylistWithMultiSongDialog
-          id="createPlaylistDialog"
-          title={t("PlaylistPage.dialog.title")}
-          label={t("PlaylistPage.dialog.label")}
-          button={
+        {user.isAuthenticated ? (
+          <>
+            {t("PlaylistPage.noPlaylist")}
+            <PlaylistWithMultiSongDialog
+              id="createPlaylistDialog"
+              title={t("PlaylistPage.dialog.title")}
+              label={t("PlaylistPage.dialog.label")}
+              button={
+                <CustomButton
+                  onClick={() => _handleOnClick()}
+                  style={{
+                    width: "197px",
+                    height: "40px",
+                    position: "absolute",
+                    bottom: "56px",
+                    right: "24px"
+                  }}
+                >
+                  {t("PlaylistPage.dialog.title")}
+                  <ControlPoint style={{ marginLeft: "16px" }} />
+                </CustomButton>
+              }
+              dialogText={t("PlaylistPage.dialog.text")}
+              open={open}
+              handleClose={() => _handleClose()}
+              handleConfirm={() => _createPlaylist()}
+              handleChange={_onPlaylistNameChange}
+              confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
+              cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
+              type="text"
+              textField={{
+                placeholder: "https://www.youtube.com/watch?v=A3rvyaZFCN4",
+                label: t("PlaylistPage.dialog.textField.label"),
+                dialogText: t("PlaylistPage.dialog.textField.dialogText")
+              }}
+              handleSongsChange={_onPlaylistSongsChange}
+            />{" "}
+          </>
+        ) : (
+          <>
+            {t("PlaylistPage.notAuthenticated")}
+            <Divider size={2} />
             <CustomButton
-              onClick={() => _handleOnClick()}
+              onClick={() =>
+                (window.location.href = `${
+                  window.location.href.split("#/")[0]
+                }#${routes.REGISTER}`)
+              }
               style={{
-                width: "197px",
-                height: "40px",
-                position: "absolute",
-                bottom: "56px",
-                right: "24px"
+                width: "200px"
               }}
             >
-              {t("PlaylistPage.dialog.title")}
-              <ControlPoint style={{ marginLeft: "16px" }} />
+              {t("PlaylistPage.createAccount")}
             </CustomButton>
-          }
-          dialogText={t("PlaylistPage.dialog.text")}
-          open={open}
-          handleClose={() => _handleClose()}
-          handleConfirm={() => _createPlaylist()}
-          handleChange={_onPlaylistNameChange}
-          confirmButtonText={t("PlaylistPage.dialog.confirmButton")}
-          cancelButtonText={t("PlaylistPage.dialog.cancelButton")}
-          type="text"
-          textField={{
-            placeholder: "https://www.youtube.com/watch?v=A3rvyaZFCN4",
-            label: t("PlaylistPage.dialog.textField.label"),
-            dialogText: t("PlaylistPage.dialog.textField.dialogText")
-          }}
-          handleSongsChange={_onPlaylistSongsChange}
-        />
+            <Divider size={2} />
+            <CustomButton
+              onClick={() =>
+                (window.location.href = `${
+                  window.location.href.split("#/")[0]
+                }#${routes.LOGIN}`)
+              }
+              style={{
+                width: "200px"
+              }}
+            >
+              {t("PlaylistPage.login")}
+            </CustomButton>
+          </>
+        )}
       </PlaylistContainer>
     </Container>
   );
