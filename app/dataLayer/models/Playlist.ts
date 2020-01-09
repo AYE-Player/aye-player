@@ -85,9 +85,7 @@ export default class Playlist extends Model({
       yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
 
       // get new Playlist information
-      const pl = yield* _await(
-        ApiClient.getPlaylist(this.id)
-      );
+      const pl = yield* _await(ApiClient.getPlaylist(this.id));
 
       // Get track information of the playlist
       const tracks = yield* _await(
@@ -127,8 +125,12 @@ export default class Playlist extends Model({
     try {
       yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, track.id));
 
+      const foundTrack = this.tracks.find(trk => trk.id === track.id);
+      const idx = this.tracks.indexOf(foundTrack);
+
       this.trackCount = this.trackCount - 1;
       this.duration = this.duration - track.duration;
+      this.tracks.splice(idx, 1);
     } catch (error) {
       AyeLogger.player(
         `Error remove track from playlist ${this.id} ${JSON.stringify(
@@ -146,8 +148,12 @@ export default class Playlist extends Model({
   removeTrackById = _async(function*(this: Playlist, id: string) {
     try {
       yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, id));
+
       const foundTrack = this.tracks.find(trk => trk.id === id);
       const idx = this.tracks.indexOf(foundTrack);
+
+      this.trackCount = this.trackCount - 1;
+      this.duration = this.duration - foundTrack.current.duration;
       this.tracks.splice(idx, 1);
     } catch (error) {
       AyeLogger.player(
