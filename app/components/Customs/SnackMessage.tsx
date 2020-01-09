@@ -22,7 +22,7 @@ const Container = styled.div<any>`
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-  color: #fbfbfb;
+  color: #f2f5f4;
   boxshadow: "0px 1px 5px rgba(0, 0, 0, 0.6)";
   ${props => {
     if (props.variant === "warning") return "background-color: #ef6c00;";

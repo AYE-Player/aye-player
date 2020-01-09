@@ -11,18 +11,18 @@ interface ICustomButtonProps {
 
 const CssButton = withStyles({
   root: {
-    color: "#fbfbfb",
+    color: "#161618",
     height: "40px",
     width: "140px",
     padding: "0 16px",
-    backgroundColor: "#3d4653",
+    backgroundColor: "#f0ad4e",
     "&:hover": {
       backgroundColor: "#565f6c",
       borderColor: "#565f6c"
     },
     "& .MuiOutlinedInput-root": {
       "&:hover fieldset": {
-        borderColor: "#4fc3f7"
+        borderColor: "#f0ad4e"
       }
     },
     borderRadius: "5px"

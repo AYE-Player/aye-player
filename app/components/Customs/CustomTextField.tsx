@@ -19,30 +19,30 @@ const CssTextField = withStyles({
       color: "#565f6c"
     },
     "& label.Mui-focused": {
-      color: "#4fc3f7"
+      color: "#f0ad4e"
     },
     "& label.Mui-focused.Mui-error": {
       color: "#f44336"
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "#4fc3f7"
+      borderBottomColor: "#f0ad4e"
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
         borderColor: "#565f6c"
       },
       "&:hover fieldset": {
-        borderColor: "#4fc3f7"
+        borderColor: "#f0ad4e"
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#4fc3f7"
+        borderColor: "#f0ad4e"
       },
       "&.Mui-focused fieldset.Mui-error": {
         borderColor: "#f44336"
       }
     },
     "& .MuiOutlinedInput-input": {
-      color: "#fbfbfb"
+      color: "#f2f5f4"
     },
     "& .MuiFormHelperText-root": {
       color: "#707986"

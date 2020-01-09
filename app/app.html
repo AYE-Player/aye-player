@@ -16,7 +16,7 @@
     </script>
     <style>
       body {
-        background-color: #232c39 !important;
+        background-color: #161618 !important;
         font-family: Arial, Helvetica, Helvetica Neue, serif;
       }
       /* width */
@@ -67,7 +67,10 @@
         const AyeTitleBar = new customTitlebar.Titlebar({
           backgroundColor: customTitlebar.Color.fromHex("#3D4653"),
           shadow: false,
-          iconsTheme: process.plattform === "darwin" ? customTitlebar.Themebar.mac : customTitlebar.Themebar.win,
+          iconsTheme:
+            process.plattform === "darwin"
+              ? customTitlebar.Themebar.mac
+              : customTitlebar.Themebar.win,
           maximizable: false,
           overflow: "hidden",
           icon: "./images/icons/png/24x24_w.png"

@@ -10,9 +10,11 @@ import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import { Ref } from "mobx-keystone";
 import Track from "../../dataLayer/models/Track";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 
 interface IPlaylistEntityMenuProps {
-  trackRef: Ref<Track>
+  trackRef: Ref<Track>;
   openListDialog: any;
 }
 
@@ -30,7 +32,7 @@ const StyledMenu = withStyles({
     backgroundColor: "#3D4653",
     boxShadow:
       "0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)",
-    color: "#FBFBFB"
+    color: "#f2f5f4"
   }
 })((props: MenuProps) => (
   <Menu
@@ -84,6 +86,12 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
     );
   };
 
+  const _startRadioMode = () => {
+    AyeLogger.player("Not implemented", LogType.INFO);
+/*     queue.clear();
+    player.toggleRadioMode(); */
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -103,6 +111,9 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>
             {t("EntityMenu.addToPlaylist")}
+          </MenuItem>
+          <MenuItem onClick={() => _startRadioMode()}>
+            {t("EntityMenu.startRadioMode")}
           </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>
             {t("EntityMenu.copyURL")}

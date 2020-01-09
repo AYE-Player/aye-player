@@ -150,7 +150,8 @@
     "loadPlaylist": "Lade Playlist",
     "deletePlaylist": "Lösche Playlist",
     "addPlaylistToQueue": "Lade Playlist in Queue",
-    "addTracksToPlaylist": "Tracks hinzufügen"
+    "addTracksToPlaylist": "Tracks hinzufügen",
+    "startRadioMode": "Radio starten"
   },
   "Tray": {
     "play_pause": "Abspielen/Pausieren",

@@ -1,3 +1,5 @@
+import ListIcon from "@material-ui/icons/List";
+import SearchIcon from "@material-ui/icons/Search";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -11,7 +13,7 @@ const Container = styled.div`
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #232c39;
+  background-color: #161618;
 `;
 
 const MenuItem = styled.div`
@@ -47,6 +49,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
+          <SearchIcon style={{ paddingRight: "8px" }} />
           {t("Navigation.search")}
         </NavLink>
       </MenuItem>
@@ -63,6 +66,7 @@ const Navigation: React.FunctionComponent<any> = props => {
             justifyContent: "center"
           }}
         >
+          <ListIcon style={{ paddingRight: "8px" }} />
           {t("Navigation.playlists")}
         </NavLink>
       </MenuItem>
