@@ -109,11 +109,13 @@ const VolumeSlider = withStyles({
 const PlayerControls: React.FunctionComponent<IProps> = props => {
   PlayerInterop.init();
 
-  const Store = ({ player }: RootStore) => ({
-    player
+  const Store = ({ player, queue, trackHistory }: RootStore) => ({
+    player,
+    queue,
+    trackHistory
   });
 
-  const { player } = useInject(Store);
+  const { player, queue, trackHistory } = useInject(Store);
   let seekTo: number;
 
   const _handleVolumeChange = (event: any, newValue: number) => {
@@ -160,8 +162,12 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
             )}
           </Control>
         )}
-        <Control onClick={props.previous}>
-          <SkipPreviousIcon />
+        <Control
+          onClick={trackHistory.tracks.length > 0 ? props.previous : null}
+        >
+          <SkipPreviousIcon
+            htmlColor={trackHistory.tracks.length <= 0 ? "#606060" : ""}
+          />
         </Control>
         {player.isPlaying ? (
           <PlayControl onClick={props.pause}>
@@ -172,8 +178,8 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
             <PlayCircleOutlineIcon fontSize="large" />
           </PlayControl>
         )}
-        <Control onClick={props.skip}>
-          <SkipNextIcon />
+        <Control onClick={queue.tracks.length > 1 ? props.skip : null}>
+          <SkipNextIcon htmlColor={queue.tracks.length <= 1 ? "#606060" : ""} />
         </Control>
         <Control onClick={props.shuffle}>
           {player.isShuffling ? (
