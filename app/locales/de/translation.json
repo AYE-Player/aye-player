@@ -64,6 +64,9 @@
     "tracks": "Lieder",
     "length": "Länge",
     "noPlaylist": "Du hast keine Playlist. Erstelle nun deine erste",
+    "notAuthenticated": "Um eine Playlist zu erstellen, erstelle zuerst einen Account, oder logge dich ein.",
+    "createAccount": "Erstelle Account",
+    "login": "Einloggen",
     "dialog": {
       "title": "Erstelle Playlist",
       "label": "Name der Playlist",
@@ -151,7 +154,7 @@
     "deletePlaylist": "Lösche Playlist",
     "addPlaylistToQueue": "Lade Playlist in Queue",
     "addTracksToPlaylist": "Tracks hinzufügen",
-    "startRadioMode": "Radio starten"
+    "startRadioMode": "Song Radio starten"
   },
   "Tray": {
     "play_pause": "Abspielen/Pausieren",

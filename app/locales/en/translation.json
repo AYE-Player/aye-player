@@ -64,6 +64,9 @@
     "tracks": "Tracks",
     "length": "Length",
     "noPlaylist": "You have no Playlist. Start by creating one",
+    "notAuthenticated": "To create a Playlist, create an Account first, or login.",
+    "createAccount": "Create Account",
+    "login": "Login",
     "dialog": {
       "title": "Create Playlist",
       "label": "Playlist Name",
@@ -151,7 +154,7 @@
     "deletePlaylist": "Delete Playlist",
     "addPlaylistToQueue": "Add Playlist to Queue",
     "addTracksToPlaylist": "Add Tracks",
-    "startRadioMode": "Start Radio"
+    "startRadioMode": "Start Track Radio"
   },
   "Tray": {
     "play_pause": "Play/Pause",

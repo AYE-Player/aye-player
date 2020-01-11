@@ -9,6 +9,8 @@ import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
 import PlayerControls from "./PlayerControls";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import Track from "../../dataLayer/models/Track";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 
 interface IPlayerProps {}
@@ -92,16 +94,18 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     playlists,
     queue,
     trackHistory,
-    app
+    app,
+    trackCache
   }: RootStore) => ({
     player,
     queue,
     playlists,
     trackHistory,
-    app
+    app,
+    trackCache
   });
 
-  const { player, queue, trackHistory, app } = useInject(Store);
+  const { player, queue, trackHistory, app, trackCache } = useInject(Store);
   PlayerInterop.init();
 
   window.onmessage = (message: any) => {
@@ -159,6 +163,28 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.togglePlayingState();
   };
 
+  const _getNextRadioTracks = async () => {
+    const relatedTracks = await ApiClient.getRelatedTracks(
+      player.currentTrack.current.id
+    );
+    const tracks: Track[] = [];
+    for (const trk of relatedTracks) {
+      let track: Track;
+      if (!trackCache.getTrackById(trk.Id)) {
+        track = new Track({
+          id: trk.Id,
+          title: trk.Title,
+          duration: trk.Duration
+        });
+        trackCache.add(track);
+      } else {
+        track = trackCache.getTrackById(trk.Id);
+      }
+      tracks.push(track);
+    }
+    queue.addTracks(tracks);
+  };
+
   const _playNextTrack = () => {
     const prevTrack = player.currentTrack;
     const track = queue.nextTrack();
@@ -201,6 +227,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         player.notifyRPC({ state: "Idle" });
       }
     } else {
+      if (queue.tracks.length <= 3 && player.radioActive) {
+        _getNextRadioTracks();
+      }
       trackHistory.addTrack(prevTrack.current);
 
       player.setCurrentTrack();
