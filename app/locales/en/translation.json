@@ -103,7 +103,8 @@
     "tray": "Minimize to Tray",
     "language": "Language",
     "infoText": "* App will be restarted",
-    "devMode": "Development Mode"
+    "devMode": "Development Mode",
+    "autoRadio": "Autoradio"
   },
   "LoginPage": {
     "header": "Login",

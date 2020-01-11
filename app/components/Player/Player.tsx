@@ -163,9 +163,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.togglePlayingState();
   };
 
-  const _getNextRadioTracks = async () => {
+  const _getNextRadioTracks = async (prevTrack?: Track) => {
     const relatedTracks = await ApiClient.getRelatedTracks(
-      player.currentTrack.current.id
+      player.currentTrack?.current.id || prevTrack.id
     );
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
@@ -185,12 +185,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     queue.addTracks(tracks);
   };
 
-  const _playNextTrack = () => {
-    const prevTrack = player.currentTrack;
+  const _playNextTrack = async () => {
+    const prevTrackRef = player.currentTrack;
+    const prevTrack = prevTrackRef.current;
     const track = queue.nextTrack();
 
     if (!track) {
-      const idx = player.currentPlaylist.current.getIndexOfTrack(prevTrack);
+      const idx = player.currentPlaylist.current.getIndexOfTrack(prevTrackRef);
       if (idx && idx !== player.currentPlaylist.current.trackCount - 1) {
         queue.addTracks(
           player.currentPlaylist.current
@@ -214,11 +215,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         PlayerInterop.setTrack(
           player.currentPlaylist.current.tracks[0].current
         );
-      } else if (
-        player.currentPlaylist?.current.getTrackById(prevTrack.id) &&
-        player.currentPlaylist.current.getIndexOfTrack(prevTrack) + 1 <
-          player.currentPlaylist.current.trackCount
-      ) {
+      } else if (app.autoRadio) {
+        await _getNextRadioTracks(prevTrack);
+
+        trackHistory.addTrack(prevTrack);
+
+        player.setCurrentTrack();
+        player.playTrack(queue.tracks[0].current);
+        PlayerInterop.playTrack(queue.tracks[0].current);
       } else {
         player.togglePlayingState();
         PlayerInterop.togglePlayingState();
@@ -227,10 +231,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         player.notifyRPC({ state: "Idle" });
       }
     } else {
-      if (queue.tracks.length <= 3 && player.radioActive) {
+      if (
+        (queue.tracks.length <= 3 && player.radioActive) ||
+        (queue.isEmpty && app.autoRadio)
+      ) {
         _getNextRadioTracks();
       }
-      trackHistory.addTrack(prevTrack.current);
+      trackHistory.addTrack(prevTrack);
 
       player.setCurrentTrack();
       player.playTrack(track.current);

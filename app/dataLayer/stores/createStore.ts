@@ -17,7 +17,8 @@ const createStore = (): RootStore => {
       rpcEnabled: Settings.get("rpcEnabled"),
       minimizeToTray: Settings.get("minimizeToTray"),
       language: Settings.get("language"),
-      devMode: Settings.get("devMode")
+      devMode: Settings.get("devMode"),
+      autoRadio: Settings.get("autoRadio")
     }),
     player: new Player({
       volume: 0.2,

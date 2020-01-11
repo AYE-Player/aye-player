@@ -103,7 +103,8 @@
     "tray": "Minimieren",
     "language": "Sprache",
     "infoText": "* App wird neugestartet",
-    "devMode": "Entwicklermodus"
+    "devMode": "Entwicklermodus",
+    "autoRadio": "Autoradio"
   },
   "LoginPage": {
     "header": "Einloggen",
