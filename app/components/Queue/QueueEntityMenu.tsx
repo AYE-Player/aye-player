@@ -10,6 +10,8 @@ import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import { Ref } from "mobx-keystone";
 import Track from "../../dataLayer/models/Track";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 
 interface IQueueEntityMenuProps {
   trackRef: Ref<Track>;
@@ -51,11 +53,13 @@ const StyledMenu = withStyles({
 const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue }: RootStore) => ({
-    queue
+  const Store = ({ queue, player, trackCache }: RootStore) => ({
+    queue,
+    player,
+    trackCache
   });
 
-  const { queue } = useInject(Store);
+  const { queue, player, trackCache } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -81,6 +85,44 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
     navigator.clipboard.writeText(
       `https://www.youtube.com/watch?v=${props.trackRef.id}`
     );
+  };
+
+  const _startRadioMode = async () => {
+    // we need to copy the track here, because we will clear the queue an remove the ref
+    const trackCopy = props.trackRef.current;
+    // prepare
+    queue.clear();
+    player.toggleRadioMode();
+
+    // set first track
+    queue.addTrack(trackCopy);
+    player.setCurrentTrack(trackCopy);
+    PlayerInterop.setTrack(trackCopy);
+
+    // get related tracks
+    const relatedTracks = await ApiClient.getRelatedTracks(trackCopy.id);
+    const tracks: Track[] = [];
+    for (const trk of relatedTracks) {
+      let track: Track;
+      if (!trackCache.getTrackById(trk.Id)) {
+        track = new Track({
+          id: trk.Id,
+          title: trk.Title,
+          duration: trk.Duration
+        });
+        trackCache.add(track);
+      } else {
+        track = trackCache.getTrackById(trk.Id);
+      }
+      tracks.push(track);
+    }
+    queue.addTracks(tracks);
+
+    // toggle playing mode
+    if (!player.isPlaying) {
+      player.togglePlayingState();
+      PlayerInterop.togglePlayingState();
+    }
   };
 
   return (
@@ -113,6 +155,9 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
               </MenuItem>
               <MenuItem onClick={() => props.openListDialog()}>
                 {t("EntityMenu.addToPlaylist")}
+              </MenuItem>
+              <MenuItem onClick={() => _startRadioMode()}>
+                {t("EntityMenu.startRadioMode")}
               </MenuItem>
               <MenuItem onClick={() => _handleCopyUrl()}>
                 {t("EntityMenu.copyURL")}

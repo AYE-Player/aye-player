@@ -38,30 +38,38 @@ class ApiClient {
   }
 
   async createPlaylist(name: string): Promise<string> {
-    return this.ky.post(`playlists/`, {
-      json: {
-        Name: name
-      }
-    }).json();
+    return this.ky
+      .post(`playlists/`, {
+        json: {
+          Name: name
+        }
+      })
+      .json();
   }
 
-  async createPlaylistWithSongs(name: string, songs: { Url: string }[]): Promise<string> {
-    return this.ky.post("playlists/by-urls", {
-      json: {
-        Name: name,
-        Songs: songs
-      }
-    }).json();
-   }
+  async createPlaylistWithSongs(
+    name: string,
+    songs: { Url: string }[]
+  ): Promise<string> {
+    return this.ky
+      .post("playlists/by-urls", {
+        json: {
+          Name: name,
+          Songs: songs
+        }
+      })
+      .json();
+  }
 
   async deletePlaylist(id: string) {
     return this.ky.delete(`playlists/${id}`);
   }
 
-  async getTracksFromPlaylist(id: string, amount: number = 20): Promise<ITrackDto[]> {
-    return this.ky.get(
-      `playlists/${id}/songs?skip=0&take=${amount}`
-    ).json();
+  async getTracksFromPlaylist(
+    id: string,
+    amount: number = 20
+  ): Promise<ITrackDto[]> {
+    return this.ky.get(`playlists/${id}/songs?skip=0&take=${amount}`).json();
   }
 
   async addTrackToPlaylist(id: string, track: Track) {
@@ -116,12 +124,14 @@ class ApiClient {
   }
 
   async authenticate(username: string, password: string): Promise<string> {
-    return this.ky.post("auth/", {
-      json: {
-        Email: username,
-        Password: password
-      }
-    }).json();
+    return this.ky
+      .post("auth/", {
+        json: {
+          Email: username,
+          Password: password
+        }
+      })
+      .json();
   }
 
   async forgotPassword(email: string) {
@@ -149,9 +159,11 @@ class ApiClient {
   }
 
   async updateAvatar(data: FormData): Promise<string> {
-    return await this.ky.post("userIdentity/avatar", {
-      body: data
-    }).json();
+    return await this.ky
+      .post("userIdentity/avatar", {
+        body: data
+      })
+      .json();
   }
 
   async updateAvatarUrl(url: string) {
@@ -178,14 +190,16 @@ class ApiClient {
   }
 
   async getTrackFromUrl(url: string): Promise<ITrackDto> {
-    return this.ky.get(
-      `search/song?songUrl=${encodeURIComponent(url)}`
-    ).json();
+    return this.ky.get(`search/song?songUrl=${encodeURIComponent(url)}`).json();
   }
 
-/*   async getSimilarTrack(term: string): Promise<ITrackDto> {
+  /*async getSimilarTrack(term: string): Promise<ITrackDto> {
     return this.ky.get(`search/similarSong?artist=${}`)
-  } */
+  }*/
+
+  async getRelatedTracks(id: string): Promise<ITrackDto[]> {
+    return this.ky.get(`search/radio/${id}`).json();
+  }
 }
 
 export default new ApiClient();

@@ -3,13 +3,15 @@ import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
+import { Ref } from "mobx-keystone";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
+import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import Track from "../../dataLayer/models/Track";
-import { Ref } from "mobx-keystone";
 
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
@@ -51,13 +53,15 @@ const StyledMenu = withStyles({
 const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue, playlists, app }: RootStore) => ({
+  const Store = ({ queue, playlists, app, player, trackCache }: RootStore) => ({
     queue,
     playlists,
-    app
+    app,
+    player,
+    trackCache
   });
 
-  const { queue, playlists, app } = useInject(Store);
+  const { queue, playlists, app, player, trackCache } = useInject(Store);
   const playlist = playlists.getListById(app.selectedPlaylist);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -86,6 +90,44 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
     );
   };
 
+  const _startRadioMode = async () => {
+    // prepare
+    queue.clear();
+    player.toggleRadioMode();
+
+    // set first track
+    queue.addTrack(props.trackRef.current);
+    player.setCurrentTrack(props.trackRef.current);
+    PlayerInterop.setTrack(props.trackRef.current);
+
+    // get related tracks
+    const relatedTracks = await ApiClient.getRelatedTracks(
+      props.trackRef.current.id
+    );
+    const tracks: Track[] = [];
+    for (const trk of relatedTracks) {
+      let track: Track;
+      if (!trackCache.getTrackById(trk.Id)) {
+        track = new Track({
+          id: trk.Id,
+          title: trk.Title,
+          duration: trk.Duration
+        });
+        trackCache.add(track);
+      } else {
+        track = trackCache.getTrackById(trk.Id);
+      }
+      tracks.push(track);
+    }
+    queue.addTracks(tracks);
+
+    // toggle playing mode
+    if (!player.isPlaying) {
+      player.togglePlayingState();
+      PlayerInterop.togglePlayingState();
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -105,6 +147,9 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>
             {t("EntityMenu.addToPlaylist")}
+          </MenuItem>
+          <MenuItem onClick={() => _startRadioMode()}>
+            {t("EntityMenu.startRadioMode")}
           </MenuItem>
           <MenuItem onClick={() => _handleCopyUrl()}>
             {t("EntityMenu.copyURL")}

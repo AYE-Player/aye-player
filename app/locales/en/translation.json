@@ -154,7 +154,7 @@
     "deletePlaylist": "Delete Playlist",
     "addPlaylistToQueue": "Add Playlist to Queue",
     "addTracksToPlaylist": "Add Tracks",
-    "startRadioMode": "Start Radio"
+    "startRadioMode": "Start Track Radio"
   },
   "Tray": {
     "play_pause": "Play/Pause",

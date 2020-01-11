@@ -3,13 +3,15 @@ import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/styles/withStyles";
+import { Ref } from "mobx-keystone";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import useInject from "../../hooks/useInject";
-import RootStore from "../../dataLayer/stores/RootStore";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import { Ref } from "mobx-keystone";
+import RootStore from "../../dataLayer/stores/RootStore";
+import useInject from "../../hooks/useInject";
 
 interface ISearchEntityMenuProps {
   trackRef: Ref<Track>;
@@ -51,11 +53,13 @@ const StyledMenu = withStyles({
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props => {
   const { t } = useTranslation();
 
-  const Store = ({ queue }: RootStore) => ({
-    queue
+  const Store = ({ queue, trackCache, player }: RootStore) => ({
+    queue,
+    trackCache,
+    player
   });
 
-  const { queue } = useInject(Store);
+  const { queue, trackCache, player } = useInject(Store);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -83,6 +87,44 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
     );
   };
 
+  const _startRadioMode = async () => {
+    // prepare
+    queue.clear();
+    player.toggleRadioMode();
+
+    // set first track
+    queue.addTrack(props.trackRef.current);
+    player.setCurrentTrack(props.trackRef.current);
+    PlayerInterop.setTrack(props.trackRef.current);
+
+    // get related tracks
+    const relatedTracks = await ApiClient.getRelatedTracks(
+      props.trackRef.current.id
+    );
+    const tracks: Track[] = [];
+    for (const trk of relatedTracks) {
+      let track: Track;
+      if (!trackCache.getTrackById(trk.Id)) {
+        track = new Track({
+          id: trk.Id,
+          title: trk.Title,
+          duration: trk.Duration
+        });
+        trackCache.add(track);
+      } else {
+        track = trackCache.getTrackById(trk.Id);
+      }
+      tracks.push(track);
+    }
+    queue.addTracks(tracks);
+
+    // toggle playing mode
+    if (!player.isPlaying) {
+      player.togglePlayingState();
+      PlayerInterop.togglePlayingState();
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -108,6 +150,9 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
               </MenuItem>
               <MenuItem onClick={() => props.openListDialog()}>
                 {t("EntityMenu.addToPlaylist")}
+              </MenuItem>
+              <MenuItem onClick={() => _startRadioMode()}>
+                {t("EntityMenu.startRadioMode")}
               </MenuItem>
               <MenuItem onClick={() => _handleCopyUrl()}>
                 {t("EntityMenu.copyURL")}
