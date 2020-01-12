@@ -53,8 +53,8 @@ ipcRenderer.on("play-next", (event, message) => {
         player.currentPlaylist.current.tracks.map(track => track.current)
       );
       queue.shuffel();
-      player.playTrack(queue.tracks[0].current);
-      PlayerInterop.playTrack(queue.tracks[0].current);
+      player.playTrack(queue.currentTrack.current);
+      PlayerInterop.playTrack(queue.currentTrack.current);
     } else if (player.repeat === Repeat.ALL) {
       queue.addTracks(
         player.currentPlaylist.current.tracks.map(track => track.current)
@@ -198,15 +198,15 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             .getTracksStartingFrom(idx + 1)
             .map(track => track.current)
         );
-        player.playTrack(queue.tracks[0].current);
-        PlayerInterop.playTrack(queue.tracks[0].current);
+        player.playTrack(queue.currentTrack.current);
+        PlayerInterop.playTrack(queue.currentTrack.current);
       } else if (player.repeat === Repeat.ALL && player.isShuffling) {
         queue.addTracks(
           player.currentPlaylist.current.tracks.map(track => track.current)
         );
         queue.shuffel();
-        player.playTrack(queue.tracks[0].current);
-        PlayerInterop.setTrack(queue.tracks[0].current);
+        player.playTrack(queue.currentTrack.current);
+        PlayerInterop.setTrack(queue.currentTrack.current);
       } else if (player.repeat === Repeat.ALL) {
         queue.addTracks(
           player.currentPlaylist.current.tracks.map(track => track.current)
@@ -221,8 +221,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         trackHistory.addTrack(prevTrack);
 
         player.setCurrentTrack();
-        player.playTrack(queue.tracks[0].current);
-        PlayerInterop.playTrack(queue.tracks[0].current);
+        player.playTrack(queue.currentTrack.current);
+        PlayerInterop.playTrack(queue.currentTrack.current);
       } else {
         player.togglePlayingState();
         PlayerInterop.togglePlayingState();
@@ -231,10 +231,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         player.notifyRPC({ state: "Idle" });
       }
     } else {
-      if (
-        (queue.tracks.length <= 3 && player.radioActive) ||
-        (queue.isEmpty && app.autoRadio)
-      ) {
+      if (queue.tracks.length <= 3 && player.radioActive) {
         _getNextRadioTracks();
       }
       trackHistory.addTrack(prevTrack);
