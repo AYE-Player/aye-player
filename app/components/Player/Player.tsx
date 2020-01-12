@@ -192,7 +192,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
     if (!track) {
       const idx = player.currentPlaylist.current.getIndexOfTrack(prevTrackRef);
-      if (idx && idx !== player.currentPlaylist.current.trackCount - 1) {
+
+      if (idx !== -1 && idx !== player.currentPlaylist.current.trackCount - 1) {
         queue.addTracks(
           player.currentPlaylist.current
             .getTracksStartingFrom(idx + 1)
