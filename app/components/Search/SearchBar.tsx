@@ -27,14 +27,23 @@ const SearchBar: React.FunctionComponent = () => {
   const { t } = useTranslation();
   PlayerInterop.init();
 
-  const Store = ({ player, queue, searchResult, trackCache }: RootStore) => ({
+  const Store = ({
     player,
     queue,
     searchResult,
-    trackCache
+    trackCache,
+    trackHistory
+  }: RootStore) => ({
+    player,
+    queue,
+    searchResult,
+    trackCache,
+    trackHistory
   });
 
-  const { player, queue, searchResult, trackCache } = useInject(Store);
+  const { player, queue, searchResult, trackCache, trackHistory } = useInject(
+    Store
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,6 +80,7 @@ const SearchBar: React.FunctionComponent = () => {
           trackCache.add(track);
         }
         searchResult.clear();
+        trackHistory.addTrack(player.currentTrack.current);
         queue.addPrivilegedTrack(track);
         player.playTrack(track);
         PlayerInterop.playTrack(track);

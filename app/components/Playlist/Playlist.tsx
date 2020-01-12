@@ -58,17 +58,19 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ app, queue, player }: RootStore) => ({
+  const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
     app,
     queue,
-    player
+    player,
+    trackHistory
   });
 
-  const { app, queue, player } = useInject(Store);
+  const { app, queue, player, trackHistory } = useInject(Store);
 
   const _handleClick = (track: Ref<Track>) => {
     const idx = player.currentPlaylist.current.getIndexOfTrack(track);
 
+    trackHistory.addTrack(player.currentTrack.current);
     queue.clear();
     queue.addTracks(
       player.currentPlaylist.current
@@ -102,7 +104,9 @@ const Playlist: React.FunctionComponent<IProps> = props => {
 
       queue.clear();
       queue.addTracks(
-        player.currentPlaylist.current.getTracksStartingFrom(idx).map(track => track.current)
+        player.currentPlaylist.current
+          .getTracksStartingFrom(idx)
+          .map(track => track.current)
       );
       setValue(!value);
     } catch (error) {

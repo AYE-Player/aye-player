@@ -61,15 +61,25 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   PlayerInterop.init();
 
-  const Store = ({ queue, player, playlists, trackCache, app }: RootStore) => ({
+  const Store = ({
     queue,
     player,
     playlists,
     trackCache,
-    app
+    app,
+    trackHistory
+  }: RootStore) => ({
+    queue,
+    player,
+    playlists,
+    trackCache,
+    app,
+    trackHistory
   });
 
-  const { queue, player, playlists, trackCache, app } = useInject(Store);
+  const { queue, player, playlists, trackCache, app, trackHistory } = useInject(
+    Store
+  );
 
   const { id } = props.match.params;
   const playlist = playlists.getListById(id);
@@ -111,6 +121,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const _handleClick = (track: Ref<Track>) => {
     const idx = playlist.getIndexOfTrack(track);
 
+    trackHistory.addTrack(player.currentTrack.current);
     queue.clear();
     queue.addTracks(
       playlist.getTracksStartingFrom(idx).map(track => track.current)

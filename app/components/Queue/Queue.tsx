@@ -50,15 +50,17 @@ const Queue: React.FunctionComponent<IProps> = props => {
 
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ app, queue, player }: RootStore) => ({
+  const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
     app,
     queue,
-    player
+    player,
+    trackHistory
   });
 
-  const { app, queue, player } = useInject(Store);
+  const { app, queue, player, trackHistory } = useInject(Store);
 
   const _handleClick = (index: number) => {
+    trackHistory.addTrack(player.currentTrack.current);
     queue.jumpTo(index);
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
