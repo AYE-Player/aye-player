@@ -69,8 +69,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
   };
 
   const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const track = queue.removeAndGetTrack(result.source.index);
-    queue.addTrackAt(track.current, result.destination.index);
+    queue.moveTrack(result.source.index, result.destination.index);
   };
 
   const _showQueue = () => {

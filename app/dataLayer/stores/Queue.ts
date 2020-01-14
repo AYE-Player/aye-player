@@ -71,9 +71,9 @@ export default class Queue extends Model({
 
   @modelAction
   moveTrack(oldIndex: number, newIndex: number) {
-    const track = this.tracks[oldIndex];
+    const track = this.tracks[oldIndex].current;
     this.tracks.splice(oldIndex, 1);
-    this.tracks.splice(newIndex, 0, track);
+    this.tracks.splice(newIndex, 0, trackRef(track));
   }
 
   @modelAction
