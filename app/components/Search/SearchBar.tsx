@@ -102,6 +102,7 @@ const SearchBar: React.FunctionComponent = () => {
         searchResult.clear();
         searchResult.addTracks(foundTracks);
       }
+      setTerm("");
     } catch (error) {
       AyeLogger.player(
         `Error in SearchBar Component ${JSON.stringify(error, null, 2)}`,
