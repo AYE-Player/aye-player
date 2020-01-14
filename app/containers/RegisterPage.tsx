@@ -7,6 +7,7 @@ import CustomButton from "../components/Customs/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
+import routes from "../constants/routes.json";
 import RootStore from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
@@ -80,6 +81,9 @@ const RegisterPage: React.FunctionComponent<any> = () => {
           />
         )
       });
+      window.location.href = `${window.location.href.split("#/")[0]}#${
+        routes.LOGIN
+      }`;
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
