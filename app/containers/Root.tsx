@@ -270,6 +270,8 @@ const MainGrid = styled.div`
 
 const getPlaylists = async () => {
   try {
+    if (!rootStore.user.isAuthenticated) return;
+
     const token = localStorage.getItem("token");
     if (token) {
       const playlists = await ApiClient.getPlaylists();
@@ -342,23 +344,25 @@ export default class Root extends Component {
               playerSettings.currentPlaylist.id
             );
             if (!playlist) return;
-            ApiClient.getTracksFromPlaylist(
-              playlist.id,
-              playlist.trackCount
-            ).then(tracks => {
-              for (const track of tracks) {
-                const tr = new Track({
-                  id: track.Id,
-                  duration: track.Duration,
-                  title: track.Title
-                });
-                if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
-                  rootStore.trackCache.add(tr);
+            if (rootStore.user.isAuthenticated) {
+              ApiClient.getTracksFromPlaylist(
+                playlist.id,
+                playlist.trackCount
+              ).then(tracks => {
+                for (const track of tracks) {
+                  const tr = new Track({
+                    id: track.Id,
+                    duration: track.Duration,
+                    title: track.Title
+                  });
+                  if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
+                    rootStore.trackCache.add(tr);
+                  }
+                  playlist.addLoadedTrack(tr);
                 }
-                playlist.addLoadedTrack(tr);
-              }
-              rootStore.player.setCurrentPlaylist(playlist);
-            });
+                rootStore.player.setCurrentPlaylist(playlist);
+              });
+            }
           }
 
           // TODO: Remove these checks, whenever the electron-store package fixes it,
