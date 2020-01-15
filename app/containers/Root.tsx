@@ -270,8 +270,6 @@ const MainGrid = styled.div`
 
 const getPlaylists = async () => {
   try {
-    if (!rootStore.user.isAuthenticated) return;
-
     const token = localStorage.getItem("token");
     if (token) {
       const playlists = await ApiClient.getPlaylists();
@@ -344,7 +342,7 @@ export default class Root extends Component {
               playerSettings.currentPlaylist.id
             );
             if (!playlist) return;
-            if (rootStore.user.isAuthenticated) {
+            try {
               ApiClient.getTracksFromPlaylist(
                 playlist.id,
                 playlist.trackCount
@@ -362,6 +360,11 @@ export default class Root extends Component {
                 }
                 rootStore.player.setCurrentPlaylist(playlist);
               });
+            } catch (error) {
+              AyeLogger.player(
+                `[Root] Error retrieving Playlist songs ${error}`,
+                LogType.ERROR
+              );
             }
           }
 
