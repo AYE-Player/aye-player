@@ -81,23 +81,22 @@ ipcRenderer.on("play-song", async (event, message) => {
     `https://www.youtube.com/watch?v=${message.id}`
   );
 
-  let tr: Track;
+  let track: Track;
   if (!trackCache.getTrackById(trackInfo.id)) {
-    const track = new Track({
+    track = new Track({
       id: trackInfo.id,
       duration: trackInfo.duration,
       title: trackInfo.title
     });
     trackCache.add(track);
-    tr = track;
   } else {
-    tr = trackCache.getTrackById(trackInfo.id);
+    track = trackCache.getTrackById(trackInfo.id);
   }
 
   trackHistory.addTrack(prevTrack.current);
-  queue.addPrivilegedTrack(tr);
-  player.playTrack(tr);
-  PlayerInterop.playTrack(tr);
+  queue.addPrivilegedTrack(track);
+  player.playTrack(track);
+  PlayerInterop.playTrack(track);
 });
 
 ipcRenderer.on("play-previous", (event, message) => {
