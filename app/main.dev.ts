@@ -125,8 +125,7 @@ export default class Main {
     // Custom URI for Mac OS
     app.on("open-url", (event, customSchemeData) => {
       event.preventDefault();
-      AyeLogger.info(`EVENT ${event}`);
-      AyeLogger.info(`CustomSchemeData ${customSchemeData}`);
+
       this.mainWindow.webContents.send("play-song", {
         id: customSchemeData.split("://")[1]
       });
