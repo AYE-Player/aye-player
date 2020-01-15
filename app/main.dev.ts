@@ -127,6 +127,9 @@ export default class Main {
       event.preventDefault();
       AyeLogger.info(`EVENT ${event}`);
       AyeLogger.info(`CustomSchemeData ${customSchemeData}`);
+      this.mainWindow.webContents.send("play-song", {
+        id: customSchemeData.split("://")[1]
+      });
     });
 
     // IPC Communication

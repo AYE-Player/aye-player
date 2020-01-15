@@ -73,6 +73,33 @@ ipcRenderer.on("play-next", (event, message) => {
   PlayerInterop.playTrack(track.current);
 });
 
+ipcRenderer.on("play-song", async (event, message) => {
+  const { queue, player, trackHistory, trackCache, searchResult } = Root.stores;
+  const prevTrack = player.currentTrack;
+
+  const trackInfo = await searchResult.getTrackFromUrl(
+    `https://www.youtube.com/watch?v=${message.id}`
+  );
+
+  let tr: Track;
+  if (!trackCache.getTrackById(trackInfo.id)) {
+    const track = new Track({
+      id: trackInfo.id,
+      duration: trackInfo.duration,
+      title: trackInfo.title
+    });
+    trackCache.add(track);
+    tr = track;
+  } else {
+    tr = trackCache.getTrackById(trackInfo.id);
+  }
+
+  trackHistory.addTrack(prevTrack.current);
+  queue.addPrivilegedTrack(tr);
+  player.playTrack(tr);
+  PlayerInterop.playTrack(tr);
+});
+
 ipcRenderer.on("play-previous", (event, message) => {
   const { player, queue, trackHistory } = Root.stores;
   const track = trackHistory.removeAndGetTrack();
