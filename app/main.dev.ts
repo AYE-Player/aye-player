@@ -352,6 +352,10 @@ export default class Main {
 
     this.mainWindow.webContents.on("new-window", (event, url) => {
       event.preventDefault();
+
+      this.mainWindow.webContents.send("play-song", {
+        id: url.split("/watch?v=")[1]
+      });
     });
 
     this.menu = new AyeMenu(this.mainWindow, i18n);
