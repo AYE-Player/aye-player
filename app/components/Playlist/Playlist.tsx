@@ -14,8 +14,6 @@ import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import AyeLogger from "../../modules/AyeLogger";
-import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
 import { Ref } from "mobx-keystone";
@@ -110,10 +108,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
       );
       setValue(!value);
     } catch (error) {
-      AyeLogger.player(
-        `Error in Playlist Component ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />

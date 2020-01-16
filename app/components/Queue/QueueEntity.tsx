@@ -108,7 +108,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
     setOpen(true);
   };
 
-  const _handleClose = (id: string, givenTrack: Track) => {
+  const _handleClose = async (id: string, givenTrack: Track) => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
@@ -123,7 +123,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
           )
         });
       } else {
-        playlist.addTrack(givenTrack);
+        await playlist.addTrack(givenTrack);
         enqueueSnackbar("", {
           content: key => (
             <SnackMessage
@@ -134,8 +134,12 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
           )
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("Error.couldNotAddTrack")} />
+        )
+      });
     }
   };
 

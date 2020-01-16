@@ -275,8 +275,10 @@ export default class Main {
       if (process.platform === "linux") {
         try {
           new AyeMpris(this.mainWindow).init();
-        } catch (err) {
-          console.error(err);
+        } catch (error) {
+          AyeLogger.main(
+            `Error registering Mpris ${JSON.stringify(error, null, 2)}`
+          );
         }
       }
 

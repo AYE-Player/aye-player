@@ -85,7 +85,6 @@ export default class Playlists extends Model({
 
       return playlist;
     } catch (error) {
-      console.error(error);
       AyeLogger.player(
         `[createListWithSongs] Error setting ID ${JSON.stringify(
           error,

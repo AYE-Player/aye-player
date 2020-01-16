@@ -40,7 +40,9 @@ class AyeMediaKeys extends BaseModule {
       this.registerBindings("gnome3");
       this.registerBindings("mate");
     } catch (error) {
-      console.error(error);
+      AyeLogger.main(
+        `Error registering mediakeys ${JSON.stringify(error, null, 2)}`
+      );
     }
   };
 

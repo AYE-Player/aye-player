@@ -34,6 +34,9 @@
   "General": {
     "error": "Something went wrong, please try again later."
   },
+  "Error": {
+    "couldNotAddTrack": "Couldnt add track, please try again later"
+  },
   "SearchPage": {
     "title": "Search",
     "placeholder": "$t(SearchPage.title)"

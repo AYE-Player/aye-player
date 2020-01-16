@@ -17,8 +17,6 @@ import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import { removeControlCharacters } from "../../helpers";
 import useInject from "../../hooks/useInject";
-import AyeLogger from "../../modules/AyeLogger";
-import { LogType } from "../../types/enums";
 import CustomButton from "../Customs/CustomButton";
 import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
@@ -140,13 +138,9 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
       await playlist.moveTrackTo(result.source.index, result.destination.index);
       setValue(!value);
     } catch (error) {
-      AyeLogger.player(
-        `Error in Playlist Component ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("General.error")} />
+          <SnackMessage id={key} variant="error" message={t("Error.couldNotAddTrack")} />
         )
       });
     }

@@ -35,9 +35,7 @@ export default class User extends Model({
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const userInfo = yield* _await(
-          ApiClient.getUserdata()
-        );
+        const userInfo = yield* _await(ApiClient.getUserdata());
         this.id = userInfo.Id;
         this.email = userInfo.Email;
         this.name = userInfo.Username;
@@ -49,7 +47,10 @@ export default class User extends Model({
           !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
       } catch (error) {
         localStorage.removeItem("token");
-        console.error(error);
+        AyeLogger.player(
+          `Error logging in ${JSON.stringify(error, null, 2)}`,
+          LogType.ERROR
+        );
       }
     }
   });
@@ -62,15 +63,11 @@ export default class User extends Model({
   ) {
     try {
       AyeLogger.player(`Trying to log in with: ${username}`);
-      const token = yield* _await(
-        ApiClient.authenticate(username, password)
-      );
+      const token = yield* _await(ApiClient.authenticate(username, password));
 
       localStorage.setItem("token", token);
 
-      const userInfo = yield* _await(
-        ApiClient.getUserdata()
-      );
+      const userInfo = yield* _await(ApiClient.getUserdata());
 
       // Save user information
       this.id = userInfo.Id;
@@ -84,7 +81,10 @@ export default class User extends Model({
         !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
       AyeLogger.player(`Logged in user ${username}`);
     } catch (error) {
-      AyeLogger.player(`Error logging in ${error}`, LogType.ERROR);
+      AyeLogger.player(
+        `Error logging in ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
       throw error;
     }
   });
@@ -152,7 +152,10 @@ export default class User extends Model({
       this.avatar = avatarURL;
       AyeLogger.player(`Updated User Avatar ${avatarURL}`);
     } catch (error) {
-      AyeLogger.player(`Error Updating user avatar ${error}`, LogType.ERROR);
+      AyeLogger.player(
+        `Error Updating user avatar ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
       throw error;
     }
   });

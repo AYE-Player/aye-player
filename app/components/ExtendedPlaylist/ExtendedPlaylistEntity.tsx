@@ -142,8 +142,16 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
           )
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotAddTrack")}
+          />
+        )
+      });
     }
   };
 
