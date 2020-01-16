@@ -166,7 +166,7 @@ export default class User extends Model({
   ) {
     try {
       AyeLogger.player(`Trying to register with ${name} ${email}`);
-      yield* _await(ApiClient.register(email, password));
+      yield* _await(ApiClient.register(name, email, password));
     } catch (error) {
       AyeLogger.player(
         `Failed registration ${JSON.stringify(error, null, 2)}`,

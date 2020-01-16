@@ -167,11 +167,12 @@ class ApiClient {
    * @param email email of the user
    * @param password password of the user
    */
-  async register(email: string, password: string) {
+  async register(username: string, email: string, password: string) {
     return this.ky.post("userIdentity/", {
       json: {
         Email: email,
-        Password: password
+        Password: password,
+        Username: username
       }
     });
   }
