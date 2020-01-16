@@ -350,12 +350,14 @@ export default class Main {
       i18n.changeLanguage(lng);
     });
 
-    this.mainWindow.webContents.on("new-window", (event, url) => {
+    this.mainWindow.webContents.on("new-window", (event, url: string) => {
       event.preventDefault();
 
-      this.mainWindow.webContents.send("play-song", {
-        id: url.split("/watch?v=")[1]
-      });
+      if (url.includes("/watch?v=")) {
+        this.mainWindow.webContents.send("play-song", {
+          id: url.split("/watch?v=")[1]
+        });
+      }
     });
 
     this.menu = new AyeMenu(this.mainWindow, i18n);
