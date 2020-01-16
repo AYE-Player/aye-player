@@ -8,7 +8,7 @@ import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
-import PlayerControls from "./PlayerControls";
+import PlayerControlsContainer from "./PlayerControlsContainer";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import Track from "../../dataLayer/models/Track";
 const AyeLogo = require("../../images/aye_temp_logo.png");
@@ -319,7 +319,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   return (
     <Container>
-      <PlayerControls
+      <PlayerControlsContainer
         play={() => _playVideo()}
         stop={() => _stopVideo()}
         pause={() => _pauseVideo()}
