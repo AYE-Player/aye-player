@@ -60,7 +60,7 @@ const PlaylistPage: React.FunctionComponent = () => {
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] = React.useState<
-    string | undefined
+    Maybe<string>
   >(undefined);
 
   const { t } = useTranslation();

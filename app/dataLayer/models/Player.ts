@@ -30,8 +30,8 @@ export default class Player extends Model({
   isSeeking: prop<boolean>(),
   playbackPosition: prop<number>(),
   radioActive: prop<boolean>(),
-  currentTrack: prop<Ref<Track> | undefined>(),
-  currentPlaylist: prop<Ref<Playlist> | undefined>()
+  currentTrack: prop<Maybe<Ref<Track>>>(),
+  currentPlaylist: prop<Maybe<Ref<Playlist>>>()
 }) {
   @modelAction
   playTrack(track: Track) {
