@@ -32,6 +32,7 @@ const animation = () => css`
   ${marquee} 5s linear 2;
 `;
 
+// TODO: Fix the scrolling animation
 const Container = styled.div<any>`
   height: 48px;
   width: calc(100% - 8px);
