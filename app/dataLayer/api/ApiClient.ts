@@ -268,7 +268,17 @@ class ApiClient {
    * @param term term to search youtube videos for
    */
   async searchTrack(term: string): Promise<ITrackDto[]> {
-    return this.ky.get(`search/${term}`).json();
+    const { data: { Songs } } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{ Songs(searchTerm: "${term}") { Title Duration Id } }`
+        })
+      })
+      .json();
+
+    return Songs;
+    //return this.ky.get(`search/${term}`).json();
   }
 
   /**
