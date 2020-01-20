@@ -87,6 +87,11 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
     );
   };
 
+  const _addToQueue = () => {
+    queue.addTrack(props.trackRef.current);
+    setAnchorEl(null);
+  };
+
   const _startRadioMode = async () => {
     // prepare
     queue.clear();
@@ -138,6 +143,9 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
         >
           <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
+          </MenuItem>
+          <MenuItem onClick={() => _addToQueue()}>
+            {t("EntityMenu.addToQueue")}
           </MenuItem>
           <MenuItem onClick={() => _handleRemoveTrack()}>
             {t("EntityMenu.remove")}

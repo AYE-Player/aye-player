@@ -90,6 +90,11 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
     );
   };
 
+  const _addToQueue = () => {
+    queue.addTrack(props.trackRef.current);
+    setAnchorEl(null);
+  };
+
   const _startRadioMode = async () => {
     // prepare
     queue.clear();
@@ -141,6 +146,9 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
         >
           <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
+          </MenuItem>
+          <MenuItem onClick={() => _addToQueue()}>
+            {t("EntityMenu.addToQueue")}
           </MenuItem>
           <MenuItem onClick={() => _handleRemoveTrack()}>
             {t("EntityMenu.remove")}
