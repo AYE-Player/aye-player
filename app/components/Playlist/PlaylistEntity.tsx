@@ -1,6 +1,6 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
-import { observer } from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -216,21 +216,25 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             {...provided.dragHandleProps}
           >
             <DragHandle fontSize="small" />
-            <TrackInfoContainer
-              active={
-                player.currentTrack
-                  ? player.currentTrack.id === props.track.id
-                  : false
-              }
-              onClick={() => props.onClick(props.track)}
-            >
-              <Title length={props.track.current.title.length}>
-                <ScrollText>
-                  <TextSpan>{props.track.current.title}</TextSpan>
-                </ScrollText>
-              </Title>
-              <Duration>{props.duration}</Duration>
-            </TrackInfoContainer>
+            <Observer>
+              {() => (
+                <TrackInfoContainer
+                  active={
+                    player.currentTrack
+                      ? player.currentTrack.id === props.track.id
+                      : false
+                  }
+                  onClick={() => props.onClick(props.track)}
+                >
+                  <Title length={props.track.current.title.length}>
+                    <ScrollText>
+                      <TextSpan>{props.track.current.title}</TextSpan>
+                    </ScrollText>
+                  </Title>
+                  <Duration>{props.duration}</Duration>
+                </TrackInfoContainer>
+              )}
+            </Observer>
             <PlaylistEntityMenu
               trackRef={props.track}
               openListDialog={_handleClickOpen}
@@ -270,4 +274,4 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(PlaylistEntity);
+export default PlaylistEntity;

@@ -1,5 +1,5 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
-import { observer } from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import React from "react";
 import {
   DragDropContext,
@@ -76,8 +76,6 @@ const Queue: React.FunctionComponent<IProps> = props => {
     app.toggleQueueDisplay();
   };
 
-  player.currentTrack;
-
   const renderQueue = () => (
     <DragDropContext onDragEnd={_onDragEnd}>
       <Container>
@@ -89,24 +87,28 @@ const Queue: React.FunctionComponent<IProps> = props => {
         </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
-            <ScrollContainer
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {queue.tracks.map((track, index) => {
-                return (
-                  <QueueEntity
-                    duration={track.current.formattedDuration}
-                    track={track}
-                    key={`${track.id}-${index}`}
-                    dragId={`${track.id}-${index}`}
-                    index={index}
-                    onClick={_handleClick}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </ScrollContainer>
+            <Observer>
+              {() => (
+                <ScrollContainer
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {queue.tracks.map((track, index) => {
+                    return (
+                      <QueueEntity
+                        duration={track.current.formattedDuration}
+                        track={track}
+                        key={`${track.id}-${index}`}
+                        dragId={`${track.id}-${index}`}
+                        index={index}
+                        onClick={_handleClick}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </ScrollContainer>
+              )}
+            </Observer>
           )}
         </Droppable>
       </Container>
@@ -128,4 +130,4 @@ const Queue: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(Queue);
+export default Queue;

@@ -84,8 +84,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     app.toggleQueueDisplay();
   };
 
-  player.currentTrack;
-
   const _onDragEnd = async (
     result: DropResult,
     provided: ResponderProvided
