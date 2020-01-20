@@ -5,8 +5,7 @@ import {
   prop,
   Ref,
   _async,
-  _await,
-  clone
+  _await
 } from "mobx-keystone";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
@@ -175,12 +174,16 @@ export default class Playlist extends Model({
     newIndex: number
   ) {
     try {
-      const track = clone(this.tracks[oldIndex]);
+      console.log("get track");
+      const track = this.tracks[oldIndex].current;
 
-      yield ApiClient.moveTrackTo(this.id, track.id, newIndex);
+      yield* _await(ApiClient.moveTrackTo(this.id, track.id, newIndex));
 
+      console.log("REmove track");
       this.tracks.splice(oldIndex, 1);
-      this.tracks.splice(newIndex, 0, track);
+      console.log("readd track");
+      this.tracks.splice(newIndex, 0, trackRef(track));
+      console.log("tracks", this.tracks);
     } catch (error) {
       AyeLogger.player(
         `Error changing Track order ${JSON.stringify(error, null, 2)}`,

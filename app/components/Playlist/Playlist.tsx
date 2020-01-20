@@ -54,8 +54,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   const { enqueueSnackbar } = useSnackbar();
   PlayerInterop.init();
 
-  const [value, setValue] = React.useState(true); //boolean state
-
   const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
     app,
     queue,
@@ -77,7 +75,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     );
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
-    setValue(!value);
   };
 
   const _showQueue = () => {
@@ -104,7 +101,6 @@ const Playlist: React.FunctionComponent<IProps> = props => {
           .getTracksStartingFrom(idx)
           .map(track => track.current)
       );
-      setValue(!value);
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
