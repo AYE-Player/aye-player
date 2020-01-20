@@ -1,6 +1,6 @@
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { Ref } from "mobx-keystone";
-import { observer } from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import {
@@ -140,7 +140,11 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("Error.couldNotAddTrack")} />
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotAddTrack")}
+          />
         )
       });
     }
@@ -165,9 +169,6 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     setAddTracksOpen(false);
   };
 
-  player.currentTrack;
-  playlist.tracks;
-
   return (
     <>
       <DragDropContext onDragEnd={_onDragEnd}>
@@ -175,23 +176,27 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         <Container>
           <Droppable droppableId="droppable">
             {(provided: any) => (
-              <ScrollContainer
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {playlist.tracks.map((track, index) => {
-                  return (
-                    <ExtendedPlaylistEntity
-                      duration={track.current.formattedDuration}
-                      track={track}
-                      key={track.id}
-                      index={index}
-                      onClick={_handleClick}
-                    />
-                  );
-                })}
-                {provided.placeholder}
-              </ScrollContainer>
+              <Observer>
+                {() => (
+                  <ScrollContainer
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {playlist.tracks.map((track, index) => {
+                      return (
+                        <ExtendedPlaylistEntity
+                          duration={track.current.formattedDuration}
+                          track={track}
+                          key={track.id}
+                          index={index}
+                          onClick={_handleClick}
+                        />
+                      );
+                    })}
+                    {provided.placeholder}
+                  </ScrollContainer>
+                )}
+              </Observer>
             )}
           </Droppable>
         </Container>
@@ -229,4 +234,4 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(ExtendedPlaylist);
+export default ExtendedPlaylist;
