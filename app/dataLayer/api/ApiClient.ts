@@ -268,7 +268,9 @@ class ApiClient {
    * @param term term to search youtube videos for
    */
   async searchTrack(term: string): Promise<ITrackDto[]> {
-    const { data: { Songs } } = await this.ky
+    const {
+      data: { Songs }
+    } = await this.ky
       .post("search/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -286,7 +288,19 @@ class ApiClient {
    * @param url youtube url
    */
   async getTrackFromUrl(url: string): Promise<ITrackDto> {
-    return this.ky.get(`search/song?songUrl=${encodeURIComponent(url)}`).json();
+    const {
+      data: { Song }
+    } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{ Song(songUrl: "${url}") { Title Duration Id } }`
+        })
+      })
+      .json();
+
+    return Song;
+    // return this.ky.get(`search/song?songUrl=${encodeURIComponent(url)}`).json();
   }
 
   /*async getSimilarTrack(term: string): Promise<ITrackDto> {
@@ -298,7 +312,19 @@ class ApiClient {
    * @param id youtube id
    */
   async getRelatedTracks(id: string): Promise<ITrackDto[]> {
-    return this.ky.get(`search/radio/${id}`).json();
+    const {
+      data: { Radio }
+    } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{ Radio(startId: "${id}") { Title Duration Id } }`
+        })
+      })
+      .json();
+
+    return Radio;
+    // return this.ky.get(`search/radio/${id}`).json();
   }
 }
 
