@@ -1,5 +1,5 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
 import {
@@ -95,12 +95,14 @@ const Playlist: React.FunctionComponent<IProps> = props => {
         player.currentTrack
       );
 
-      queue.clear();
-      queue.addTracks(
-        player.currentPlaylist.current
-          .getTracksStartingFrom(idx)
-          .map(track => track.current)
-      );
+      if (result.destination.index > idx) {
+        queue.clear();
+        queue.addTracks(
+          player.currentPlaylist.current
+            .getTracksStartingFrom(idx)
+            .map(track => track.current)
+        );
+      }
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
@@ -121,23 +123,28 @@ const Playlist: React.FunctionComponent<IProps> = props => {
         </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
-            <ScrollContainer
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {player.currentPlaylist.current.tracks.map((track, index) => {
-                return (
-                  <PlaylistEntity
-                    duration={track.current.formattedDuration}
-                    track={track}
-                    key={track.id}
-                    index={index}
-                    onClick={_handleClick}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </ScrollContainer>
+            <Observer>
+              {() => (
+                <ScrollContainer
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {player.currentPlaylist.current.tracks.map((track, index) => {
+                    return (
+                      <PlaylistEntity
+                        duration={track.current.formattedDuration}
+                        track={track}
+                        key={track.id}
+                        index={index}
+                        onClick={_handleClick}
+                        active={player.currentTrack?.id === track.id}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </ScrollContainer>
+              )}
+            </Observer>
           )}
         </Droppable>
       </Container>

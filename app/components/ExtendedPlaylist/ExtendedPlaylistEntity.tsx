@@ -19,6 +19,7 @@ interface IProps {
   duration: string;
   track: Ref<Track>;
   index: number;
+  active: boolean;
   onClick: Function;
 }
 
@@ -98,12 +99,11 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ player, playlists }: RootStore) => ({
-    player,
+  const Store = ({ playlists }: RootStore) => ({
     playlists
   });
 
-  const { player, playlists } = useInject(Store);
+  const { playlists } = useInject(Store);
 
   const [open, setOpen] = React.useState(false);
   const [
@@ -206,7 +206,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
           >
             <DragHandle fontSize="small" />
             <TrackInfoContainer
-              active={player.currentTrack?.id === props.track.id || false}
+              active={props.active || false}
               onClick={() => props.onClick(props.track)}
             >
               <TrackImageContainer>

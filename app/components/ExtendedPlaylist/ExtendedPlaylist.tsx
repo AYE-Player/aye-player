@@ -53,7 +53,6 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
 
-  const [value, setValue] = React.useState(true); //boolean state
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
@@ -127,7 +126,6 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
-    setValue(!value);
   };
 
   const _onDragEnd = async (
@@ -136,7 +134,6 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   ) => {
     try {
       await playlist.moveTrackTo(result.source.index, result.destination.index);
-      setValue(!value);
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
@@ -190,6 +187,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
                           key={track.id}
                           index={index}
                           onClick={_handleClick}
+                          active={player.currentTrack?.id === track.id || false}
                         />
                       );
                     })}

@@ -1,11 +1,11 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
-import { Observer } from "mobx-react-lite";
+import { Ref } from "mobx-keystone";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
-import styled, { keyframes, css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
@@ -13,12 +13,12 @@ import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
-import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
   track: Ref<Track>;
   index: number;
+  active: boolean;
   onClick: Function;
 }
 
@@ -109,12 +109,11 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ player, playlists }: RootStore) => ({
-    player,
+  const Store = ({ playlists }: RootStore) => ({
     playlists
   });
 
-  const { player, playlists } = useInject(Store);
+  const { playlists } = useInject(Store);
 
   const [open, setOpen] = React.useState(false);
   const [
@@ -216,25 +215,17 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             {...provided.dragHandleProps}
           >
             <DragHandle fontSize="small" />
-            <Observer>
-              {() => (
-                <TrackInfoContainer
-                  active={
-                    player.currentTrack
-                      ? player.currentTrack.id === props.track.id
-                      : false
-                  }
-                  onClick={() => props.onClick(props.track)}
-                >
-                  <Title length={props.track.current.title.length}>
-                    <ScrollText>
-                      <TextSpan>{props.track.current.title}</TextSpan>
-                    </ScrollText>
-                  </Title>
-                  <Duration>{props.duration}</Duration>
-                </TrackInfoContainer>
-              )}
-            </Observer>
+            <TrackInfoContainer
+              active={props.active || false}
+              onClick={() => props.onClick(props.track)}
+            >
+              <Title length={props.track.current.title.length}>
+                <ScrollText>
+                  <TextSpan>{props.track.current.title}</TextSpan>
+                </ScrollText>
+              </Title>
+              <Duration>{props.duration}</Duration>
+            </TrackInfoContainer>
             <PlaylistEntityMenu
               trackRef={props.track}
               openListDialog={_handleClickOpen}
