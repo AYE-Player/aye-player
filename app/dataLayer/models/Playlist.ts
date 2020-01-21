@@ -174,16 +174,12 @@ export default class Playlist extends Model({
     newIndex: number
   ) {
     try {
-      console.log("get track");
       const track = this.tracks[oldIndex].current;
 
       yield* _await(ApiClient.moveTrackTo(this.id, track.id, newIndex));
 
-      console.log("REmove track");
       this.tracks.splice(oldIndex, 1);
-      console.log("readd track");
       this.tracks.splice(newIndex, 0, trackRef(track));
-      console.log("tracks", this.tracks);
     } catch (error) {
       AyeLogger.player(
         `Error changing Track order ${JSON.stringify(error, null, 2)}`,
