@@ -8,8 +8,8 @@ import { ITrackDto, IUserInfoDto, IPlaylistDto } from "../../types/response";
 class ApiClient {
   private ky: typeof ky;
   /**
-   * Prepares our ky instance, also this checks if a token is present
-   * and if a token exists, adds it to every request
+   * Prepares our ky instance, also sets a beforeRequst hook
+   * to check for an existing token and adding it as a header
    */
   constructor() {
     this.ky = ky.extend({
