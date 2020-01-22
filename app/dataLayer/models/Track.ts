@@ -21,12 +21,12 @@ export default class Track extends Model({
     const minutes = Math.floor((this.duration - hours * 3600) / 60);
     const seconds = this.duration - minutes * 60;
 
-    const finalTime =
+    return (
       (hours >= 1 ? str_pad_left(hours, "0", 2) + ":" : "") +
       str_pad_left(minutes, "0", 2) +
       ":" +
-      str_pad_left(seconds, "0", 2);
-    return finalTime;
+      str_pad_left(seconds, "0", 2)
+    );
   }
 
   @modelAction
