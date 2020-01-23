@@ -28,6 +28,7 @@ interface IProps {
 
 const Container = styled.div`
   height: 100%;
+  width: 100%;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -35,7 +36,8 @@ const Container = styled.div`
 `;
 
 const ScrollContainer = styled.div`
-  overflow: auto;
+  overflow-y: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   height: calc(100% - 64px);

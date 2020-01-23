@@ -46,13 +46,13 @@ const TrackInfoContainer = styled.div<any>`
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
-  width: 100%;
+  width: 93%;
   color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
 `;
 
 const Title = styled.div<any>`
-  margin-right: 32px;
-  width: 50%;
+  margin-right: 40px;
+  width: 60%;
   white-space: nowrap;
   overflow: hidden;
   ${(props: any) => {
