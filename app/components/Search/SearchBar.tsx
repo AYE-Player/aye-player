@@ -127,10 +127,11 @@ const SearchBar: React.FunctionComponent = () => {
       />
       <SearchIcon
         style={{
-          padding: "0px 16px",
+          padding: "0px 8px",
           backgroundColor: "#3d4653",
           height: "100%",
-          borderRadius: "4px"
+          borderRadius: "4px",
+          width: "38px"
         }}
         onClick={_handleSearchIconClick}
       />
