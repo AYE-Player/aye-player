@@ -6,8 +6,8 @@ import formattedDuration from "../helpers/formattedDuration";
 interface IActivityParameters {
   details?: string;
   state?: string;
-  startTimestamp?: Maybe<number>;
-  endTimestamp?: Maybe<number>;
+  startTimestamp?: number;
+  endTimestamp?: number;
   largeImageKey?: string;
   largeImageText?: string;
   smallImageKey?: string;
