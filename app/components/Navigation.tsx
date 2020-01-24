@@ -8,7 +8,7 @@ import styled from "styled-components";
 import routes from "../constants/routes.json";
 
 const Container = styled.div`
-  width: calc(100% - 336px);
+  width: calc(100% - 335px);
   display: flex;
   position: absolute;
   bottom: 0;
