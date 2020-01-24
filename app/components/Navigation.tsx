@@ -1,6 +1,5 @@
 import ListIcon from "@material-ui/icons/List";
 import SearchIcon from "@material-ui/icons/Search";
-import { observer } from "mobx-react-lite";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
@@ -74,4 +73,4 @@ const Navigation: React.FunctionComponent<any> = props => {
   );
 };
 
-export default observer(Navigation);
+export default Navigation;
