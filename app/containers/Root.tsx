@@ -17,6 +17,8 @@ import createStore from "../dataLayer/stores/createStore";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
+import { AyeRemote } from "@aye/aye-remote";
+import os from "os";
 
 interface IPlayerSettings {
   volume: number;
@@ -34,205 +36,12 @@ interface IPlayerSettings {
 
 const rootStore = createStore();
 
-/*if (process.env.NODE_ENV === "development") {
-  rootStore.playlists.add(
-    Playlist.create({
-      id: "1",
-      name: "Awesome Playlist",
-      tracks: []
-    })
-  );
-  rootStore.playlists.add(
-    Playlist.create({
-      id: "2",
-      name: "test",
-      tracks: []
-    })
-  );
-  const playlist = rootStore.playlists.getListById("1");
-  let track = Track.create({
-    id: "A0HDitIHMXo",
-    title: "Nightcore - MAYDAY",
-    duration: 215
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
+const remote = new AyeRemote("http://localhost:8337", "12345", os.hostname());
 
-  let track = Track.create({
-    id: "dj-tiesto/dj-tiesto-forbidden-paradise-deep-trance-mix",
-    title: "Dj tiesto - Forbidden Paradise (Deep Trance Mix)",
-    duration: 255,
-    source: "soundcloud"
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "_8mwWhyjOS0",
-    title: "Neovaii - Feel Better",
-    duration: 235
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "BLBiLjQl4uQ",
-    title: "Neovaii - Bad For You",
-    duration: 262
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "j2QXZD5tk8c",
-    title: "Neovaii - Take It Back",
-    duration: 214
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "Rz5BHmd4XkE",
-    title: "Neovaii - Don't You Know",
-    duration: 225
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "E3wJFVmyeT4",
-    title: "Neovaii - I Remember",
-    duration: 192
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "nzhAgfs_Gv4",
-    title: "Neovaii - At The End",
-    duration: 218
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "mWrrBndTadM",
-    title: "Neovaii - Just Be Me",
-    duration: 195
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "g6xFyd3CMXQ",
-    title: "Neovaii - Let Me Go",
-    duration: 198
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "dQmjxCJFyQA",
-    title: "Neovaii - Should've Started",
-    duration: 225
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "lJ_TSjn-khU",
-    title: "Neovaii - Chase Pop",
-    duration: 200
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "ijKrFbLXkj8",
-    title: "Neovaii - Crash",
-    duration: 226
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "7bD_r5u3znQ",
-    title: "Neovaii - Your Eyes",
-    duration: 212
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "VSdgdjMnw1k",
-    title: "Neovaii - Feel You",
-    duration: 203
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "mXah1eQBUFs",
-    title: "Neovaii - Serenity",
-    duration: 197
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "UWzRZ0LgiWc",
-    title: "Neovaii - Heart Shaped Box",
-    duration: 291
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "4Q46xYqUwZQ",
-    title: "Legends Never Die",
-    duration: 235
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "UOxkGD8qRB4",
-    title: "POP/STARS",
-    duration: 202
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "RG_DLoKkGsg",
-    title: "Phoenix",
-    duration: 175
-  });
-  rootStore.trackCache.add(track);
-  playlist.addLoadedTrack(track);
-
-  const playlist2 = rootStore.playlists.getListById("2");
-
-  track = Track.create({
-    id: "63i0u26PlpI",
-    title: "Nightcore - Cradles (Besomorph)",
-    duration: 122
-  });
-  rootStore.trackCache.add(track);
-  playlist2.addLoadedTrack(track);
-
-  track = Track.create({
-    id: "Pre8O2RlbjU",
-    title: "Nightcore - Play (Alan Walker, K-391)",
-    duration: 148
-  });
-  rootStore.trackCache.add(track);
-  playlist2.addLoadedTrack(track);
-
-  // rootStore.queue.addTracks(rootStore.playlists.lists[0].tracks);
-  rootStore.player.setCurrentPlaylist(rootStore.playlists.lists[0]);
-  //rootStore.player.setCurrentTrack(rootStore.playlists.lists[0].tracks[0]);
-}*/
+remote.socket.on("play", () => {
+  rootStore.player.togglePlayingState();
+  PlayerInterop.togglePlayingState();
+});
 
 ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.volume", rootStore.player.volume);
