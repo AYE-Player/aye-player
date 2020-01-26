@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "pretty": true,
+    "alwaysStrict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
