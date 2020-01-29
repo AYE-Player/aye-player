@@ -72,7 +72,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
   };
 
   const _handleRemoveTrack = () => {
-    player.currentPlaylist.current.removeTrackById(props.trackRef.id);
+    player.currentPlaylist.current.removeTrackById(props.trackRef.current.id);
     setAnchorEl(null);
   };
 
@@ -83,7 +83,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.trackRef.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.current.id}`
     );
   };
 

@@ -75,7 +75,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
   };
 
   const _handleRemoveTrack = async () => {
-    await playlist.removeTrackById(props.trackRef.id);
+    await playlist.removeTrackById(props.trackRef.current.id);
     setAnchorEl(null);
   };
 
@@ -86,7 +86,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.trackRef.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.current.id}`
     );
   };
 

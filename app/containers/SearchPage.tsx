@@ -67,7 +67,7 @@ const SearchPage: React.FunctionComponent = () => {
                         : track.current.formattedDuration
                     }
                     track={track}
-                    key={track.id}
+                    key={track.current.id}
                     index={index}
                     onDoubleClick={_handleDoubleClick}
                   />

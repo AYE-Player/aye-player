@@ -83,7 +83,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props 
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.trackRef.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.current.id}`
     );
   };
 

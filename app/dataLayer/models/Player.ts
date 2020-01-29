@@ -45,7 +45,7 @@ export default class Player extends Model({
     if (!this.isPlaying) this.isPlaying = true;
 
     new Notification(`Now Playing: ${this.currentTrack.current.title}`, {
-      icon: `https://img.youtube.com/vi/${this.currentTrack.id}/hqdefault.jpg`,
+      icon: `https://img.youtube.com/vi/${this.currentTrack.current.id}/hqdefault.jpg`,
       silent: true
     });
     this.notifyRPC();
@@ -70,7 +70,7 @@ export default class Player extends Model({
     ipcRenderer.send("player2Win", {
       type: "trackInfo",
       data: {
-        id: this.currentTrack.id,
+        id: this.currentTrack.current.id,
         title: this.currentTrack.current.title,
         duration: this.currentTrack.current.duration
       }

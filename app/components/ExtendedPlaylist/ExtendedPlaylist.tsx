@@ -186,10 +186,10 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
                         <ExtendedPlaylistEntity
                           duration={track.current.formattedDuration}
                           track={track}
-                          key={track.id}
+                          key={track.current.id}
                           index={index}
                           onClick={_handleClick}
-                          active={player.currentTrack?.id === track.id || false}
+                          active={player.currentTrack?.current.id === track.current.id || false}
                         />
                       );
                     })}

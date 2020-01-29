@@ -72,7 +72,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
   };
 
   const _handleRemoveTrack = () => {
-    queue.removeTrack(props.trackRef.id);
+    queue.removeTrack(props.trackRef.current.id);
     setAnchorEl(null);
   };
 
@@ -83,7 +83,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.trackRef.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.current.id}`
     );
   };
 

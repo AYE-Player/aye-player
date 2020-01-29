@@ -55,13 +55,13 @@ ipcRenderer.on("app-close", (event, message) => {
 
   if (rootStore.player.currentPlaylist) {
     Settings.set("playerSettings.currentPlaylist", {
-      id: rootStore.player.currentPlaylist.id,
+      id: rootStore.player.currentPlaylist.current.id,
       trackCount: rootStore.player.currentPlaylist.current.trackCount,
       duration: rootStore.player.currentPlaylist.current.duration
     });
   }
   if (
-    rootStore.player.currentTrack?.id !==
+    rootStore.player.currentTrack?.current.id !==
     Settings.get("playerSettings.currentTrack").id
   ) {
     Settings.set(

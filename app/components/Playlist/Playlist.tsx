@@ -134,10 +134,10 @@ const Playlist: React.FunctionComponent<IProps> = props => {
                       <PlaylistEntity
                         duration={track.current.formattedDuration}
                         track={track}
-                        key={track.id}
+                        key={track.current.id}
                         index={index}
                         onClick={_handleClick}
-                        active={player.currentTrack?.id === track.id}
+                        active={player.currentTrack?.current.id === track.current.id}
                       />
                     );
                   })}

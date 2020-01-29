@@ -98,8 +98,8 @@ const Queue: React.FunctionComponent<IProps> = props => {
                       <QueueEntity
                         duration={track.current.formattedDuration}
                         track={track}
-                        key={`${track.id}-${index}`}
-                        dragId={`${track.id}-${index}`}
+                        key={`${track.current.id}-${index}`}
+                        dragId={`${track.current.id}-${index}`}
                         index={index}
                         onClick={_handleClick}
                       />

@@ -34,7 +34,7 @@ export default class Queue extends Model({
 
   @modelAction
   removeTrack(id: string) {
-    const foundList = this.tracks.find(track => track.id === id);
+    const foundList = this.tracks.find(track => track.current.id === id);
     const idx = this.tracks.indexOf(foundList);
     this.tracks.splice(idx, 1);
   }

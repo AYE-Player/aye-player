@@ -112,7 +112,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
-      if (playlist.tracks.find(track => track.id === givenTrack.id)) {
+      if (playlist.tracks.find(track => track.current.id === givenTrack.id)) {
         enqueueSnackbar("", {
           content: key => (
             <SnackMessage
@@ -151,7 +151,7 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
     await playlists.createListWithSongs(newPlaylistName, [
-      { Url: `https://www.youtube.com/watch?v${props.track.id}` }
+      { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
     ]);
 
     enqueueSnackbar("", {

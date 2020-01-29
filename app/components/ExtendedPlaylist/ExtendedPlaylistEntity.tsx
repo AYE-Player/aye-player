@@ -120,7 +120,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
-      if (playlist.tracks.find(track => track.id === givenTrack.id)) {
+      if (playlist.tracks.find(track => track.current.id === givenTrack.id)) {
         enqueueSnackbar("", {
           content: key => (
             <SnackMessage
@@ -163,7 +163,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
     await playlists.createListWithSongs(newPlaylistName, [
-      { Url: `https://www.youtube.com/watch?v${props.track.id}` }
+      { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
     ]);
 
     enqueueSnackbar("", {
@@ -195,7 +195,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
     <>
       <Draggable
         key={props.index}
-        draggableId={props.track.id}
+        draggableId={props.track.current.id}
         index={props.index}
       >
         {(provided: any) => (
@@ -211,7 +211,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
             >
               <TrackImageContainer>
                 <TrackImage
-                  src={`https://img.youtube.com/vi/${props.track.id}/default.jpg`}
+                  src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
                 />
               </TrackImageContainer>
               <Title length={props.track.current.title.length}>

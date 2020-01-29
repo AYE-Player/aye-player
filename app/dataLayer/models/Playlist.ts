@@ -24,11 +24,11 @@ export default class Playlist extends Model({
 }) {
   getTrackById(id: string) {
     if (!this.tracks) return null;
-    return this.tracks.find(track => track.id === id);
+    return this.tracks.find(track => track.current.id === id);
   }
 
   getIndexOfTrack(track: Ref<Track>) {
-    return this.tracks.map(t => t.id).indexOf(track.id);
+    return this.tracks.map(t => t.current.id).indexOf(track.current.id);
   }
 
   getTracksStartingFrom(idx: number) {
@@ -124,7 +124,7 @@ export default class Playlist extends Model({
     try {
       yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, track.id));
 
-      const foundTrack = this.tracks.find(trk => trk.id === track.id);
+      const foundTrack = this.tracks.find(trk => trk.current.id === track.id);
       const idx = this.tracks.indexOf(foundTrack);
 
       this.trackCount = this.trackCount - 1;
@@ -148,7 +148,7 @@ export default class Playlist extends Model({
     try {
       yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, id));
 
-      const foundTrack = this.tracks.find(trk => trk.id === id);
+      const foundTrack = this.tracks.find(trk => trk.current.id === id);
       const idx = this.tracks.indexOf(foundTrack);
 
       this.trackCount = this.trackCount - 1;
