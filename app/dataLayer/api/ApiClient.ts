@@ -33,6 +33,18 @@ class ApiClient {
    * Retrieves all Playlists of the current user
    */
   async getPlaylists(): Promise<IPlaylistDto[]> {
+    /*const {
+      data: { Playlists }
+    } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{ Playlists { Name Id Duration SongCount } }`
+        })
+      })
+      .json();
+
+    return Playlist;*/
     return this.ky.get(`playlists/`).json();
   }
 
@@ -41,6 +53,18 @@ class ApiClient {
    * @param id id of the playlist
    */
   async getPlaylist(id: string): Promise<IPlaylistDto> {
+    /*const {
+      data: { Playlist }
+    } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{ Playlist(PlaylistId: "${id}") { Name Id Duration SongCount } }`
+        })
+      })
+      .json();
+
+    return Playlist;*/
     return this.ky.get(`playlists/${id}`).json();
   }
 
@@ -49,6 +73,18 @@ class ApiClient {
    * @param name Name of the new playlist
    */
   async createPlaylist(name: string): Promise<string> {
+    /*const {
+      data: { addPlaylist }
+    } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mutation: `{ addPlaylist(name: "${name}") { Id } }`
+        })
+      })
+      .json();
+
+    return Playlist;*/
     return this.ky
       .post(`playlists/`, {
         json: {
@@ -92,9 +128,22 @@ class ApiClient {
    */
   async getTracksFromPlaylist(
     id: string,
-    amount: number = 20
+    amount: number = 20,
+    skip: number = 0
   ): Promise<ITrackDto[]> {
-    return this.ky.get(`playlists/${id}/songs?skip=0&take=${amount}`).json();
+    /*const {
+      data: { PlaylistSongs }
+    } = await this.ky
+      .post("search/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{ PlaylistSongs(PlaylistId: "${id}" Skip: "${skip}" Take: "${amount}") { Title Duration Id } }`
+        })
+      })
+      .json();
+
+    return Playlist;*/
+    return this.ky.get(`playlists/${id}/songs?skip=${skip}&take=${amount}`).json();
   }
 
   /**
