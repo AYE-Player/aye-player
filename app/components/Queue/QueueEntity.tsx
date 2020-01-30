@@ -1,5 +1,6 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
+import { Ref } from "mobx-keystone";
 import { observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
@@ -12,8 +13,8 @@ import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
+import ScrollingText from "../ScrollingText";
 import QueueEntityMenu from "./QueueEntityMenu";
-import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
@@ -47,24 +48,10 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
 `;
 
-const Title = styled.div<any>`
-  padding-right: 16px;
-  width: 200px;
+const Title = styled.div`
   white-space: nowrap;
-  overflow: hidden;
-  ${(props: any) => {
-    if (props.length >= 30) {
-      return `div {
-
-        transform: translateX(0);
-        transition-timing-function: cubic-bezier(0.42,0,0.58,1);
-        transition-duration: 1s;
-      }
-      :hover div {
-        transform: translateX(calc(200px - 100%));
-      }`;
-    }
-  }}
+  position: relative;
+  z-index: 10;
 `;
 
 const Duration = styled.div`
@@ -137,7 +124,11 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("Error.couldNotAddTrack")} />
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotAddTrack")}
+          />
         )
       });
     }
@@ -186,19 +177,22 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
         draggableId={props.dragId}
         index={props.index}
       >
-        {(provided: any) => (
+        {provided => (
           <Container
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
             <DragHandle fontSize="small" />
-            <TrackInfoContainer onClick={() => props.onClick(props.index)}>
-              <Title length={props.track.current.title.length}>
-                <div style={{ display: "inline-block" }}>
-                  {props.track.current.title}
-                </div>
-              </Title>
+            <TrackInfoContainer
+              onClick={() => props.onClick(props.index)}
+              id={props.track.current.id + "-" + props.index}
+            >
+              <ScrollingText
+                scrollId={props.track.current.id + "-" + props.index}
+              >
+                <Title>{props.track.current.title}</Title>
+              </ScrollingText>
               <Duration>
                 {!props.track.current.isLivestream ? (
                   props.duration

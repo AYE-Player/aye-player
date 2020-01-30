@@ -5,13 +5,14 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
+import ScrollingText from "../ScrollingText";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
 
 interface IProps {
@@ -22,17 +23,6 @@ interface IProps {
   onClick: Function;
 }
 
-const marquee = keyframes`
-  0% { left: 0; }
-  100% { left: -100%; }
-}
-`;
-
-const animation = () => css`
-  ${marquee} 5s linear 2;
-`;
-
-// TODO: Fix the scrolling animation
 const Container = styled.div<any>`
   height: 48px;
   width: calc(100% - 8px);
@@ -69,28 +59,10 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
 `;
 
-const Title = styled.div<any>`
-  padding-right: 16px;
-  width: 200px;
+const Title = styled.div`
   white-space: nowrap;
-  overflow: hidden;
   position: relative;
   z-index: 10;
-`;
-
-const ScrollText = styled.div`
-  width: 200px;
-  z-index: 10;
-  &:hover {
-    animation-play-state: running;
-    animation-fill-mode: none;
-    animation: ${animation};
-  }
-`;
-
-const TextSpan = styled.div`
-  float: left;
-  display: block;
 `;
 
 const Duration = styled.div`
@@ -208,7 +180,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         draggableId={props.track.current.id}
         index={props.index}
       >
-        {(provided: any) => (
+        {provided => (
           <Container
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -218,12 +190,13 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             <TrackInfoContainer
               active={props.active || false}
               onClick={() => props.onClick(props.track)}
+              id={props.track.current.id + "-" + props.index}
             >
-              <Title length={props.track.current.title.length}>
-                <ScrollText>
-                  <TextSpan>{props.track.current.title}</TextSpan>
-                </ScrollText>
-              </Title>
+              <ScrollingText
+                scrollId={props.track.current.id + "-" + props.index}
+              >
+                <Title>{props.track.current.title}</Title>
+              </ScrollingText>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
             <PlaylistEntityMenu
