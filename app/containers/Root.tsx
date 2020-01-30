@@ -17,7 +17,7 @@ import createStore from "../dataLayer/stores/createStore";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
-import { AyeRemote } from "@aye/aye-remote-client";
+import AyeRemote from "@aye/aye-remote-client";
 
 interface IPlayerSettings {
   volume: number;
