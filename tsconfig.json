@@ -3,7 +3,7 @@
     "target": "es6",
     "rootDir": "./",
     "jsx": "react",
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "experimentalDecorators": true,

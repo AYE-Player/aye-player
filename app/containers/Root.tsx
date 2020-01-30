@@ -17,8 +17,7 @@ import createStore from "../dataLayer/stores/createStore";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
-import { AyeRemote } from "@aye/aye-remote";
-import os from "os";
+import { AyeRemote } from "@aye/aye-remote-client";
 
 interface IPlayerSettings {
   volume: number;
@@ -36,9 +35,19 @@ interface IPlayerSettings {
 
 const rootStore = createStore();
 
-const remote = new AyeRemote("http://localhost:8337", "12345", os.hostname());
+const remote = new AyeRemote(
+  "http://localhost:8337",
+  rootStore.user.id
+);
 
 remote.socket.on("play", () => {
+  console.log("received play");
+  rootStore.player.togglePlayingState();
+  PlayerInterop.togglePlayingState();
+});
+
+remote.socket.on("pause", () => {
+  console.log("received pause");
   rootStore.player.togglePlayingState();
   PlayerInterop.togglePlayingState();
 });
