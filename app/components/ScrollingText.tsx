@@ -3,6 +3,9 @@ import React, { useEffect } from "react";
 interface IScrollingTextProps {
   scrollId: string;
   children: any;
+  textOffset?: number;
+  speed?: number;
+  scrollCount?: number;
 }
 
 const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
@@ -15,10 +18,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
   let mouseLeft = false;
 
   useEffect(() => {
-    // pixel offset for the text clone
-    const textSpacer = 64;
-
-    prepareScrollingElements(textSpacer);
+    prepareScrollingElements();
 
     marquee.addEventListener(
       "mouseenter",
@@ -28,7 +28,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
           mouseEntered = true;
           mouseLeft = false;
           console.log("MOUSEenter ID", props.scrollId);
-          scrollingTextEffect(textSpacer);
+          scrollingTextEffect();
         }
       },
       true
@@ -42,7 +42,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
           mouseEntered = true;
           mouseLeft = false;
           console.log("MOUSEover ID", props.scrollId);
-          scrollingTextEffect(textSpacer);
+          scrollingTextEffect();
         }
       },
       true
@@ -70,7 +70,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
           if (!mouseEntered) {
             mouseEntered = true;
             console.log("MOUSEenter ID", props.scrollId);
-            scrollingTextEffect(textSpacer);
+            scrollingTextEffect();
           }
         },
         true
@@ -82,7 +82,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
           if (!mouseEntered) {
             mouseEntered = true;
             console.log("MOUSEover ID", props.scrollId);
-            scrollingTextEffect(textSpacer);
+            scrollingTextEffect();
           }
         },
         true
@@ -99,7 +99,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
     };
   });
 
-  const prepareScrollingElements = (textSpacer: number) => {
+  const prepareScrollingElements = () => {
     marquee = document.querySelectorAll(`#${props.scrollId}`)[0];
 
     container = marquee.querySelector(".inner") as HTMLElement;
@@ -109,27 +109,28 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
     clone = content.cloneNode(true);
     container.appendChild(clone);
 
-    content.style.marginRight = `${textSpacer}px`;
+    content.style.marginRight = `${props.textOffset}px`;
   };
 
-  const scrollingTextEffect = (textSpacer: number) => {
-    const speed = 0.5;
+  const scrollingTextEffect = () => {
     const elWidth = content.offsetWidth;
     let progress = 1;
     let animationCount = 0;
 
     const loop = () => {
-      if (animationCount === 3) {
-        resetAnimation();
-      }
-      progress = progress - speed;
-      if (progress <= (elWidth + textSpacer) * -1) {
+      progress = progress - props.speed;
+      if (progress <= (elWidth + props.textOffset) * -1) {
         progress = 0;
         animationCount++;
+        if (animationCount === props.scrollCount) {
+          resetAnimation();
+          animationCount = 0;
+          return;
+        }
       }
 
       container.style.transform = "translateX(" + progress + "px)";
-      container.style.transform += "skewX(" + speed * 0.4 + "deg)";
+      container.style.transform += "skewX(" + props.speed * 0.4 + "deg)";
 
       animationFrame = window.requestAnimationFrame(loop);
     };
@@ -138,7 +139,6 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
 
   const resetAnimation = () => {
     window.cancelAnimationFrame(animationFrame);
-    container.removeChild(clone);
 
     const reset = () => {
       container.style.transform = "translateX(0px) skewX(0deg)";
@@ -166,5 +166,11 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
     </div>
   );
 };
+
+ScrollingText.defaultProps = {
+  scrollCount: 3,
+  speed: 0.5,
+  textOffset: 64
+} as Partial<IScrollingTextProps>;
 
 export default ScrollingText;
