@@ -18,10 +18,11 @@ steps:
     inputs:
       versionSpec: '12.x'
     displayName: 'Install Node.js'
-
-  - script: |
-      yarn install
-    displayName: 'Yarn install'
+  
+  - task: Yarn@3
+    inputs:
+      customRegistry: 'useFeed'
+      customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
 
   - script: |
       yarn package
