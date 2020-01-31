@@ -6,6 +6,7 @@ interface IScrollingTextProps {
   textOffset?: number;
   speed?: number;
   scrollCount?: number;
+  onClick?: any;
 }
 
 const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
@@ -118,6 +119,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
       style={{
         overflow: "hidden"
       }}
+      onClick={props.onClick}
     >
       <div
         className="inner"

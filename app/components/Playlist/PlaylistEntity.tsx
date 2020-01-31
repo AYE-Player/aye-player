@@ -190,10 +190,11 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             <TrackInfoContainer
               active={props.active || false}
               onClick={() => props.onClick(props.track)}
-              id={props.track.current.id + "-" + props.index}
+              id={"track_" + props.track.current.id + "-" + props.index}
             >
               <ScrollingText
-                scrollId={props.track.current.id + "-" + props.index}
+                scrollId={"track_" + props.track.current.id + "-" + props.index}
+                onClick={() => props.onClick(props.index)}
               >
                 <Title>{props.track.current.title}</Title>
               </ScrollingText>

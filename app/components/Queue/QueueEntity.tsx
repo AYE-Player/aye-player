@@ -186,10 +186,11 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
             <DragHandle fontSize="small" />
             <TrackInfoContainer
               onClick={() => props.onClick(props.index)}
-              id={props.track.current.id + "-" + props.index}
+              id={"queue_" + props.track.current.id + "-" + props.index}
             >
               <ScrollingText
-                scrollId={props.track.current.id + "-" + props.index}
+                scrollId={"queue_" + props.track.current.id + "-" + props.index}
+                onClick={() => props.onClick(props.index)}
               >
                 <Title>{props.track.current.title}</Title>
               </ScrollingText>
