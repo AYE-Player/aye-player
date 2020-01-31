@@ -42,9 +42,9 @@ steps:
       SourceFolder: './release'
       Contents: |
         mac
-        aye-player-0.2.0-mac.zip
-        ._aye-player-0.2.0.dmg
-        aye-player-0.2.0.dmg.blockmap
+        *.zip
+        ._aye-player-*.dmg
+        *.blockmap
     displayName: 'Deleting unneeded mac files'
 
   - task: DeleteFiles@1
@@ -53,7 +53,7 @@ steps:
       SourceFolder: './release'
       Contents: |
         win-unpacked
-        aye-player Setup 0.2.0.exe.blockmap
+        *.exe.blockmap
     displayName: 'Deleting unneeded windows files'
 
   - task: ArchiveFiles@2
