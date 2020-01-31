@@ -38,6 +38,9 @@ const Container = styled.div<any>`
   &:hover > svg {
     opacity: 1;
   }
+  &:hover > div {
+    color: #f0ad4e;
+  }
 `;
 const TrackInfoContainer = styled.div<any>`
   display: inline-block;
@@ -190,7 +193,6 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
             >
               <ScrollingText
                 scrollId={"queue_" + props.track.current.id + "-" + props.index}
-                onClick={() => props.onClick(props.index)}
               >
                 <Title>{props.track.current.title}</Title>
               </ScrollingText>
