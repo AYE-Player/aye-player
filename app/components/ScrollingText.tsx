@@ -6,25 +6,32 @@ interface IScrollingTextProps {
   textOffset?: number;
   speed?: number;
   scrollCount?: number;
-  onClick?: any;
 }
 
 const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
   let animationFrame: number;
   let container: HTMLElement;
   let content: HTMLElement;
-  let marquee: Element;
+  let marquee: HTMLElement;
   let clone: Node;
 
   useEffect(() => {
+    marquee = document.getElementById(`${props.scrollId}`);
+
+    container = marquee.querySelector(".inner") as HTMLElement;
+    content = marquee.querySelector(".inner > *") as HTMLElement;
+
+    // only add scrolleffects, when the textelement is to long
+    if (content.offsetWidth < marquee.offsetWidth) {
+      return;
+    }
+
     prepareScrollingElements();
 
     marquee.addEventListener(
       "mouseenter",
       event => {
-        event.preventDefault();
         if (animationFrame) return;
-        console.log("MOUSEenter ID", props.scrollId);
         scrollingTextEffect();
       },
       true
@@ -33,9 +40,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
     marquee.addEventListener(
       "mouseover",
       event => {
-        event.preventDefault();
         if (animationFrame) return;
-        console.log("MOUSEover ID", props.scrollId);
         scrollingTextEffect();
       },
       true
@@ -45,9 +50,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
       marquee.removeEventListener(
         "mouseenter",
         event => {
-          event.preventDefault();
           if (animationFrame) return;
-          console.log("MOUSEenter ID", props.scrollId);
           scrollingTextEffect();
         },
         true
@@ -55,10 +58,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
       marquee.removeEventListener(
         "mouseover",
         event => {
-          event.preventDefault();
-
           if (animationFrame) return;
-          console.log("MOUSEover ID", props.scrollId);
           scrollingTextEffect();
         },
         true
@@ -67,16 +67,17 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
   });
 
   const prepareScrollingElements = () => {
-    marquee = document.querySelectorAll(`#${props.scrollId}`)[0];
-
-    container = marquee.querySelector(".inner") as HTMLElement;
-    content = marquee.querySelector(".inner > *") as HTMLElement;
+    // check if content got duplicated already and return if
+    // there are already 2 nodes
+    if (content.childNodes.length > 1) return;
 
     //Duplicate content
     clone = content.cloneNode(true);
     container.appendChild(clone);
+    const cloneHtml = container.childNodes[1] as HTMLElement;
 
     content.style.marginRight = `${props.textOffset}px`;
+    cloneHtml.style.marginRight = `${props.textOffset}px`;
   };
 
   const scrollingTextEffect = () => {
@@ -119,7 +120,6 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
       style={{
         overflow: "hidden"
       }}
-      onClick={props.onClick}
     >
       <div
         className="inner"
