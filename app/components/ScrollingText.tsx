@@ -14,7 +14,6 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
   let content: HTMLElement;
   let marquee: Element;
   let clone: Node;
-  let animationRunning = false;
 
   useEffect(() => {
     prepareScrollingElements();
@@ -23,12 +22,9 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
       "mouseenter",
       event => {
         event.preventDefault();
-        if (!animationRunning) {
-          animationRunning = true;
-          if (animationFrame) return;
-          console.log("MOUSEenter ID", props.scrollId);
-          scrollingTextEffect();
-        }
+        if (animationFrame) return;
+        console.log("MOUSEenter ID", props.scrollId);
+        scrollingTextEffect();
       },
       true
     );
@@ -37,12 +33,9 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
       "mouseover",
       event => {
         event.preventDefault();
-        if (!animationRunning) {
-          animationRunning = true;
-          if (animationFrame) return;
-          console.log("MOUSEover ID", props.scrollId);
-          scrollingTextEffect();
-        }
+        if (animationFrame) return;
+        console.log("MOUSEover ID", props.scrollId);
+        scrollingTextEffect();
       },
       true
     );
@@ -52,12 +45,9 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
         "mouseenter",
         event => {
           event.preventDefault();
-          if (!animationRunning) {
-            animationRunning = true;
-            if (animationFrame) return;
-            console.log("MOUSEenter ID", props.scrollId);
-            scrollingTextEffect();
-          }
+          if (animationFrame) return;
+          console.log("MOUSEenter ID", props.scrollId);
+          scrollingTextEffect();
         },
         true
       );
@@ -65,12 +55,10 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
         "mouseover",
         event => {
           event.preventDefault();
-          if (!animationRunning) {
-            animationRunning = true;
-            if (animationFrame) return;
-            console.log("MOUSEover ID", props.scrollId);
-            scrollingTextEffect();
-          }
+
+          if (animationFrame) return;
+          console.log("MOUSEover ID", props.scrollId);
+          scrollingTextEffect();
         },
         true
       );
@@ -102,7 +90,6 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = props => {
         animationCount++;
         if (animationCount === props.scrollCount) {
           resetAnimation();
-          animationRunning = false;
           animationCount = 0;
           return;
         }
