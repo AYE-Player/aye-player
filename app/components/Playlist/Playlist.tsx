@@ -1,5 +1,5 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
 import {
@@ -14,8 +14,6 @@ import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
-import AyeLogger from "../../modules/AyeLogger";
-import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
 import { Ref } from "mobx-keystone";
@@ -56,19 +54,19 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   const { enqueueSnackbar } = useSnackbar();
   PlayerInterop.init();
 
-  const [value, setValue] = React.useState(true); //boolean state
-
-  const Store = ({ app, queue, player }: RootStore) => ({
+  const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
     app,
     queue,
-    player
+    player,
+    trackHistory
   });
 
-  const { app, queue, player } = useInject(Store);
+  const { app, queue, player, trackHistory } = useInject(Store);
 
   const _handleClick = (track: Ref<Track>) => {
     const idx = player.currentPlaylist.current.getIndexOfTrack(track);
 
+    trackHistory.addTrack(player.currentTrack.current);
     queue.clear();
     queue.addTracks(
       player.currentPlaylist.current
@@ -77,14 +75,11 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     );
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
-    setValue(!value);
   };
 
   const _showQueue = () => {
     app.toggleQueueDisplay();
   };
-
-  player.currentTrack;
 
   const _onDragEnd = async (
     result: DropResult,
@@ -100,16 +95,15 @@ const Playlist: React.FunctionComponent<IProps> = props => {
         player.currentTrack
       );
 
-      queue.clear();
-      queue.addTracks(
-        player.currentPlaylist.current.getTracksStartingFrom(idx).map(track => track.current)
-      );
-      setValue(!value);
+      if (result.destination.index > idx) {
+        queue.clear();
+        queue.addTracks(
+          player.currentPlaylist.current
+            .getTracksStartingFrom(idx)
+            .map(track => track.current)
+        );
+      }
     } catch (error) {
-      AyeLogger.player(
-        `Error in Playlist Component ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
@@ -129,23 +123,28 @@ const Playlist: React.FunctionComponent<IProps> = props => {
         </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
-            <ScrollContainer
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {player.currentPlaylist.current.tracks.map((track, index) => {
-                return (
-                  <PlaylistEntity
-                    duration={track.current.formattedDuration}
-                    track={track}
-                    key={track.id}
-                    index={index}
-                    onClick={_handleClick}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </ScrollContainer>
+            <Observer>
+              {() => (
+                <ScrollContainer
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {player.currentPlaylist.current.tracks.map((track, index) => {
+                    return (
+                      <PlaylistEntity
+                        duration={track.current.formattedDuration}
+                        track={track}
+                        key={track.current.id}
+                        index={index}
+                        onClick={_handleClick}
+                        active={player.currentTrack?.current.id === track.current.id}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </ScrollContainer>
+              )}
+            </Observer>
           )}
         </Droppable>
       </Container>

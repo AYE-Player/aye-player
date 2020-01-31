@@ -9,7 +9,8 @@ export default class AppStore extends Model({
   devMode: prop(false),
   minimizeToTray: prop<boolean>(),
   language: prop<string>(),
-  selectedPlaylist: prop<string>()
+  selectedPlaylist: prop<string>(),
+  autoRadio: prop(false)
 }) {
   @modelAction
   toggleQueueDisplay() {
@@ -61,5 +62,15 @@ export default class AppStore extends Model({
   @modelAction
   setActivePlaylist(id: string) {
     this.selectedPlaylist = id;
+  }
+
+  @modelAction
+  toggleAutoRadio() {
+    this.autoRadio = !this.autoRadio;
+    if (this.autoRadio) {
+      Settings.set("autoRadio", true);
+    } else {
+      Settings.set("autoRadio", false);
+    }
   }
 }

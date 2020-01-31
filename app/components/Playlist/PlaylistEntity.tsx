@@ -1,36 +1,27 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import { withStyles } from "@material-ui/styles";
-import { observer } from "mobx-react-lite";
+import { Ref } from "mobx-keystone";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
-import styled, { keyframes, css } from "styled-components";
+import styled from "styled-components";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
+import ScrollingText from "../ScrollingText";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
-import { Ref } from "mobx-keystone";
 
 interface IProps {
   duration: string;
   track: Ref<Track>;
   index: number;
+  active: boolean;
   onClick: Function;
 }
-
-const marquee = keyframes`
-  0% { left: 0; }
-  100% { left: -100%; }
-}
-`;
-
-const animation = () => css`
-  ${marquee} 5s linear 2;
-`;
 
 const Container = styled.div<any>`
   height: 48px;
@@ -68,28 +59,10 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
 `;
 
-const Title = styled.div<any>`
-  padding-right: 16px;
-  width: 200px;
+const Title = styled.div`
   white-space: nowrap;
-  overflow: hidden;
   position: relative;
   z-index: 10;
-`;
-
-const ScrollText = styled.div`
-  width: 200px;
-  z-index: 10;
-  &:hover {
-    animation-play-state: running;
-    animation-fill-mode: none;
-    animation: ${animation};
-  }
-`;
-
-const TextSpan = styled.div`
-  float: left;
-  display: block;
 `;
 
 const Duration = styled.div`
@@ -108,12 +81,11 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ player, playlists }: RootStore) => ({
-    player,
+  const Store = ({ playlists }: RootStore) => ({
     playlists
   });
 
-  const { player, playlists } = useInject(Store);
+  const { playlists } = useInject(Store);
 
   const [open, setOpen] = React.useState(false);
   const [
@@ -130,7 +102,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
-      if (playlist.tracks.find(track => track.id === givenTrack.id)) {
+      if (playlist.tracks.find(track => track.current.id === givenTrack.id)) {
         enqueueSnackbar("", {
           content: key => (
             <SnackMessage
@@ -152,8 +124,16 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
           )
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotAddTrack")}
+          />
+        )
+      });
     }
   };
 
@@ -165,7 +145,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
     await playlists.createListWithSongs(newPlaylistName, [
-      { Url: `https://www.youtube.com/watch?v${props.track.id}` }
+      { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
     ]);
 
     enqueueSnackbar("", {
@@ -197,10 +177,10 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     <>
       <Draggable
         key={props.index}
-        draggableId={props.track.id}
+        draggableId={props.track.current.id}
         index={props.index}
       >
-        {(provided: any) => (
+        {provided => (
           <Container
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -208,18 +188,15 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
           >
             <DragHandle fontSize="small" />
             <TrackInfoContainer
-              active={
-                player.currentTrack
-                  ? player.currentTrack.id === props.track.id
-                  : false
-              }
+              active={props.active || false}
               onClick={() => props.onClick(props.track)}
+              id={props.track.current.id + "-" + props.index}
             >
-              <Title length={props.track.current.title.length}>
-                <ScrollText>
-                  <TextSpan>{props.track.current.title}</TextSpan>
-                </ScrollText>
-              </Title>
+              <ScrollingText
+                scrollId={props.track.current.id + "-" + props.index}
+              >
+                <Title>{props.track.current.title}</Title>
+              </ScrollingText>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
             <PlaylistEntityMenu
@@ -261,4 +238,4 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(PlaylistEntity);
+export default PlaylistEntity;

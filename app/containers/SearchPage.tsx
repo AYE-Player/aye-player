@@ -32,18 +32,19 @@ const ScrollContainer = styled.div`
 `;
 
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({ player, queue, searchResult, trackCache }: RootStore) => ({
+  const Store = ({ player, queue, searchResult, trackHistory }: RootStore) => ({
     player,
     queue,
     searchResult,
-    trackCache
+    trackHistory
   });
 
-  const { player, queue, searchResult } = useInject(Store);
+  const { player, queue, searchResult, trackHistory } = useInject(Store);
 
   const { t } = useTranslation();
 
   const _handleDoubleClick = (track: Ref<Track>) => {
+    trackHistory.addTrack(player.currentTrack.current);
     queue.addPrivilegedTrack(track.current);
     player.playTrack(track.current);
     PlayerInterop.playTrack(track.current);
@@ -66,7 +67,7 @@ const SearchPage: React.FunctionComponent = () => {
                         : track.current.formattedDuration
                     }
                     track={track}
-                    key={track.id}
+                    key={track.current.id}
                     index={index}
                     onDoubleClick={_handleDoubleClick}
                   />

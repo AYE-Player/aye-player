@@ -1,5 +1,5 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
-import { observer } from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import React from "react";
 import {
   DragDropContext,
@@ -50,15 +50,17 @@ const Queue: React.FunctionComponent<IProps> = props => {
 
   const [value, setValue] = React.useState(true); //boolean state
 
-  const Store = ({ app, queue, player }: RootStore) => ({
+  const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
     app,
     queue,
-    player
+    player,
+    trackHistory
   });
 
-  const { app, queue, player } = useInject(Store);
+  const { app, queue, player, trackHistory } = useInject(Store);
 
   const _handleClick = (index: number) => {
+    trackHistory.addTrack(player.currentTrack.current);
     queue.jumpTo(index);
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
@@ -67,15 +69,12 @@ const Queue: React.FunctionComponent<IProps> = props => {
   };
 
   const _onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    const track = queue.removeAndGetTrack(result.source.index);
-    queue.addTrackAt(track.current, result.destination.index);
+    queue.moveTrack(result.source.index, result.destination.index);
   };
 
   const _showQueue = () => {
     app.toggleQueueDisplay();
   };
-
-  player.currentTrack;
 
   const renderQueue = () => (
     <DragDropContext onDragEnd={_onDragEnd}>
@@ -88,24 +87,28 @@ const Queue: React.FunctionComponent<IProps> = props => {
         </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
-            <ScrollContainer
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {queue.tracks.map((track, index) => {
-                return (
-                  <QueueEntity
-                    duration={track.current.formattedDuration}
-                    track={track}
-                    key={`${track.id}-${index}`}
-                    dragId={`${track.id}-${index}`}
-                    index={index}
-                    onClick={_handleClick}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </ScrollContainer>
+            <Observer>
+              {() => (
+                <ScrollContainer
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {queue.tracks.map((track, index) => {
+                    return (
+                      <QueueEntity
+                        duration={track.current.formattedDuration}
+                        track={track}
+                        key={`${track.current.id}-${index}`}
+                        dragId={`${track.current.id}-${index}`}
+                        index={index}
+                        onClick={_handleClick}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </ScrollContainer>
+              )}
+            </Observer>
           )}
         </Droppable>
       </Container>
@@ -127,4 +130,4 @@ const Queue: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(Queue);
+export default Queue;

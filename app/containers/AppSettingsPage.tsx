@@ -60,6 +60,10 @@ const AccountPage: React.FunctionComponent = () => {
     app.setLanguage(event.target.value);
   };
 
+  const _switchAutoRadio = () => {
+    app.toggleAutoRadio();
+  };
+
   return (
     <Container>
       <Header>{t("AppSettingsPage.header")}</Header>
@@ -76,6 +80,11 @@ const AccountPage: React.FunctionComponent = () => {
           checked={app.minimizeToTray}
         />
         <Divider size={2} />
+        <CustomSwitch
+          label={t("AppSettingsPage.autoRadio")}
+          onChange={_switchAutoRadio}
+          checked={app.autoRadio}
+        />
         <CustomDropDown
           name={t("AppSettingsPage.language")}
           id="language-select"

@@ -1,6 +1,6 @@
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { Ref } from "mobx-keystone";
-import { observer } from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import {
@@ -17,8 +17,6 @@ import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import { removeControlCharacters } from "../../helpers";
 import useInject from "../../hooks/useInject";
-import AyeLogger from "../../modules/AyeLogger";
-import { LogType } from "../../types/enums";
 import CustomButton from "../Customs/CustomButton";
 import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
@@ -30,6 +28,7 @@ interface IProps {
 
 const Container = styled.div`
   height: 100%;
+  width: 100%;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -37,7 +36,8 @@ const Container = styled.div`
 `;
 
 const ScrollContainer = styled.div`
-  overflow: auto;
+  overflow-y: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   height: calc(100% - 64px);
@@ -55,21 +55,30 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
 
-  const [value, setValue] = React.useState(true); //boolean state
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   PlayerInterop.init();
 
-  const Store = ({ queue, player, playlists, trackCache, app }: RootStore) => ({
+  const Store = ({
     queue,
     player,
     playlists,
     trackCache,
-    app
+    app,
+    trackHistory
+  }: RootStore) => ({
+    queue,
+    player,
+    playlists,
+    trackCache,
+    app,
+    trackHistory
   });
 
-  const { queue, player, playlists, trackCache, app } = useInject(Store);
+  const { queue, player, playlists, trackCache, app, trackHistory } = useInject(
+    Store
+  );
 
   const { id } = props.match.params;
   const playlist = playlists.getListById(id);
@@ -111,6 +120,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const _handleClick = (track: Ref<Track>) => {
     const idx = playlist.getIndexOfTrack(track);
 
+    trackHistory.addTrack(player.currentTrack.current);
     queue.clear();
     queue.addTracks(
       playlist.getTracksStartingFrom(idx).map(track => track.current)
@@ -118,7 +128,6 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
-    setValue(!value);
   };
 
   const _onDragEnd = async (
@@ -127,15 +136,14 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   ) => {
     try {
       await playlist.moveTrackTo(result.source.index, result.destination.index);
-      setValue(!value);
     } catch (error) {
-      AyeLogger.player(
-        `Error in Playlist Component ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("General.error")} />
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotAddTrack")}
+          />
         )
       });
     }
@@ -160,9 +168,6 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     setAddTracksOpen(false);
   };
 
-  player.currentTrack;
-  playlist.tracks;
-
   return (
     <>
       <DragDropContext onDragEnd={_onDragEnd}>
@@ -170,23 +175,28 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         <Container>
           <Droppable droppableId="droppable">
             {(provided: any) => (
-              <ScrollContainer
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {playlist.tracks.map((track, index) => {
-                  return (
-                    <ExtendedPlaylistEntity
-                      duration={track.current.formattedDuration}
-                      track={track}
-                      key={track.id}
-                      index={index}
-                      onClick={_handleClick}
-                    />
-                  );
-                })}
-                {provided.placeholder}
-              </ScrollContainer>
+              <Observer>
+                {() => (
+                  <ScrollContainer
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {playlist.tracks.map((track, index) => {
+                      return (
+                        <ExtendedPlaylistEntity
+                          duration={track.current.formattedDuration}
+                          track={track}
+                          key={track.current.id}
+                          index={index}
+                          onClick={_handleClick}
+                          active={player.currentTrack?.current.id === track.current.id || false}
+                        />
+                      );
+                    })}
+                    {provided.placeholder}
+                  </ScrollContainer>
+                )}
+              </Observer>
             )}
           </Droppable>
         </Container>
@@ -224,4 +234,4 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   );
 };
 
-export default observer(ExtendedPlaylist);
+export default ExtendedPlaylist;

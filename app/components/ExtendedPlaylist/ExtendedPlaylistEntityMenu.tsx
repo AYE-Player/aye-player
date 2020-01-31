@@ -74,8 +74,8 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
     setAnchorEl(null);
   };
 
-  const _handleRemoveTrack = () => {
-    playlist.removeTrackById(props.trackRef.id);
+  const _handleRemoveTrack = async () => {
+    await playlist.removeTrackById(props.trackRef.current.id);
     setAnchorEl(null);
   };
 
@@ -86,8 +86,13 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.trackRef.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.current.id}`
     );
+  };
+
+  const _addToQueue = () => {
+    queue.addTrack(props.trackRef.current);
+    setAnchorEl(null);
   };
 
   const _startRadioMode = async () => {
@@ -141,6 +146,9 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
         >
           <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
+          </MenuItem>
+          <MenuItem onClick={() => _addToQueue()}>
+            {t("EntityMenu.addToQueue")}
           </MenuItem>
           <MenuItem onClick={() => _handleRemoveTrack()}>
             {t("EntityMenu.remove")}

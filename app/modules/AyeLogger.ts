@@ -9,6 +9,7 @@ const logWin2Player = debug("aye:win2Player");
 const logPlayer2Win = debug("aye:player2Win");
 const logRPC = debug("aye:rpc");
 const logPlayer = debug("aye:player");
+const logMain = debug("aye:main");
 
 logFile.transports.console.level = "debug";
 logFile.transports.file.fileName = "aye.log";
@@ -62,6 +63,11 @@ class AyeLogger {
   static player(message: string, type?: string) {
     logPlayer(message);
     this.log(message, "player", type);
+  }
+
+  static main(message: string, type?: string) {
+    logMain(message);
+    this.log(message, "main", type);
   }
 
   static log(message: string, service: string, type: string = "info") {

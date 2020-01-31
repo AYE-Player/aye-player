@@ -27,14 +27,23 @@ const SearchBar: React.FunctionComponent = () => {
   const { t } = useTranslation();
   PlayerInterop.init();
 
-  const Store = ({ player, queue, searchResult, trackCache }: RootStore) => ({
+  const Store = ({
     player,
     queue,
     searchResult,
-    trackCache
+    trackCache,
+    trackHistory
+  }: RootStore) => ({
+    player,
+    queue,
+    searchResult,
+    trackCache,
+    trackHistory
   });
 
-  const { player, queue, searchResult, trackCache } = useInject(Store);
+  const { player, queue, searchResult, trackCache, trackHistory } = useInject(
+    Store
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,6 +80,7 @@ const SearchBar: React.FunctionComponent = () => {
           trackCache.add(track);
         }
         searchResult.clear();
+        trackHistory.addTrack(player.currentTrack.current);
         queue.addPrivilegedTrack(track);
         player.playTrack(track);
         PlayerInterop.playTrack(track);
@@ -92,6 +102,7 @@ const SearchBar: React.FunctionComponent = () => {
         searchResult.clear();
         searchResult.addTracks(foundTracks);
       }
+      setTerm("");
     } catch (error) {
       AyeLogger.player(
         `Error in SearchBar Component ${JSON.stringify(error, null, 2)}`,
@@ -116,10 +127,11 @@ const SearchBar: React.FunctionComponent = () => {
       />
       <SearchIcon
         style={{
-          padding: "0px 16px",
+          padding: "0px 8px",
           backgroundColor: "#3d4653",
           height: "100%",
-          borderRadius: "4px"
+          borderRadius: "4px",
+          width: "38px"
         }}
         onClick={_handleSearchIconClick}
       />

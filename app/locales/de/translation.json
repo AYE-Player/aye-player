@@ -34,6 +34,9 @@
   "General": {
     "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
   },
+  "Error": {
+    "couldNotAddTrack": "Track konnte nicht hinzugefügt werden, versuche es später nocheinmal"
+  },
   "SearchPage": {
     "title": "Suchen",
     "placeholder": "$t(SearchPage.title)"
@@ -103,7 +106,8 @@
     "tray": "Minimieren",
     "language": "Sprache",
     "infoText": "* App wird neugestartet",
-    "devMode": "Entwicklermodus"
+    "devMode": "Entwicklermodus",
+    "autoRadio": "Autoradio"
   },
   "LoginPage": {
     "header": "Einloggen",

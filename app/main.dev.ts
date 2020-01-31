@@ -125,8 +125,10 @@ export default class Main {
     // Custom URI for Mac OS
     app.on("open-url", (event, customSchemeData) => {
       event.preventDefault();
-      AyeLogger.info(`EVENT ${event}`);
-      AyeLogger.info(`CustomSchemeData ${customSchemeData}`);
+
+      this.mainWindow.webContents.send("play-song", {
+        id: customSchemeData.split("://")[1]
+      });
     });
 
     // IPC Communication
@@ -273,8 +275,10 @@ export default class Main {
       if (process.platform === "linux") {
         try {
           new AyeMpris(this.mainWindow).init();
-        } catch (err) {
-          console.error(err);
+        } catch (error) {
+          AyeLogger.main(
+            `Error registering Mpris ${JSON.stringify(error, null, 2)}`
+          );
         }
       }
 
@@ -348,8 +352,14 @@ export default class Main {
       i18n.changeLanguage(lng);
     });
 
-    this.mainWindow.webContents.on("new-window", (event, url) => {
+    this.mainWindow.webContents.on("new-window", (event, url: string) => {
       event.preventDefault();
+
+      if (url.includes("/watch?v=")) {
+        this.mainWindow.webContents.send("play-song", {
+          id: url.split("/watch?v=")[1]
+        });
+      }
     });
 
     this.menu = new AyeMenu(this.mainWindow, i18n);

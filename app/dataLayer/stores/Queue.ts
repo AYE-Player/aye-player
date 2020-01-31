@@ -4,7 +4,7 @@ import trackRef from "../references/TrackRef";
 
 @model("Queue")
 export default class Queue extends Model({
-  tracks: prop<Ref<Track>[] | undefined>()
+  tracks: prop<Maybe<Ref<Track>[]>>()
 }) {
   get currentTrack() {
     if (!this.tracks || this.tracks.length === 0) return null;
@@ -34,7 +34,7 @@ export default class Queue extends Model({
 
   @modelAction
   removeTrack(id: string) {
-    const foundList = this.tracks.find(track => track.id === id);
+    const foundList = this.tracks.find(track => track.current.id === id);
     const idx = this.tracks.indexOf(foundList);
     this.tracks.splice(idx, 1);
   }
@@ -71,9 +71,9 @@ export default class Queue extends Model({
 
   @modelAction
   moveTrack(oldIndex: number, newIndex: number) {
-    const track = this.tracks[oldIndex];
+    const track = this.tracks[oldIndex].current;
     this.tracks.splice(oldIndex, 1);
-    this.tracks.splice(newIndex, 0, track);
+    this.tracks.splice(newIndex, 0, trackRef(track));
   }
 
   @modelAction

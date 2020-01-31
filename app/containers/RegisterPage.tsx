@@ -1,12 +1,13 @@
 import { Grid } from "@material-ui/core";
 import { useSnackbar } from "notistack";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
+import routes from "../constants/routes.json";
 import RootStore from "../dataLayer/stores/RootStore";
 import { debounce, validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
@@ -32,6 +33,20 @@ const RegisterPage: React.FunctionComponent<any> = () => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
+  useEffect(() => {
+    document.addEventListener("keypress", _handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keypress", _handleKeyPress);
+    };
+  });
+
+  const _handleKeyPress = async (event: any) => {
+    if (event.key === "Enter" && name && email && password && password2) {
+      _handleOnClick();
+    }
+  };
+
   const _handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -54,7 +69,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
     debounce(setInvalidEmail(!validateEmail(event.target.value)), 500);
   };
 
-  const _handleOnClick = async (event: React.MouseEvent) => {
+  const _handleOnClick = async (event?: React.MouseEvent) => {
     try {
       await user.register(name, email, password);
       enqueueSnackbar("", {
@@ -66,14 +81,13 @@ const RegisterPage: React.FunctionComponent<any> = () => {
           />
         )
       });
+      window.location.href = `${window.location.href.split("#/")[0]}#${
+        routes.LOGIN
+      }`;
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage
-            id={key}
-            variant="error"
-            message={t("General.error")}
-          />
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
         )
       });
     }

@@ -5,8 +5,7 @@ import {
   prop,
   Ref,
   _async,
-  _await,
-  clone
+  _await
 } from "mobx-keystone";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
@@ -25,11 +24,11 @@ export default class Playlist extends Model({
 }) {
   getTrackById(id: string) {
     if (!this.tracks) return null;
-    return this.tracks.find(track => track.id === id);
+    return this.tracks.find(track => track.current.id === id);
   }
 
   getIndexOfTrack(track: Ref<Track>) {
-    return this.tracks.map(t => t.id).indexOf(track.id);
+    return this.tracks.map(t => t.current.id).indexOf(track.current.id);
   }
 
   getTracksStartingFrom(idx: number) {
@@ -125,7 +124,7 @@ export default class Playlist extends Model({
     try {
       yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, track.id));
 
-      const foundTrack = this.tracks.find(trk => trk.id === track.id);
+      const foundTrack = this.tracks.find(trk => trk.current.id === track.id);
       const idx = this.tracks.indexOf(foundTrack);
 
       this.trackCount = this.trackCount - 1;
@@ -149,7 +148,7 @@ export default class Playlist extends Model({
     try {
       yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, id));
 
-      const foundTrack = this.tracks.find(trk => trk.id === id);
+      const foundTrack = this.tracks.find(trk => trk.current.id === id);
       const idx = this.tracks.indexOf(foundTrack);
 
       this.trackCount = this.trackCount - 1;
@@ -175,12 +174,12 @@ export default class Playlist extends Model({
     newIndex: number
   ) {
     try {
-      const track = clone(this.tracks[oldIndex]);
-
-      yield ApiClient.moveTrackTo(this.id, track.id, newIndex);
+      const track = this.tracks[oldIndex].current;
 
       this.tracks.splice(oldIndex, 1);
-      this.tracks.splice(newIndex, 0, track);
+      this.tracks.splice(newIndex, 0, trackRef(track));
+
+      yield* _await(ApiClient.moveTrackTo(this.id, track.id, newIndex));
     } catch (error) {
       AyeLogger.player(
         `Error changing Track order ${JSON.stringify(error, null, 2)}`,

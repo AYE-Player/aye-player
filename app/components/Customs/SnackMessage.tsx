@@ -10,14 +10,14 @@ interface ISnackMessageProps {
 const Container = styled.div<any>`
   ${props => {
     if (props.length >= 25) {
-      return "width: 500px";
+      return "width: 500px;";
     } else if (props.length >= 15) {
-      return "width: 350px";
+      return "width: 350px;";
     } else {
-      return "width: 256px";
+      return "width: 256px;";
     }
   }}
-  height: 40px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;

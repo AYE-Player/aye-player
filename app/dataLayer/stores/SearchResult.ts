@@ -26,9 +26,7 @@ export default class SearchResult extends Model({
   @modelFlow
   getTracks = _async(function*(term: string) {
     try {
-      const data = yield* _await(
-        ApiClient.searchTrack(term)
-      );
+      const data = yield* _await(ApiClient.searchTrack(term));
       const tracks = [];
 
       for (const track of data) {
@@ -41,6 +39,14 @@ export default class SearchResult extends Model({
 
       return tracks;
     } catch (error) {
+      AyeLogger.player(
+        `[SearchResult] Error retrieving tracks ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
       throw error;
     }
   });
@@ -48,9 +54,7 @@ export default class SearchResult extends Model({
   @modelFlow
   getTrackFromUrl = _async(function*(this: SearchResult, url: string) {
     try {
-      const data = yield* _await(
-        ApiClient.getTrackFromUrl(url)
-      );
+      const data = yield* _await(ApiClient.getTrackFromUrl(url));
 
       let parsedData = {
         id: data.Id,
@@ -59,7 +63,14 @@ export default class SearchResult extends Model({
       };
       return parsedData;
     } catch (error) {
-      AyeLogger.player(error, LogType.ERROR);
+      AyeLogger.player(
+        `[SearchResult] Error retrieving track from url ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
       throw error;
     }
   });

@@ -21,6 +21,7 @@ interface IPlaylistEntityMenuProps {
 const Container = styled.div`
   height: 24px;
   width: 24px;
+  margin-left: 8px;
   display: block;
   right: 0;
   cursor: pointer;
@@ -72,7 +73,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
   };
 
   const _handleRemoveTrack = () => {
-    player.currentPlaylist.current.removeTrackById(props.trackRef.id);
+    player.currentPlaylist.current.removeTrackById(props.trackRef.current.id);
     setAnchorEl(null);
   };
 
@@ -83,8 +84,13 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
 
   const _handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${props.trackRef.id}`
+      `https://www.youtube.com/watch?v=${props.trackRef.current.id}`
     );
+  };
+
+  const _addToQueue = () => {
+    queue.addTrack(props.trackRef.current);
+    setAnchorEl(null);
   };
 
   const _startRadioMode = async () => {
@@ -138,6 +144,9 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
         >
           <MenuItem onClick={() => _handlePlayNextTrack()}>
             {t("EntityMenu.playNext")}
+          </MenuItem>
+          <MenuItem onClick={() => _addToQueue()}>
+            {t("EntityMenu.addToQueue")}
           </MenuItem>
           <MenuItem onClick={() => _handleRemoveTrack()}>
             {t("EntityMenu.remove")}
