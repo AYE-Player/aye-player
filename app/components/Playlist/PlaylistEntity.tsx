@@ -28,19 +28,10 @@ const Container = styled.div<any>`
   width: calc(100% - 8px);
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #565f6c;
   padding-left: 8px;
-  &:after {
-    content: "";
-    margin: 0 auto;
-    width: calc(100% - 8px);
-    padding-top: 46px;
-    border-bottom: 1px solid #565f6c;
-    margin-left: -278px;
-    z-index: 1;
-  }
-  &:last-child:after {
+  &:last-child {
     border-bottom: none;
-    z-index: 1;
   }
   &:hover > svg {
     opacity: 1;
@@ -190,10 +181,10 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             <TrackInfoContainer
               active={props.active || false}
               onClick={() => props.onClick(props.track)}
-              id={props.track.current.id + "-" + props.index}
+              id={"track_" + props.track.current.id + "-" + props.index}
             >
               <ScrollingText
-                scrollId={props.track.current.id + "-" + props.index}
+                scrollId={"track_" + props.track.current.id + "-" + props.index}
               >
                 <Title>{props.track.current.title}</Title>
               </ScrollingText>

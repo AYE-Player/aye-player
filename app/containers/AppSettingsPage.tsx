@@ -8,6 +8,7 @@ import Divider from "../components/Divider";
 import RootStore from "../dataLayer/stores/RootStore";
 import useInject from "../hooks/useInject";
 import { remote } from "electron";
+import { version } from "../../package.json";
 
 const Header = styled.div`
   font-size: 24px;
@@ -23,12 +24,12 @@ const SettingsContainer = styled.div`
   padding: 40px;
 `;
 
-/* const InfoText = styled.div`
+const InfoText = styled.div`
   position: absolute;
   bottom: 56px;
   right: 8px;
   font-size: 14px;
-`; */
+`;
 
 const AccountPage: React.FunctionComponent = () => {
   const store = ({ app, user }: RootStore) => ({
@@ -107,7 +108,7 @@ const AccountPage: React.FunctionComponent = () => {
           </>
         )}
       </SettingsContainer>
-      {/* <InfoText>{t("AppSettingsPage.infoText")}</InfoText> */}
+        <InfoText>v{version}</InfoText>
     </Container>
   );
 };
