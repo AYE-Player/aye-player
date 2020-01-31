@@ -19,7 +19,7 @@ steps:
       versionSpec: '12.x'
     displayName: 'Install Node.js'
   
-   - task: Yarn@3
+  - task: Yarn@3
     inputs:
       customRegistry: 'useFeed'
       customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
