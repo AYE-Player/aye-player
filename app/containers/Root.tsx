@@ -35,10 +35,7 @@ interface IPlayerSettings {
 
 const rootStore = createStore();
 
-const remote = new AyeRemote(
-  "http://localhost:8337",
-  rootStore.user.id
-);
+const remote = new AyeRemote("http://localhost:8337", rootStore.user.id);
 
 remote.socket.on("play", () => {
   console.log("received play");
@@ -106,7 +103,7 @@ const getPlaylists = async () => {
     }
   } catch (error) {
     AyeLogger.player(
-      `[Root] Error retrieving Playlists ${error}`,
+      `[Root] Error retrieving Playlists ${JSON.stringify(error, null, 2)}`,
       LogType.ERROR
     );
   }

@@ -22,6 +22,7 @@ class ApiClient {
 
             if (token != null) {
               request.headers.set("x-access-token", token);
+              request.headers.set("Authorization", `Bearer ${token}`);
             }
           }
         ]
@@ -33,19 +34,19 @@ class ApiClient {
    * Retrieves all Playlists of the current user
    */
   async getPlaylists(): Promise<IPlaylistDto[]> {
-    /*const {
+    const {
       data: { Playlists }
     } = await this.ky
-      .post("search/gql", {
+      .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: `{ Playlists { Name Id Duration SongCount } }`
+          query: `{ Playlists { Name Id Duration SongsCount } }`
         })
       })
       .json();
 
-    return Playlist;*/
-    return this.ky.get(`playlists/`).json();
+    return Playlists;
+    // return this.ky.get(`playlists/`).json();
   }
 
   /**
@@ -53,19 +54,19 @@ class ApiClient {
    * @param id id of the playlist
    */
   async getPlaylist(id: string): Promise<IPlaylistDto> {
-    /*const {
+    const {
       data: { Playlist }
     } = await this.ky
-      .post("search/gql", {
+      .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: `{ Playlist(PlaylistId: "${id}") { Name Id Duration SongCount } }`
+          query: `{ Playlist(PlaylistId: "${id}") { Name Id Duration SongsCount } }`
         })
       })
       .json();
 
-    return Playlist;*/
-    return this.ky.get(`playlists/${id}`).json();
+    return Playlist;
+    // return this.ky.get(`playlists/${id}`).json();
   }
 
   /**
@@ -73,25 +74,25 @@ class ApiClient {
    * @param name Name of the new playlist
    */
   async createPlaylist(name: string): Promise<string> {
-    /*const {
-      data: { addPlaylist }
+    const {
+      data: { CreateNewPlaylist }
     } = await this.ky
-      .post("search/gql", {
+      .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mutation: `{ addPlaylist(name: "${name}") { Id } }`
+          mutation: `{ CreateNewPlaylist(Name: "${name}" Songs: []) { Id } }`
         })
       })
       .json();
 
-    return Playlist;*/
-    return this.ky
+    return CreateNewPlaylist;
+    /*return this.ky
       .post(`playlists/`, {
         json: {
           Name: name
         }
       })
-      .json();
+      .json();*/
   }
 
   /**
@@ -103,14 +104,26 @@ class ApiClient {
     name: string,
     songs: { Url: string }[]
   ): Promise<string> {
-    return this.ky
+    const {
+      data: { CreateNewPlaylistByVideoUrls }
+    } = await this.ky
+      .post("playlists/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mutation: `{ CreateNewPlaylistByVideoUrls(Name: "${name}" Songs: ${songs}) { Id } }`
+        })
+      })
+      .json();
+
+    return CreateNewPlaylistByVideoUrls;
+    /*return this.ky
       .post("playlists/by-urls", {
         json: {
           Name: name,
           Songs: songs
         }
       })
-      .json();
+      .json();*/
   }
 
   /**
@@ -118,7 +131,19 @@ class ApiClient {
    * @param id id of the playlist
    */
   async deletePlaylist(id: string) {
-    return this.ky.delete(`playlists/${id}`);
+    const {
+      data: { DeletePlaylist }
+    } = await this.ky
+      .post("playlists/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mutation: `{ DeletePlaylist(id: "${id}") }`
+        })
+      })
+      .json();
+
+    return DeletePlaylist;
+    // return this.ky.delete(`playlists/${id}`);
   }
 
   /**
@@ -131,19 +156,21 @@ class ApiClient {
     amount: number = 20,
     skip: number = 0
   ): Promise<ITrackDto[]> {
-    /*const {
+    const {
       data: { PlaylistSongs }
     } = await this.ky
-      .post("search/gql", {
+      .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: `{ PlaylistSongs(PlaylistId: "${id}" Skip: "${skip}" Take: "${amount}") { Title Duration Id } }`
+          query: `{ PlaylistSongs(PlaylistId: "${id}" Skip: ${skip} Take: ${amount}) { Title Duration YouTubeId } }`
         })
       })
       .json();
 
-    return Playlist;*/
-    return this.ky.get(`playlists/${id}/songs?skip=${skip}&take=${amount}`).json();
+    PlaylistSongs.map((song: any) => (song.Id = song.YouTubeId));
+
+    return PlaylistSongs;
+    // return this.ky.get(`playlists/${id}/songs?skip=${skip}&take=${amount}`).json();
   }
 
   /**
@@ -152,14 +179,26 @@ class ApiClient {
    * @param track MobX cached Track
    */
   async addTrackToPlaylist(id: string, track: Track) {
-    return this.ky.put(`playlists/${id}/songs`, {
+    const {
+      data: { AddSongToPlaylist }
+    } = await this.ky
+      .post("playlists/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mutation: `{ AddSongToPlaylist(PlaylistId: "${id}" Id: "${track.id}" Title: "${track.title}" Duration: "${track.duration}") { Id } }`
+        })
+      })
+      .json();
+
+    return AddSongToPlaylist;
+    /*return this.ky.put(`playlists/${id}/songs`, {
       json: {
         Id: track.id,
         Duration: track.duration,
         Title: track.title,
         IsLivestream: track.isLivestream
       }
-    });
+    });*/
   }
 
   /**
@@ -168,11 +207,23 @@ class ApiClient {
    * @param songs array of youtube urls to be added to the playlist
    */
   async addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
-    return this.ky.put(`playlists/${id}/songs/by-urls`, {
+    const {
+      data: { AddSongsToPlaylistByUrls }
+    } = await this.ky
+      .post("playlists/gql", {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mutation: `{ AddSongsToPlaylistByUrls(PlaylistId: "${id}" Songs: "${songs}") { Id } }`
+        })
+      })
+      .json();
+
+    return AddSongsToPlaylistByUrls;
+    /*return this.ky.put(`playlists/${id}/songs/by-urls`, {
       json: {
         Songs: songs
       }
-    });
+    });*/
   }
 
   /**
