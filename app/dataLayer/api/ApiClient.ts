@@ -92,11 +92,11 @@ class ApiClient {
    * @param name Name of the new playlist
    * @param songs Urls of Songs which should be added to the inital playlist
    */
+  // FIXME: adjust to work with gql
   async createPlaylistWithSongs(
     name: string,
     songs: { Url: string }[]
   ): Promise<string> {
-    console.log("SONGS", songs);
     const {
       data: { CreateNewPlaylistByVideoUrls }
     } = await this.ky
@@ -109,7 +109,6 @@ class ApiClient {
       })
       .json();
 
-    console.log("new pl", CreateNewPlaylistByVideoUrls);
     return CreateNewPlaylistByVideoUrls;
   }
 
@@ -163,15 +162,13 @@ class ApiClient {
    * @param track MobX cached Track
    */
   async addTrackToPlaylist(id: string, track: Track) {
-    await this.ky
-      .post("playlists/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `mutation { AddSongToPlaylist(PlaylistId: "${id}" Id: "${track.id}" Title: "${track.title}" Duration: ${track.duration}) }`,
-          variables: {}
-        })
+    await this.ky.post("playlists/gql", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: `mutation { AddSongToPlaylist(addSongArgs: { PlaylistId: "${id}" Id: "${track.id}" Title: "${track.title}" Duration: ${track.duration} }) }`,
+        variables: {}
       })
-      .json();
+    });
   }
 
   /**
@@ -179,20 +176,17 @@ class ApiClient {
    * @param id id of the playlist
    * @param songs array of youtube urls to be added to the playlist
    */
+  // FIXME: adjust to work with gql
   async addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
-    const {
-      data: { AddSongsToPlaylistByUrls }
-    } = await this.ky
+    await this.ky
       .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: `mutation { AddSongsToPlaylistByUrls(PlaylistId: "${id}" Songs: ${songs}) { Id } }`,
+          query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${songs} }) }`,
           variables: {}
         })
       })
       .json();
-
-    return AddSongsToPlaylistByUrls;
   }
 
   /**
@@ -201,7 +195,13 @@ class ApiClient {
    * @param track Mobx cached Track
    */
   async removeTrackFromPlaylist(id: string, track: Track) {
-    return this.ky.delete(`playlists/${id}/songs/${track.id}`);
+    await this.ky.post("playlists/gql", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: `mutation { RemoveSongFromPlaylist(removeSongFromPlaylistArgs: { PlaylistId: "${id}" SongId: "${track.id}" }) }`,
+        variables: {}
+      })
+    });
   }
 
   /**
@@ -210,7 +210,13 @@ class ApiClient {
    * @param trackId id of the track
    */
   async removeTrackFromPlaylistById(id: string, trackId: string) {
-    return this.ky.delete(`playlists/${id}/songs/${trackId}`);
+    await this.ky.post("playlists/gql", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: `mutation { RemoveSongFromPlaylist(removeSongFromPlaylistArgs: { PlaylistId: "${id}" SongId: "${trackId}" }) }`,
+        variables: {}
+      })
+    });
   }
 
   /**
@@ -219,15 +225,19 @@ class ApiClient {
    * @param trackId if of the track
    * @param index position to move to
    */
+  // FIXME: adjust to work with gql
   async moveTrackTo(id: string, trackId: string, index: number) {
-    return this.ky.patch(`playlists/${id}/songs/${trackId}`, {
-      json: [
-        {
+    await this.ky.post("playlists/gql", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: `mutation { PatchSong(patchSongArgs: { PlaylistId: "${id}" YtId: "${trackId}" Patch: [${{
           op: "replace",
           path: "OrderId",
           value: index
-        }
-      ]
+        }}]
+      }) }`,
+        variables: {}
+      })
     });
   }
 
