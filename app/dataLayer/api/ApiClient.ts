@@ -40,7 +40,7 @@ class ApiClient {
       .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: `{ Playlists { Name Id Duration SongsCount } }`
+          query: `{ Playlists { Id Name Duration SongsCount } }`
         })
       })
       .json();
@@ -59,7 +59,7 @@ class ApiClient {
       .post("playlists/gql", {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: `{ Playlist(PlaylistId: "${id}") { Name Id Duration SongsCount } }`
+          query: `{ Playlist(PlaylistId: "${id}") { Id Name Duration SongsCount } }`
         })
       })
       .json();
@@ -69,7 +69,7 @@ class ApiClient {
 
   /**
    * Creates a new playlist
-   * @param name Name of the new playlist
+   * @param name name of the new playlist
    */
   async createPlaylist(name: string): Promise<string> {
     const {
@@ -230,6 +230,7 @@ class ApiClient {
    * @param id id of the playlist
    * @param trackId if of the track
    * @param index position to move to
+   * @param oldIndex old position
    */
   // FIXME: adjust to work with gql
   async moveTrackTo(
@@ -391,10 +392,6 @@ class ApiClient {
 
     return Song;
   }
-
-  /*async getSimilarTrack(term: string): Promise<ITrackDto> {
-    return this.ky.get(`search/similarSong?artist=${}`)
-  }*/
 
   /**
    * Retrives related videos for the given id
