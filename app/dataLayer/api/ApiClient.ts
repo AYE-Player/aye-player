@@ -178,15 +178,21 @@ class ApiClient {
    */
   // FIXME: adjust to work with gql
   async addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
-    await this.ky
-      .post("playlists/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${songs} }) }`,
-          variables: {}
-        })
+    const stringySongs = JSON.stringify(songs);
+    console.log(
+      "BODY",
+      JSON.stringify({
+        query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${stringySongs} }) }`,
+        variables: {}
       })
-      .json();
+    );
+    await this.ky.post("playlists/gql", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${stringySongs} }) }`,
+        variables: {}
+      })
+    });
   }
 
   /**
@@ -226,12 +232,18 @@ class ApiClient {
    * @param index position to move to
    */
   // FIXME: adjust to work with gql
-  async moveTrackTo(id: string, trackId: string, index: number) {
+  async moveTrackTo(
+    id: string,
+    trackId: string,
+    index: number,
+    oldIndex: number
+  ) {
     await this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `mutation { PatchSong(patchSongArgs: { PlaylistId: "${id}" YtId: "${trackId}" Patch: [${{
           op: "replace",
+          from: oldIndex,
           path: "OrderId",
           value: index
         }}]
