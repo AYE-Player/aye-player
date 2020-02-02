@@ -106,7 +106,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("General.error")} />
+          <SnackMessage id={key} variant="error" message={t("Error.couldNotMoveTrack")} />
         )
       });
     }

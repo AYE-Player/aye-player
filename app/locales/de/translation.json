@@ -35,7 +35,8 @@
     "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
   },
   "Error": {
-    "couldNotAddTrack": "Track konnte nicht hinzugefügt werden, versuche es später nocheinmal"
+    "couldNotAddTrack": "Track konnte nicht hinzugefügt werden, versuche es später nocheinmal",
+    "couldNotMoveTrack": "Track konnte nicht verschoben werden, versuche es später nocheinmal"
   },
   "SearchPage": {
     "title": "Suchen",

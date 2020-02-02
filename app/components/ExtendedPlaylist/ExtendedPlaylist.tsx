@@ -142,7 +142,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
           <SnackMessage
             id={key}
             variant="error"
-            message={t("Error.couldNotAddTrack")}
+            message={t("Error.couldNotMoveTrack")}
           />
         )
       });
