@@ -15,7 +15,7 @@
     "lint-fix": "yarn --silent lint --fix; exit 0",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
-    "ncu": "ncu -u",
+    "ncu": "ncu -x url-loader,file-loader -u",
     "package": "yarn build && electron-builder build --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -230,7 +230,7 @@
     "eslint-plugin-react-hooks": "^2.3.0",
     "eslint-plugin-testcafe": "^0.2.1",
     "fbjs-scripts": "^1.2.0",
-    "file-loader": "^5.0.2",
+    "file-loader": "^4.3.0",
     "husky": "^4.2.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.1.0",
@@ -256,7 +256,7 @@
     "testcafe-react-selectors": "^4.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "3.7.5",
-    "url-loader": "^3.0.0",
+    "url-loader": "^2.3.0",
     "webpack": "^4.41.5",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
@@ -303,7 +303,8 @@
     "shortid": "^2.2.15",
     "source-map-support": "^0.5.16",
     "styled-components": "^5.0.0",
-    "v8-compile-cache": "^2.1.0"
+    "v8-compile-cache": "^2.1.0",
+    "ytsr": "^0.1.10"
   },
   "devEngines": {
     "node": ">=7.x",
