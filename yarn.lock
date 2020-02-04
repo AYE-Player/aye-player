@@ -10516,10 +10516,10 @@ mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mobx-keystone@^0.37.0:
-  version "0.37.0"
-  resolved "https://registry.yarnpkg.com/mobx-keystone/-/mobx-keystone-0.37.0.tgz#cbf111343c12077211dda68c6f2396531a9c52d9"
-  integrity sha512-LHx95XyCL0jPhvS4ODiwPKKz3ABdJDXqMbX+YdtfDTTri6xZOTQHIWU5OSDmKIei/HFe54h9Z0/eUmCA8ZnA1Q==
+mobx-keystone@^0.38.0:
+  version "0.38.0"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/mobx-keystone/-/mobx-keystone-0.38.0.tgz#cdf3403b788551fc02b3d616d16f1a5a8d3a5d56"
+  integrity sha1-zfNAO3iFUfwCs9YW0W8aWo06XVY=
   dependencies:
     fast-deep-equal "^3.1.1"
     ts-toolbelt "^6.1.4"
