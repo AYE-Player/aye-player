@@ -7,7 +7,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import PlayerInterop from "../../../dataLayer/api/PlayerInterop";
 import RootStore from "../../../dataLayer/stores/RootStore";
-import { debounce } from "../../../helpers/";
+import { debounce } from "../../../helpers";
 import useInject from "../../../hooks/useInject";
 
 const StyledSlider = withStyles({
