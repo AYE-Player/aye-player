@@ -1334,22 +1334,22 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
 
-"@fortawesome/fontawesome-common-types@^0.2.26":
-  version "0.2.26"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.26.tgz#6e0b13a752676036f8196f8a1500d53a27b4adc1"
-  integrity sha512-CcM/fIFwZlRdiWG/25xE/wHbtyUuCtqoCTrr6BsWw7hH072fR++n4L56KPydAr3ANgMJMjT8v83ZFIsDc7kE+A==
+"@fortawesome/fontawesome-common-types@^0.2.27":
+  version "0.2.27"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.27.tgz#19706345859fc46adf3684ed01d11b40903b87e9"
+  integrity sha1-GXBjRYWfxGrfNoTtAdEbQJA7h+k=
 
-"@fortawesome/fontawesome-free@^5.12.0":
-  version "5.12.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.12.0.tgz#8ceb9f09edfb85ea18a6c7bf098f6f5dd5ffd62b"
-  integrity sha512-vKDJUuE2GAdBERaQWmmtsciAMzjwNrROXA5KTGSZvayAsmuTGjam5z6QNqNPCwDfVljLWuov1nEC3mEQf/n6fQ==
+"@fortawesome/fontawesome-free@^5.12.1":
+  version "5.12.1"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/@fortawesome/fontawesome-free/-/fontawesome-free-5.12.1.tgz#2a98fea9fbb8a606ddc79a4680034e9d5591c550"
+  integrity sha1-Kpj+qfu4pgbdx5pGgANOnVWRxVA=
 
-"@fortawesome/fontawesome-svg-core@^1.2.26":
-  version "1.2.26"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.26.tgz#671569271d6b532cdea5e3deb8ff16f8b7ac251d"
-  integrity sha512-3Dfd/v2IztP1TxKOxZiB5+4kaOZK9mNy0KU1vVK7nFlPWz3gzxrCWB+AloQhQUoJ8HhGqbzjliK89Vl7PExGbw==
+"@fortawesome/fontawesome-svg-core@^1.2.27":
+  version "1.2.27"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.27.tgz#e4db8e3be81a40988213507c3e3d0c158a6641a3"
+  integrity sha1-5NuOO+gaQJiCE1B8Pj0MFYpmQaM=
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.26"
+    "@fortawesome/fontawesome-common-types" "^0.2.27"
 
 "@fortawesome/react-fontawesome@^0.1.8":
   version "0.1.8"
@@ -1814,10 +1814,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^25.1.1":
-  version "25.1.1"
-  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/@types/jest/-/jest-25.1.1.tgz#dcf65a8ee315b91ad39c0d358ae0ddc5602ab0e9"
-  integrity sha1-3PZajuMVuRrTnA01iuDdxWAqsOk=
+"@types/jest@^25.1.2":
+  version "25.1.2"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/@types/jest/-/jest-25.1.2.tgz#1c4c8770c27906c7d8def5d2033df9dbd39f60da"
+  integrity sha1-HEyHcMJ5BsfY3vXSAz3529OfYNo=
   dependencies:
     jest-diff "^25.1.0"
     pretty-format "^25.1.0"
@@ -5429,10 +5429,10 @@ dbus-next@^0.5.1:
   optionalDependencies:
     abstract-socket "^2.0.0"
 
-dbus-next@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.8.1.tgz#19ca46691f293fd77405fceaeaec5b64090f0fe0"
-  integrity sha512-/sgwpcnCkLQuMOTF9I95x6qvJZCbTK2RAbHwh7C60VMroSU7rphydj3ujpqiSy5yq04aKc3meZIHpCOrZ2791g==
+dbus-next@^0.8.2:
+  version "0.8.2"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/dbus-next/-/dbus-next-0.8.2.tgz#b53beec47812e643d4c24a96f7ce223c32aa2edb"
+  integrity sha1-tTvuxHgS5kPUwkqW984iPDKqLts=
   dependencies:
     "@nornagon/put" "0.0.8"
     event-stream "3.3.4"
@@ -6524,13 +6524,12 @@ eslint-plugin-import@^2.20.1:
     read-pkg-up "^2.0.0"
     resolve "^1.12.0"
 
-eslint-plugin-jest@^23.6.0:
-  version "23.6.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.6.0.tgz#508b32f80d44058c8c01257c0ee718cfbd521e9d"
-  integrity sha512-GH8AhcFXspOLqak7fqnddLXEJsrFyvgO8Bm60SexvKSn1+3rWYESnCiWUOCUcBTprNSDSE4CtAZdM4EyV6gPPw==
+eslint-plugin-jest@^23.7.0:
+  version "23.7.0"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/eslint-plugin-jest/-/eslint-plugin-jest-23.7.0.tgz#84d5603b6e745b59898cb6750df6a44782a39b04"
+  integrity sha1-hNVgO250W1mJjLZ1DfakR4KjmwQ=
   dependencies:
     "@typescript-eslint/experimental-utils" "^2.5.0"
-    micromatch "^4.0.2"
 
 eslint-plugin-jsx-a11y@6.2.3:
   version "6.2.3"
@@ -10506,10 +10505,10 @@ mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mobx-keystone@^0.38.0:
-  version "0.38.0"
-  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/mobx-keystone/-/mobx-keystone-0.38.0.tgz#cdf3403b788551fc02b3d616d16f1a5a8d3a5d56"
-  integrity sha1-zfNAO3iFUfwCs9YW0W8aWo06XVY=
+mobx-keystone@^0.39.0:
+  version "0.39.0"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/mobx-keystone/-/mobx-keystone-0.39.0.tgz#50da7de6fbcdd7718f0b2942b34e588630d6502b"
+  integrity sha1-UNp95vvN13GPCylCs05YhjDWUCs=
   dependencies:
     fast-deep-equal "^3.1.1"
     ts-toolbelt "^6.1.4"
@@ -15650,10 +15649,10 @@ webpack-dev-middleware@^3.7.2:
     range-parser "^1.2.1"
     webpack-log "^2.0.0"
 
-webpack-dev-server@^3.10.2:
-  version "3.10.2"
-  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/webpack-dev-server/-/webpack-dev-server-3.10.2.tgz#3403287d674c7407aab6d9b3f72259ecd0aa0874"
-  integrity sha1-NAMofWdMdAeqttmz9yJZ7NCqCHQ=
+webpack-dev-server@^3.10.3:
+  version "3.10.3"
+  resolved "https://pkgs.dev.azure.com/caringdeveloper/_packaging/AYE.NPM.Registry/npm/registry/webpack-dev-server/-/webpack-dev-server-3.10.3.tgz#f35945036813e57ef582c2420ef7b470e14d3af0"
+  integrity sha1-81lFA2gT5X71gsJCDve0cOFNOvA=
   dependencies:
     ansi-html "0.0.7"
     bonjour "^3.5.0"
