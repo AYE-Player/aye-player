@@ -6,6 +6,7 @@ import RepeatOneIcon from "@material-ui/icons/RepeatOne";
 import ShuffleIcon from "@material-ui/icons/Shuffle";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
+import Radio from "@material-ui/icons/Radio";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
@@ -21,6 +22,7 @@ interface IProps {
   shuffle: () => void;
   skip: () => void;
   previous: () => void;
+  toggleExternalRadio: () => void;
 }
 
 const Control = styled.div`
@@ -48,53 +50,54 @@ const PlayerControlElements: React.FunctionComponent<IProps> = props => {
   const { app, player, queue, trackHistory } = useInject(Store);
 
   return (
-      <Grid container justify="center" alignItems="center" spacing={2}>
-        {player.repeat === Repeat.ONE ? (
-          <Control onClick={props.toggleRepeat}>
-            <RepeatOneIcon htmlColor="#f0ad4e" />
-          </Control>
-        ) : (
-          <Control onClick={props.toggleRepeat}>
-            {player.repeat === Repeat.ALL ? (
-              <RepeatIcon htmlColor="#f0ad4e" />
-            ) : (
-              <RepeatIcon />
-            )}
-          </Control>
-        )}
-        <Control
-          onClick={trackHistory.tracks.length > 0 ? props.previous : null}
-        >
-          <SkipPreviousIcon
-            htmlColor={trackHistory.tracks.length <= 0 ? "#606060" : ""}
-          />
+    <Grid container justify="center" alignItems="center" spacing={2}>
+      <Control onClick={props.toggleExternalRadio}>
+        <Radio />
+      </Control>
+      {player.repeat === Repeat.ONE ? (
+        <Control onClick={props.toggleRepeat}>
+          <RepeatOneIcon htmlColor="#f0ad4e" />
         </Control>
-        {player.isPlaying ? (
-          <PlayControl onClick={props.pause}>
-            <PauseCircleOutlineIcon fontSize="large" />
-          </PlayControl>
-        ) : (
-          <PlayControl onClick={props.play}>
-            <PlayCircleOutlineIcon fontSize="large" />
-          </PlayControl>
-        )}
-        <Control
-          onClick={queue.tracks.length > 1 || app.autoRadio ? props.skip : null}
-        >
-          <SkipNextIcon
-            htmlColor={
-              queue.tracks.length <= 1 && !app.autoRadio ? "#606060" : ""
-            }
-          />
-        </Control>
-        <Control onClick={props.shuffle}>
-          {player.isShuffling ? (
-            <ShuffleIcon htmlColor="#f0ad4e" />
+      ) : (
+        <Control onClick={props.toggleRepeat}>
+          {player.repeat === Repeat.ALL ? (
+            <RepeatIcon htmlColor="#f0ad4e" />
           ) : (
-            <ShuffleIcon />
+            <RepeatIcon />
           )}
         </Control>
-      </Grid>
+      )}
+      <Control onClick={trackHistory.tracks.length > 0 ? props.previous : null}>
+        <SkipPreviousIcon
+          htmlColor={trackHistory.tracks.length <= 0 ? "#606060" : ""}
+        />
+      </Control>
+      {player.isPlaying ? (
+        <PlayControl onClick={props.pause}>
+          <PauseCircleOutlineIcon fontSize="large" />
+        </PlayControl>
+      ) : (
+        <PlayControl onClick={props.play}>
+          <PlayCircleOutlineIcon fontSize="large" />
+        </PlayControl>
+      )}
+      <Control
+        onClick={queue.tracks.length > 1 || app.autoRadio ? props.skip : null}
+      >
+        <SkipNextIcon
+          htmlColor={
+            queue.tracks.length <= 1 && !app.autoRadio ? "#606060" : ""
+          }
+        />
+      </Control>
+      <Control onClick={props.shuffle}>
+        {player.isShuffling ? (
+          <ShuffleIcon htmlColor="#f0ad4e" />
+        ) : (
+          <ShuffleIcon />
+        )}
+      </Control>
+    </Grid>
   );
 };
 

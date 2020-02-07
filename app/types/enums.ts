@@ -14,6 +14,7 @@ export enum OutgoingMessageType {
   TOGGLE_PLAYING_STATE,
   SET_TRACK,
   PLAY_TRACK,
+  PLAY_STREAM,
   SET_LOOPING,
   SEEK,
   VOLUME,

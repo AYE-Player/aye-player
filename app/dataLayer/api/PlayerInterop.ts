@@ -86,6 +86,20 @@ class PlayerInterop {
     );
   }
 
+  playLivestream(streamURL: string) {
+    this.player.contentWindow.postMessage(
+      {
+        type: OutgoingMessageType.PLAY_STREAM,
+        track: {
+          source: "livestream",
+          streamURL,
+          isLivestream: true
+        }
+      },
+      this.apiUrl
+    );
+  }
+
   seekTo(time: number) {
     this.player.contentWindow.postMessage(
       {
