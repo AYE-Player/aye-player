@@ -161,6 +161,7 @@ class ApiClient {
    * @param id id of the playlist
    * @param track MobX cached Track
    */
+  // FIXME: adjust to work with gql
   async addTrackToPlaylist(id: string, track: Track) {
     await this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
@@ -233,22 +234,16 @@ class ApiClient {
    * @param oldIndex old position
    */
   // FIXME: adjust to work with gql
-  async moveTrackTo(
-    id: string,
-    trackId: string,
-    index: number,
-    oldIndex: number
-  ) {
+  async moveTrackTo(id: string, trackId: string, index: number) {
     await this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: `mutation { PatchSong(patchSongArgs: { PlaylistId: "${id}" YtId: "${trackId}" Patch: [${{
+        query: `mutation { PatchSong(patchSongArgs: { PlaylistId: "${id}" YtId: "${trackId}" Patch: [{
           op: "replace",
-          from: oldIndex,
           path: "OrderId",
-          value: index
-        }}]
-      }) }`,
+          value: ${index}
+        }]
+      })}`,
         variables: {}
       })
     });
