@@ -14,6 +14,9 @@ import Track from "../dataLayer/models/Track";
 import spotifyToLocalTracks from "../helpers/spotify/spotifyToLocalTracks";
 import CustomListDialog from "../components/Customs/CustomListDialog";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Playlist from "../dataLayer/models/Playlist";
+import { Ref } from "mobx-keystone";
+import trackRef from "../dataLayer/references/TrackRef";
 const SpotifyLogo = require("../images/Spotify_Logo_CMYK_Green.png");
 
 const Header = styled.div`
@@ -82,11 +85,9 @@ const AccountPage: React.FunctionComponent = () => {
     localStorage.setItem("spotify_token", token);
     const importedPlaylists = (await getSpotifyPlaylists(token)) as any[];
 
-    const playlistNames = importedPlaylists.map(
-      (playlist: any) => {
-        return { id: playlist.id, name: playlist.name };
-      }
-    );
+    const playlistNames = importedPlaylists.map((playlist: any) => {
+      return { id: playlist.id, name: playlist.name };
+    });
     console.log("playlist names", playlistNames);
 
     setSpotifyListNames(playlistNames);
@@ -102,7 +103,12 @@ const AccountPage: React.FunctionComponent = () => {
     const list = spotifyLists.find((playlist: any) => playlist.id === id);
     const tracks = await spotifyToLocalTracks(list);
 
-    const pl = await playlists.createList(list.name);
+    //const pl = await playlists.createList(list.name);
+    const tempId = new Uint32Array(5);
+    window.crypto.getRandomValues(tempId);
+
+    let playlistDuration = 0;
+    const mobxTracks: Ref<Track>[] = [];
 
     for (const track of tracks) {
       const mobxTrack = new Track({
@@ -110,11 +116,24 @@ const AccountPage: React.FunctionComponent = () => {
         duration: track.duration,
         title: track.title
       });
+      playlistDuration += track.duration;
 
       trackCache.add(mobxTrack);
+      mobxTracks.push(trackRef(mobxTrack));
 
-      await pl.addTrack(mobxTrack);
+      // await pl.addTrack(mobxTrack);
+      // pl.addLoadedTrack(mobxTrack);
     }
+
+    const pl = new Playlist({
+      name: list.name,
+      trackCount: tracks.length,
+      duration: playlistDuration,
+      id: "" + tempId.join(""),
+      tracks: mobxTracks
+    });
+
+    playlists.add(pl);
   };
 
   return (
