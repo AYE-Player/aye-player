@@ -22,7 +22,6 @@ const getSpotifyAccessToken = (): Promise<string> => {
     win.webContents.session.webRequest.onBeforeRequest(
       filter,
       ({ url }, callback) => {
-        callback({ cancel: true });
         resolve(parseURL(url));
         destroyAuthWin();
       }
