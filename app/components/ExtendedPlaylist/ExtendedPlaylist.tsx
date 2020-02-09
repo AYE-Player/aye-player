@@ -17,6 +17,8 @@ import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import { removeControlCharacters } from "../../helpers";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 import CustomButton from "../Customs/CustomButton";
 import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
@@ -94,22 +96,33 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     const controller = new AbortController();
 
     if (!isLoaded) {
-      ApiClient.getTracksFromPlaylist(id, playlist.trackCount).then(songs => {
-        songs.map(song => {
-          const track = new Track({
-            id: song.Id,
-            title: song.Title,
-            duration: song.Duration
+      ApiClient.getTracksFromPlaylist(id, playlist.trackCount)
+        .then(songs => {
+          songs.map(song => {
+            const track = new Track({
+              id: song.Id,
+              title: song.Title,
+              duration: song.Duration
+            });
+            if (!trackCache.getTrackById(track.id)) {
+              trackCache.add(track);
+            }
+            if (!playlist.getTrackById(track.id)) {
+              playlist.addLoadedTrack(track);
+            }
           });
-          if (!trackCache.getTrackById(track.id)) {
-            trackCache.add(track);
-          }
-          if (!playlist.getTrackById(track.id)) {
-            playlist.addLoadedTrack(track);
-          }
-        });
-        setIsLoaded(true);
-      });
+          setIsLoaded(true);
+        })
+        .catch(error =>
+          AyeLogger.player(
+            `[ExtendedPlaylist] error getting playlist tracks ${(JSON.stringify(
+              error,
+              null,
+              2
+            ),
+            LogType.ERROR)}`
+          )
+        );
     }
 
     return () => {
@@ -189,7 +202,10 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
                           key={track.current.id}
                           index={index}
                           onClick={_handleClick}
-                          active={player.currentTrack?.current.id === track.current.id || false}
+                          active={
+                            player.currentTrack?.current.id ===
+                              track.current.id || false
+                          }
                         />
                       );
                     })}
