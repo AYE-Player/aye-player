@@ -163,7 +163,7 @@ class ApiClient {
    */
   // FIXME: adjust to work with gql
   async addTrackToPlaylist(id: string, track: Track) {
-    await this.ky.post("playlists/gql", {
+    this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `mutation { AddSongToPlaylist(addSongArgs: { PlaylistId: "${id}" Id: "${track.id}" Title: "${track.title}" Duration: ${track.duration} }) }`,
@@ -187,7 +187,7 @@ class ApiClient {
         variables: {}
       })
     );
-    await this.ky.post("playlists/gql", {
+    this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${stringySongs} }) }`,
@@ -202,7 +202,7 @@ class ApiClient {
    * @param track Mobx cached Track
    */
   async removeTrackFromPlaylist(id: string, track: Track) {
-    await this.ky.post("playlists/gql", {
+    this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `mutation { RemoveSongFromPlaylist(removeSongFromPlaylistArgs: { PlaylistId: "${id}" SongId: "${track.id}" }) }`,
@@ -217,7 +217,7 @@ class ApiClient {
    * @param trackId id of the track
    */
   async removeTrackFromPlaylistById(id: string, trackId: string) {
-    await this.ky.post("playlists/gql", {
+    this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `mutation { RemoveSongFromPlaylist(removeSongFromPlaylistArgs: { PlaylistId: "${id}" SongId: "${trackId}" }) }`,
@@ -235,7 +235,7 @@ class ApiClient {
    */
   // FIXME: adjust to work with gql
   async moveTrackTo(id: string, trackId: string, index: number) {
-    await this.ky.post("playlists/gql", {
+    this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `mutation { PatchSong(patchSongArgs: { PlaylistId: "${id}" YtId: "${trackId}" Patch: [{
@@ -255,7 +255,7 @@ class ApiClient {
    * @param password password of the user
    */
   async register(username: string, email: string, password: string) {
-    return this.ky.post("userIdentity/", {
+    this.ky.post("userIdentity/", {
       json: {
         Email: email,
         Password: password,
@@ -285,7 +285,7 @@ class ApiClient {
    * @param email email of the account
    */
   async forgotPassword(email: string) {
-    return this.ky.put("userIdentity/password", {
+    this.ky.put("userIdentity/password", {
       json: {
         Email: email
       }
@@ -304,7 +304,7 @@ class ApiClient {
    * @param password new password
    */
   async updatePassword(password: string) {
-    return this.ky.patch("userIdentity/", {
+    this.ky.patch("userIdentity/", {
       json: [
         {
           op: "replace",
@@ -320,7 +320,7 @@ class ApiClient {
    * @param data FormData containing the new avatar
    */
   async updateAvatar(data: FormData): Promise<string> {
-    return await this.ky
+    return this.ky
       .post("userIdentity/avatar", {
         body: data
       })
@@ -332,7 +332,7 @@ class ApiClient {
    * @param url url of avatar
    */
   async updateAvatarUrl(url: string) {
-    return this.ky.patch("userIdentity/", {
+    this.ky.patch("userIdentity/", {
       json: [
         {
           op: "replace",
