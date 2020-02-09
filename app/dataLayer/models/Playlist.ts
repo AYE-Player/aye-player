@@ -104,7 +104,9 @@ export default class Playlist extends Model({
           Root.stores.trackCache.add(tr);
         }
 
-        this.tracks.push(trackRef(tr));
+        if (!this.getTrackById(tr.id)) {
+          this.tracks.push(trackRef(tr));
+        }
       }
 
       this.duration = pl.Duration;

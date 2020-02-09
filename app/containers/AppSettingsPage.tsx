@@ -99,6 +99,7 @@ const AccountPage: React.FunctionComponent = () => {
     setOpen(false);
   };
 
+  //TODO: Create playlist in DB and add songs
   const _handleListSelected = async (id: string) => {
     const list = spotifyLists.find((playlist: any) => playlist.id === id);
     const tracks = await spotifyToLocalTracks(list);

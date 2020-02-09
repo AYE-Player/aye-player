@@ -15,6 +15,7 @@ class ApiClient {
     this.ky = ky.extend({
       prefixUrl: "https://api.aye-player.de/v1/",
       timeout: 5000,
+      throwHttpErrors: true,
       hooks: {
         beforeRequest: [
           request => {
@@ -161,12 +162,12 @@ class ApiClient {
    * @param id id of the playlist
    * @param track MobX cached Track
    */
-  // FIXME: adjust to work with gql
+  // FIXME: adjust to work with gql (in combination with spotify import)
   async addTrackToPlaylist(id: string, track: Track) {
     this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: `mutation { AddSongToPlaylist(addSongArgs: { PlaylistId: "${id}" Id: "${track.id}" Title: "${track.title}" Duration: ${track.duration} }) }`,
+        query: `mutation { AddSongToPlaylist(addSongArgs: { PlaylistId: "${id}" Id: "${track.id}" Title: "${track.title}" Duration: ${track.duration} }) {} }`,
         variables: {}
       })
     });
@@ -179,18 +180,17 @@ class ApiClient {
    */
   // FIXME: adjust to work with gql
   async addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
-    const stringySongs = JSON.stringify(songs);
+    console.log("songs", songs);
     console.log(
-      "BODY",
       JSON.stringify({
-        query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${stringySongs} }) }`,
+        query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${songs} }) }`,
         variables: {}
       })
     );
     this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${stringySongs} }) }`,
+      json: JSON.stringify({
+        query: `mutation { AddSongsToPlaylistByUrls(addSongArgs: { PlaylistId: "${id}" Songs: ${songs} }) }`,
         variables: {}
       })
     });
@@ -233,7 +233,6 @@ class ApiClient {
    * @param index position to move to
    * @param oldIndex old position
    */
-  // FIXME: adjust to work with gql
   async moveTrackTo(id: string, trackId: string, index: number) {
     this.ky.post("playlists/gql", {
       headers: { "Content-Type": "application/json" },
@@ -241,7 +240,7 @@ class ApiClient {
         query: `mutation { PatchSong(patchSongArgs: { PlaylistId: "${id}" YtId: "${trackId}" Patch: [{
           op: "replace",
           path: "OrderId",
-          value: ${index}
+          value: "${index}"
         }]
       })}`,
         variables: {}
