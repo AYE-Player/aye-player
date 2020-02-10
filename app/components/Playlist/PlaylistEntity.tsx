@@ -1,5 +1,5 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
-import { withStyles } from "@material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { Ref } from "mobx-keystone";
 import { useSnackbar } from "notistack";
 import React from "react";
