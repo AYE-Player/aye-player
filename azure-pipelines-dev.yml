@@ -32,7 +32,7 @@ steps:
     inputs:
       workingFile: '.npmrc'
   
-  - script: pnpm install --no-lock
+  - script: pnpm install --shamefully-hoist --no-lock
     displayName: 'Install Dependencies'
 
   - script: |
