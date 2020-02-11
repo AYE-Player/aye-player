@@ -27,6 +27,11 @@ steps:
   - script: npm install -g pnpm@next
     displayName: 'Install pnpm'
   
+
+  - task: npmAuthenticate@0
+    inputs:
+      workingFile: '.npmrc'
+  
   - script: pnpm install --no-lock
     displayName: 'Install Dependencies'
 
