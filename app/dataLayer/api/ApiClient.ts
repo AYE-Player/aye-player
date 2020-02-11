@@ -7,7 +7,11 @@
 import ky from "ky/umd";
 import Track from "../models/Track";
 import { ITrackDto, IUserInfoDto, IPlaylistDto } from "../../types/response";
-import { graphQLClient, GRAPHQL } from "./graphQL";
+import {
+  graphQLClientPlaylists,
+  GRAPHQL,
+  graphQLClientSearch
+} from "./graphQL";
 import {
   QueryPlaylist,
   CreatePlaylistInput,
@@ -59,7 +63,7 @@ class ApiClient {
   async getPlaylists(): Promise<IPlaylistDto[]> {
     const {
       data: { Playlists }
-    } = await graphQLClient.query<any, any>({
+    } = await graphQLClientPlaylists.query<any, any>({
       query: GRAPHQL.QUERY.PLAYLISTS
     });
 
@@ -73,7 +77,7 @@ class ApiClient {
   async getPlaylist(id: string): Promise<IPlaylistDto> {
     const {
       data: { Playlist }
-    } = await graphQLClient.query<any, QueryPlaylist>({
+    } = await graphQLClientPlaylists.query<any, QueryPlaylist>({
       query: GRAPHQL.QUERY.PLAYLIST,
       variables: {
         id
@@ -90,7 +94,7 @@ class ApiClient {
   async createPlaylist(name: string): Promise<string> {
     const {
       data: { CreateNewPlaylist }
-    } = await graphQLClient.mutate<any, CreatePlaylistInput>({
+    } = await graphQLClientPlaylists.mutate<any, CreatePlaylistInput>({
       mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST,
       variables: {
         name
@@ -112,7 +116,7 @@ class ApiClient {
   ): Promise<string> {
     const {
       data: { CreateNewPlaylistByVideoUrls }
-    } = await graphQLClient.mutate<any, CreatePlaylistWithSongsInput>({
+    } = await graphQLClientPlaylists.mutate<any, CreatePlaylistWithSongsInput>({
       mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST_WITH_SONGS,
       variables: {
         name,
@@ -130,7 +134,7 @@ class ApiClient {
   async deletePlaylist(id: string) {
     const {
       data: { DeletePlaylist }
-    } = await graphQLClient.mutate<any, DeletePlaylistInput>({
+    } = await graphQLClientPlaylists.mutate<any, DeletePlaylistInput>({
       mutation: GRAPHQL.MUTATION.DELETE_PLAYLIST,
       variables: {
         id
@@ -152,7 +156,7 @@ class ApiClient {
   ): Promise<ITrackDto[]> {
     const {
       data: { PlaylistSongs }
-    } = await graphQLClient.query<any, QueryTracksFromPlaylist>({
+    } = await graphQLClientPlaylists.query<any, QueryTracksFromPlaylist>({
       query: GRAPHQL.QUERY.TRACKS_FROM_PLAYLIST,
       variables: {
         id,
@@ -171,7 +175,7 @@ class ApiClient {
    */
   // FIXME: adjust to work with gql (in combination with spotify import)
   async addTrackToPlaylist(id: string, track: Track) {
-    graphQLClient.mutate<any, AddTrackToPlaylistInput>({
+    graphQLClientPlaylists.mutate<any, AddTrackToPlaylistInput>({
       mutation: GRAPHQL.MUTATION.ADD_TRACK_TO_PLAYLIST,
       variables: {
         id,
@@ -188,7 +192,7 @@ class ApiClient {
    * @param songs array of youtube urls to be added to the playlist
    */
   async addTracksToPlaylistByUrls(id: string, songs: SongInputType[]) {
-    graphQLClient.mutate<any, AddTracksToPlaylistByUrlInput>({
+    graphQLClientPlaylists.mutate<any, AddTracksToPlaylistByUrlInput>({
       mutation: GRAPHQL.MUTATION.ADD_TRACKS_TO_PLAYLIST_BY_URLS,
       variables: {
         id,
@@ -203,7 +207,7 @@ class ApiClient {
    * @param track Mobx cached Track
    */
   async removeTrackFromPlaylist(id: string, track: Track) {
-    graphQLClient.mutate<any, RemoveTrackFromPlaylistInput>({
+    graphQLClientPlaylists.mutate<any, RemoveTrackFromPlaylistInput>({
       mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
       variables: {
         id,
@@ -218,7 +222,7 @@ class ApiClient {
    * @param trackId id of the track
    */
   async removeTrackFromPlaylistById(id: string, trackId: string) {
-    graphQLClient.mutate<any, RemoveTrackFromPlaylistInput>({
+    graphQLClientPlaylists.mutate<any, RemoveTrackFromPlaylistInput>({
       mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
       variables: {
         id,
@@ -235,7 +239,7 @@ class ApiClient {
    * @param oldIndex old position
    */
   async moveTrackTo(id: string, trackId: string, position: number) {
-    graphQLClient.mutate<any, MoveTrackToInput>({
+    graphQLClientPlaylists.mutate<any, MoveTrackToInput>({
       mutation: GRAPHQL.MUTATION.MOVE_TRACK_TO,
       variables: {
         id,
@@ -353,7 +357,7 @@ class ApiClient {
   async searchTrack(term: string): Promise<ITrackDto[]> {
     const {
       data: { Songs }
-    } = await graphQLClient.query<any, QuerySearchTrack>({
+    } = await graphQLClientSearch.query<any, QuerySearchTrack>({
       query: GRAPHQL.QUERY.SEARCH_TRACK,
       variables: {
         term
@@ -370,7 +374,7 @@ class ApiClient {
   async getTrackFromUrl(url: string): Promise<ITrackDto> {
     const {
       data: { Song }
-    } = await graphQLClient.query<any, QueryTrackFromUrl>({
+    } = await graphQLClientSearch.query<any, QueryTrackFromUrl>({
       query: GRAPHQL.QUERY.TRACK_FROM_URL,
       variables: {
         url
@@ -387,7 +391,7 @@ class ApiClient {
   async getRelatedTracks(id: string): Promise<ITrackDto[]> {
     const {
       data: { Radio }
-    } = await graphQLClient.query<any, QueryRelatedTracks>({
+    } = await graphQLClientSearch.query<any, QueryRelatedTracks>({
       query: GRAPHQL.QUERY.RELATED_TRACKS,
       variables: {
         id

@@ -3,12 +3,32 @@ import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import gql from "graphql-tag";
 
-export const graphQLClient = new ApolloClient({
+export const graphQLClientPlaylists = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true,
   // @ts-ignore
   link: new HttpLink({
     uri: "https://api.aye-player.de/v1/playlists/gql",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    },
+    // @ts-ignore
+    fetch
+  }),
+  defaultOptions: {
+    query: {
+      fetchPolicy: "no-cache"
+    },
+    mutate: {
+      fetchPolicy: "no-cache"
+    }
+  }
+});
+
+export const graphQLClientSearch = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: new HttpLink({
+    uri: "https://api.aye-player.de/v1/search/gql",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`
     },
