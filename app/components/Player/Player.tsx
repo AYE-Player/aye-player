@@ -317,11 +317,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     player.notifyRPC();
   };
 
-  const _toggleExternalRadio = () => {
-    if (!player.isPlaying) player.togglePlayingState();
-    PlayerInterop.playLivestream("https://listen.moe/kpop/stream");
-  };
-
   return (
     <Container>
       <PlayerControlsContainer
@@ -332,7 +327,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         shuffle={() => _toggleShuffle()}
         skip={() => _playNextTrack()}
         previous={() => _playPreviousTrack()}
-        toggleExternalRadio={() => _toggleExternalRadio()}
         seekingStop={_handleSeekMouseUp}
       />
       {!player.isPlaying && !player.currentTrack ? (

@@ -15,7 +15,6 @@ interface IProps {
   skip: () => void;
   previous: () => void;
   seekingStop: (value: number) => void;
-  toggleExternalRadio: () => void;
 }
 
 const Container = styled.div`
@@ -42,7 +41,6 @@ const PlayerControls: React.FunctionComponent<IProps> = props => {
         previous={props.previous}
         skip={props.skip}
         toggleRepeat={props.toggleRepeat}
-        toggleExternalRadio={props.toggleExternalRadio}
       />
       <Divider size={2} />
       <VolumeSlider />

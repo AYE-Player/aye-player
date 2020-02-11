@@ -1,4 +1,6 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
+import Radio from "@material-ui/icons/Radio";
+import { Ref } from "mobx-keystone";
 import { Observer, observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
@@ -16,9 +18,10 @@ import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
-import { Ref } from "mobx-keystone";
 
-interface IProps {}
+interface IProps {
+  toggleExternalRadio: () => void;
+}
 
 const Container = styled.div`
   margin: 8px 5px;
@@ -47,6 +50,11 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const ButtonAligner = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const Playlist: React.FunctionComponent<IProps> = props => {
@@ -106,7 +114,11 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("Error.couldNotMoveTrack")} />
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotMoveTrack")}
+          />
         )
       });
     }
@@ -117,9 +129,14 @@ const Playlist: React.FunctionComponent<IProps> = props => {
       <Container>
         <Header>
           Playlist
-          <Control>
-            <QueueMusicIcon onClick={() => _showQueue()} />
-          </Control>
+          <ButtonAligner>
+            <Control onClick={props.toggleExternalRadio}>
+              <Radio />
+            </Control>
+            <Control>
+              <QueueMusicIcon onClick={() => _showQueue()} />
+            </Control>
+          </ButtonAligner>
         </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (
@@ -137,7 +154,9 @@ const Playlist: React.FunctionComponent<IProps> = props => {
                         key={track.current.id}
                         index={index}
                         onClick={_handleClick}
-                        active={player.currentTrack?.current.id === track.current.id}
+                        active={
+                          player.currentTrack?.current.id === track.current.id
+                        }
                       />
                     );
                   })}

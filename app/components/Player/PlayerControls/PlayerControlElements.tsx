@@ -6,7 +6,6 @@ import RepeatOneIcon from "@material-ui/icons/RepeatOne";
 import ShuffleIcon from "@material-ui/icons/Shuffle";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import Radio from "@material-ui/icons/Radio";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
@@ -22,7 +21,6 @@ interface IProps {
   shuffle: () => void;
   skip: () => void;
   previous: () => void;
-  toggleExternalRadio: () => void;
 }
 
 const Control = styled.div`
@@ -51,9 +49,6 @@ const PlayerControlElements: React.FunctionComponent<IProps> = props => {
 
   return (
     <Grid container justify="center" alignItems="center" spacing={2}>
-      <Control onClick={props.toggleExternalRadio}>
-        <Radio />
-      </Control>
       {player.repeat === Repeat.ONE ? (
         <Control onClick={props.toggleRepeat}>
           <RepeatOneIcon htmlColor="#f0ad4e" />
