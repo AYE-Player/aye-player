@@ -19,24 +19,13 @@ steps:
       versionSpec: '12.x'
     displayName: 'Install Node.js'
   
-  #- task: Yarn@3
-  #  inputs:
-  #    customRegistry: 'useFeed'
-  #    customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
-
-  - script: npm install -g pnpm@next
-    displayName: 'Install pnpm'
-  
-
-  - task: npmAuthenticate@0
+  - task: Yarn@3
     inputs:
-      workingFile: '.npmrc'
-  
-  - script: pnpm install --shamefully-hoist --no-lock
-    displayName: 'Install Dependencies'
+      customRegistry: 'useFeed'
+      customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
 
   - script: |
-      pnpm run package
+      yarn package
     displayName: 'Package'
 
   - task: DeleteFiles@1
