@@ -138,7 +138,7 @@ export const GRAPHQL = {
     `,
 
     ADD_TRACK_TO_PLAYLIST: gql`
-      mutation($id: ID!, $trackId: String!, $title: String!, $duration: Int!) {
+      mutation($id: ID!, $trackId: String!, $title: String!, $duration: Float!) {
         AddSongToPlaylist(
           addSongArgs: {
             PlaylistId: $id

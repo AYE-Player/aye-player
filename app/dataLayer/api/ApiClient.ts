@@ -101,7 +101,7 @@ class ApiClient {
       }
     });
 
-    return CreateNewPlaylist;
+    return CreateNewPlaylist.Id;
   }
 
   /**
@@ -109,7 +109,6 @@ class ApiClient {
    * @param name Name of the new playlist
    * @param songs Urls of Songs which should be added to the inital playlist
    */
-  // FIXME: adjust to work with gql
   async createPlaylistWithSongs(
     name: string,
     songs: SongInputType[]
@@ -124,7 +123,7 @@ class ApiClient {
       }
     });
 
-    return CreateNewPlaylistByVideoUrls;
+    return CreateNewPlaylistByVideoUrls.Id;
   }
 
   /**
@@ -132,16 +131,12 @@ class ApiClient {
    * @param id id of the playlist
    */
   async deletePlaylist(id: string) {
-    const {
-      data: { DeletePlaylist }
-    } = await graphQLClientPlaylists.mutate<any, DeletePlaylistInput>({
+    graphQLClientPlaylists.mutate<any, DeletePlaylistInput>({
       mutation: GRAPHQL.MUTATION.DELETE_PLAYLIST,
       variables: {
         id
       }
     });
-
-    return DeletePlaylist;
   }
 
   /**
