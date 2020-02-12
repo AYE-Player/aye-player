@@ -96,6 +96,7 @@ const AccountPage: React.FunctionComponent = () => {
     setOpen(false);
   };
 
+  //FIXME: Fix creation of playlist, sometimes (or always?) only half the songs are added
   const _handleListSelected = async (id: string) => {
     const list = spotifyLists.find((playlist: any) => playlist.id === id);
     const tracks = await spotifyToLocalTracks(list);

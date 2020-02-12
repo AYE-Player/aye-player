@@ -168,7 +168,6 @@ class ApiClient {
    * @param id id of the playlist
    * @param track MobX cached Track
    */
-  // FIXME: adjust to work with gql (in combination with spotify import)
   async addTrackToPlaylist(id: string, track: Track) {
     graphQLClientPlaylists.mutate<any, AddTrackToPlaylistInput>({
       mutation: GRAPHQL.MUTATION.ADD_TRACK_TO_PLAYLIST,
