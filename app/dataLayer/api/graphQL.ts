@@ -1,20 +1,31 @@
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
+import { ApolloLink, concat } from "apollo-link";
 import gql from "graphql-tag";
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  const token = localStorage.getItem("token") || null;
+  //add authorization header
+  operation.setContext({
+    headers: {
+      Authorization: token ? `Bearer ${token}` : null
+    }
+  });
+
+  return forward(operation);
+});
 
 export const graphQLClientPlaylists = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true,
-  // @ts-ignore
-  link: new HttpLink({
-    uri: "https://api.aye-player.de/v1/playlists/gql",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    },
-    // @ts-ignore
-    fetch
-  }),
+  link: concat(
+    authMiddleware,
+    new HttpLink({
+      uri: "https://api.aye-player.de/v1/playlists/gql",
+      fetch
+    })
+  ),
   defaultOptions: {
     query: {
       fetchPolicy: "no-cache"
@@ -27,14 +38,13 @@ export const graphQLClientPlaylists = new ApolloClient({
 
 export const graphQLClientSearch = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: "https://api.aye-player.de/v1/search/gql",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    },
-    // @ts-ignore
-    fetch
-  }),
+  link: concat(
+    authMiddleware,
+    new HttpLink({
+      uri: "https://api.aye-player.de/v1/search/gql",
+      fetch
+    })
+  ),
   defaultOptions: {
     query: {
       fetchPolicy: "no-cache"
@@ -138,7 +148,12 @@ export const GRAPHQL = {
     `,
 
     ADD_TRACK_TO_PLAYLIST: gql`
-      mutation($id: ID!, $trackId: String!, $title: String!, $duration: Float!) {
+      mutation(
+        $id: ID!
+        $trackId: String!
+        $title: String!
+        $duration: Float!
+      ) {
         AddSongToPlaylist(
           addSongArgs: {
             PlaylistId: $id
