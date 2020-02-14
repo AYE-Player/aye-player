@@ -14,35 +14,44 @@ export interface SimpleDialogProps {
   dialogTitle: string;
   open: boolean;
   options: { id: string; name: string }[];
-  track: Ref<Track>;
-  onSelect: (id: string, track: Track) => void;
+  track?: Ref<Track>;
+  onSelect: (id: string, track?: Track) => void;
   handleClose: () => void;
-  createListItem: (value: string) => void;
-  listItemText: string;
+  createListItem?: (value: string) => void;
+  listItemText?: string;
 }
 
 const CustomListDialog: React.FunctionComponent<SimpleDialogProps> = props => {
   return (
-    <Dialog aria-labelledby="custom-dialog-title" open={props.open} onClose={props.handleClose}>
+    <Dialog
+      aria-labelledby="custom-dialog-title"
+      open={props.open}
+      onClose={props.handleClose}
+    >
       <DialogTitle id="custom-dialog-title">{props.dialogTitle}</DialogTitle>
       <List>
         {props.options.map(option => (
           <ListItem
             button
-            onClick={() => props.onSelect(option.id, props.track.current)}
+            onClick={() => props.onSelect(option.id, props.track?.current)}
             key={option.id}
           >
             <ListItemText primary={option.name} />
           </ListItem>
         ))}
-        <ListItem button onClick={() => props.createListItem("createPlaylist")}>
-          <ListItemAvatar>
-            <Avatar>
-              <AddIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={props.listItemText} />
-        </ListItem>
+        {props.listItemText && (
+          <ListItem
+            button
+            onClick={() => props.createListItem("createPlaylist")}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <AddIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={props.listItemText} />
+          </ListItem>
+        )}
       </List>
     </Dialog>
   );

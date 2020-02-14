@@ -35,7 +35,8 @@
     "error": "Something went wrong, please try again later."
   },
   "Error": {
-    "couldNotAddTrack": "Couldnt add track, please try again later"
+    "couldNotAddTrack": "Couldn't add track, please try again later",
+    "couldNotMoveTrack": "Cloudn't move track, please try again later"
   },
   "SearchPage": {
     "title": "Search",

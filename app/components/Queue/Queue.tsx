@@ -1,4 +1,5 @@
 import QueueMusicIcon from "@material-ui/icons/QueueMusic";
+import Radio from "@material-ui/icons/Radio";
 import { Observer } from "mobx-react-lite";
 import React from "react";
 import {
@@ -9,12 +10,14 @@ import {
 } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import QueueEntity from "./QueueEntity";
-import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 
-interface IProps {}
+interface IProps {
+  toggleExternalRadio: () => void;
+}
 
 const Container = styled.div`
   margin: 8px 5px;
@@ -43,6 +46,11 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const ButtonAligner = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const Queue: React.FunctionComponent<IProps> = props => {
@@ -81,9 +89,14 @@ const Queue: React.FunctionComponent<IProps> = props => {
       <Container>
         <Header>
           Queue
-          <Control>
-            <QueueMusicIcon onClick={() => _showQueue()} />
-          </Control>
+          <ButtonAligner>
+            <Control onClick={props.toggleExternalRadio}>
+              <Radio />
+            </Control>
+            <Control>
+              <QueueMusicIcon onClick={() => _showQueue()} />
+            </Control>
+          </ButtonAligner>
         </Header>
         <Droppable droppableId="droppable">
           {(provided: any) => (

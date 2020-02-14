@@ -4,7 +4,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
-import { withStyles } from "@material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -59,9 +59,9 @@ const PlaylistPage: React.FunctionComponent = () => {
   const [open, setOpen] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
-  const [selectedPlaylist, setSelectedPlaylist] = React.useState<
-    Maybe<string>
-  >(undefined);
+  const [selectedPlaylist, setSelectedPlaylist] = React.useState<Maybe<string>>(
+    undefined
+  );
 
   const { t } = useTranslation();
 

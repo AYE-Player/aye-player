@@ -1,0 +1,34 @@
+const loadPlaylists = async (accessToken: string) => {
+  return new Promise(async (resolve, reject) => {
+    const rawPlaylists = await fetch(
+      `https://api.spotify.com/v1/me/playlists?limit=50`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    ).then(res => res.json());
+
+    if (rawPlaylists == null) reject(new Error("failed to retrieve playlists"));
+
+    const fetchPromises = [];
+
+    for (const item of rawPlaylists.items) {
+      fetchPromises.push(
+        fetch(item.href, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }).then(res => res.json())
+      );
+    }
+
+    const playlists = await Promise.all(fetchPromises);
+
+    resolve(playlists);
+  });
+};
+
+export default loadPlaylists;

@@ -1,5 +1,4 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
-import { withStyles } from "@material-ui/styles";
 import { observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
 import React from "react";
@@ -23,6 +22,11 @@ interface IProps {
   onClick: Function;
 }
 
+const DragHandle = styled(DragHandleIcon)`
+  opacity: 0;
+  cursor: grab;
+`;
+
 const Container = styled.div`
   height: 72px;
   width: calc(100% - 16px);
@@ -35,7 +39,7 @@ const Container = styled.div`
   &:last-child {
     border-bottom: none;
   }
-  &:hover > svg {
+  &:hover ${DragHandle} {
     opacity: 1;
   }
 `;
@@ -50,25 +54,11 @@ const TrackInfoContainer = styled.div<any>`
   color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
 `;
 
-const Title = styled.div<any>`
+const Title = styled.div`
   margin-right: 40px;
   width: 60%;
   white-space: nowrap;
   overflow: hidden;
-  ${(props: any) => {
-    if (props.length >= 30) {
-      return `div {
-        transform: translateX(0);
-        transition-timing-function: linear;
-        transition-duration: ${
-          props.length <= 30 ? "1s" : props.length <= 45 ? "2s" : "3s"
-        };
-      }
-      :hover div {
-        transform: translateX(calc(300px - 100%));
-      }`;
-    }
-  }}
 `;
 
 const Duration = styled.div``;
@@ -87,13 +77,6 @@ const TrackImage = styled.img`
   height: 48px;
   transform: scale(1.4) translate(-5px);
 `;
-
-const DragHandle = withStyles({
-  root: {
-    opacity: 0,
-    cursor: "grab"
-  }
-})(DragHandleIcon);
 
 const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
@@ -214,9 +197,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
                   src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
                 />
               </TrackImageContainer>
-              <Title length={props.track.current.title.length}>
-                {props.track.current.title}
-              </Title>
+              <Title>{props.track.current.title}</Title>
               <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
             <ExtendedPlaylistEntityMenu

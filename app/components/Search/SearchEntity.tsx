@@ -35,7 +35,7 @@ const Container = styled.div<any>`
     color: #f0ad4e;
   }
 `;
-const TrackInfoContainer = styled.div<any>`
+const TrackInfoContainer = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -45,26 +45,11 @@ const TrackInfoContainer = styled.div<any>`
 `;
 
 // TODO: FIX scrolltext, to only scroll if it really goes out of the designated zone
-const Title = styled.div<any>`
+const Title = styled.div`
   padding-right: 16px;
   width: 300px;
   white-space: nowrap;
   overflow: hidden;
-  ${(props: any) => {
-    if (props.length >= 42) {
-      return `div {
-
-        transform: translateX(0);
-        transition-timing-function: linear;
-        transition-duration: ${
-          props.length === 42 ? "1s" : props.length <= 55 ? "2s" : "3s"
-        };
-      }
-      :hover div {
-        transform: translateX(calc(300px - 100%)) translate3d(0,0,0);
-      }`;
-    }
-  }}
 `;
 
 const Duration = styled.div`
@@ -136,7 +121,11 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
     } catch (error) {
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="error" message={t("Error.couldNotAddTrack")} />
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.couldNotAddTrack")}
+          />
         )
       });
     }
@@ -188,7 +177,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
           />
         </TrackImageContainer>
-        <Title length={props.track.current.title.length}>
+        <Title>
           <div style={{ display: "inline-block" }}>
             {props.track.current.title}
           </div>

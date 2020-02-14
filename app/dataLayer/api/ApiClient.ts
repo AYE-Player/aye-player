@@ -1,6 +1,32 @@
+//TODO: Move gql to unified endpoint !!!! erek
+/**
+ * Adjustments for GQL implementation
+ * https://graphql.org/learn/best-practices/
+ */
+
 import ky from "ky/umd";
 import Track from "../models/Track";
 import { ITrackDto, IUserInfoDto, IPlaylistDto } from "../../types/response";
+import {
+  graphQLClientPlaylists,
+  GRAPHQL,
+  graphQLClientSearch
+} from "./graphQL";
+import {
+  QueryPlaylist,
+  CreatePlaylistInput,
+  CreatePlaylistWithSongsInput,
+  DeletePlaylistInput,
+  QueryTracksFromPlaylist,
+  AddTrackToPlaylistInput,
+  AddTracksToPlaylistByUrlInput,
+  SongInputType,
+  RemoveTrackFromPlaylistInput,
+  MoveTrackToInput,
+  QuerySearchTrack,
+  QueryTrackFromUrl,
+  QueryRelatedTracks
+} from "./graphQLTypes";
 
 /**
  * Manages all requests to the aye-player backend
@@ -15,6 +41,7 @@ class ApiClient {
     this.ky = ky.extend({
       prefixUrl: "https://api.aye-player.de/v1/",
       timeout: 5000,
+      throwHttpErrors: true,
       hooks: {
         beforeRequest: [
           request => {
@@ -22,6 +49,7 @@ class ApiClient {
 
             if (token != null) {
               request.headers.set("x-access-token", token);
+              request.headers.set("Authorization", `Bearer ${token}`);
             }
           }
         ]
@@ -33,19 +61,13 @@ class ApiClient {
    * Retrieves all Playlists of the current user
    */
   async getPlaylists(): Promise<IPlaylistDto[]> {
-    /*const {
+    const {
       data: { Playlists }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{ Playlists { Name Id Duration SongCount } }`
-        })
-      })
-      .json();
+    } = await graphQLClientPlaylists.query<any, any>({
+      query: GRAPHQL.QUERY.PLAYLISTS
+    });
 
-    return Playlist;*/
-    return this.ky.get(`playlists/`).json();
+    return Playlists;
   }
 
   /**
@@ -53,45 +75,33 @@ class ApiClient {
    * @param id id of the playlist
    */
   async getPlaylist(id: string): Promise<IPlaylistDto> {
-    /*const {
+    const {
       data: { Playlist }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{ Playlist(PlaylistId: "${id}") { Name Id Duration SongCount } }`
-        })
-      })
-      .json();
+    } = await graphQLClientPlaylists.query<any, QueryPlaylist>({
+      query: GRAPHQL.QUERY.PLAYLIST,
+      variables: {
+        id
+      }
+    });
 
-    return Playlist;*/
-    return this.ky.get(`playlists/${id}`).json();
+    return Playlist;
   }
 
   /**
    * Creates a new playlist
-   * @param name Name of the new playlist
+   * @param name name of the new playlist
    */
   async createPlaylist(name: string): Promise<string> {
-    /*const {
-      data: { addPlaylist }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mutation: `{ addPlaylist(name: "${name}") { Id } }`
-        })
-      })
-      .json();
+    const {
+      data: { CreateNewPlaylist }
+    } = await graphQLClientPlaylists.mutate<any, CreatePlaylistInput>({
+      mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST,
+      variables: {
+        name
+      }
+    });
 
-    return Playlist;*/
-    return this.ky
-      .post(`playlists/`, {
-        json: {
-          Name: name
-        }
-      })
-      .json();
+    return CreateNewPlaylist.Id;
   }
 
   /**
@@ -101,16 +111,19 @@ class ApiClient {
    */
   async createPlaylistWithSongs(
     name: string,
-    songs: { Url: string }[]
+    songs: SongInputType[]
   ): Promise<string> {
-    return this.ky
-      .post("playlists/by-urls", {
-        json: {
-          Name: name,
-          Songs: songs
-        }
-      })
-      .json();
+    const {
+      data: { CreateNewPlaylistByVideoUrls }
+    } = await graphQLClientPlaylists.mutate<any, CreatePlaylistWithSongsInput>({
+      mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST_WITH_SONGS,
+      variables: {
+        name,
+        songs
+      }
+    });
+
+    return CreateNewPlaylistByVideoUrls.Id;
   }
 
   /**
@@ -118,7 +131,12 @@ class ApiClient {
    * @param id id of the playlist
    */
   async deletePlaylist(id: string) {
-    return this.ky.delete(`playlists/${id}`);
+    graphQLClientPlaylists.mutate<any, DeletePlaylistInput>({
+      mutation: GRAPHQL.MUTATION.DELETE_PLAYLIST,
+      variables: {
+        id
+      }
+    });
   }
 
   /**
@@ -131,19 +149,18 @@ class ApiClient {
     amount: number = 20,
     skip: number = 0
   ): Promise<ITrackDto[]> {
-    /*const {
+    const {
       data: { PlaylistSongs }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{ PlaylistSongs(PlaylistId: "${id}" Skip: "${skip}" Take: "${amount}") { Title Duration Id } }`
-        })
-      })
-      .json();
+    } = await graphQLClientPlaylists.query<any, QueryTracksFromPlaylist>({
+      query: GRAPHQL.QUERY.TRACKS_FROM_PLAYLIST,
+      variables: {
+        id,
+        amount,
+        skip
+      }
+    });
 
-    return Playlist;*/
-    return this.ky.get(`playlists/${id}/songs?skip=${skip}&take=${amount}`).json();
+    return PlaylistSongs;
   }
 
   /**
@@ -152,12 +169,13 @@ class ApiClient {
    * @param track MobX cached Track
    */
   async addTrackToPlaylist(id: string, track: Track) {
-    return this.ky.put(`playlists/${id}/songs`, {
-      json: {
-        Id: track.id,
-        Duration: track.duration,
-        Title: track.title,
-        IsLivestream: track.isLivestream
+    graphQLClientPlaylists.mutate<any, AddTrackToPlaylistInput>({
+      mutation: GRAPHQL.MUTATION.ADD_TRACK_TO_PLAYLIST,
+      variables: {
+        id,
+        trackId: track.id,
+        title: track.title,
+        duration: track.duration
       }
     });
   }
@@ -167,10 +185,12 @@ class ApiClient {
    * @param id id of the playlist
    * @param songs array of youtube urls to be added to the playlist
    */
-  async addTracksToPlaylistByUrls(id: string, songs: { Url: string }[]) {
-    return this.ky.put(`playlists/${id}/songs/by-urls`, {
-      json: {
-        Songs: songs
+  async addTracksToPlaylistByUrls(id: string, songs: SongInputType[]) {
+    graphQLClientPlaylists.mutate<any, AddTracksToPlaylistByUrlInput>({
+      mutation: GRAPHQL.MUTATION.ADD_TRACKS_TO_PLAYLIST_BY_URLS,
+      variables: {
+        id,
+        songs
       }
     });
   }
@@ -181,7 +201,13 @@ class ApiClient {
    * @param track Mobx cached Track
    */
   async removeTrackFromPlaylist(id: string, track: Track) {
-    return this.ky.delete(`playlists/${id}/songs/${track.id}`);
+    graphQLClientPlaylists.mutate<any, RemoveTrackFromPlaylistInput>({
+      mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
+      variables: {
+        id,
+        trackId: track.id
+      }
+    });
   }
 
   /**
@@ -190,7 +216,13 @@ class ApiClient {
    * @param trackId id of the track
    */
   async removeTrackFromPlaylistById(id: string, trackId: string) {
-    return this.ky.delete(`playlists/${id}/songs/${trackId}`);
+    graphQLClientPlaylists.mutate<any, RemoveTrackFromPlaylistInput>({
+      mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
+      variables: {
+        id,
+        trackId
+      }
+    });
   }
 
   /**
@@ -198,16 +230,16 @@ class ApiClient {
    * @param id id of the playlist
    * @param trackId if of the track
    * @param index position to move to
+   * @param oldIndex old position
    */
-  async moveTrackTo(id: string, trackId: string, index: number) {
-    return this.ky.patch(`playlists/${id}/songs/${trackId}`, {
-      json: [
-        {
-          op: "replace",
-          path: "OrderId",
-          value: index
-        }
-      ]
+  async moveTrackTo(id: string, trackId: string, position: number) {
+    graphQLClientPlaylists.mutate<any, MoveTrackToInput>({
+      mutation: GRAPHQL.MUTATION.MOVE_TRACK_TO,
+      variables: {
+        id,
+        trackId,
+        position: position.toString()
+      }
     });
   }
 
@@ -217,7 +249,7 @@ class ApiClient {
    * @param password password of the user
    */
   async register(username: string, email: string, password: string) {
-    return this.ky.post("userIdentity/", {
+    this.ky.post("userIdentity/", {
       json: {
         Email: email,
         Password: password,
@@ -247,7 +279,7 @@ class ApiClient {
    * @param email email of the account
    */
   async forgotPassword(email: string) {
-    return this.ky.put("userIdentity/password", {
+    this.ky.put("userIdentity/password", {
       json: {
         Email: email
       }
@@ -266,7 +298,7 @@ class ApiClient {
    * @param password new password
    */
   async updatePassword(password: string) {
-    return this.ky.patch("userIdentity/", {
+    this.ky.patch("userIdentity/", {
       json: [
         {
           op: "replace",
@@ -282,7 +314,7 @@ class ApiClient {
    * @param data FormData containing the new avatar
    */
   async updateAvatar(data: FormData): Promise<string> {
-    return await this.ky
+    return this.ky
       .post("userIdentity/avatar", {
         body: data
       })
@@ -294,7 +326,7 @@ class ApiClient {
    * @param url url of avatar
    */
   async updateAvatarUrl(url: string) {
-    return this.ky.patch("userIdentity/", {
+    this.ky.patch("userIdentity/", {
       json: [
         {
           op: "replace",
@@ -319,17 +351,14 @@ class ApiClient {
   async searchTrack(term: string): Promise<ITrackDto[]> {
     const {
       data: { Songs }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{ Songs(searchTerm: "${term}") { Title Duration Id } }`
-        })
-      })
-      .json();
+    } = await graphQLClientSearch.query<any, QuerySearchTrack>({
+      query: GRAPHQL.QUERY.SEARCH_TRACK,
+      variables: {
+        term
+      }
+    });
 
     return Songs;
-    //return this.ky.get(`search/${term}`).json();
   }
 
   /**
@@ -339,22 +368,15 @@ class ApiClient {
   async getTrackFromUrl(url: string): Promise<ITrackDto> {
     const {
       data: { Song }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{ Song(songUrl: "${url}") { Title Duration Id } }`
-        })
-      })
-      .json();
+    } = await graphQLClientSearch.query<any, QueryTrackFromUrl>({
+      query: GRAPHQL.QUERY.TRACK_FROM_URL,
+      variables: {
+        url
+      }
+    });
 
     return Song;
-    // return this.ky.get(`search/song?songUrl=${encodeURIComponent(url)}`).json();
   }
-
-  /*async getSimilarTrack(term: string): Promise<ITrackDto> {
-    return this.ky.get(`search/similarSong?artist=${}`)
-  }*/
 
   /**
    * Retrives related videos for the given id
@@ -363,17 +385,14 @@ class ApiClient {
   async getRelatedTracks(id: string): Promise<ITrackDto[]> {
     const {
       data: { Radio }
-    } = await this.ky
-      .post("search/gql", {
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{ Radio(startId: "${id}") { Title Duration Id } }`
-        })
-      })
-      .json();
+    } = await graphQLClientSearch.query<any, QueryRelatedTracks>({
+      query: GRAPHQL.QUERY.RELATED_TRACKS,
+      variables: {
+        id
+      }
+    });
 
     return Radio;
-    // return this.ky.get(`search/radio/${id}`).json();
   }
 }
 

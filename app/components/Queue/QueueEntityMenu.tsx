@@ -2,7 +2,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import withStyles from "@material-ui/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";

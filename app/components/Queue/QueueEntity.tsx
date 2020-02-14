@@ -1,5 +1,4 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
-import { withStyles } from "@material-ui/styles";
 import { Ref } from "mobx-keystone";
 import { observer } from "mobx-react-lite";
 import { useSnackbar } from "notistack";
@@ -24,6 +23,12 @@ interface IProps {
   dragId: string;
 }
 
+const DragHandle = styled(DragHandleIcon)`
+  opacity: 0;
+  cursor: grab;
+  z-index: 10;
+`;
+
 const Container = styled.div<any>`
   height: 48px;
   width: calc(100% - 8px);
@@ -35,7 +40,7 @@ const Container = styled.div<any>`
   &:last-child {
     border-bottom: none;
   }
-  &:hover > svg {
+  &:hover ${DragHandle} {
     opacity: 1;
   }
   &:hover > div {
@@ -69,13 +74,6 @@ const Dot = styled.span`
   display: inline-block;
   margin-right: 8px;
 `;
-
-const DragHandle = withStyles({
-  root: {
-    opacity: 0,
-    cursor: "grab"
-  }
-})(DragHandleIcon);
 
 const QueueEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();

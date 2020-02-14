@@ -1,5 +1,4 @@
 import DragHandleIcon from "@material-ui/icons/DragHandle";
-import { withStyles } from "@material-ui/styles";
 import { Ref } from "mobx-keystone";
 import { useSnackbar } from "notistack";
 import React from "react";
@@ -23,6 +22,12 @@ interface IProps {
   onClick: Function;
 }
 
+const DragHandle = styled(DragHandleIcon)`
+  opacity: 0;
+  cursor: grab;
+  z-index: 10;
+`;
+
 const Container = styled.div<any>`
   height: 48px;
   width: calc(100% - 8px);
@@ -33,7 +38,7 @@ const Container = styled.div<any>`
   &:last-child {
     border-bottom: none;
   }
-  &:hover > svg {
+  &:hover ${DragHandle} {
     opacity: 1;
   }
   &:hover > div {
@@ -59,14 +64,6 @@ const Title = styled.div`
 const Duration = styled.div`
   font-size: 12px;
 `;
-
-const DragHandle = withStyles({
-  root: {
-    opacity: 0,
-    cursor: "grab",
-    zIndex: 10
-  }
-})(DragHandleIcon);
 
 const PlaylistEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
