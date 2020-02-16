@@ -29,7 +29,7 @@ const DragHandle = styled(DragHandleIcon)`
   z-index: 10;
 `;
 
-const Container = styled.div<any>`
+const Container = styled.div`
   height: 48px;
   width: calc(100% - 8px);
   display: flex;

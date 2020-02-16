@@ -187,7 +187,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         <Header>{playlist.name}</Header>
         <Container>
           <Droppable droppableId="droppable">
-            {(provided: any) => (
+            {provided => (
               <Observer>
                 {() => (
                   <ScrollContainer

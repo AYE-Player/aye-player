@@ -19,7 +19,7 @@ interface IProps {
   onDoubleClick: Function;
 }
 
-const Container = styled.div<any>`
+const Container = styled.div`
   height: 72px;
   width: calc(100% - 16px);
   display: flex;
@@ -44,7 +44,6 @@ const TrackInfoContainer = styled.div`
   width: 100%;
 `;
 
-// TODO: FIX scrolltext, to only scroll if it really goes out of the designated zone
 const Title = styled.div`
   padding-right: 16px;
   width: 300px;

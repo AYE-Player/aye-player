@@ -99,7 +99,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
           </ButtonAligner>
         </Header>
         <Droppable droppableId="droppable">
-          {(provided: any) => (
+          {provided => (
             <Observer>
               {() => (
                 <ScrollContainer

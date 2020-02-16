@@ -10,7 +10,9 @@ import RootStore from "../../../dataLayer/stores/RootStore";
 import useInject from "../../../hooks/useInject";
 import Divider from "../../Divider";
 
-interface IAccountDisplayMenuProps {}
+interface IAccountDisplayMenuProps {
+  children?: any;
+}
 
 const Container = styled.div`
   height: 32px;

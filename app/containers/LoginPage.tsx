@@ -21,7 +21,7 @@ const Header = styled.div`
   padding-bottom: 8px;
 `;
 
-const LoginPage: React.FunctionComponent<any> = () => {
+const LoginPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   const UserStore = ({ user, playlists }: RootStore) => ({

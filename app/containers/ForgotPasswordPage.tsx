@@ -16,7 +16,7 @@ const Header = styled.div`
   padding-bottom: 8px;
 `;
 
-const PasswordForgotPage: React.FunctionComponent<any> = () => {
+const PasswordForgotPage: React.FunctionComponent = () => {
   const store = ({ user }: RootStore) => ({
     user
   });

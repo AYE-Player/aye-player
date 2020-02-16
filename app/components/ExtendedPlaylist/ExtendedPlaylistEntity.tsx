@@ -181,7 +181,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
         draggableId={props.track.current.id}
         index={props.index}
       >
-        {(provided: any) => (
+        {provided => (
           <Container
             ref={provided.innerRef}
             {...provided.draggableProps}

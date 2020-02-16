@@ -17,7 +17,7 @@ const Header = styled.div`
   padding-bottom: 8px;
 `;
 
-const RegisterPage: React.FunctionComponent<any> = () => {
+const RegisterPage: React.FunctionComponent = () => {
   const store = ({ user }: RootStore) => ({
     user
   });

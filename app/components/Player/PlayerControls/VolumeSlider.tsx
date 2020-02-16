@@ -28,7 +28,7 @@ const VolumeSlider: React.FunctionComponent = () => {
 
   const { player } = useInject(Store);
 
-  const _handleVolumeChange = (event: any, newValue: number) => {
+  const _handleVolumeChange = (_event: any, newValue: number) => {
     debounce(player.setVolume(newValue / 100), 500);
     debounce(PlayerInterop.setVolume(newValue), 500);
     if (newValue === 0) {

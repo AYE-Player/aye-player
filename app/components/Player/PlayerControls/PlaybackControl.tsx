@@ -71,11 +71,11 @@ const PlaybackControl: React.FunctionComponent<IProps> = props => {
   let seekTo: number;
 
 
-  const _handlePlaybackChange = (event: any, newValue: number) => {
+  const _handlePlaybackChange = (_event: any, newValue: number) => {
     debounce(player.setPlaybackPosition(newValue), 500);
   };
 
-  const _handleSeek = (event: any, newValue: number) => {
+  const _handleSeek = (_event: any, newValue: number) => {
     seekTo = newValue;
   };
 

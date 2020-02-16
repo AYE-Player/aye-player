@@ -30,7 +30,7 @@ const MenuItem = styled.div`
   }
 `;
 
-const Navigation: React.FunctionComponent<any> = props => {
+const Navigation: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   return (

@@ -53,7 +53,7 @@ const SearchBar: React.FunctionComponent = () => {
     setTerm(event.target.value);
   };
 
-  const _handleSearchIconClick = (event: any) => {
+  const _handleSearchIconClick = () => {
     if (term.length > 0) {
       _search(term);
     }
