@@ -9,7 +9,7 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import routes from "../constants/routes.json";
 import RootStore from "../dataLayer/stores/RootStore";
-import { debounce, validateEmail } from "../helpers/";
+import { validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
 
 const Header = styled.div`
@@ -66,7 +66,7 @@ const RegisterPage: React.FunctionComponent = () => {
   const _handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
 
-    debounce(setInvalidEmail(!validateEmail(event.target.value)), 500);
+    setInvalidEmail(!validateEmail(event.target.value));
   };
 
   const _handleOnClick = async (event?: React.MouseEvent) => {

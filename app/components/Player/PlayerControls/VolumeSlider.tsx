@@ -7,7 +7,6 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import PlayerInterop from "../../../dataLayer/api/PlayerInterop";
 import RootStore from "../../../dataLayer/stores/RootStore";
-import { debounce } from "../../../helpers";
 import useInject from "../../../hooks/useInject";
 
 const StyledSlider = withStyles({
@@ -29,8 +28,8 @@ const VolumeSlider: React.FunctionComponent = () => {
   const { player } = useInject(Store);
 
   const _handleVolumeChange = (_event: any, newValue: number) => {
-    debounce(player.setVolume(newValue / 100), 500);
-    debounce(PlayerInterop.setVolume(newValue), 500);
+    player.setVolume(newValue / 100);
+    PlayerInterop.setVolume(newValue);
     if (newValue === 0) {
       player.mute();
       PlayerInterop.setMute(true);

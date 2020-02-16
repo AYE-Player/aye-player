@@ -8,7 +8,7 @@ import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import RootStore from "../dataLayer/stores/RootStore";
-import { debounce, validateEmail } from "../helpers";
+import { validateEmail } from "../helpers";
 import useInject from "../hooks/useInject";
 
 const Header = styled.div`
@@ -46,7 +46,7 @@ const PasswordForgotPage: React.FunctionComponent = () => {
   const _handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
 
-    debounce(setInvalidEmail(!validateEmail(event.target.value)), 500);
+    setInvalidEmail(!validateEmail(event.target.value));
   };
 
   const _handleOnClick = (event?: React.MouseEvent) => {
