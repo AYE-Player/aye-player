@@ -22,6 +22,10 @@ interface IProps {
   onClick: Function;
 }
 
+interface ITrackInfoContainerProps {
+  active: boolean;
+}
+
 const DragHandle = styled(DragHandleIcon)`
   opacity: 0;
   cursor: grab;
@@ -43,7 +47,7 @@ const Container = styled.div`
     opacity: 1;
   }
 `;
-const TrackInfoContainer = styled.div<any>`
+const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   display: flex;
   align-items: center;
   align-content: space-around;
@@ -51,7 +55,7 @@ const TrackInfoContainer = styled.div<any>`
   padding: 8px;
   padding-left: 8px;
   width: 93%;
-  color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
+  color: ${props => (props.active ? "#f0ad4e" : "")};
 `;
 
 const Title = styled.div`
