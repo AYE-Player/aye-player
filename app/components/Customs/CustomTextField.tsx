@@ -12,7 +12,6 @@ interface ICustomTextFieldProps {
   autoFocus?: boolean;
 }
 
-// TODO: Implement correct coloring for error handling
 const CssTextField = withStyles({
   root: {
     "& label": {
@@ -37,7 +36,7 @@ const CssTextField = withStyles({
       "&.Mui-focused fieldset": {
         borderColor: "#f0ad4e"
       },
-      "&.Mui-focused fieldset.Mui-error": {
+      "&.Mui-focused.Mui-error fieldset": {
         borderColor: "#f44336"
       }
     },
