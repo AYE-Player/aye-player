@@ -71,3 +71,55 @@ export interface MoveTrackToInput {
   trackId: Scalars["String"];
   position: Scalars["String"];
 }
+
+// Return types
+interface Playlist {
+  Id: string;
+  Name: string;
+  Duration: number;
+  SongsCount: number;
+}
+
+interface Track {
+  Id: string;
+  Title: string;
+  Duration: number;
+  Source: string;
+  IsLivestream: boolean;
+}
+
+export interface PlaylistData {
+  Playlist: Playlist;
+}
+
+export interface PlaylistsData {
+  Playlists: Playlist[];
+}
+
+export interface CreatePlaylist {
+  Id: string;
+}
+
+export interface CreatePlaylistData {
+  CreateNewPlaylist: CreatePlaylist;
+}
+
+export interface CreatePlaylistByVideoUrls {
+  CreateNewPlaylistByVideoUrls: CreatePlaylist;
+}
+
+export interface PlaylistTracks {
+  PlaylistSongs: Track[];
+}
+
+export interface SearchTracks {
+  Songs: Track[];
+}
+
+export interface RelatedTracks {
+  Radio: Track[];
+}
+
+export interface GetTrackFromUrl {
+  Song: Track;
+}
