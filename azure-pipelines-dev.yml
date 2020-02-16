@@ -19,18 +19,13 @@ steps:
       versionSpec: '12.x'
     displayName: 'Install Node.js'
 
-  - task: npmAuthenticate@0
+  - task: Yarn@3
     inputs:
-      workingFile: '.npmrc'
-
-  - script: npm install -g pnpm
-    displayName: 'Install pnpm'
-
-  - script: pnpm i
-    displayName: 'Install Dependencies'
+      customRegistry: 'useFeed'
+      customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
 
   - script: |
-      pnpm run package
+      yarn package
     displayName: 'Package'
 
   - task: DeleteFiles@1
