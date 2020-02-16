@@ -33,7 +33,6 @@ steps:
 
   - task: Yarn@3
     inputs:
-      productionMode: true
       customRegistry: 'useFeed'
       customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
       arguments: '--frozen-lockfile'
