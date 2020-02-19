@@ -41,7 +41,7 @@ const Control = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 364px);
+  height: calc(100% - 376px);
 `;
 
 const Header = styled.div`
