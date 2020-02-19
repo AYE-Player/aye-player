@@ -25,7 +25,7 @@ const MainPage: React.FunctionComponent = () => {
     <>
       <StyledGrid
         container
-        direction="column"
+        direction="row"
       >
         {user.isAuthenticated ? (
           <AccountDisplay username={user.name} avatar={user.avatar} email={user.email} />
