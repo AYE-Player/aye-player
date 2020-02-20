@@ -54,13 +54,12 @@ const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
-  width: 93%;
+  width: 82%;
   color: ${props => (props.active ? "#f0ad4e" : "")};
 `;
 
 const Title = styled.div`
-  margin-right: 40px;
-  width: 85%;
+  margin-right: 16px;
   white-space: nowrap;
   overflow: hidden;
 `;
@@ -203,7 +202,9 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
                   src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
                 />
               </TrackImageContainer>
-              <Title>{props.track.current.title}</Title>
+              <div style={{ overflow: "hidden" }}>
+                <Title>{props.track.current.title}</Title>
+              </div>
             </TrackInfoContainer>
             <Duration>{props.duration}</Duration>
             <ExtendedPlaylistEntityMenu

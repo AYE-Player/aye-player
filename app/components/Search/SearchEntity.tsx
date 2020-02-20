@@ -41,12 +41,11 @@ const TrackInfoContainer = styled.div`
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
-  width: 100%;
+  width: 82%;
 `;
 
 const Title = styled.div`
   padding-right: 16px;
-  width: 85%;
   white-space: nowrap;
   overflow: hidden;
 `;
@@ -176,11 +175,9 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
           />
         </TrackImageContainer>
-        <Title>
-          <div style={{ display: "inline-block" }}>
-            {props.track.current.title}
-          </div>
-        </Title>
+        <div style={{ overflow: "hidden" }}>
+          <Title>{props.track.current.title}</Title>
+        </div>
       </TrackInfoContainer>
       <Duration>{props.duration}</Duration>
       <SearchEntityMenu
