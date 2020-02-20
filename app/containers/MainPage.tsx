@@ -9,7 +9,7 @@ import useInject from "../hooks/useInject";
 import Routes from "../Routes";
 
 const StyledGrid = styled(Grid)`
-  height: calc(100% - 47px);
+  height: calc(100% - 32px);
   padding: 8px 24px 0 24px;
   width: 100%;
 `;

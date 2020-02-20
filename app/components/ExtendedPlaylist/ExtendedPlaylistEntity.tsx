@@ -60,12 +60,14 @@ const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
 
 const Title = styled.div`
   margin-right: 40px;
-  width: 60%;
+  width: 85%;
   white-space: nowrap;
   overflow: hidden;
 `;
 
-const Duration = styled.div``;
+const Duration = styled.div`
+  margin-right: 48px;
+`;
 
 const TrackImageContainer = styled.div`
   width: 48px;
@@ -202,8 +204,8 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
                 />
               </TrackImageContainer>
               <Title>{props.track.current.title}</Title>
-              <Duration>{props.duration}</Duration>
             </TrackInfoContainer>
+            <Duration>{props.duration}</Duration>
             <ExtendedPlaylistEntityMenu
               trackRef={props.track}
               openListDialog={_handleClickOpen}

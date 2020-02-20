@@ -80,7 +80,7 @@ ipcRenderer.on("app-close", (event, message) => {
 const MainGrid = styled.div`
   height: 100%;
   width: calc(100% - 330px);
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const getPlaylists = async () => {

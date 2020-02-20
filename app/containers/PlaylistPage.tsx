@@ -30,8 +30,10 @@ const Header = styled.div`
   margin-bottom: 16px;
 `;
 
+// Im not 100% sure, why we need the 42px here,
+// but it looks good now
 const Container = styled.div`
-  height: 100%;
+  height: calc(100% - 42px);
   width: 100%;
 `;
 
@@ -43,7 +45,7 @@ const PlaylistContainer = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 112px);
+  height: calc(100% - 72px);
 `;
 
 const StyledTableCell = withStyles({

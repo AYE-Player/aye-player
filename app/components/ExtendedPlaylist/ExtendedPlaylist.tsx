@@ -29,28 +29,20 @@ interface IProps {
 }
 
 const Container = styled.div`
-  height: 100%;
+  height: calc(100% - 48px);
   width: 100%;
   top: 0;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
 `;
 
 const ScrollContainer = styled.div`
   overflow-y: auto;
   width: 100%;
-  display: flex;
-  flex-direction: column;
   height: calc(100% - 64px);
 `;
 
 const Header = styled.div`
   font-size: 24px;
   margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 `;
 
 const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {

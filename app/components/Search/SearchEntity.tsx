@@ -46,13 +46,13 @@ const TrackInfoContainer = styled.div`
 
 const Title = styled.div`
   padding-right: 16px;
-  width: 300px;
+  width: 85%;
   white-space: nowrap;
   overflow: hidden;
 `;
 
 const Duration = styled.div`
-  margin-left: 16px;
+  margin-right: 48px;
 `;
 
 const TrackImageContainer = styled.div`
@@ -181,8 +181,8 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             {props.track.current.title}
           </div>
         </Title>
-        <Duration>{props.duration}</Duration>
       </TrackInfoContainer>
+      <Duration>{props.duration}</Duration>
       <SearchEntityMenu
         trackRef={props.track}
         openListDialog={_handleClickOpen}
