@@ -21,7 +21,7 @@ interface IPlaylistEntityMenuProps {
 const Container = styled.div`
   height: 24px;
   width: 24px;
-  display: block;
+  position: absolute;
   margin-right: 16px;
   right: 0;
   cursor: pointer;

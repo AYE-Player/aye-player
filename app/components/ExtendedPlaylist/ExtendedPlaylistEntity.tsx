@@ -37,7 +37,6 @@ const Container = styled.div`
   display: flex;
   position: relative;
   align-items: center;
-  justify-content: space-between;
   border-bottom: 1px solid #565f6c;
   padding-left: 8px;
   &:last-child {
@@ -50,16 +49,20 @@ const Container = styled.div`
 const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   display: flex;
   align-items: center;
-  align-content: space-around;
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
-  width: 82%;
+  width: calc(100% - 200px);
   color: ${props => (props.active ? "#f0ad4e" : "")};
 `;
 
+const TitleWrapper = styled.div`
+  overflow: hidden;
+  margin-left: 24px;
+  width: 85%;
+`;
+
 const Title = styled.div`
-  margin-right: 16px;
   white-space: nowrap;
   overflow: hidden;
 `;
@@ -71,7 +74,6 @@ const Duration = styled.div`
 const TrackImageContainer = styled.div`
   width: 48px;
   height: 48px;
-  margin-right: 32px;
   border-radius: 24px;
   overflow: hidden;
 `;
@@ -202,9 +204,9 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
                   src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
                 />
               </TrackImageContainer>
-              <div style={{ overflow: "hidden" }}>
+              <TitleWrapper>
                 <Title>{props.track.current.title}</Title>
-              </div>
+              </TitleWrapper>
             </TrackInfoContainer>
             <Duration>{props.duration}</Duration>
             <ExtendedPlaylistEntityMenu
