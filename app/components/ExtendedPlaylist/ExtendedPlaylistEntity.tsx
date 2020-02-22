@@ -64,7 +64,6 @@ const TitleWrapper = styled.div`
 
 const Title = styled.div`
   white-space: nowrap;
-  overflow: hidden;
 `;
 
 const Duration = styled.div`
