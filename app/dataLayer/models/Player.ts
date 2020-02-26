@@ -63,7 +63,7 @@ export default class Player extends Model({
       playbackPosition: this.playbackPosition,
       endTime: state ? null : this.currentTrack.current.duration,
       details: this.currentTrack.current.title,
-      state: state ? state : null,
+      state: state ?? null,
       duration: this.currentTrack.current.duration
     });
 

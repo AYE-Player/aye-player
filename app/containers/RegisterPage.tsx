@@ -146,7 +146,7 @@ const RegisterPage: React.FunctionComponent = () => {
         onChange={_handlePasswordChange}
         key="password"
         type="password"
-        error={password.length < 8 && password.length > 0 ? true : false}
+        error={password.length < 8 && password.length > 0}
         required
       />
       <Divider size={2} />
@@ -160,8 +160,6 @@ const RegisterPage: React.FunctionComponent = () => {
         error={
           (password2.length < 8 && password2.length > 0) ||
           password2 !== password
-            ? true
-            : false
         }
         required
       />

@@ -49,7 +49,7 @@ class PlayerInterop {
         {
           type: OutgoingMessageType.INIT,
           track: this.initTrack,
-          startAt: this.startAt ? this.startAt : undefined,
+          startAt: this.startAt ?? undefined,
           volume: this.volume,
           muted: this.isMuted
         },
