@@ -24,12 +24,12 @@ const Header = styled.div`
 const LoginPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user, playlists }: RootStore) => ({
+  const Store = ({ user, playlists }: RootStore) => ({
     user,
     playlists
   });
 
-  const { user, playlists } = useInject(UserStore);
+  const { user, playlists } = useInject(Store);
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
