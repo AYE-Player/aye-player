@@ -31,7 +31,8 @@ export default class Player extends Model({
   playbackPosition: prop<number>(),
   radioActive: prop<boolean>(),
   currentTrack: prop<Maybe<Ref<Track>>>(),
-  currentPlaylist: prop<Maybe<Ref<Playlist>>>()
+  currentPlaylist: prop<Maybe<Ref<Playlist>>>(),
+  livestreamSource: prop<string>()
 }) {
   @modelAction
   playTrack(track: Track) {
@@ -41,6 +42,8 @@ export default class Player extends Model({
     this.currentTrack = trackRef(track);
     Settings.delete("playerSettings.currentTrack");
     Settings.set("playerSettings.currentTrack", getSnapshot(track));
+
+    this.livestreamSource = undefined;
 
     if (!this.isPlaying) this.isPlaying = true;
 
@@ -187,5 +190,10 @@ export default class Player extends Model({
   @modelAction
   toggleRadioMode() {
     this.radioActive = !this.radioActive;
+  }
+
+  @modelAction
+  setLivestreamSource(source: string) {
+    this.livestreamSource = source;
   }
 }

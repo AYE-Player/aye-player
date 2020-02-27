@@ -12,6 +12,7 @@ import PlayerControlsContainer from "./PlayerControlsContainer";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import Track from "../../dataLayer/models/Track";
 const AyeLogo = require("../../images/aye_temp_logo.png");
+const ListenMoe = require("../../images/listenmoe.svg");
 
 interface IPlayerProps {}
 
@@ -342,6 +343,20 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             zIndex: 999
           }}
         />
+      ) : null}
+      {player.livestreamSource === "listen.moe" ? (
+        <img
+        src={ListenMoe}
+        style={{
+          width: "320px",
+          height: "200px",
+          position: "absolute",
+          marginTop: "45px",
+          borderColor: "none",
+          backgroundColor: "#161618",
+          zIndex: 999
+        }}
+      />
       ) : null}
       <div
         style={{

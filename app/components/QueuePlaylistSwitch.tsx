@@ -18,6 +18,7 @@ const QueuePlaylistSwitch: React.FunctionComponent<IQueuePlaylistSwitchProps> = 
 
   const _toggleExternalRadio = () => {
     if (!player.isPlaying) player.togglePlayingState();
+    player.setLivestreamSource("listen.moe")
     PlayerInterop.playLivestream("https://listen.moe/kpop/stream");
   };
 
