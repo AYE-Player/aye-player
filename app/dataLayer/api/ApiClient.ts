@@ -1,4 +1,3 @@
-//TODO: Move gql to unified endpoint !!!! erek
 /**
  * Adjustments for GQL implementation
  * https://graphql.org/learn/best-practices/
