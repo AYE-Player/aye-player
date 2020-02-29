@@ -32,7 +32,9 @@ import {
   RelatedTracks,
   RemoveTrackFromPlaylistInput,
   SearchTracks,
-  SongInputType
+  SongInputType,
+  SubscribePlaylistInpt,
+  UnsubscribePlaylistInpt
 } from "./graphQLTypes";
 
 /**
@@ -144,7 +146,7 @@ class ApiClient {
    * @param id id of the playlist
    */
   async deletePlaylist(id: string) {
-    graphQLClientPlaylists.mutate<any, DeletePlaylistInput>({
+    graphQLClientPlaylists.mutate<void, DeletePlaylistInput>({
       mutation: GRAPHQL.MUTATION.DELETE_PLAYLIST,
       variables: {
         id
@@ -185,7 +187,7 @@ class ApiClient {
    * @param track MobX cached Track
    */
   async addTrackToPlaylist(id: string, track: Track) {
-    graphQLClientPlaylists.mutate<any, AddTrackToPlaylistInput>({
+    graphQLClientPlaylists.mutate<void, AddTrackToPlaylistInput>({
       mutation: GRAPHQL.MUTATION.ADD_TRACK_TO_PLAYLIST,
       variables: {
         id,
@@ -202,7 +204,7 @@ class ApiClient {
    * @param songs array of youtube urls to be added to the playlist
    */
   async addTracksToPlaylistByUrls(id: string, songs: SongInputType[]) {
-    graphQLClientPlaylists.mutate<any, AddTracksToPlaylistByUrlInput>({
+    graphQLClientPlaylists.mutate<void, AddTracksToPlaylistByUrlInput>({
       mutation: GRAPHQL.MUTATION.ADD_TRACKS_TO_PLAYLIST_BY_URLS,
       variables: {
         id,
@@ -217,7 +219,7 @@ class ApiClient {
    * @param track Mobx cached Track
    */
   async removeTrackFromPlaylist(id: string, track: Track) {
-    graphQLClientPlaylists.mutate<any, RemoveTrackFromPlaylistInput>({
+    graphQLClientPlaylists.mutate<void, RemoveTrackFromPlaylistInput>({
       mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
       variables: {
         id,
@@ -232,7 +234,7 @@ class ApiClient {
    * @param trackId id of the track
    */
   async removeTrackFromPlaylistById(id: string, trackId: string) {
-    graphQLClientPlaylists.mutate<any, RemoveTrackFromPlaylistInput>({
+    graphQLClientPlaylists.mutate<void, RemoveTrackFromPlaylistInput>({
       mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
       variables: {
         id,
@@ -249,12 +251,38 @@ class ApiClient {
    * @param oldIndex old position
    */
   async moveTrackTo(id: string, trackId: string, position: number) {
-    graphQLClientPlaylists.mutate<any, MoveTrackToInput>({
+    graphQLClientPlaylists.mutate<void, MoveTrackToInput>({
       mutation: GRAPHQL.MUTATION.MOVE_TRACK_TO,
       variables: {
         id,
         trackId,
         position: position.toString()
+      }
+    });
+  }
+
+  /**
+   * Subscribe to the given Playlist
+   * @param id id of the playlist
+   */
+  async subscribePlaylist(id: string) {
+    graphQLClientPlaylists.mutate<void, SubscribePlaylistInpt>({
+      mutation: GRAPHQL.MUTATION.SUBSCRIBE_PLAYLIST,
+      variables: {
+        id
+      }
+    });
+  }
+
+  /**
+   * Unsubscribe to the given Playlist
+   * @param id id of the playlist
+   */
+  async unsubscribePlaylist(id: string) {
+    graphQLClientPlaylists.mutate<void, UnsubscribePlaylistInpt>({
+      mutation: GRAPHQL.MUTATION.UNSUBSCRIBE_PLAYLIST,
+      variables: {
+        id
       }
     });
   }

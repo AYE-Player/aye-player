@@ -19,6 +19,7 @@ interface IProps {
   track: Ref<Track>;
   index: number;
   active: boolean;
+  isReadonly: boolean;
   onClick: Function;
 }
 
@@ -194,6 +195,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             <PlaylistEntityMenu
               trackRef={props.track}
               openListDialog={_handleClickOpen}
+              isReadOnly={props.isReadonly}
             />
           </Container>
         )}
@@ -206,12 +208,14 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         onSelect={_handleClose}
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
-        options={playlists.lists.map(list => {
-          return {
-            name: list.name,
-            id: list.id
-          };
-        })}
+        options={playlists.lists
+          .filter(list => !list.isReadonly)
+          .map(list => {
+            return {
+              name: list.name,
+              id: list.id
+            };
+          })}
       />
       <CustomFormDialog
         id="createPlaylistDialog"

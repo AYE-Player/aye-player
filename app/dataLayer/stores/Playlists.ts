@@ -102,9 +102,13 @@ export default class Playlists extends Model({
   }
 
   @modelFlow
-  remove = _async(function*(this: Playlists, id: string) {
+  remove = _async(function*(this: Playlists, id: string, subscribed: boolean) {
     try {
-      yield* _await(ApiClient.deletePlaylist(id));
+      if (subscribed) {
+        yield* _await(ApiClient.unsubscribePlaylist(id));
+      } else {
+        yield* _await(ApiClient.deletePlaylist(id));
+      }
       const foundList = this.lists.find(playlist => playlist.id === id);
       const idx = this.lists.indexOf(foundList);
       this.lists.splice(idx, 1);

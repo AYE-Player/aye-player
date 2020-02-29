@@ -63,6 +63,7 @@ const LoginPage: React.FunctionComponent = () => {
           name: playlist.Name,
           duration: playlist.Duration,
           trackCount: playlist.SongsCount,
+          isReadonly: playlist.IsReadonly,
           tracks: []
         });
 
@@ -70,7 +71,11 @@ const LoginPage: React.FunctionComponent = () => {
       }
     } catch (error) {
       AyeLogger.player(
-        `[LoginPage] Error retrieving Playlists ${JSON.stringify(error, null, 2)}`,
+        `[LoginPage] Error retrieving Playlists ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
         LogType.ERROR
       );
       throw error;

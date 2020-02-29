@@ -223,7 +223,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
         onSelect={_handleClose}
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
-        options={playlists.lists.map(list => {
+        options={playlists.lists.filter(list => !list.isReadonly).map(list => {
           return {
             name: list.name,
             id: list.id

@@ -95,6 +95,7 @@ const getPlaylists = async () => {
           name: playlist.Name,
           duration: playlist.Duration,
           trackCount: playlist.SongsCount,
+          isReadonly: playlist.IsReadonly,
           tracks: []
         });
 

@@ -66,6 +66,7 @@ export const GRAPHQL = {
           Name
           Duration
           SongsCount
+          IsReadonly
         }
       }
     `,
@@ -77,6 +78,7 @@ export const GRAPHQL = {
           Name
           Duration
           SongsCount
+          IsReadonly
         }
       }
     `,
@@ -189,6 +191,22 @@ export const GRAPHQL = {
             YtId: $trackId
             Patch: [{ op: "replace", path: "OrderId", value: $position }]
           }
+        )
+      }
+    `,
+
+    SUBSCRIBE_PLAYLIST: gql`
+      mutation($id: ID!) {
+        AddReadingUserToPlaylist(
+          addReadingUserToPlaylistArgs: { PlaylistId: $id }
+        )
+      }
+    `,
+
+    UNSUBSCRIBE_PLAYLIST: gql`
+      mutation($id: ID!) {
+        RemoveReadingUserFromPlaylist(
+          removeReadingUserFromPlaylistArgs: { PlaylistId: $id }
         )
       }
     `

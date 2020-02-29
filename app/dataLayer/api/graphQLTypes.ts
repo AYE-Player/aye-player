@@ -72,12 +72,21 @@ export interface MoveTrackToInput {
   position: Scalars["String"];
 }
 
+export interface SubscribePlaylistInpt {
+  id: Scalars["ID"];
+}
+
+export interface UnsubscribePlaylistInpt {
+  id: Scalars["ID"];
+}
+
 // Return types
 interface Playlist {
   Id: string;
   Name: string;
   Duration: number;
   SongsCount: number;
+  IsReadonly: boolean;
 }
 
 interface Track {

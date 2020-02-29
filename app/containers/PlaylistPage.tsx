@@ -88,6 +88,7 @@ const PlaylistPage: React.FunctionComponent = () => {
               name: playlist.Name,
               trackCount: playlist.SongsCount,
               duration: playlist.Duration,
+              isReadonly: playlist.IsReadonly,
               tracks: []
             });
             if (playlist.Tracks) {

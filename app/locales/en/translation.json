@@ -147,7 +147,8 @@
     "noTracks": "No tracks in queue"
   },
   "Playlist": {
-    "noList": "No active Playlist"
+    "noList": "No active Playlist",
+    "subscribeb": "Successfully subscribed"
   },
   "EntityMenu": {
     "playNext": "Play Next",
@@ -159,6 +160,7 @@
     "deletePlaylist": "Delete Playlist",
     "addPlaylistToQueue": "Add Playlist to Queue",
     "addTracksToPlaylist": "Add Tracks",
+    "sharePlaylist": "Share Playlist",
     "startRadioMode": "Start Track Radio"
   },
   "Tray": {
