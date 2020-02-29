@@ -16,6 +16,7 @@ import useInject from "../../hooks/useInject";
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
   openListDialog: any;
+  isReadOnly: boolean;
 }
 
 const Container = styled.div`
@@ -148,7 +149,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
           <MenuItem onClick={() => _addToQueue()}>
             {t("EntityMenu.addToQueue")}
           </MenuItem>
-          <MenuItem onClick={() => _handleRemoveTrack()}>
+          <MenuItem onClick={() => _handleRemoveTrack()} disabled={props.isReadOnly}>
             {t("EntityMenu.remove")}
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>

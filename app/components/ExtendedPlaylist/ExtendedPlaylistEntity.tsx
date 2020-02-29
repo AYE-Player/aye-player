@@ -22,6 +22,10 @@ interface IProps {
   onClick: Function;
 }
 
+interface ITrackInfoContainerProps {
+  active: boolean;
+}
+
 const DragHandle = styled(DragHandleIcon)`
   opacity: 0;
   cursor: grab;
@@ -33,7 +37,6 @@ const Container = styled.div`
   display: flex;
   position: relative;
   align-items: center;
-  justify-content: space-between;
   border-bottom: 1px solid #565f6c;
   padding-left: 8px;
   &:last-child {
@@ -43,30 +46,33 @@ const Container = styled.div`
     opacity: 1;
   }
 `;
-const TrackInfoContainer = styled.div<any>`
+const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   display: flex;
   align-items: center;
-  align-content: space-around;
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
-  width: 93%;
-  color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
+  width: calc(100% - 200px);
+  color: ${props => (props.active ? "#f0ad4e" : "")};
+`;
+
+const TitleWrapper = styled.div`
+  overflow: hidden;
+  margin-left: 24px;
+  width: 85%;
 `;
 
 const Title = styled.div`
-  margin-right: 40px;
-  width: 60%;
   white-space: nowrap;
-  overflow: hidden;
 `;
 
-const Duration = styled.div``;
+const Duration = styled.div`
+  margin-right: 48px;
+`;
 
 const TrackImageContainer = styled.div`
   width: 48px;
   height: 48px;
-  margin-right: 32px;
   border-radius: 24px;
   overflow: hidden;
 `;
@@ -181,7 +187,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
         draggableId={props.track.current.id}
         index={props.index}
       >
-        {(provided: any) => (
+        {provided => (
           <Container
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -197,9 +203,11 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
                   src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
                 />
               </TrackImageContainer>
-              <Title>{props.track.current.title}</Title>
-              <Duration>{props.duration}</Duration>
+              <TitleWrapper>
+                <Title>{props.track.current.title}</Title>
+              </TitleWrapper>
             </TrackInfoContainer>
+            <Duration>{props.duration}</Duration>
             <ExtendedPlaylistEntityMenu
               trackRef={props.track}
               openListDialog={_handleClickOpen}
@@ -215,7 +223,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
         onSelect={_handleClose}
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
-        options={playlists.lists.map(list => {
+        options={playlists.lists.filter(list => !list.isReadonly).map(list => {
           return {
             name: list.name,
             id: list.id

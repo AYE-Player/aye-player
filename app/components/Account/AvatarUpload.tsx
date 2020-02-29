@@ -58,6 +58,13 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
     document.getElementById("file-input-element").click();
   };
 
+  const _getAvatar = () => {
+    const { user, avatar } = props;
+    if (avatar) return avatar;
+    if (user) return user.avatar;
+    return placeholder;
+  };
+
   return (
     <Aligner>
       <input
@@ -67,16 +74,7 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
         type="file"
         onChange={fileSelectedHandler}
       />
-      <Image
-        src={
-          props.avatar
-            ? props.avatar
-            : props.user
-            ? props.user.avatar
-            : placeholder
-        }
-        onClick={() => _clickInputFaker()}
-      />
+      <Image src={_getAvatar()} onClick={() => _clickInputFaker()} />
       <CustomButton onClick={() => _clickInputFaker()}>
         {t("AccountPage.changeAvatarButton")}
       </CustomButton>

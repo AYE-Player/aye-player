@@ -12,6 +12,7 @@ export interface IPlaylistDto {
   Tracks?: ITrackDto[];
   Duration: number;
   SongsCount: number;
+  IsReadonly: boolean;
 }
 
 export interface IRole {

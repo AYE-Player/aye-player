@@ -19,7 +19,7 @@ interface IProps {
   onDoubleClick: Function;
 }
 
-const Container = styled.div<any>`
+const Container = styled.div`
   height: 72px;
   width: calc(100% - 16px);
   display: flex;
@@ -41,25 +41,26 @@ const TrackInfoContainer = styled.div`
   cursor: pointer;
   padding: 8px;
   padding-left: 8px;
-  width: 100%;
+  width: calc(100% - 200px);
 `;
 
-// TODO: FIX scrolltext, to only scroll if it really goes out of the designated zone
-const Title = styled.div`
-  padding-right: 16px;
-  width: 300px;
-  white-space: nowrap;
+const TitleWrapper = styled.div`
   overflow: hidden;
+  margin-left: 24px;
+  width: 85%;
+`;
+
+const Title = styled.div`
+  white-space: nowrap;
 `;
 
 const Duration = styled.div`
-  margin-left: 16px;
+  margin-right: 48px;
 `;
 
 const TrackImageContainer = styled.div`
   width: 48px;
   height: 48px;
-  margin-right: 32px;
   border-radius: 24px;
   overflow: hidden;
 `;
@@ -177,13 +178,11 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
             src={`https://img.youtube.com/vi/${props.track.current.id}/default.jpg`}
           />
         </TrackImageContainer>
-        <Title>
-          <div style={{ display: "inline-block" }}>
-            {props.track.current.title}
-          </div>
-        </Title>
-        <Duration>{props.duration}</Duration>
+        <TitleWrapper>
+          <Title>{props.track.current.title}</Title>
+        </TitleWrapper>
       </TrackInfoContainer>
+      <Duration>{props.duration}</Duration>
       <SearchEntityMenu
         trackRef={props.track}
         openListDialog={_handleClickOpen}
@@ -197,7 +196,7 @@ const SearchEntity: React.FunctionComponent<IProps> = props => {
         onSelect={_handleClose}
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
-        options={playlists.lists.map(list => {
+        options={playlists.lists.filter(list => !list.isReadonly).map(list => {
           return {
             name: list.name,
             id: list.id

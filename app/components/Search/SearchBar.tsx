@@ -12,6 +12,7 @@ import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
+import ApiClient from "../../dataLayer/api/ApiClient";
 
 const Search = styled.div`
   width: 100%;
@@ -53,7 +54,7 @@ const SearchBar: React.FunctionComponent = () => {
     setTerm(event.target.value);
   };
 
-  const _handleSearchIconClick = (event: any) => {
+  const _handleSearchIconClick = () => {
     if (term.length > 0) {
       _search(term);
     }
@@ -67,7 +68,15 @@ const SearchBar: React.FunctionComponent = () => {
 
   const _search = async (term: string) => {
     try {
-      if (detectLink(term)) {
+      //TODO: Retrieve songs of the subscribed playlist
+      if (term.includes("aye://playlist/")) {
+        await ApiClient.subscribePlaylist(term.split("//playlist/")[1]);
+        enqueueSnackbar("", {
+          content: key => (
+            <SnackMessage id={key} variant="success" message={t("Playlist.subscribed")} />
+          )
+        });
+      } else if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
         let track: Track;
         if (trackInfo.duration === 0) {

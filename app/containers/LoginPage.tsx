@@ -21,15 +21,15 @@ const Header = styled.div`
   padding-bottom: 8px;
 `;
 
-const LoginPage: React.FunctionComponent<any> = () => {
+const LoginPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const UserStore = ({ user, playlists }: RootStore) => ({
+  const Store = ({ user, playlists }: RootStore) => ({
     user,
     playlists
   });
 
-  const { user, playlists } = useInject(UserStore);
+  const { user, playlists } = useInject(Store);
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
@@ -63,6 +63,7 @@ const LoginPage: React.FunctionComponent<any> = () => {
           name: playlist.Name,
           duration: playlist.Duration,
           trackCount: playlist.SongsCount,
+          isReadonly: playlist.IsReadonly,
           tracks: []
         });
 
@@ -70,7 +71,11 @@ const LoginPage: React.FunctionComponent<any> = () => {
       }
     } catch (error) {
       AyeLogger.player(
-        `[LoginPage] Error retrieving Playlists ${JSON.stringify(error, null, 2)}`,
+        `[LoginPage] Error retrieving Playlists ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
         LogType.ERROR
       );
       throw error;

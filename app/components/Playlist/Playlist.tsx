@@ -41,7 +41,7 @@ const Control = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 364px);
+  height: calc(100% - 376px);
 `;
 
 const Header = styled.div`
@@ -139,7 +139,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
           </ButtonAligner>
         </Header>
         <Droppable droppableId="droppable">
-          {(provided: any) => (
+          {provided => (
             <Observer>
               {() => (
                 <ScrollContainer
@@ -157,6 +157,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
                         active={
                           player.currentTrack?.current.id === track.current.id
                         }
+                        isReadonly={player.currentPlaylist.current.isReadonly}
                       />
                     );
                   })}

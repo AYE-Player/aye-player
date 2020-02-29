@@ -9,7 +9,7 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import routes from "../constants/routes.json";
 import RootStore from "../dataLayer/stores/RootStore";
-import { debounce, validateEmail } from "../helpers/";
+import { validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
 
 const Header = styled.div`
@@ -17,7 +17,7 @@ const Header = styled.div`
   padding-bottom: 8px;
 `;
 
-const RegisterPage: React.FunctionComponent<any> = () => {
+const RegisterPage: React.FunctionComponent = () => {
   const store = ({ user }: RootStore) => ({
     user
   });
@@ -66,7 +66,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
   const _handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
 
-    debounce(setInvalidEmail(!validateEmail(event.target.value)), 500);
+    setInvalidEmail(!validateEmail(event.target.value));
   };
 
   const _handleOnClick = async (event?: React.MouseEvent) => {
@@ -146,7 +146,7 @@ const RegisterPage: React.FunctionComponent<any> = () => {
         onChange={_handlePasswordChange}
         key="password"
         type="password"
-        error={password.length < 8 && password.length > 0 ? true : false}
+        error={password.length < 8 && password.length > 0}
         required
       />
       <Divider size={2} />
@@ -160,8 +160,6 @@ const RegisterPage: React.FunctionComponent<any> = () => {
         error={
           (password2.length < 8 && password2.length > 0) ||
           password2 !== password
-            ? true
-            : false
         }
         required
       />

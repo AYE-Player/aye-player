@@ -5,7 +5,7 @@ import React from "react";
 import styled from "styled-components";
 import PlayerInterop from "../../../dataLayer/api/PlayerInterop";
 import RootStore from "../../../dataLayer/stores/RootStore";
-import { debounce, formattedDuration } from "../../../helpers/";
+import { formattedDuration } from "../../../helpers/";
 import useInject from "../../../hooks/useInject";
 
 interface IProps {
@@ -71,11 +71,11 @@ const PlaybackControl: React.FunctionComponent<IProps> = props => {
   let seekTo: number;
 
 
-  const _handlePlaybackChange = (event: any, newValue: number) => {
-    debounce(player.setPlaybackPosition(newValue), 500);
+  const _handlePlaybackChange = (_event: any, newValue: number) => {
+    player.setPlaybackPosition(newValue)
   };
 
-  const _handleSeek = (event: any, newValue: number) => {
+  const _handleSeek = (_event: any, newValue: number) => {
     seekTo = newValue;
   };
 

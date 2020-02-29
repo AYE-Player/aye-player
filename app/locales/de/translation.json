@@ -147,7 +147,8 @@
     "noTracks": "Warteschlange is leer"
   },
   "Playlist": {
-    "noList": "Keine aktive Playlist"
+    "noList": "Keine aktive Playlist",
+    "subscribeb": "Erfolgreich subscribed"
   },
   "EntityMenu": {
     "playNext": "Als nächstes Spielen",
@@ -159,6 +160,7 @@
     "deletePlaylist": "Lösche Playlist",
     "addPlaylistToQueue": "Lade Playlist in Queue",
     "addTracksToPlaylist": "Tracks hinzufügen",
+    "sharePlaylist": "Teile Playlist",
     "startRadioMode": "Song Radio starten"
   },
   "Tray": {

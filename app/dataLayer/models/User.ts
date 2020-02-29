@@ -39,7 +39,7 @@ export default class User extends Model({
         this.id = userInfo.Id;
         this.email = userInfo.Email;
         this.name = userInfo.Username;
-        this.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
+        this.avatar = userInfo.Avatar ?? undefined;
         this.isAuthenticated = true;
         this.roles = userInfo.Roles.map((role: IRole) => role.Name);
         this.hasPremium =
@@ -73,7 +73,7 @@ export default class User extends Model({
       this.id = userInfo.Id;
       this.email = userInfo.Email;
       this.name = userInfo.Username;
-      this.avatar = userInfo.Avatar ? userInfo.Avatar : undefined;
+      this.avatar = userInfo.Avatar ?? undefined;
       this.isAuthenticated = true;
       this.roles = userInfo.Roles.map((role: IRole) => role.Name);
       this.hasPremium =

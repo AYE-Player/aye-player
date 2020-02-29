@@ -19,7 +19,12 @@ interface IProps {
   track: Ref<Track>;
   index: number;
   active: boolean;
+  isReadonly: boolean;
   onClick: Function;
+}
+
+interface ITrackInfoContainerProps {
+  active: boolean;
 }
 
 const DragHandle = styled(DragHandleIcon)`
@@ -28,7 +33,7 @@ const DragHandle = styled(DragHandleIcon)`
   z-index: 10;
 `;
 
-const Container = styled.div<any>`
+const Container = styled.div`
   height: 48px;
   width: calc(100% - 8px);
   display: flex;
@@ -46,13 +51,13 @@ const Container = styled.div<any>`
   }
 `;
 
-const TrackInfoContainer = styled.div<any>`
+const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   display: inline-block;
   cursor: pointer;
   width: 224px;
   padding: 8px 0;
   padding-left: 8px;
-  color: ${(props: any) => (props.active ? "#f0ad4e" : "")};
+  color: ${props => (props.active ? "#f0ad4e" : "")};
 `;
 
 const Title = styled.div`
@@ -190,6 +195,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
             <PlaylistEntityMenu
               trackRef={props.track}
               openListDialog={_handleClickOpen}
+              isReadOnly={props.isReadonly}
             />
           </Container>
         )}
@@ -202,12 +208,14 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         onSelect={_handleClose}
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
-        options={playlists.lists.map(list => {
-          return {
-            name: list.name,
-            id: list.id
-          };
-        })}
+        options={playlists.lists
+          .filter(list => !list.isReadonly)
+          .map(list => {
+            return {
+              name: list.name,
+              id: list.id
+            };
+          })}
       />
       <CustomFormDialog
         id="createPlaylistDialog"

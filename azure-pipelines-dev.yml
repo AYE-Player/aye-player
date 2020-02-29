@@ -7,6 +7,9 @@ strategy:
     windows:
       imageName: 'windows-latest'
 
+variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+
 pool:
   vmImage: $(imageName)
 
@@ -18,11 +21,21 @@ steps:
     inputs:
       versionSpec: '12.x'
     displayName: 'Install Node.js'
-  
+
+  - task: Cache@2
+    inputs:
+      key: 'yarn | "$(Agent.OS)" | yarn.lock'
+      restoreKeys: |
+         yarn | "$(Agent.OS)"
+         yarn
+      path: $(YARN_CACHE_FOLDER)
+    displayName: Cache Yarn packages
+
   - task: Yarn@3
     inputs:
       customRegistry: 'useFeed'
       customFeed: '349a4029-ad48-4139-829a-350c5fbdced8'
+      arguments: '--frozen-lockfile'
 
   - script: |
       yarn package

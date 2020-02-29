@@ -4,7 +4,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
-import { withStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,8 +29,11 @@ const Header = styled.div`
   margin-bottom: 16px;
 `;
 
+// Im not 100% sure, why we need the 42px here,
+// but it looks good now
 const Container = styled.div`
-  height: 100%;
+  height: calc(100% - 42px);
+  width: 100%;
 `;
 
 const PlaylistContainer = styled.div`
@@ -42,14 +44,8 @@ const PlaylistContainer = styled.div`
 
 const ScrollContainer = styled.div`
   overflow: auto;
-  height: calc(100% - 112px);
+  height: calc(100% - 72px);
 `;
-
-const StyledTableCell = withStyles({
-  body: {
-    color: "#f2f5f4"
-  }
-})(TableCell);
 
 const PlaylistPage: React.FunctionComponent = () => {
   const [newPlaylistName, setNewPlaylistName] = React.useState("");
@@ -92,6 +88,7 @@ const PlaylistPage: React.FunctionComponent = () => {
               name: playlist.Name,
               trackCount: playlist.SongsCount,
               duration: playlist.Duration,
+              isReadonly: playlist.IsReadonly,
               tracks: []
             });
             if (playlist.Tracks) {
@@ -233,48 +230,27 @@ const PlaylistPage: React.FunctionComponent = () => {
             <TableBody>
               {playlists.lists.map(playlist => (
                 <TableRow key={playlist.id}>
-                  <StyledTableCell
-                    component="th"
-                    scope="row"
-                    style={{ borderBottom: "1px solid #565f6c" }}
-                  >
+                  <TableCell component="th" scope="row">
                     <Link
                       to={`/playlist/${playlist.id}`}
-                      style={{ color: "#f2f5f4" }}
+                      style={{ color: "#f2f5f4", opacity: 1 }}
                     >
                       {playlist.name}
                     </Link>
-                  </StyledTableCell>
-                  <StyledTableCell
-                    align="right"
-                    style={{
-                      color: "#f2f5f4",
-                      borderBottom: "1px solid #565f6c"
-                    }}
-                  >
+                  </TableCell>
+                  <TableCell align="right" style={{ color: "#f2f5f4" }}>
                     {playlist.trackCount}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    align="right"
-                    style={{
-                      color: "#f2f5f4",
-                      borderBottom: "1px solid #565f6c"
-                    }}
-                  >
+                  </TableCell>
+                  <TableCell align="right" style={{ color: "#f2f5f4" }}>
                     {formattedDuration(playlist.duration)}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    style={{
-                      color: "#f2f5f4",
-                      borderBottom: "1px solid #565f6c"
-                    }}
-                  >
+                  </TableCell>
+                  <TableCell style={{ color: "#f2f5f4" }}>
                     <PlaylistPageMenu
                       id={playlist.id}
                       handleAddTracksToList={() => setAddTracksOpen(true)}
                       setSelectedPlaylist={setSelectedPlaylist}
                     />
-                  </StyledTableCell>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

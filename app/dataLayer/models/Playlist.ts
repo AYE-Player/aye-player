@@ -20,7 +20,8 @@ export default class Playlist extends Model({
   name: prop<string>(),
   tracks: prop<Ref<Track>[]>(),
   duration: prop(0),
-  trackCount: prop(0)
+  trackCount: prop(0),
+  isReadonly: prop<Maybe<boolean>>()
 }) {
   getTrackById(id: string) {
     if (!this.tracks) return null;

@@ -7,7 +7,13 @@ interface ISnackMessageProps {
   message: string;
 }
 
-const Container = styled.div<any>`
+interface IContainerProps {
+  length: number;
+  variant: "warning" | "success" | "info" | "error";
+  ref: any;
+}
+
+const Container = styled.div<IContainerProps>`
   ${props => {
     if (props.length >= 25) {
       return "width: 500px;";

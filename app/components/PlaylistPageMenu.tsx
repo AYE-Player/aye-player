@@ -62,6 +62,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   });
 
   const { player, playlists, queue, trackCache } = useInject(Store);
+  const playlist = playlists.getListById(props.id);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -74,8 +75,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   };
 
   const _handleLoadClick = async () => {
-    const playlist = playlists.getListById(props.id);
-
     if (playlist.tracks.length === 0) {
       await _getTracksOfPlaylist(playlist);
     }
@@ -90,13 +89,10 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
 
   const _handleDeleteClick = () => {
     setAnchorEl(null);
-    const playlist = playlists.getListById(props.id);
-    playlists.remove(playlist.id);
+    playlists.remove(playlist.id, playlist.isReadonly);
   };
 
   const _handleAddPlaylistToQueueClick = async () => {
-    const playlist = playlists.getListById(props.id);
-
     if (playlist.tracks.length === 0) {
       await _getTracksOfPlaylist(playlist);
     }
@@ -122,6 +118,10 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
     }
   };
 
+  const _handleSharePlaylist = async () => {
+    navigator.clipboard.writeText(`aye://playlist/${props.id}`);
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose}>
       <Container onClick={_handleClick}>
@@ -134,7 +134,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
         >
           <MenuItem
             onClick={() => _handleLoadClick()}
-            disabled={playlists.getListById(props.id).trackCount === 0}
+            disabled={playlist.trackCount === 0}
           >
             {t("EntityMenu.loadPlaylist")}
           </MenuItem>
@@ -143,14 +143,21 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
               props.setSelectedPlaylist(props.id);
               props.handleAddTracksToList();
             }}
+            disabled={playlist.isReadonly}
           >
             {t("EntityMenu.addTracksToPlaylist")}
           </MenuItem>
           <MenuItem
             onClick={() => _handleAddPlaylistToQueueClick()}
-            disabled={playlists.getListById(props.id).trackCount === 0}
+            disabled={playlist.trackCount === 0}
           >
             {t("EntityMenu.addPlaylistToQueue")}
+          </MenuItem>
+          <MenuItem
+            onClick={() => _handleSharePlaylist()}
+            disabled={playlist.isReadonly}
+          >
+            {t("EntityMenu.sharePlaylist")}
           </MenuItem>
           <MenuItem onClick={() => _handleDeleteClick()}>
             {t("EntityMenu.deletePlaylist")}
