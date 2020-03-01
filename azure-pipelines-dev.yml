@@ -7,9 +7,6 @@ strategy:
     windows:
       imageName: 'windows-latest'
 
-variables:
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-
 pool:
   vmImage: $(imageName)
 
