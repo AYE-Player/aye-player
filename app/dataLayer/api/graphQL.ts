@@ -176,7 +176,7 @@ export const GRAPHQL = {
     `,
 
     REMOVE_TRACK_FROM_PLAYLIST: gql`
-      mutation($id: ID!, $trackId: String!) {
+      mutation($id: ID!, $trackId: ID!) {
         RemoveSongFromPlaylist(
           removeSongFromPlaylistArgs: { PlaylistId: $id, SongId: $trackId }
         )
