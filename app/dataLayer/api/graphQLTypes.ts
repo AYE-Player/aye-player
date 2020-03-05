@@ -94,8 +94,6 @@ export interface ITrackDto {
   Id: string;
   Title: string;
   Duration: number;
-  Source: string;
-  IsLivestream: boolean;
 }
 
 export interface PlaylistData {
