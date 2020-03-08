@@ -32,7 +32,7 @@ const Container = styled.div<IContainerProps>`
   boxshadow: "0px 1px 5px rgba(0, 0, 0, 0.6)";
   ${props => {
     if (props.variant === "warning") return "background-color: #ef6c00;";
-    else if (props.variant === "success") return "background-color: #689f38;";
+    else if (props.variant === "success") return "background-color: #f0ad4e;";
     else if (props.variant === "info") return "background-color: #546e7a;";
     else if (props.variant === "error") return "background-color: #f44336;";
   }}
