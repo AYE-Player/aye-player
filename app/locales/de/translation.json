@@ -36,7 +36,9 @@
   },
   "Error": {
     "couldNotAddTrack": "Track konnte nicht hinzugefügt werden, versuche es später nocheinmal",
-    "couldNotMoveTrack": "Track konnte nicht verschoben werden, versuche es später nocheinmal"
+    "couldNotMoveTrack": "Track konnte nicht verschoben werden, versuche es später nocheinmal",
+    "couldNotDeleteTrack": "Track konnte nicht gelöscht werden, versuche es später nocheinmal",
+    "getPlaylists": "Fehler beim laden der Playlist(s), versuche es später nocheinmal"
   },
   "SearchPage": {
     "title": "Suchen",
@@ -46,8 +48,7 @@
     "trackExists": "Track ist schon vorhanden",
     "trackAdded": "Track wurde hinzugefügt",
     "selectPlaylist": "Playlist auswählen",
-    "createListText": "Erstelle Playlist",
-    "createdAndAdded": "Playlist erstellt und Track hinzugefügt"
+    "createListText": "Erstelle Playlist"
   },
   "Navigation": {
     "search": "Suchen",
@@ -133,7 +134,8 @@
       "confirmButton": "Löschen bestätigen",
       "title": "Account Löschung",
       "text": "Möchtest du deinen Account wirklich löschen? Dies kann nicht rückgängig gemacht werden."
-    }
+    },
+    "deleteSuccess": "Dein Account wurde gelöscht."
   },
   "AccountDisplay": {
     "loginButton": "Einloggen",
@@ -148,7 +150,9 @@
   },
   "Playlist": {
     "noList": "Keine aktive Playlist",
-    "subscribeb": "Erfolgreich subscribed"
+    "subscribed": "Erfolgreich subscribed",
+    "deleted": "Playlist gelöscht",
+    "couldNotDelete": "Fehler beim löschen der Playlist, versuche es später nocheinmal"
   },
   "EntityMenu": {
     "playNext": "Als nächstes Spielen",
@@ -169,5 +173,6 @@
     "previous": "Vorheriges",
     "show": "Anzeigen",
     "quit": "Beenden"
-  }
+  },
+  "createdAndAdded": "Playlist erstellt und Track hinzugefügt"
 }

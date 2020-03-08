@@ -5,12 +5,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ControlPoint from "@material-ui/icons/ControlPoint";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CustomButton from "../components/Customs/CustomButton";
 import CustomTextareaDialog from "../components/Customs/CustomTextareaDialog";
+import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
@@ -60,6 +62,7 @@ const PlaylistPage: React.FunctionComponent = () => {
   );
 
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const Store = ({ playlists, trackCache, user }: RootStore) => ({
     playlists,
@@ -114,6 +117,15 @@ const PlaylistPage: React.FunctionComponent = () => {
         `[PlaylistPage] Error retrieving Playlists ${error}`,
         LogType.ERROR
       );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Error.getPlaylists")}`}
+          />
+        )
+      });
     }
 
     return () => {
@@ -123,10 +135,26 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const _createPlaylist = async () => {
     setOpen(false);
-    if (newPlaylistSongs.length > 0) {
-      await playlists.createListWithSongs(newPlaylistName, newPlaylistSongs);
-    } else {
-      await playlists.createList(newPlaylistName);
+    try {
+      if (newPlaylistSongs.length > 0) {
+        await playlists.createListWithSongs(newPlaylistName, newPlaylistSongs);
+      } else {
+        await playlists.createList(newPlaylistName);
+      }
+    } catch (error) {
+      AyeLogger.player(
+        `Error creating Playlist ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Playlist.couldNotCreate")}`}
+          />
+        )
+      });
     }
   };
 
@@ -171,9 +199,29 @@ const PlaylistPage: React.FunctionComponent = () => {
   };
 
   const _addTracksToPlaylist = async () => {
-    setAddTracksOpen(false);
     const playlist = playlists.getListById(selectedPlaylist);
-    await playlist.addTracksByUrls(songsToAdd);
+    try {
+      setAddTracksOpen(false);
+      await playlist.addTracksByUrls(songsToAdd);
+    } catch (error) {
+      AyeLogger.player(
+        `Error adding tracks to playlist ${playlist.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Error.couldNotAddTrack")}`}
+          />
+        )
+      });
+    }
   };
 
   const renderPlaylists = () => (

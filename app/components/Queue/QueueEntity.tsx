@@ -9,6 +9,8 @@ import styled from "styled-components";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
@@ -122,6 +124,14 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
         });
       }
     } catch (error) {
+      AyeLogger.player(
+        `Error adding Track to playlist. Error: ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -141,19 +151,39 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
 
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
-    await playlists.createListWithSongs(newPlaylistName, [
-      { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
-    ]);
+    try {
+      await playlists.createListWithSongs(newPlaylistName, [
+        { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
+      ]);
 
-    enqueueSnackbar("", {
-      content: key => (
-        <SnackMessage
-          id={key}
-          variant="info"
-          message={`${t("SearchEntity.createdAndAdded")}`}
-        />
-      )
-    });
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="info"
+            message={`${t("createdAndAdded")}`}
+          />
+        )
+      });
+    } catch (error) {
+      AyeLogger.player(
+        `[createListWithSongs] Error creating playlist ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Playlist.couldNotCreate")}`}
+          />
+        )
+      });
+    }
   };
 
   const _onPlaylistNameChange = (
@@ -220,12 +250,14 @@ const QueueEntity: React.FunctionComponent<IProps> = props => {
         onSelect={_handleClose}
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
-        options={playlists.lists.filter(list => !list.isReadonly).map(list => {
-          return {
-            name: list.name,
-            id: list.id
-          };
-        })}
+        options={playlists.lists
+          .filter(list => !list.isReadonly)
+          .map(list => {
+            return {
+              name: list.name,
+              id: list.id
+            };
+          })}
       />
       <CustomFormDialog
         id="createPlaylistDialog"

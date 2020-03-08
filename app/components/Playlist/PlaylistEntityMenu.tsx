@@ -1,9 +1,10 @@
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/core/styles/withStyles";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { Ref } from "mobx-keystone";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -12,6 +13,9 @@ import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
+import SnackMessage from "../Customs/SnackMessage";
 
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
@@ -54,6 +58,7 @@ const StyledMenu = withStyles({
 
 const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const Store = ({ queue, player, trackCache }: RootStore) => ({
     queue,
@@ -74,8 +79,30 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
   };
 
   const _handleRemoveTrack = async () => {
-    await player.currentPlaylist.current.removeTrackById(props.trackRef.current.id);
-    setAnchorEl(null);
+    try {
+      await player.currentPlaylist.current.removeTrackById(
+        props.trackRef.current.id
+      );
+      setAnchorEl(null);
+    } catch (error) {
+      AyeLogger.player(
+        `Error removing track from playlist ${this.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Error.couldNotDeleteTrack")}`}
+          />
+        )
+      });
+    }
   };
 
   const _handlePlayNextTrack = () => {
@@ -149,7 +176,10 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
           <MenuItem onClick={() => _addToQueue()}>
             {t("EntityMenu.addToQueue")}
           </MenuItem>
-          <MenuItem onClick={() => _handleRemoveTrack()} disabled={props.isReadOnly}>
+          <MenuItem
+            onClick={() => _handleRemoveTrack()}
+            disabled={props.isReadOnly}
+          >
             {t("EntityMenu.remove")}
           </MenuItem>
           <MenuItem onClick={() => props.openListDialog()}>

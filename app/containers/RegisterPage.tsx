@@ -11,6 +11,8 @@ import routes from "../constants/routes.json";
 import RootStore from "../dataLayer/stores/RootStore";
 import { validateEmail } from "../helpers/";
 import useInject from "../hooks/useInject";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 
 const Header = styled.div`
   font-size: 24px;
@@ -85,6 +87,7 @@ const RegisterPage: React.FunctionComponent = () => {
         routes.LOGIN
       }`;
     } catch (error) {
+      AyeLogger.player(`Error registering User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />

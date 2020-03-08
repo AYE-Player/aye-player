@@ -1,17 +1,21 @@
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/core/styles/withStyles";
-import ApiClient from "../dataLayer/api/ApiClient";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
-import Track from "../dataLayer/models/Track";
-import useInject from "../hooks/useInject";
-import RootStore from "../dataLayer/stores/RootStore";
 import Playlist from "../dataLayer/models/Playlist";
+import Track from "../dataLayer/models/Track";
+import RootStore from "../dataLayer/stores/RootStore";
+import useInject from "../hooks/useInject";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
+import SnackMessage from "./Customs/SnackMessage";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -52,6 +56,7 @@ const StyledMenu = withStyles({
 
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   PlayerInterop.init();
 
   const Store = ({ player, playlists, queue, trackCache }: RootStore) => ({
@@ -75,29 +80,84 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   };
 
   const _handleLoadClick = async () => {
-    if (playlist.tracks.length === 0) {
-      await _getTracksOfPlaylist(playlist);
-    }
+    try {
+      if (playlist.tracks.length === 0) {
+        await _getTracksOfPlaylist(playlist);
+      }
 
-    queue.clear();
-    queue.addTracks(playlist.tracks.map(track => track.current));
-    player.setCurrentPlaylist(playlist);
-    player.playTrack(playlist.tracks[0].current);
-    PlayerInterop.playTrack(playlist.tracks[0].current);
-    setAnchorEl(null);
+      queue.clear();
+      queue.addTracks(playlist.tracks.map(track => track.current));
+      player.setCurrentPlaylist(playlist);
+      player.playTrack(playlist.tracks[0].current);
+      PlayerInterop.playTrack(playlist.tracks[0].current);
+      setAnchorEl(null);
+    } catch (error) {
+      AyeLogger.player(
+        `Error loading PlaylistTracks ${JSON.stringify(error, null, 2)}`
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.getPlaylists")}
+          />
+        )
+      });
+    }
   };
 
-  const _handleDeleteClick = () => {
-    setAnchorEl(null);
-    playlists.remove(playlist.id, playlist.isReadonly);
+  const _handleDeleteClick = async () => {
+    try {
+      setAnchorEl(null);
+      await playlists.remove(playlist.id, playlist.isReadonly);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="success"
+            message={t("Playlist.deleted")}
+          />
+        )
+      });
+    } catch (error) {
+      AyeLogger.player(
+        `Error deleting Playlist ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Playlist.couldNotDelete")}
+          />
+        )
+      });
+    }
   };
 
   const _handleAddPlaylistToQueueClick = async () => {
-    if (playlist.tracks.length === 0) {
-      await _getTracksOfPlaylist(playlist);
-    }
+    try {
+      if (playlist.tracks.length === 0) {
+        await _getTracksOfPlaylist(playlist);
+      }
 
-    queue.addTracks(playlist.tracks.map(track => track.current));
+      queue.addTracks(playlist.tracks.map(track => track.current));
+    } catch (error) {
+      AyeLogger.player(
+        `Error loading PlaylistTracks ${JSON.stringify(error, null, 2)}`
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={t("Error.getPlaylists")}
+          />
+        )
+      });
+    }
   };
 
   const _getTracksOfPlaylist = async (playlist: Playlist) => {
