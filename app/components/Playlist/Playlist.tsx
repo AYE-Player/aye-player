@@ -177,12 +177,14 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     <Container>
       <Header>
         Playlist
-        <Control onClick={props.toggleExternalRadio}>
-          <Radio />
-        </Control>
-        <Control>
-          <QueueMusicIcon onClick={() => _showQueue()} />
-        </Control>
+        <ButtonAligner>
+          <Control onClick={props.toggleExternalRadio}>
+            <Radio />
+          </Control>
+          <Control>
+            <QueueMusicIcon onClick={() => _showQueue()} />
+          </Control>
+        </ButtonAligner>
       </Header>
       {t("Playlist.noList")}
     </Container>
