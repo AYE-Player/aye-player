@@ -6,9 +6,7 @@ import Playlist from "./Playlist/Playlist";
 import Queue from "./Queue/Queue";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 
-interface IQueuePlaylistSwitchProps {}
-
-const QueuePlaylistSwitch: React.FunctionComponent<IQueuePlaylistSwitchProps> = props => {
+const QueuePlaylistSwitch: React.FunctionComponent = () => {
   const Store = ({ app, player }: RootStore) => ({
     app,
     player
