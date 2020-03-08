@@ -73,8 +73,8 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
     setAnchorEl(null);
   };
 
-  const _handleRemoveTrack = () => {
-    player.currentPlaylist.current.removeTrackById(props.trackRef.current.id);
+  const _handleRemoveTrack = async () => {
+    await player.currentPlaylist.current.removeTrackById(props.trackRef.current.id);
     setAnchorEl(null);
   };
 
