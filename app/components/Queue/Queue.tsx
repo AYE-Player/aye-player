@@ -134,6 +134,9 @@ const Queue: React.FunctionComponent<IProps> = props => {
     <Container>
       <Header>
         Queue
+        <Control onClick={props.toggleExternalRadio}>
+          <Radio />
+        </Control>
         <Control>
           <QueueMusicIcon onClick={() => _showQueue()} />
         </Control>
