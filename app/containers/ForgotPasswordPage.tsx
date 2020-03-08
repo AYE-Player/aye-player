@@ -10,6 +10,8 @@ import Divider from "../components/Divider";
 import RootStore from "../dataLayer/stores/RootStore";
 import { validateEmail } from "../helpers";
 import useInject from "../hooks/useInject";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 
 const Header = styled.div`
   font-size: 24px;
@@ -62,6 +64,14 @@ const PasswordForgotPage: React.FunctionComponent = () => {
         )
       });
     } catch (error) {
+      AyeLogger.player(
+        `Failed to start password reset process ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />

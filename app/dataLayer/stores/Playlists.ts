@@ -8,8 +8,6 @@ import {
   _await
 } from "mobx-keystone";
 import Root from "../../containers/Root";
-import AyeLogger from "../../modules/AyeLogger";
-import { LogType } from "../../types/enums";
 import ApiClient from "../api/ApiClient";
 import Playlist from "../models/Playlist";
 import Track from "../models/Track";
@@ -24,24 +22,17 @@ export default class Playlists extends Model({
 
   @modelFlow
   createList = _async(function*(this: Playlists, name: string) {
-    try {
-      const id = yield* _await(ApiClient.createPlaylist(name));
+    const id = yield* _await(ApiClient.createPlaylist(name));
 
-      const playlist = new Playlist({
-        name,
-        id,
-        tracks: []
-      });
+    const playlist = new Playlist({
+      name,
+      id,
+      tracks: []
+    });
 
-      this.lists.push(playlist);
+    this.lists.push(playlist);
 
-      return playlist;
-    } catch (error) {
-      AyeLogger.player(
-        `[createList] Error setting ID ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
-    }
+    return playlist;
   });
 
   @modelFlow
@@ -49,51 +40,40 @@ export default class Playlists extends Model({
     name: string,
     songs: { Url: string }[]
   ) {
-    try {
-      const id = yield* _await(ApiClient.createPlaylistWithSongs(name, songs));
+    const id = yield* _await(ApiClient.createPlaylistWithSongs(name, songs));
 
-      const pl = yield* _await(ApiClient.getPlaylist(id));
+    const pl = yield* _await(ApiClient.getPlaylist(id));
 
-      const playlist = new Playlist({
-        name,
-        id,
-        duration: pl.Duration,
-        trackCount: pl.SongsCount,
-        tracks: []
+    const playlist = new Playlist({
+      name,
+      id,
+      duration: pl.Duration,
+      trackCount: pl.SongsCount,
+      tracks: []
+    });
+
+    const tracks = yield* _await(
+      ApiClient.getTracksFromPlaylist(id, pl.SongsCount)
+    );
+
+    for (const track of tracks) {
+      const tr = new Track({
+        id: track.Id,
+        title: track.Title,
+        duration: track.Duration,
+        isLivestream: false
       });
 
-      const tracks = yield* _await(
-        ApiClient.getTracksFromPlaylist(id, pl.SongsCount)
-      );
-
-      for (const track of tracks) {
-        const tr = new Track({
-          id: track.Id,
-          title: track.Title,
-          duration: track.Duration,
-          isLivestream: false
-        });
-
-        if (!Root.stores.trackCache.getTrackById(track.Id)) {
-          Root.stores.trackCache.add(tr);
-        }
-
-        playlist.addLoadedTrack(tr);
+      if (!Root.stores.trackCache.getTrackById(track.Id)) {
+        Root.stores.trackCache.add(tr);
       }
 
-      this.lists.push(playlist);
-
-      return playlist;
-    } catch (error) {
-      AyeLogger.player(
-        `[createListWithSongs] Error setting ID ${JSON.stringify(
-          error,
-          null,
-          2
-        )}`,
-        LogType.ERROR
-      );
+      playlist.addLoadedTrack(tr);
     }
+
+    this.lists.push(playlist);
+
+    return playlist;
   });
 
   @modelAction
@@ -103,22 +83,14 @@ export default class Playlists extends Model({
 
   @modelFlow
   remove = _async(function*(this: Playlists, id: string, subscribed: boolean) {
-    try {
-      if (subscribed) {
-        yield* _await(ApiClient.unsubscribePlaylist(id));
-      } else {
-        yield* _await(ApiClient.deletePlaylist(id));
-      }
-      const foundList = this.lists.find(playlist => playlist.id === id);
-      const idx = this.lists.indexOf(foundList);
-      this.lists.splice(idx, 1);
-    } catch (error) {
-      AyeLogger.player(
-        `Error deleting Playlist ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
-      throw error;
+    if (subscribed) {
+      yield* _await(ApiClient.unsubscribePlaylist(id));
+    } else {
+      yield* _await(ApiClient.deletePlaylist(id));
     }
+    const foundList = this.lists.find(playlist => playlist.id === id);
+    const idx = this.lists.indexOf(foundList);
+    this.lists.splice(idx, 1);
   });
 
   @modelAction

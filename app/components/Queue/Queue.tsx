@@ -134,9 +134,14 @@ const Queue: React.FunctionComponent<IProps> = props => {
     <Container>
       <Header>
         Queue
-        <Control>
-          <QueueMusicIcon onClick={() => _showQueue()} />
-        </Control>
+        <ButtonAligner>
+          <Control onClick={props.toggleExternalRadio}>
+            <Radio />
+          </Control>
+          <Control>
+            <QueueMusicIcon onClick={() => _showQueue()} />
+          </Control>
+        </ButtonAligner>
       </Header>
       <ScrollContainer>{t("Queue.noTracks")}</ScrollContainer>
     </Container>

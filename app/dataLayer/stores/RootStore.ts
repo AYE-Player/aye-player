@@ -1,12 +1,12 @@
 import { model, Model, prop } from "mobx-keystone";
-import TrackCache from "./TrackCache";
+import Player from "../models/Player";
 import User from "../models/User";
 import AppStore from "./AppStore";
-import Player from "../models/Player";
 import Playlists from "./Playlists";
 import Queue from "./Queue";
-import TrackHistory from "./TrackHistory";
 import SearchResult from "./SearchResult";
+import TrackCache from "./TrackCache";
+import TrackHistory from "./TrackHistory";
 
 @model("RootStore")
 export default class RootStore extends Model({

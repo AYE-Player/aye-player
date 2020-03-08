@@ -1,18 +1,18 @@
 import { ipcRenderer } from "electron";
 import {
+  getSnapshot,
   model,
   Model,
   modelAction,
   prop,
-  Ref,
-  getSnapshot
+  Ref
 } from "mobx-keystone";
 import { Repeat } from "../../types/enums";
+import playlistRef from "../references/PlaylistRef";
+import trackRef from "../references/TrackRef";
+import Settings from "../stores/PersistentSettings";
 import Playlist from "./Playlist";
 import Track from "./Track";
-import playlistRef from "../references/PlaylistRef";
-import Settings from "../stores/PersistentSettings";
-import trackRef from "../references/TrackRef";
 
 interface IRPCState {
   track?: Track;

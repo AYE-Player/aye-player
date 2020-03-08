@@ -134,10 +134,25 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   const _deleteUser = () => {
-    user.delete();
-    user.logout();
-    player.setCurrentPlaylist(undefined);
-    playlists.clear();
+    try {
+      user.delete();
+      user.logout();
+      player.setCurrentPlaylist(undefined);
+      playlists.clear();
+
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="success" message={t("AccountPage.deleteSuccess")} />
+        )
+      });
+    } catch (error) {
+      AyeLogger.player(`Error deleting User ${error}`, LogType.ERROR);
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage id={key} variant="error" message={t("General.error")} />
+        )
+      });
+    }
   };
 
   return user.isAuthenticated ? (

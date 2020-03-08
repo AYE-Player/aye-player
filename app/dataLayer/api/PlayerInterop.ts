@@ -1,7 +1,7 @@
-import Track from "../models/Track";
+import { getSnapshot, SnapshotOutOfModel } from "mobx-keystone";
 import Root from "../../containers/Root";
 import { OutgoingMessageType } from "../../types/enums";
-import { getSnapshot, SnapshotOutOfModel } from "mobx-keystone";
+import Track from "../models/Track";
 
 class PlayerInterop {
   private player: any;

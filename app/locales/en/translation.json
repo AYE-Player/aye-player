@@ -35,8 +35,10 @@
     "error": "Something went wrong, please try again later."
   },
   "Error": {
-    "couldNotAddTrack": "Couldn't add track, please try again later",
-    "couldNotMoveTrack": "Cloudn't move track, please try again later"
+    "couldNotAddTrack": "Could not add track, please try again later",
+    "couldNotMoveTrack": "Could not move track, please try again later",
+    "couldNotDeleteTrack": "Track konnte nicht gelöscht werden, versuche es später nocheinmal",
+    "getPlaylists": "Could not retrieve playlists, please try again later"
   },
   "SearchPage": {
     "title": "Search",
@@ -46,8 +48,7 @@
     "trackExists": "Track already in list",
     "trackAdded": "Added track to list",
     "selectPlaylist": "Select Playlist",
-    "createListText": "Create Playlist",
-    "createdAndAdded": "Created Playlist and added Track"
+    "createListText": "Create Playlist"
   },
   "Navigation": {
     "search": "Search",
@@ -148,7 +149,10 @@
   },
   "Playlist": {
     "noList": "No active Playlist",
-    "subscribeb": "Successfully subscribed"
+    "subscribed": "Successfully subscribed",
+    "deleted": "Playlist deleted",
+    "couldNotDelete": "Error deleting playlist, please try again later",
+    "couldNotCreate": "Error creating playlist, please try again later"
   },
   "EntityMenu": {
     "playNext": "Play Next",
@@ -169,5 +173,6 @@
     "previous": "Previous",
     "show": "Show",
     "quit": "Quit"
-  }
+  },
+  "createdAndAdded": "Created Playlist and added Track"
 }

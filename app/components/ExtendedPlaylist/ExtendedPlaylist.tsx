@@ -142,6 +142,11 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     try {
       await playlist.moveTrackTo(result.source.index, result.destination.index);
     } catch (error) {
+      AyeLogger.player(
+        `Error changing Track order for playlist ${playlist.id}
+         Error: ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -165,8 +170,28 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   };
 
   const _addTracksToPlaylist = async () => {
-    setAddTracksOpen(false);
-    await playlist.addTracksByUrls(songsToAdd);
+    try {
+      setAddTracksOpen(false);
+      await playlist.addTracksByUrls(songsToAdd);
+    } catch (error) {
+      AyeLogger.player(
+        `Error adding tracks to playlist ${playlist.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Error.couldNotAddTrack")}`}
+          />
+        )
+      });
+    }
   };
 
   const _handleAddTracksClose = () => {

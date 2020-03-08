@@ -8,6 +8,8 @@ import styled from "styled-components";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
@@ -91,7 +93,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpen(true);
   };
 
-  const _handleClose = (id: string, givenTrack: Track) => {
+  const _handleClose = async (id: string, givenTrack: Track) => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
@@ -106,7 +108,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
           )
         });
       } else {
-        playlist.addTrack(givenTrack);
+        await playlist.addTrack(givenTrack);
         enqueueSnackbar("", {
           content: key => (
             <SnackMessage
@@ -118,6 +120,14 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         });
       }
     } catch (error) {
+      AyeLogger.player(
+        `Error adding track to playlist ${playlist.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -137,19 +147,39 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
 
   const _createPlaylist = async () => {
     setOpenCreatePlaylistDialog(false);
-    await playlists.createListWithSongs(newPlaylistName, [
-      { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
-    ]);
+    try {
+      await playlists.createListWithSongs(newPlaylistName, [
+        { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
+      ]);
 
-    enqueueSnackbar("", {
-      content: key => (
-        <SnackMessage
-          id={key}
-          variant="info"
-          message={`${t("SearchEntity.createdAndAdded")}`}
-        />
-      )
-    });
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="info"
+            message={`${t("createdAndAdded")}`}
+          />
+        )
+      });
+    } catch (error) {
+      AyeLogger.player(
+        `[createListWithSongs] Error creating playlist ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Playlist.couldNotCreate")}`}
+          />
+        )
+      });
+    }
   };
 
   const _onPlaylistNameChange = (

@@ -54,31 +54,19 @@ const LoginPage: React.FunctionComponent = () => {
   };
 
   const getPlaylists = async () => {
-    try {
-      const data = await ApiClient.getPlaylists();
+    const data = await ApiClient.getPlaylists();
 
-      for (const playlist of data) {
-        const pl = new Playlist({
-          id: playlist.Id,
-          name: playlist.Name,
-          duration: playlist.Duration,
-          trackCount: playlist.SongsCount,
-          isReadonly: playlist.IsReadonly,
-          tracks: []
-        });
+    for (const playlist of data) {
+      const pl = new Playlist({
+        id: playlist.Id,
+        name: playlist.Name,
+        duration: playlist.Duration,
+        trackCount: playlist.SongsCount,
+        isReadonly: playlist.IsReadonly,
+        tracks: []
+      });
 
-        playlists.add(pl);
-      }
-    } catch (error) {
-      AyeLogger.player(
-        `[LoginPage] Error retrieving Playlists ${JSON.stringify(
-          error,
-          null,
-          2
-        )}`,
-        LogType.ERROR
-      );
-      throw error;
+      playlists.add(pl);
     }
   };
 
@@ -90,6 +78,10 @@ const LoginPage: React.FunctionComponent = () => {
         routes.SEARCH
       }`;
     } catch (error) {
+      AyeLogger.player(
+        `Error on login ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />

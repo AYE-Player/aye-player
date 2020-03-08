@@ -75,29 +75,33 @@ ipcRenderer.on("play-next", (event, message) => {
 });
 
 ipcRenderer.on("play-song", async (event, message) => {
-  const { queue, player, trackHistory, trackCache, searchResult } = Root.stores;
-  const prevTrack = player.currentTrack;
+  try {
+    const { queue, player, trackHistory, trackCache, searchResult } = Root.stores;
+    const prevTrack = player.currentTrack;
 
-  const trackInfo = await searchResult.getTrackFromUrl(
-    `https://www.youtube.com/watch?v=${message.id}`
-  );
+    const trackInfo = await searchResult.getTrackFromUrl(
+      `https://www.youtube.com/watch?v=${message.id}`
+    );
 
-  let track: Track;
-  if (!trackCache.getTrackById(trackInfo.id)) {
-    track = new Track({
-      id: trackInfo.id,
-      duration: trackInfo.duration,
-      title: trackInfo.title
-    });
-    trackCache.add(track);
-  } else {
-    track = trackCache.getTrackById(trackInfo.id);
+    let track: Track;
+    if (!trackCache.getTrackById(trackInfo.id)) {
+      track = new Track({
+        id: trackInfo.id,
+        duration: trackInfo.duration,
+        title: trackInfo.title
+      });
+      trackCache.add(track);
+    } else {
+      track = trackCache.getTrackById(trackInfo.id);
+    }
+
+    trackHistory.addTrack(prevTrack.current);
+    queue.addPrivilegedTrack(track);
+    player.playTrack(track);
+    PlayerInterop.playTrack(track);
+  } catch (error) {
+    AyeLogger.player(`Error playing track ${JSON.stringify(error, null, 2)}`, LogType.ERROR);
   }
-
-  trackHistory.addTrack(prevTrack.current);
-  queue.addPrivilegedTrack(track);
-  player.playTrack(track);
-  PlayerInterop.playTrack(track);
 });
 
 ipcRenderer.on("play-previous", (event, message) => {

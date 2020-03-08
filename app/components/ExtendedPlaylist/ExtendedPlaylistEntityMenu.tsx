@@ -1,9 +1,10 @@
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import withStyles from "@material-ui/core/styles/withStyles";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { Ref } from "mobx-keystone";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -12,6 +13,9 @@ import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
+import SnackMessage from "../Customs/SnackMessage";
 
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
@@ -52,6 +56,7 @@ const StyledMenu = withStyles({
 
 const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const Store = ({ queue, playlists, app, player, trackCache }: RootStore) => ({
     queue,
@@ -75,8 +80,28 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
   };
 
   const _handleRemoveTrack = async () => {
-    await playlist.removeTrackById(props.trackRef.current.id);
-    setAnchorEl(null);
+    try {
+      setAnchorEl(null);
+      await playlist.removeTrackById(props.trackRef.current.id);
+    } catch (error) {
+      AyeLogger.player(
+        `Error removing track from playlist ${playlist.id} ${JSON.stringify(
+          error,
+          null,
+          2
+        )}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Error.couldNotDeleteTrack")}`}
+          />
+        )
+      });
+    }
   };
 
   const _handlePlayNextTrack = () => {

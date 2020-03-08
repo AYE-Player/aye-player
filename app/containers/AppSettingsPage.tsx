@@ -1,19 +1,23 @@
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import { remote } from "electron";
 import { observer } from "mobx-react-lite";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import CustomDropDown from "../components/Customs/CustomDropDown";
-import CustomSwitch from "../components/Customs/CustomSwitch";
-import Divider from "../components/Divider";
-import RootStore from "../dataLayer/stores/RootStore";
-import useInject from "../hooks/useInject";
-import { remote } from "electron";
 import { version } from "../../package.json";
-import { getSpotifyAccessToken, getSpotifyPlaylists } from "../helpers";
-import Track from "../dataLayer/models/Track";
-import spotifyToLocalTracks from "../helpers/spotify/spotifyToLocalTracks";
+import CustomDropDown from "../components/Customs/CustomDropDown";
 import CustomListDialog from "../components/Customs/CustomListDialog";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import CustomSwitch from "../components/Customs/CustomSwitch";
+import SnackMessage from "../components/Customs/SnackMessage";
+import Divider from "../components/Divider";
+import Track from "../dataLayer/models/Track";
+import RootStore from "../dataLayer/stores/RootStore";
+import { getSpotifyAccessToken, getSpotifyPlaylists } from "../helpers";
+import spotifyToLocalTracks from "../helpers/spotify/spotifyToLocalTracks";
+import useInject from "../hooks/useInject";
+import AyeLogger from "../modules/AyeLogger";
+import { LogType } from "../types/enums";
 const SpotifyLogo = require("../images/Spotify_Logo_CMYK_Green.png");
 
 const Header = styled.div`
@@ -38,6 +42,8 @@ const InfoText = styled.div`
 `;
 
 const AccountPage: React.FunctionComponent = () => {
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const store = ({ app, user, playlists, trackCache }: RootStore) => ({
     app,
     user,
@@ -65,8 +71,6 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   const [language, setLanguage] = React.useState(app.language);
-
-  const { t } = useTranslation();
 
   const _handleChange = async (event: React.ChangeEvent<{ value: string }>) => {
     setLanguage(event.target.value);
@@ -98,23 +102,39 @@ const AccountPage: React.FunctionComponent = () => {
 
   //FIXME: Fix creation of playlist, sometimes (or always?) only half the songs are added
   const _handleListSelected = async (id: string) => {
-    const list = spotifyLists.find((playlist: any) => playlist.id === id);
-    const tracks = await spotifyToLocalTracks(list);
+    try {
+      const list = spotifyLists.find((playlist: any) => playlist.id === id);
+      const tracks = await spotifyToLocalTracks(list);
 
-    const pl = await playlists.createList(list.name);
+      const pl = await playlists.createList(list.name);
 
-    for (const track of tracks) {
-      const mobxTrack = new Track({
-        id: track.id,
-        duration: track.duration,
-        title: track.title
-      });
+      for (const track of tracks) {
+        const mobxTrack = new Track({
+          id: track.id,
+          duration: track.duration,
+          title: track.title
+        });
 
-      if (!trackCache.getTrackById(mobxTrack.id)) {
-        trackCache.add(mobxTrack);
+        if (!trackCache.getTrackById(mobxTrack.id)) {
+          trackCache.add(mobxTrack);
+        }
+
+        await pl.addTrack(mobxTrack);
       }
-
-      await pl.addTrack(mobxTrack);
+    } catch (error) {
+      AyeLogger.player(
+        `Error creating playlist ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+      enqueueSnackbar("", {
+        content: key => (
+          <SnackMessage
+            id={key}
+            variant="error"
+            message={`${t("Playlist.couldNotCreate")}`}
+          />
+        )
+      });
     }
   };
 

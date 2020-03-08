@@ -16,6 +16,8 @@ import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
+import AyeLogger from "../../modules/AyeLogger";
+import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
 import PlaylistEntity from "./PlaylistEntity";
 
@@ -94,24 +96,25 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     provided: ResponderProvided
   ) => {
     try {
-      await player.currentPlaylist.current.moveTrackTo(
-        result.source.index,
-        result.destination.index
-      );
+      const playlist = player.currentPlaylist.current;
+      await playlist.moveTrackTo(result.source.index, result.destination.index);
 
-      const idx = player.currentPlaylist.current.getIndexOfTrack(
-        player.currentTrack
-      );
+      const idx = playlist.getIndexOfTrack(player.currentTrack);
 
       if (result.destination.index > idx) {
         queue.clear();
         queue.addTracks(
-          player.currentPlaylist.current
-            .getTracksStartingFrom(idx)
-            .map(track => track.current)
+          playlist.getTracksStartingFrom(idx).map(track => track.current)
         );
       }
     } catch (error) {
+      AyeLogger.player(
+        `Error changing Track order for playlist ${
+          player.currentPlaylist.current.id
+        }
+         Error: ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage
@@ -177,9 +180,14 @@ const Playlist: React.FunctionComponent<IProps> = props => {
     <Container>
       <Header>
         Playlist
-        <Control>
-          <QueueMusicIcon onClick={() => _showQueue()} />
-        </Control>
+        <ButtonAligner>
+          <Control onClick={props.toggleExternalRadio}>
+            <Radio />
+          </Control>
+          <Control>
+            <QueueMusicIcon onClick={() => _showQueue()} />
+          </Control>
+        </ButtonAligner>
       </Header>
       {t("Playlist.noList")}
     </Container>
