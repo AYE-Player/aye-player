@@ -17,7 +17,7 @@
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
     "ncu": "ncu -x url-loader,file-loader -u",
     "graphql:codegen": "graphql-codegen",
-    "package": "yarn build && electron-builder build --publish never",
+    "package": "yarn build && rimraf release && electron-builder build --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
     "package-linux": "yarn build && electron-builder build --linux",

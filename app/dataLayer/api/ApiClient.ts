@@ -4,8 +4,7 @@
  */
 
 import ky from "ky/umd";
-import { IPlaylistDto, ITrackDto, IUserInfoDto } from "../../types/response";
-import Track from "../models/Track";
+import { IUserInfoDto } from "../../types/response";
 import {
   GRAPHQL,
   graphQLClientPlaylists,
@@ -34,8 +33,11 @@ import {
   SearchTracks,
   SongInputType,
   SubscribePlaylistInpt,
-  UnsubscribePlaylistInpt
+  UnsubscribePlaylistInpt,
+  IPlaylistDto,
+  ITrackDto
 } from "./graphQLTypes";
+import Track from "../models/Track";
 
 /**
  * Manages all requests to the aye-player backend

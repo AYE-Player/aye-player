@@ -81,28 +81,27 @@ export interface UnsubscribePlaylistInpt {
 }
 
 // Return types
-interface Playlist {
+export interface IPlaylistDto {
   Id: string;
   Name: string;
   Duration: number;
+  Tracks?: ITrackDto[];
   SongsCount: number;
   IsReadonly: boolean;
 }
 
-interface Track {
+export interface ITrackDto {
   Id: string;
   Title: string;
   Duration: number;
-  Source: string;
-  IsLivestream: boolean;
 }
 
 export interface PlaylistData {
-  Playlist: Playlist;
+  Playlist: IPlaylistDto;
 }
 
 export interface PlaylistsData {
-  Playlists: Playlist[];
+  Playlists: IPlaylistDto[];
 }
 
 export interface CreatePlaylist {
@@ -118,17 +117,17 @@ export interface CreatePlaylistByVideoUrls {
 }
 
 export interface PlaylistTracks {
-  PlaylistSongs: Track[];
+  PlaylistSongs: ITrackDto[];
 }
 
 export interface SearchTracks {
-  Songs: Track[];
+  Songs: ITrackDto[];
 }
 
 export interface RelatedTracks {
-  Radio: Track[];
+  Radio: ITrackDto[];
 }
 
 export interface GetTrackFromUrl {
-  Song: Track;
+  Song: ITrackDto;
 }
