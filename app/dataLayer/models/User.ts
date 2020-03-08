@@ -1,11 +1,11 @@
 import {
   model,
   Model,
+  modelAction,
+  modelFlow,
   prop,
   _async,
-  _await,
-  modelFlow,
-  modelAction
+  _await
 } from "mobx-keystone";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
@@ -94,10 +94,10 @@ export default class User extends Model({
 
   @modelFlow
   delete = _async(function*(this: User) {
-      AyeLogger.player(`Deleting User ${this.id}`);
-      yield* _await(ApiClient.deleteUser());
-      this.logout();
-      AyeLogger.player(`Deleted`);
+    AyeLogger.player(`Deleting User ${this.id}`);
+    yield* _await(ApiClient.deleteUser());
+    this.logout();
+    AyeLogger.player(`Deleted`);
   });
 
   @modelFlow

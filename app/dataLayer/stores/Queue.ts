@@ -1,4 +1,4 @@
-import { model, Model, modelAction, prop, Ref, clone } from "mobx-keystone";
+import { clone, model, Model, modelAction, prop, Ref } from "mobx-keystone";
 import Track from "../models/Track";
 import trackRef from "../references/TrackRef";
 

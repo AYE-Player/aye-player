@@ -1,7 +1,7 @@
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
 import { ApolloLink, concat } from "apollo-link";
+import { HttpLink } from "apollo-link-http";
 import gql from "graphql-tag";
 
 const authMiddleware = new ApolloLink((operation, forward) => {

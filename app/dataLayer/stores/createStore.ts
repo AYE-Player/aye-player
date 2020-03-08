@@ -1,14 +1,14 @@
+import { Repeat } from "../../types/enums";
 import Player from "../models/Player";
 import User from "../models/User";
-import Settings from "./PersistentSettings";
 import AppStore from "./AppStore";
-import RootStore from "./RootStore";
-import TrackCache from "./TrackCache";
-import { Repeat } from "../../types/enums";
+import Settings from "./PersistentSettings";
 import Playlists from "./Playlists";
 import Queue from "./Queue";
-import TrackHistory from "./TrackHistory";
+import RootStore from "./RootStore";
 import SearchResult from "./SearchResult";
+import TrackCache from "./TrackCache";
+import TrackHistory from "./TrackHistory";
 
 const createStore = (): RootStore => {
   const rootStore = new RootStore({

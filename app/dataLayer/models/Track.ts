@@ -1,5 +1,5 @@
 import { model, Model, modelAction, prop } from "mobx-keystone";
-import { formattedDuration } from "../../helpers"
+import { formattedDuration } from "../../helpers";
 
 @model("Track")
 export default class Track extends Model({

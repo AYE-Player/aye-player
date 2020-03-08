@@ -1,17 +1,17 @@
 import {
   model,
   Model,
+  modelAction,
   modelFlow,
   prop,
   Ref,
   _async,
-  _await,
-  modelAction
+  _await
 } from "mobx-keystone";
+import Root from "../../containers/Root";
 import ApiClient from "../api/ApiClient";
 import trackRef from "../references/TrackRef";
 import Track from "./Track";
-import Root from "../../containers/Root";
 
 @model("Playlist")
 export default class Playlist extends Model({

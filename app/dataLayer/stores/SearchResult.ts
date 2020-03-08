@@ -2,11 +2,11 @@ import {
   model,
   Model,
   modelAction,
+  modelFlow,
   prop,
   Ref,
   _async,
-  _await,
-  modelFlow
+  _await
 } from "mobx-keystone";
 import { decodeHTMLEntities } from "../../helpers";
 import ApiClient from "../api/ApiClient";
