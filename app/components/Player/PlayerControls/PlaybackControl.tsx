@@ -88,7 +88,7 @@ const PlaybackControl: React.FunctionComponent<IProps> = props => {
   return (
       <Container>
         {player.currentTrack ? (
-          player.currentTrack.current.isLivestream ? (
+          player.currentTrack.current.isLivestream || player.livestreamSource ? (
             `🔴 Listening for ${formattedDuration(player.playbackPosition)}`
           ) : (
             <>
