@@ -1,3 +1,4 @@
+import AyeRemote from "@aye/aye-remote-client";
 import { Grid } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-keystone";
@@ -12,12 +13,11 @@ import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
-import Settings from "../dataLayer/stores/PersistentSettings";
 import createStore from "../dataLayer/stores/createStore";
+import Settings from "../dataLayer/stores/PersistentSettings";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType, Repeat } from "../types/enums";
 import MainPage from "./MainPage";
-import AyeRemote from "@aye/aye-remote-client";
 
 interface IPlayerSettings {
   volume: number;
@@ -83,6 +83,22 @@ const MainGrid = styled.div`
   flex-direction: column;
 `;
 
+const authenticate = async () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const userInfo = await ApiClient.getUserdata();
+      rootStore.user.setData(userInfo);
+    } catch (error) {
+      localStorage.removeItem("token");
+      AyeLogger.player(
+        `Error logging in ${JSON.stringify(error, null, 2)}`,
+        LogType.ERROR
+      );
+    }
+  }
+};
+
 const getPlaylists = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -119,93 +135,97 @@ export default class Root extends Component {
   constructor(props: any) {
     super(props);
     try {
-      getPlaylists().then(() => {
-        if (Settings.has("playerSettings")) {
-          const playerSettings: IPlayerSettings = Settings.get(
-            "playerSettings"
-          );
-
-          // Check for playbackPosition
-          if (
-            playerSettings.playbackPosition &&
-            !playerSettings.currentTrack?.isLivestream
-          ) {
-            rootStore.player.setPlaybackPosition(
-              playerSettings.playbackPosition
+      authenticate().then(() =>
+        getPlaylists().then(() => {
+          if (Settings.has("playerSettings")) {
+            const playerSettings: IPlayerSettings = Settings.get(
+              "playerSettings"
             );
-            PlayerInterop.setStartTime(playerSettings.playbackPosition);
-          }
 
-          // Check for currentTrack and if it was a liveStream or not
-          if (playerSettings.currentTrack?.isLivestream === false) {
-            const currentTrack = new Track(playerSettings.currentTrack);
+            // Check for playbackPosition
             if (
-              !rootStore.trackCache.tracks.find(
-                t => t.id === playerSettings.currentTrack.id
-              )
+              playerSettings.playbackPosition &&
+              !playerSettings.currentTrack?.isLivestream
             ) {
-              rootStore.trackCache.add(currentTrack);
-            }
-            rootStore.queue.addTrack(currentTrack);
-            rootStore.player.setCurrentTrack(currentTrack);
-            rootStore.player.notifyRPC({ state: "Paused" });
-            PlayerInterop.setInitValues({ track: currentTrack });
-          }
-
-          // Check for last active playlist
-          if (playerSettings.currentPlaylist) {
-            const playlist = rootStore.playlists.getListById(
-              playerSettings.currentPlaylist.id
-            );
-            if (!playlist) return;
-            try {
-              ApiClient.getTracksFromPlaylist(
-                playlist.id,
-                playlist.trackCount
-              ).then(tracks => {
-                for (const track of tracks) {
-                  const tr = new Track({
-                    id: track.Id,
-                    duration: track.Duration,
-                    title: track.Title
-                  });
-                  if (!rootStore.trackCache.tracks.find(t => t.id === tr.id)) {
-                    rootStore.trackCache.add(tr);
-                  }
-                  playlist.addLoadedTrack(tr);
-                }
-                rootStore.player.setCurrentPlaylist(playlist);
-              });
-            } catch (error) {
-              AyeLogger.player(
-                `[Root] Error retrieving Playlist songs ${error}`,
-                LogType.ERROR
+              rootStore.player.setPlaybackPosition(
+                playerSettings.playbackPosition
               );
+              PlayerInterop.setStartTime(playerSettings.playbackPosition);
             }
-          }
 
-          // TODO: Remove these checks, whenever the electron-store package fixes it,
-          // these should have an default setting, but sometimes the defaults are not saved/returned
-          if (playerSettings.repeat) {
-            rootStore.player.setRepeat(playerSettings.repeat);
-            if (playerSettings.repeat === Repeat.ONE) {
-              PlayerInterop.setLooping(true);
+            // Check for currentTrack and if it was a liveStream or not
+            if (playerSettings.currentTrack?.isLivestream === false) {
+              const currentTrack = new Track(playerSettings.currentTrack);
+              if (
+                !rootStore.trackCache.tracks.find(
+                  t => t.id === playerSettings.currentTrack.id
+                )
+              ) {
+                rootStore.trackCache.add(currentTrack);
+              }
+              rootStore.queue.addTrack(currentTrack);
+              rootStore.player.setCurrentTrack(currentTrack);
+              rootStore.player.notifyRPC({ state: "Paused" });
+              PlayerInterop.setInitValues({ track: currentTrack });
             }
+
+            // Check for last active playlist
+            if (playerSettings.currentPlaylist) {
+              const playlist = rootStore.playlists.getListById(
+                playerSettings.currentPlaylist.id
+              );
+              if (!playlist) return;
+              try {
+                ApiClient.getTracksFromPlaylist(
+                  playlist.id,
+                  playlist.trackCount
+                ).then(tracks => {
+                  for (const track of tracks) {
+                    const tr = new Track({
+                      id: track.Id,
+                      duration: track.Duration,
+                      title: track.Title
+                    });
+                    if (
+                      !rootStore.trackCache.tracks.find(t => t.id === tr.id)
+                    ) {
+                      rootStore.trackCache.add(tr);
+                    }
+                    playlist.addLoadedTrack(tr);
+                  }
+                  rootStore.player.setCurrentPlaylist(playlist);
+                });
+              } catch (error) {
+                AyeLogger.player(
+                  `[Root] Error retrieving Playlist songs ${error}`,
+                  LogType.ERROR
+                );
+              }
+            }
+
+            // TODO: Remove these checks, whenever the electron-store package fixes it,
+            // these should have an default setting, but sometimes the defaults are not saved/returned
+            if (playerSettings.repeat) {
+              rootStore.player.setRepeat(playerSettings.repeat);
+              if (playerSettings.repeat === Repeat.ONE) {
+                PlayerInterop.setLooping(true);
+              }
+            }
+            if (playerSettings.volume) {
+              rootStore.player.setVolume(playerSettings.volume);
+              PlayerInterop.setInitValues({ volume: playerSettings.volume });
+            }
+            if (playerSettings.isShuffling) {
+              rootStore.player.setShuffling(playerSettings.isShuffling);
+            }
+            if (playerSettings.isMuted) {
+              rootStore.player.setMute(playerSettings.isMuted);
+              PlayerInterop.setInitValues({ isMuted: playerSettings.isMuted });
+            }
+            PlayerInterop.setInitState();
           }
-          if (playerSettings.volume) {
-            rootStore.player.setVolume(playerSettings.volume);
-            PlayerInterop.setInitValues({ volume: playerSettings.volume });
-          }
-          if (playerSettings.isShuffling) {
-            rootStore.player.setShuffling(playerSettings.isShuffling);
-          }
-          if (playerSettings.isMuted) {
-            rootStore.player.setMute(playerSettings.isMuted);
-            PlayerInterop.setInitValues({ isMuted: playerSettings.isMuted });
-          }
-          PlayerInterop.setInitState();
-        }
-      });
+        })
+      );
     } catch (error) {
       AyeLogger.player(`Error loading settings ${error}`, LogType.ERROR);
     }

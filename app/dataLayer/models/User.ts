@@ -8,7 +8,7 @@ import {
   _await
 } from "mobx-keystone";
 import AyeLogger from "../../modules/AyeLogger";
-import { LogType } from "../../types/enums";
+import { IUserInfoDto } from "../../types/response";
 import ApiClient from "../api/ApiClient";
 
 interface IRole {
@@ -30,30 +30,18 @@ export default class User extends Model({
     return this.id;
   }
 
-  @modelFlow
-  onInit = _async(function*(this: User) {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const userInfo = yield* _await(ApiClient.getUserdata());
-        this.id = userInfo.Id;
-        this.email = userInfo.Email;
-        this.name = userInfo.Username;
-        this.avatar = userInfo.Avatar ?? undefined;
-        this.isAuthenticated = true;
-        this.roles = userInfo.Roles.map((role: IRole) => role.Name);
-        this.hasPremium =
-          !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
-          !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
-      } catch (error) {
-        localStorage.removeItem("token");
-        AyeLogger.player(
-          `Error logging in ${JSON.stringify(error, null, 2)}`,
-          LogType.ERROR
-        );
-      }
-    }
-  });
+  @modelAction
+  setData(userInfo: IUserInfoDto) {
+    this.id = userInfo.Id;
+    this.email = userInfo.Email;
+    this.name = userInfo.Username;
+    this.avatar = userInfo.Avatar ?? undefined;
+    this.isAuthenticated = true;
+    this.roles = userInfo.Roles.map((role: IRole) => role.Name);
+    this.hasPremium =
+      !!userInfo.Roles.find((role: IRole) => role.Name === "admin") ||
+      !!userInfo.Roles.find((role: IRole) => role.Name === "premium");
+  }
 
   @modelFlow
   authenticate = _async(function*(
