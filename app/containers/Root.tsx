@@ -79,7 +79,7 @@ ipcRenderer.on("app-close", (event, message) => {
 
 const MainGrid = styled.div`
   height: 100%;
-  width: calc(100% - 330px);
+  width: calc(100% - 336px);
   flex-direction: column;
 `;
 
@@ -244,13 +244,14 @@ export default class Root extends Component {
             container
             direction="row"
             data-tid="container"
-            style={{ height: "100%", padding: "8px 8px 0 8px" }}
+            style={{ height: "100%" }}
           >
             <div
               style={{
                 height: "100%",
+                padding: "8px 0 0 8px",
                 borderRight: "1px solid #565f6c",
-                width: "328px",
+                width: "336px",
                 display: "flex",
                 flexDirection: "column"
               }}
