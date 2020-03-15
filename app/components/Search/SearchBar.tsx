@@ -73,7 +73,11 @@ const SearchBar: React.FunctionComponent = () => {
         await ApiClient.subscribePlaylist(term.split("//playlist/")[1]);
         enqueueSnackbar("", {
           content: key => (
-            <SnackMessage id={key} variant="success" message={t("Playlist.subscribed")} />
+            <SnackMessage
+              id={key}
+              variant="success"
+              message={t("Playlist.subscribed")}
+            />
           )
         });
       } else if (detectLink(term)) {
@@ -89,7 +93,9 @@ const SearchBar: React.FunctionComponent = () => {
           trackCache.add(track);
         }
         searchResult.clear();
-        trackHistory.addTrack(player.currentTrack.current);
+        if (player.currentTrack) {
+          trackHistory.addTrack(player.currentTrack.current);
+        }
         queue.addPrivilegedTrack(track);
         player.playTrack(track);
         PlayerInterop.playTrack(track);

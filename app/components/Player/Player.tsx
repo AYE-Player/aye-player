@@ -71,7 +71,9 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  trackHistory.addTrack(prevTrack.current);
+  if (player.currentTrack) {
+    trackHistory.addTrack(prevTrack.current);
+  }
   player.playTrack(track.current);
   PlayerInterop.playTrack(track.current);
 });
@@ -103,7 +105,9 @@ ipcRenderer.on("play-song", async (event, message) => {
       track = trackCache.getTrackById(trackInfo.id);
     }
 
-    trackHistory.addTrack(prevTrack.current);
+    if (player.currentTrack) {
+      trackHistory.addTrack(prevTrack.current);
+    }
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
     PlayerInterop.playTrack(track);
@@ -148,8 +152,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   });
 
   const { player, queue, trackHistory, app, trackCache } = useInject(Store);
-  const [livestreamTitle, setLivestreamTitle] = React.useState("");
-  const [livestreamArtist, setLivestreamArtist] = React.useState("");
   PlayerInterop.init();
 
   window.onmessage = (message: any) => {
@@ -163,7 +165,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           if (data.playbackPosition === 0) return;
           const oldPosition = player.playbackPosition;
           player.setPlaybackPosition(data.playbackPosition);
-          if (data.playbackPosition < oldPosition) {
+          if (data.playbackPosition < oldPosition && player.currentTrack) {
             player.notifyRPC();
           }
           break;
@@ -192,6 +194,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     }
   };
 
+  // Handle listenmoe websocket song updates
   if (player.websocketConnected) {
     ListenMoeWebsocket.ws.onmessage = message => {
       if (!message.data.length) return;
@@ -214,22 +217,45 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             response.t !== "NOTIFICATION"
           )
             break;
+          console.log("D", response.d.song);
 
           ipcRenderer.send("setDiscordActivity", {
             startTimestamp: response.d.startTime,
-            details: response.d.song.title,
+            details: `${response.d.song.artists[0].name} - ${response.d.song.title} (Listen.moe)`,
             state: null,
             duration: response.d.song.duration
           });
 
-          setLivestreamTitle(response.d.song.title);
-          //TODO: fix to long artist entry (e.g. if the song has multiple artists)
-          setLivestreamArtist(
-            response.d.song.artists.map(artist => artist.name).toString()
-          );
+          player.setListeMoeData({
+            artists: response.d.song.artists
+              .map(artist => artist.name)
+              .toString(),
+            title: response.d.song.title
+          });
           break;
         default:
           break;
+      }
+    };
+
+    // listen for errors / disconnects
+    ListenMoeWebsocket.ws.onclose = error => {
+      console.log(
+        "%c> [ListenMoe] Websocket connection closed.",
+        "color: #ff015b;",
+        error
+      );
+      clearInterval(ListenMoeWebsocket.heartbeatInterval);
+      ListenMoeWebsocket.heartbeatInterval = null;
+      if (ListenMoeWebsocket.ws) {
+        ListenMoeWebsocket.ws.close();
+        ListenMoeWebsocket.ws = null;
+      }
+      if (!error.wasClean) {
+        console.log("%c> [ListenMoe] Reconnecting...", "color: #008000;");
+        setTimeout(() => ListenMoeWebsocket.connect(), 5000);
+        player.setWebsocketConnected(false);
+        player.setListeMoeData(undefined);
       }
     };
   }
@@ -417,27 +443,27 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               zIndex: 999
             }}
           />
-          {livestreamTitle && (
-            <div
-              style={{
-                zIndex: 1000,
-                position: "absolute",
-                marginTop: "96px"
-              }}
-            >
-              Title: {livestreamTitle}
-            </div>
-          )}
-          {livestreamArtist && (
-            <div
-              style={{
-                zIndex: 1000,
-                position: "absolute",
-                marginTop: "120px"
-              }}
-            >
-              Artist: {livestreamArtist}
-            </div>
+          {player.listenMoeTrackData && (
+            <>
+              <div
+                style={{
+                  zIndex: 1000,
+                  position: "absolute",
+                  marginTop: "96px"
+                }}
+              >
+                Title: {player.listenMoeTrackData.title}
+              </div>
+              <div
+                style={{
+                  zIndex: 1000,
+                  position: "absolute",
+                  marginTop: "120px"
+                }}
+              >
+                Artist: {player.listenMoeTrackData.artists}
+              </div>
+            </>
           )}
         </>
       ) : null}
