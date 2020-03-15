@@ -13,6 +13,7 @@ import trackRef from "../references/TrackRef";
 import Settings from "../stores/PersistentSettings";
 import Playlist from "./Playlist";
 import Track from "./Track";
+import ListenMoeWebsocket from "../api/ListenMoeWebsocket";
 
 interface IRPCState {
   track?: Track;
@@ -32,7 +33,8 @@ export default class Player extends Model({
   radioActive: prop<boolean>(),
   currentTrack: prop<Maybe<Ref<Track>>>(),
   currentPlaylist: prop<Maybe<Ref<Playlist>>>(),
-  livestreamSource: prop<string>()
+  livestreamSource: prop<string>(),
+  websocketConnected: prop(false)
 }) {
   @modelAction
   playTrack(track: Track) {
@@ -44,6 +46,7 @@ export default class Player extends Model({
     Settings.set("playerSettings.currentTrack", getSnapshot(track));
 
     this.livestreamSource = undefined;
+    ListenMoeWebsocket.disconnect();
 
     if (!this.isPlaying) this.isPlaying = true;
 
@@ -193,7 +196,40 @@ export default class Player extends Model({
   }
 
   @modelAction
+  setWebsocketConnected(val: boolean) {
+    this.websocketConnected = val;
+  }
+
+  @modelAction
   setLivestreamSource(source: string) {
+    if (!this.websocketConnected) {
+      // Connect to listenMoe websocket
+      ListenMoeWebsocket.connect();
+      // Listen for successfull connection
+      ListenMoeWebsocket.ws.onopen = () => {
+        console.log("%c> Websocket connection established.", "color: #008000;");
+        clearInterval(ListenMoeWebsocket.heartbeatInterval);
+        ListenMoeWebsocket.heartbeatInterval = null;
+        this.setWebsocketConnected(true);
+      };
+      // listen for errors / disconnects
+      ListenMoeWebsocket.ws.onclose = error => {
+        console.log(
+          "%c> Websocket connection closed. Reconnecting...",
+          "color: #ff015b;",
+          error
+        );
+        clearInterval(ListenMoeWebsocket.heartbeatInterval);
+        ListenMoeWebsocket.heartbeatInterval = null;
+        if (ListenMoeWebsocket.ws) {
+          ListenMoeWebsocket.ws.close();
+          ListenMoeWebsocket.ws = null;
+        }
+        setTimeout(() => ListenMoeWebsocket.connect(), 5000);
+        this.setWebsocketConnected(false);
+      };
+    }
+
     this.livestreamSource = source;
   }
 }

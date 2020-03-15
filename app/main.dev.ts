@@ -137,6 +137,7 @@ export default class Main {
       if (!this.rpc && !this.rpc.isConnected) return;
       this.rpc.setActivity(
         arg.playbackPosition,
+        arg.startTimestamp,
         arg.endTime,
         arg.state,
         arg.details,

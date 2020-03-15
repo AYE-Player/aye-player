@@ -3,14 +3,16 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
 import Root from "../../containers/Root";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import ListenMoeWebsocket from "../../dataLayer/api/ListenMoeWebsocket";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
+import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
-import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
+import { IncomingMessageType, LogType, Repeat } from "../../types/enums";
+import { IListenMoeSongUpdate } from "../../types/response";
 import PlayerControlsContainer from "./PlayerControlsContainer";
-import ApiClient from "../../dataLayer/api/ApiClient";
-import Track from "../../dataLayer/models/Track";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 const ListenMoe = require("../../images/listenmoe.svg");
 
@@ -76,7 +78,13 @@ ipcRenderer.on("play-next", (event, message) => {
 
 ipcRenderer.on("play-song", async (event, message) => {
   try {
-    const { queue, player, trackHistory, trackCache, searchResult } = Root.stores;
+    const {
+      queue,
+      player,
+      trackHistory,
+      trackCache,
+      searchResult
+    } = Root.stores;
     const prevTrack = player.currentTrack;
 
     const trackInfo = await searchResult.getTrackFromUrl(
@@ -100,7 +108,10 @@ ipcRenderer.on("play-song", async (event, message) => {
     player.playTrack(track);
     PlayerInterop.playTrack(track);
   } catch (error) {
-    AyeLogger.player(`Error playing track ${JSON.stringify(error, null, 2)}`, LogType.ERROR);
+    AyeLogger.player(
+      `Error playing track ${JSON.stringify(error, null, 2)}`,
+      LogType.ERROR
+    );
   }
 });
 
@@ -137,6 +148,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   });
 
   const { player, queue, trackHistory, app, trackCache } = useInject(Store);
+  const [livestreamTitle, setLivestreamTitle] = React.useState("");
+  const [livestreamArtist, setLivestreamArtist] = React.useState("");
   PlayerInterop.init();
 
   window.onmessage = (message: any) => {
@@ -178,6 +191,48 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       }
     }
   };
+
+  if (player.websocketConnected) {
+    ListenMoeWebsocket.ws.onmessage = message => {
+      if (!message.data.length) return;
+      let response: IListenMoeSongUpdate;
+      try {
+        response = JSON.parse(message.data);
+      } catch (error) {
+        return;
+      }
+      switch (response.op) {
+        case 0:
+          ListenMoeWebsocket.ws.send(JSON.stringify({ op: 9 }));
+          ListenMoeWebsocket.sendHeartbeat(response.d.heartbeat);
+          break;
+        case 1:
+          if (
+            response.t !== "TRACK_UPDATE" &&
+            response.t !== "TRACK_UPDATE_REQUEST" &&
+            response.t !== "QUEUE_UPDATE" &&
+            response.t !== "NOTIFICATION"
+          )
+            break;
+
+          ipcRenderer.send("setDiscordActivity", {
+            startTimestamp: response.d.startTime,
+            details: response.d.song.title,
+            state: null,
+            duration: response.d.song.duration
+          });
+
+          setLivestreamTitle(response.d.song.title);
+          //TODO: fix to long artist entry (e.g. if the song has multiple artists)
+          setLivestreamArtist(
+            response.d.song.artists.map(artist => artist.name).toString()
+          );
+          break;
+        default:
+          break;
+      }
+    };
+  }
 
   const _playVideo = () => {
     PlayerInterop.togglePlayingState();
@@ -349,18 +404,40 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         />
       ) : null}
       {player.livestreamSource === "listen.moe" ? (
-        <img
-        src={ListenMoe}
-        style={{
-          width: "320px",
-          height: "200px",
-          position: "absolute",
-          marginTop: "45px",
-          borderColor: "none",
-          backgroundColor: "#161618",
-          zIndex: 999
-        }}
-      />
+        <>
+          <img
+            src={ListenMoe}
+            style={{
+              width: "320px",
+              height: "200px",
+              position: "absolute",
+              marginTop: "35px",
+              borderColor: "none",
+              backgroundColor: "#161618",
+              zIndex: 999
+            }}
+          />
+          <div
+            style={{
+              zIndex: 1000,
+              position: "absolute",
+              marginTop: "96px"
+            }}
+          >
+            Title: {livestreamTitle}
+          </div>
+          {livestreamArtist && (
+            <div
+              style={{
+                zIndex: 1000,
+                position: "absolute",
+                marginTop: "120px"
+              }}
+            >
+              Artist: {livestreamArtist}
+            </div>
+          )}
+        </>
       ) : null}
       <div
         style={{
