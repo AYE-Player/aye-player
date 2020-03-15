@@ -417,15 +417,17 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               zIndex: 999
             }}
           />
-          <div
-            style={{
-              zIndex: 1000,
-              position: "absolute",
-              marginTop: "96px"
-            }}
-          >
-            Title: {livestreamTitle}
-          </div>
+          {livestreamTitle && (
+            <div
+              style={{
+                zIndex: 1000,
+                position: "absolute",
+                marginTop: "96px"
+              }}
+            >
+              Title: {livestreamTitle}
+            </div>
+          )}
           {livestreamArtist && (
             <div
               style={{
