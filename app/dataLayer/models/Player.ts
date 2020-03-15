@@ -20,6 +20,11 @@ interface IRPCState {
   state?: string;
 }
 
+interface IListenMoeTrackData {
+  title: string;
+  artists: string;
+}
+
 @model("Player")
 export default class Player extends Model({
   volume: prop<number>(),
@@ -34,7 +39,8 @@ export default class Player extends Model({
   currentTrack: prop<Maybe<Ref<Track>>>(),
   currentPlaylist: prop<Maybe<Ref<Playlist>>>(),
   livestreamSource: prop<string>(),
-  websocketConnected: prop(false)
+  websocketConnected: prop(false),
+  listenMoeTrackData: prop<Maybe<IListenMoeTrackData>>()
 }) {
   @modelAction
   playTrack(track: Track) {
@@ -46,7 +52,10 @@ export default class Player extends Model({
     Settings.set("playerSettings.currentTrack", getSnapshot(track));
 
     this.livestreamSource = undefined;
-    ListenMoeWebsocket.disconnect();
+    if (this.websocketConnected) {
+      ListenMoeWebsocket.disconnect();
+      this.websocketConnected = false;
+    }
 
     if (!this.isPlaying) this.isPlaying = true;
 
@@ -207,29 +216,19 @@ export default class Player extends Model({
       ListenMoeWebsocket.connect();
       // Listen for successfull connection
       ListenMoeWebsocket.ws.onopen = () => {
-        console.log("%c> Websocket connection established.", "color: #008000;");
+        console.log("%c> [ListenMoe] Websocket connection established.", "color: #008000;");
         clearInterval(ListenMoeWebsocket.heartbeatInterval);
         ListenMoeWebsocket.heartbeatInterval = null;
         this.setWebsocketConnected(true);
       };
-      // listen for errors / disconnects
-      ListenMoeWebsocket.ws.onclose = error => {
-        console.log(
-          "%c> Websocket connection closed. Reconnecting...",
-          "color: #ff015b;",
-          error
-        );
-        clearInterval(ListenMoeWebsocket.heartbeatInterval);
-        ListenMoeWebsocket.heartbeatInterval = null;
-        if (ListenMoeWebsocket.ws) {
-          ListenMoeWebsocket.ws.close();
-          ListenMoeWebsocket.ws = null;
-        }
-        setTimeout(() => ListenMoeWebsocket.connect(), 5000);
-        this.setWebsocketConnected(false);
-      };
     }
 
+    this.currentTrack = undefined;
     this.livestreamSource = source;
+  }
+
+  @modelAction
+  setListeMoeData(data: IListenMoeTrackData) {
+    this.listenMoeTrackData = data;
   }
 }
