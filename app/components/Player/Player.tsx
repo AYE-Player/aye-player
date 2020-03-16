@@ -253,7 +253,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       }
       if (!error.wasClean) {
         console.log("%c> [ListenMoe] Reconnecting...", "color: #008000;");
-        setTimeout(() => ListenMoeWebsocket.connect(), 5000);
+        setTimeout(() => {
+          player.setLivestreamSource("listen.moe");
+        }, 5000);
         player.setWebsocketConnected(false);
         player.setListeMoeData(undefined);
       }
