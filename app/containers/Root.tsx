@@ -51,13 +51,15 @@ remote.socket.on("pause", () => {
 
 ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.volume", rootStore.player.volume);
-  Settings.set(
-    "playerSettings.playbackPosition",
-    rootStore.player.playbackPosition
-  );
-  Settings.set("playerSettings.repeat", rootStore.player.repeat);
+  if (rootStore.player.currentTrack) {
+    Settings.set(
+      "playerSettings.playbackPosition",
+      rootStore.player.playbackPosition
+    );
+    Settings.set("playerSettings.repeat", rootStore.player.repeat);
+    Settings.set("playerSettings.isShuffling", rootStore.player.isShuffling);
+  }
   Settings.set("playerSettings.isMuted", rootStore.player.isMuted);
-  Settings.set("playerSettings.isShuffling", rootStore.player.isShuffling);
 
   if (rootStore.player.currentPlaylist) {
     Settings.set("playerSettings.currentPlaylist", {
