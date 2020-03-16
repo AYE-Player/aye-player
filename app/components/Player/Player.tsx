@@ -217,7 +217,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             response.t !== "NOTIFICATION"
           )
             break;
-          console.log("D", response.d.song);
 
           ipcRenderer.send("setDiscordActivity", {
             startTimestamp: response.d.startTime,
@@ -230,7 +229,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             artists: response.d.song.artists
               .map(artist => artist.name)
               .toString(),
-            title: response.d.song.title
+            title: response.d.song.title,
+            duration: response.d.song.duration
           });
           break;
         default:
@@ -449,19 +449,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
                 style={{
                   zIndex: 1000,
                   position: "absolute",
-                  marginTop: "96px"
+                  marginTop: "112px"
                 }}
               >
-                Title: {player.listenMoeTrackData.title}
-              </div>
-              <div
-                style={{
-                  zIndex: 1000,
-                  position: "absolute",
-                  marginTop: "120px"
-                }}
-              >
-                Artist: {player.listenMoeTrackData.artists}
+                {player.listenMoeTrackData.title}{" "}
+                {player.listenMoeTrackData.artists
+                  ? `- ${player.listenMoeTrackData.artists}`
+                  : ""}
               </div>
             </>
           )}

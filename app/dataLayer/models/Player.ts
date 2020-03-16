@@ -23,6 +23,7 @@ interface IRPCState {
 interface IListenMoeTrackData {
   title: string;
   artists: string;
+  duration: number;
 }
 
 @model("Player")
@@ -76,18 +77,18 @@ export default class Player extends Model({
 
     ipcRenderer.send("setDiscordActivity", {
       playbackPosition: this.playbackPosition,
-      endTime: state ? null : this.currentTrack.current.duration,
-      details: this.currentTrack.current.title,
+      endTime: state ? null : this.currentTrack?.current.duration  || this.listenMoeTrackData.duration,
+      details: this.currentTrack?.current.title || this.listenMoeTrackData.title,
       state: state ?? null,
-      duration: this.currentTrack.current.duration
+      duration: this.currentTrack?.current.duration || this.listenMoeTrackData.duration
     });
 
     ipcRenderer.send("player2Win", {
       type: "trackInfo",
       data: {
-        id: this.currentTrack.current.id,
-        title: this.currentTrack.current.title,
-        duration: this.currentTrack.current.duration
+        id: this.currentTrack?.current.id || 0,
+        title: this.currentTrack?.current.title || this.listenMoeTrackData.title,
+        duration: this.currentTrack?.current.duration  || this.listenMoeTrackData.duration
       }
     });
   }
