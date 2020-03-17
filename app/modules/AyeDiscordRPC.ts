@@ -69,16 +69,16 @@ export default class AyeDiscordRPC {
 
     if (startTimestamp && duration) {
       // Listen.moe time calc
-        activityParameters = {
-          details,
-          endTimestamp:
-            new Date(startTimestamp).getTime() +
-            new Date(duration * 1000).getTime(),
-          largeImageKey: "aye",
-          smallImageKey: "play",
-          smallImageText: "Playing",
-          instance: false
-        };
+      activityParameters = {
+        details,
+        endTimestamp:
+          new Date(startTimestamp).getTime() +
+          new Date(duration * 1000).getTime(),
+        largeImageKey: "aye",
+        smallImageKey: "play",
+        smallImageText: "Playing",
+        instance: false
+      };
     } else if (endTimestamp) {
       activityParameters = {
         details,

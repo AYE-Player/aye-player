@@ -75,20 +75,37 @@ export default class Player extends Model({
       return;
     }
 
-    ipcRenderer.send("setDiscordActivity", {
-      playbackPosition: this.playbackPosition,
-      endTime: state ? null : this.currentTrack?.current.duration  || this.listenMoeTrackData.duration,
-      details: this.currentTrack?.current.title || this.listenMoeTrackData.title,
-      state: state ?? null,
-      duration: this.currentTrack?.current.duration || this.listenMoeTrackData.duration
-    });
+    if (this.currentTrack.current.isLivestream) {
+      ipcRenderer.send("setDiscordActivity", {
+        details: this.currentTrack?.current.title,
+        state: state ?? null
+      });
+    } else {
+      ipcRenderer.send("setDiscordActivity", {
+        playbackPosition: this.playbackPosition,
+        endTime: state
+          ? null
+          : this.currentTrack?.current.duration ||
+            this.listenMoeTrackData.duration,
+        details:
+          this.currentTrack?.current.title || this.listenMoeTrackData.title,
+        state: state ?? null,
+        duration:
+          this.currentTrack?.current.duration ||
+          this.listenMoeTrackData.duration
+      });
+    }
 
     ipcRenderer.send("player2Win", {
       type: "trackInfo",
       data: {
         id: this.currentTrack?.current.id || 0,
-        title: this.currentTrack?.current.title || this.listenMoeTrackData.title,
-        duration: this.currentTrack?.current.duration  || this.listenMoeTrackData.duration
+        title:
+          this.currentTrack?.current.title || this.listenMoeTrackData.title,
+        duration:
+          this.currentTrack?.current.duration ||
+          this.listenMoeTrackData?.duration ||
+          0
       }
     });
   }
@@ -217,7 +234,10 @@ export default class Player extends Model({
       ListenMoeWebsocket.connect();
       // Listen for successfull connection
       ListenMoeWebsocket.ws.onopen = () => {
-        console.log("%c> [ListenMoe] Websocket connection established.", "color: #008000;");
+        console.log(
+          "%c> [ListenMoe] Websocket connection established.",
+          "color: #008000;"
+        );
         clearInterval(ListenMoeWebsocket.heartbeatInterval);
         ListenMoeWebsocket.heartbeatInterval = null;
         this.setWebsocketConnected(true);

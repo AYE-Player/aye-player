@@ -93,7 +93,7 @@ const SearchBar: React.FunctionComponent = () => {
           trackCache.add(track);
         }
         searchResult.clear();
-        if (player.currentTrack) {
+        if (player.currentTrack && !player.currentTrack.current.isLivestream) {
           trackHistory.addTrack(player.currentTrack.current);
         }
         queue.addPrivilegedTrack(track);
@@ -119,10 +119,7 @@ const SearchBar: React.FunctionComponent = () => {
       }
       setTerm("");
     } catch (error) {
-      AyeLogger.player(
-        `Error in SearchBar Component ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
+      AyeLogger.player(`Error in SearchBar Component ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
