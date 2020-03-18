@@ -75,7 +75,7 @@ export default class Player extends Model({
       return;
     }
 
-    if (this.currentTrack.current.isLivestream) {
+    if (this.currentTrack?.current.isLivestream) {
       ipcRenderer.send("setDiscordActivity", {
         details: this.currentTrack?.current.title,
         state: state ?? null
