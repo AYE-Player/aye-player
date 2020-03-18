@@ -156,7 +156,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={t("Error.couldNotMoveTrack")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
@@ -191,7 +192,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={`${t("Error.couldNotAddTrack")}`}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

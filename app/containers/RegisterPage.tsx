@@ -81,7 +81,8 @@ const RegisterPage: React.FunctionComponent = () => {
             variant="success"
             message={t("RegisterPage.success")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
       window.location.href = `${window.location.href.split("#/")[0]}#${
         routes.LOGIN
@@ -91,7 +92,8 @@ const RegisterPage: React.FunctionComponent = () => {
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

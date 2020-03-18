@@ -46,7 +46,8 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = props => {
             variant="warning"
             message={t("AccountPage.avatarToBig")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
       return;
     }

@@ -85,7 +85,8 @@ const LoginPage: React.FunctionComponent = () => {
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

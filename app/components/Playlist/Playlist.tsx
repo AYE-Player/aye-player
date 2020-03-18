@@ -124,7 +124,8 @@ const Playlist: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={t("Error.couldNotMoveTrack")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

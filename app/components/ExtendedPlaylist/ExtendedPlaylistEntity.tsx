@@ -119,7 +119,8 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
               variant="warning"
               message={t("SearchEntity.trackExists")}
             />
-          )
+          ),
+          disableWindowBlurListener: true
         });
       } else {
         await playlist.addTrack(givenTrack);
@@ -130,7 +131,8 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
               variant="success"
               message={`${t("SearchEntity.trackAdded")} ${playlist.name}`}
             />
-          )
+          ),
+          disableWindowBlurListener: true
         });
       }
     } catch (error) {
@@ -149,7 +151,8 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={t("Error.couldNotAddTrack")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
@@ -173,7 +176,8 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
             variant="success"
             message={`${t("createdAndAdded")}`}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     } catch (error) {
       AyeLogger.player(
@@ -191,7 +195,8 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={`${t("Playlist.couldNotCreate")}`}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

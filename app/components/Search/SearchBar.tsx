@@ -78,7 +78,8 @@ const SearchBar: React.FunctionComponent = () => {
               variant="success"
               message={t("Playlist.subscribed")}
             />
-          )
+          ),
+          disableWindowBlurListener: true
         });
       } else if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
@@ -123,7 +124,8 @@ const SearchBar: React.FunctionComponent = () => {
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
