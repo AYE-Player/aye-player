@@ -13,7 +13,7 @@ import {
   BrowserWindow,
   globalShortcut,
   ipcMain,
-  systemPreferences
+  systemPreferences,
 } from "electron";
 import unhandled from "electron-unhandled";
 import "v8-compile-cache";
@@ -127,7 +127,7 @@ export default class Main {
       event.preventDefault();
 
       this.mainWindow.webContents.send("play-song", {
-        id: customSchemeData.split("://")[1]
+        id: customSchemeData.split("://")[1],
       });
     });
 
@@ -173,7 +173,9 @@ export default class Main {
     const extensions = ["REACT_DEVELOPER_TOOLS"];
 
     return Promise.all(
-      extensions.map(name => installer.default(installer[name], forceDownload))
+      extensions.map((name) =>
+        installer.default(installer[name], forceDownload)
+      )
     ).catch(console.log);
   };
 
@@ -194,9 +196,9 @@ export default class Main {
       /// and set the transparency, to remove any window background color
       transparent: true,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
       },
-      icon: `${__dirname}/images/icons/png/256x256_w.png`
+      icon: `${__dirname}/images/icons/png/256x256_w.png`,
     });
 
     this.loadingScreen.loadURL(`file://${__dirname}/loading.html`);
@@ -232,9 +234,10 @@ export default class Main {
       titleBarStyle: "hidden",
       maximizable: false,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        backgroundThrottling: false,
       },
-      icon: `${__dirname}/images/icons/png/256x256_w.png`
+      icon: `${__dirname}/images/icons/png/256x256_w.png`,
     });
 
     this.mainWindow.setMenuBarVisibility(false);
@@ -256,7 +259,7 @@ export default class Main {
       // Create Tray
       this.tray = new AyeTray(this.mainWindow, i18n);
 
-      this.tray.i18n.on("languageChanged", lng => {
+      this.tray.i18n.on("languageChanged", (lng) => {
         this.tray.rebuild();
       });
     }
@@ -302,7 +305,7 @@ export default class Main {
       }
     });
 
-    this.mainWindow.on("close", event => {
+    this.mainWindow.on("close", (event) => {
       if (Settings.get("minimizeToTray") && !this.tray.shouldQuit) {
         event.preventDefault();
         this.tray.hideToTray();
@@ -317,12 +320,12 @@ export default class Main {
       // save windows position and size
       Settings.set("windowSize", {
         height,
-        width
+        width,
       });
 
       Settings.set("windowPosition", {
         x,
-        y
+        y,
       });
 
       // dispose of rpc client
@@ -347,7 +350,7 @@ export default class Main {
       this.mainWindow.webContents.send("language-changed", {
         language: lng,
         namespace: config.namespace,
-        resource: i18n.getResourceBundle(lng, config.namespace)
+        resource: i18n.getResourceBundle(lng, config.namespace),
       });
 
       i18n.changeLanguage(lng);
@@ -358,19 +361,19 @@ export default class Main {
 
       if (url.includes("/watch?v=")) {
         this.mainWindow.webContents.send("play-song", {
-          id: url.split("/watch?v=")[1]
+          id: url.split("/watch?v=")[1],
         });
       }
     });
 
     this.menu = new AyeMenu(this.mainWindow, i18n);
 
-    this.menu.i18n.on("languageChanged", lng => {
+    this.menu.i18n.on("languageChanged", (lng) => {
       this.menu.build();
       this.mainWindow.webContents.send("language-changed", {
         language: lng,
         namespace: config.namespace,
-        resource: this.menu.i18n.getResourceBundle(lng, config.namespace)
+        resource: this.menu.i18n.getResourceBundle(lng, config.namespace),
       });
     });
 
