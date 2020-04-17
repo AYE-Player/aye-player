@@ -76,7 +76,9 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   const _handleClick = (track: Ref<Track>) => {
     const idx = player.currentPlaylist.current.getIndexOfTrack(track);
 
-    trackHistory.addTrack(player.currentTrack.current);
+    if (player.currentTrack) {
+      trackHistory.addTrack(player.currentTrack.current);
+    }
     queue.clear();
     queue.addTracks(
       player.currentPlaylist.current
@@ -122,7 +124,8 @@ const Playlist: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={t("Error.couldNotMoveTrack")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

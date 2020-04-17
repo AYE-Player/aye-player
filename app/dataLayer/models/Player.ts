@@ -13,10 +13,17 @@ import trackRef from "../references/TrackRef";
 import Settings from "../stores/PersistentSettings";
 import Playlist from "./Playlist";
 import Track from "./Track";
+import ListenMoeWebsocket from "../api/ListenMoeWebsocket";
 
 interface IRPCState {
   track?: Track;
   state?: string;
+}
+
+interface IListenMoeTrackData {
+  title: string;
+  artists: string;
+  duration: number;
 }
 
 @model("Player")
@@ -32,7 +39,9 @@ export default class Player extends Model({
   radioActive: prop<boolean>(),
   currentTrack: prop<Maybe<Ref<Track>>>(),
   currentPlaylist: prop<Maybe<Ref<Playlist>>>(),
-  livestreamSource: prop<string>()
+  livestreamSource: prop<string>(),
+  websocketConnected: prop(false),
+  listenMoeTrackData: prop<Maybe<IListenMoeTrackData>>()
 }) {
   @modelAction
   playTrack(track: Track) {
@@ -44,6 +53,10 @@ export default class Player extends Model({
     Settings.set("playerSettings.currentTrack", getSnapshot(track));
 
     this.livestreamSource = undefined;
+    if (this.websocketConnected) {
+      ListenMoeWebsocket.disconnect();
+      this.websocketConnected = false;
+    }
 
     if (!this.isPlaying) this.isPlaying = true;
 
@@ -62,20 +75,37 @@ export default class Player extends Model({
       return;
     }
 
-    ipcRenderer.send("setDiscordActivity", {
-      playbackPosition: this.playbackPosition,
-      endTime: state ? null : this.currentTrack.current.duration,
-      details: this.currentTrack.current.title,
-      state: state ?? null,
-      duration: this.currentTrack.current.duration
-    });
+    if (this.currentTrack?.current.isLivestream) {
+      ipcRenderer.send("setDiscordActivity", {
+        details: this.currentTrack?.current.title,
+        state: state ?? null
+      });
+    } else {
+      ipcRenderer.send("setDiscordActivity", {
+        playbackPosition: this.playbackPosition,
+        endTime: state
+          ? null
+          : this.currentTrack?.current.duration ||
+            this.listenMoeTrackData.duration,
+        details:
+          this.currentTrack?.current.title || this.listenMoeTrackData.title,
+        state: state ?? null,
+        duration:
+          this.currentTrack?.current.duration ||
+          this.listenMoeTrackData.duration
+      });
+    }
 
     ipcRenderer.send("player2Win", {
       type: "trackInfo",
       data: {
-        id: this.currentTrack.current.id,
-        title: this.currentTrack.current.title,
-        duration: this.currentTrack.current.duration
+        id: this.currentTrack?.current.id || 0,
+        title:
+          this.currentTrack?.current.title || this.listenMoeTrackData.title,
+        duration:
+          this.currentTrack?.current.duration ||
+          this.listenMoeTrackData?.duration ||
+          0
       }
     });
   }
@@ -193,7 +223,33 @@ export default class Player extends Model({
   }
 
   @modelAction
+  setWebsocketConnected(val: boolean) {
+    this.websocketConnected = val;
+  }
+
+  @modelAction
   setLivestreamSource(source: string) {
+    if (!this.websocketConnected) {
+      // Connect to listenMoe websocket
+      ListenMoeWebsocket.connect();
+      // Listen for successfull connection
+      ListenMoeWebsocket.ws.onopen = () => {
+        console.log(
+          "%c> [ListenMoe] Websocket connection established.",
+          "color: #008000;"
+        );
+        clearInterval(ListenMoeWebsocket.heartbeatInterval);
+        ListenMoeWebsocket.heartbeatInterval = null;
+        this.setWebsocketConnected(true);
+      };
+    }
+
+    this.currentTrack = undefined;
     this.livestreamSource = source;
+  }
+
+  @modelAction
+  setListeMoeData(data: IListenMoeTrackData) {
+    this.listenMoeTrackData = data;
   }
 }

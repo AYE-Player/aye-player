@@ -57,6 +57,7 @@ export default class AyeDiscordRPC {
 
   public async setActivity(
     playbackPosition: number,
+    startTimestamp: number,
     endTimestamp: number,
     state: string,
     details: string,
@@ -66,7 +67,19 @@ export default class AyeDiscordRPC {
 
     let activityParameters: IActivityParameters;
 
-    if (endTimestamp) {
+    if (startTimestamp && duration) {
+      // Listen.moe time calc
+      activityParameters = {
+        details,
+        endTimestamp:
+          new Date(startTimestamp).getTime() +
+          new Date(duration * 1000).getTime(),
+        largeImageKey: "aye",
+        smallImageKey: "play",
+        smallImageText: "Playing",
+        instance: false
+      };
+    } else if (endTimestamp) {
       activityParameters = {
         details,
         endTimestamp: Math.floor(
@@ -123,7 +136,7 @@ export default class AyeDiscordRPC {
         AyeLogger.rpc("Successfully connected to Discord.");
         this.isConnected = true;
 
-        await this.setActivity(0, 0, null, "Idle", 0);
+        await this.setActivity(0, 0, 0, null, "Idle", 0);
       });
 
       this._rpc.transport.once("close", async () => {

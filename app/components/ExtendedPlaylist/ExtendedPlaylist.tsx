@@ -125,7 +125,9 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const _handleClick = (track: Ref<Track>) => {
     const idx = playlist.getIndexOfTrack(track);
 
-    trackHistory.addTrack(player.currentTrack.current);
+    if (player.currentTrack) {
+      trackHistory.addTrack(player.currentTrack.current);
+    }
     queue.clear();
     queue.addTracks(
       playlist.getTracksStartingFrom(idx).map(track => track.current)
@@ -154,7 +156,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={t("Error.couldNotMoveTrack")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
@@ -189,7 +192,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
             variant="error"
             message={`${t("Error.couldNotAddTrack")}`}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

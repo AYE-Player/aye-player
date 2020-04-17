@@ -102,7 +102,8 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             variant="error"
             message={t("Error.getPlaylists")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
@@ -118,7 +119,8 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             variant="success"
             message={t("Playlist.deleted")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     } catch (error) {
       AyeLogger.player(
@@ -132,7 +134,8 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             variant="error"
             message={t("Playlist.couldNotDelete")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
@@ -155,7 +158,8 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
             variant="error"
             message={t("Error.getPlaylists")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

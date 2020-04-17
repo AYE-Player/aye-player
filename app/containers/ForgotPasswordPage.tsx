@@ -61,7 +61,8 @@ const PasswordForgotPage: React.FunctionComponent = () => {
             variant="info"
             message={t("PasswordForgotPage.success")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     } catch (error) {
       AyeLogger.player(
@@ -75,7 +76,8 @@ const PasswordForgotPage: React.FunctionComponent = () => {
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

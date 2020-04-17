@@ -99,7 +99,8 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
             variant="error"
             message={`${t("Error.couldNotDeleteTrack")}`}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

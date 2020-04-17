@@ -56,7 +56,6 @@ const PrettoSlider = withStyles({
   }
 })(Slider);
 
-
 const PlaybackControl: React.FunctionComponent<IProps> = props => {
   PlayerInterop.init();
 
@@ -70,9 +69,8 @@ const PlaybackControl: React.FunctionComponent<IProps> = props => {
   const { player } = useInject(Store);
   let seekTo: number;
 
-
   const _handlePlaybackChange = (_event: any, newValue: number) => {
-    player.setPlaybackPosition(newValue)
+    player.setPlaybackPosition(newValue);
   };
 
   const _handleSeek = (_event: any, newValue: number) => {
@@ -86,28 +84,28 @@ const PlaybackControl: React.FunctionComponent<IProps> = props => {
   };
 
   return (
-      <Container>
-        {player.currentTrack ? (
-          player.currentTrack.current.isLivestream || player.livestreamSource ? (
-            `🔴 Listening for ${formattedDuration(player.playbackPosition)}`
-          ) : (
-            <>
-              <Time>{formattedDuration(player.playbackPosition)}</Time>
-              <PrettoSlider
-                min={0}
-                max={player.currentTrack?.current.duration || 0}
-                value={player.playbackPosition}
-                onChange={_handleSeek}
-                onChangeCommitted={_handlePlaybackChange}
-                onMouseUp={_handleSeekingStop}
-              />
-              <Time>
-                {formattedDuration(player.currentTrack?.current.duration || 0)}
-              </Time>
-            </>
-          )
-        ) : null}
-      </Container>
+    <Container>
+      {player.currentTrack || player.livestreamSource ? (
+        player.currentTrack?.current.isLivestream || player.livestreamSource ? (
+          `🔴 Listening for ${formattedDuration(player.playbackPosition)}`
+        ) : (
+          <>
+            <Time>{formattedDuration(player.playbackPosition)}</Time>
+            <PrettoSlider
+              min={0}
+              max={player.currentTrack?.current.duration || 0}
+              value={player.playbackPosition}
+              onChange={_handleSeek}
+              onChangeCommitted={_handlePlaybackChange}
+              onMouseUp={_handleSeekingStop}
+            />
+            <Time>
+              {formattedDuration(player.currentTrack?.current.duration || 0)}
+            </Time>
+          </>
+        )
+      ) : null}
+    </Container>
   );
 };
 

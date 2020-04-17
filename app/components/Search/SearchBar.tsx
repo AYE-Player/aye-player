@@ -73,8 +73,13 @@ const SearchBar: React.FunctionComponent = () => {
         await ApiClient.subscribePlaylist(term.split("//playlist/")[1]);
         enqueueSnackbar("", {
           content: key => (
-            <SnackMessage id={key} variant="success" message={t("Playlist.subscribed")} />
-          )
+            <SnackMessage
+              id={key}
+              variant="success"
+              message={t("Playlist.subscribed")}
+            />
+          ),
+          disableWindowBlurListener: true
         });
       } else if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
@@ -89,7 +94,9 @@ const SearchBar: React.FunctionComponent = () => {
           trackCache.add(track);
         }
         searchResult.clear();
-        trackHistory.addTrack(player.currentTrack.current);
+        if (player.currentTrack && !player.currentTrack.current.isLivestream) {
+          trackHistory.addTrack(player.currentTrack.current);
+        }
         queue.addPrivilegedTrack(track);
         player.playTrack(track);
         PlayerInterop.playTrack(track);
@@ -113,14 +120,12 @@ const SearchBar: React.FunctionComponent = () => {
       }
       setTerm("");
     } catch (error) {
-      AyeLogger.player(
-        `Error in SearchBar Component ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
+      AyeLogger.player(`Error in SearchBar Component ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };

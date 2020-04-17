@@ -3,14 +3,16 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
 import Root from "../../containers/Root";
+import ApiClient from "../../dataLayer/api/ApiClient";
+import ListenMoeWebsocket from "../../dataLayer/api/ListenMoeWebsocket";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
+import Track from "../../dataLayer/models/Track";
 import RootStore from "../../dataLayer/stores/RootStore";
 import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
-import { LogType, Repeat, IncomingMessageType } from "../../types/enums";
+import { IncomingMessageType, LogType, Repeat } from "../../types/enums";
+import { IListenMoeSongUpdate } from "../../types/response";
 import PlayerControlsContainer from "./PlayerControlsContainer";
-import ApiClient from "../../dataLayer/api/ApiClient";
-import Track from "../../dataLayer/models/Track";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 const ListenMoe = require("../../images/listenmoe.svg");
 
@@ -69,14 +71,22 @@ ipcRenderer.on("play-next", (event, message) => {
     return;
   }
 
-  trackHistory.addTrack(prevTrack.current);
+  if (player.currentTrack) {
+    trackHistory.addTrack(prevTrack.current);
+  }
   player.playTrack(track.current);
   PlayerInterop.playTrack(track.current);
 });
 
 ipcRenderer.on("play-song", async (event, message) => {
   try {
-    const { queue, player, trackHistory, trackCache, searchResult } = Root.stores;
+    const {
+      queue,
+      player,
+      trackHistory,
+      trackCache,
+      searchResult
+    } = Root.stores;
     const prevTrack = player.currentTrack;
 
     const trackInfo = await searchResult.getTrackFromUrl(
@@ -95,12 +105,17 @@ ipcRenderer.on("play-song", async (event, message) => {
       track = trackCache.getTrackById(trackInfo.id);
     }
 
-    trackHistory.addTrack(prevTrack.current);
+    if (player.currentTrack) {
+      trackHistory.addTrack(prevTrack.current);
+    }
     queue.addPrivilegedTrack(track);
     player.playTrack(track);
     PlayerInterop.playTrack(track);
   } catch (error) {
-    AyeLogger.player(`Error playing track ${JSON.stringify(error, null, 2)}`, LogType.ERROR);
+    AyeLogger.player(
+      `Error playing track ${JSON.stringify(error, null, 2)}`,
+      LogType.ERROR
+    );
   }
 });
 
@@ -150,7 +165,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           if (data.playbackPosition === 0) return;
           const oldPosition = player.playbackPosition;
           player.setPlaybackPosition(data.playbackPosition);
-          if (data.playbackPosition < oldPosition) {
+          if (data.playbackPosition < oldPosition && player.currentTrack) {
             player.notifyRPC();
           }
           break;
@@ -178,6 +193,74 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       }
     }
   };
+
+  // Handle listenmoe websocket song updates
+  if (player.websocketConnected) {
+    ListenMoeWebsocket.ws.onmessage = message => {
+      if (!message.data.length) return;
+      let response: IListenMoeSongUpdate;
+      try {
+        response = JSON.parse(message.data);
+      } catch (error) {
+        return;
+      }
+      switch (response.op) {
+        case 0:
+          ListenMoeWebsocket.ws.send(JSON.stringify({ op: 9 }));
+          ListenMoeWebsocket.sendHeartbeat(response.d.heartbeat);
+          break;
+        case 1:
+          if (
+            response.t !== "TRACK_UPDATE" &&
+            response.t !== "TRACK_UPDATE_REQUEST" &&
+            response.t !== "QUEUE_UPDATE" &&
+            response.t !== "NOTIFICATION"
+          )
+            break;
+
+          ipcRenderer.send("setDiscordActivity", {
+            startTimestamp: response.d.startTime,
+            details: `${response.d.song.artists[0].name} - ${response.d.song.title} (Listen.moe)`,
+            state: null,
+            duration: response.d.song.duration
+          });
+
+          player.setListeMoeData({
+            artists: response.d.song.artists
+              .map(artist => artist.name)
+              .toString(),
+            title: response.d.song.title,
+            duration: response.d.song.duration
+          });
+          break;
+        default:
+          break;
+      }
+    };
+
+    // listen for errors / disconnects
+    ListenMoeWebsocket.ws.onclose = error => {
+      console.log(
+        "%c> [ListenMoe] Websocket connection closed.",
+        "color: #ff015b;",
+        error
+      );
+      clearInterval(ListenMoeWebsocket.heartbeatInterval);
+      ListenMoeWebsocket.heartbeatInterval = null;
+      if (ListenMoeWebsocket.ws) {
+        ListenMoeWebsocket.ws.close();
+        ListenMoeWebsocket.ws = null;
+      }
+      if (!error.wasClean) {
+        console.log("%c> [ListenMoe] Reconnecting...", "color: #008000;");
+        setTimeout(() => {
+          player.setLivestreamSource("listen.moe");
+        }, 5000);
+        player.setWebsocketConnected(false);
+        player.setListeMoeData(undefined);
+      }
+    };
+  }
 
   const _playVideo = () => {
     PlayerInterop.togglePlayingState();
@@ -349,18 +432,36 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         />
       ) : null}
       {player.livestreamSource === "listen.moe" ? (
-        <img
-        src={ListenMoe}
-        style={{
-          width: "320px",
-          height: "200px",
-          position: "absolute",
-          marginTop: "45px",
-          borderColor: "none",
-          backgroundColor: "#161618",
-          zIndex: 999
-        }}
-      />
+        <>
+          <img
+            src={ListenMoe}
+            style={{
+              width: "320px",
+              height: "200px",
+              position: "absolute",
+              marginTop: "35px",
+              borderColor: "none",
+              backgroundColor: "#161618",
+              zIndex: 999
+            }}
+          />
+          {player.listenMoeTrackData && (
+            <>
+              <div
+                style={{
+                  zIndex: 1000,
+                  position: "absolute",
+                  marginTop: "112px"
+                }}
+              >
+                {player.listenMoeTrackData.title}{" "}
+                {player.listenMoeTrackData.artists
+                  ? `- ${player.listenMoeTrackData.artists}`
+                  : ""}
+              </div>
+            </>
+          )}
+        </>
       ) : null}
       <div
         style={{

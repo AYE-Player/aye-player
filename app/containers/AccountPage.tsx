@@ -121,14 +121,16 @@ const AccountPage: React.FunctionComponent = () => {
             variant="success"
             message={t("AccountPage.updateSuccessMessage")}
           />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     } catch (error) {
       AyeLogger.player(`Error updating User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
@@ -142,15 +144,21 @@ const AccountPage: React.FunctionComponent = () => {
 
       enqueueSnackbar("", {
         content: key => (
-          <SnackMessage id={key} variant="success" message={t("AccountPage.deleteSuccess")} />
-        )
+          <SnackMessage
+            id={key}
+            variant="success"
+            message={t("AccountPage.deleteSuccess")}
+          />
+        ),
+        disableWindowBlurListener: true
       });
     } catch (error) {
       AyeLogger.player(`Error deleting User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
         content: key => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
-        )
+        ),
+        disableWindowBlurListener: true
       });
     }
   };
