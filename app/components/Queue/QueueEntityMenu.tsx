@@ -127,7 +127,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props =>
   };
 
   return (
-    <ClickAwayListener onClickAway={_handleClose}>
+    <ClickAwayListener onClickAway={_handleClose} disableReactTree>
       <Container onClick={_handleClick}>
         <MoreHorizIcon />
         <StyledMenu
