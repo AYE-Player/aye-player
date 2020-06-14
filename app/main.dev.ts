@@ -236,6 +236,7 @@ export default class Main {
       webPreferences: {
         nodeIntegration: true,
         backgroundThrottling: false,
+        enableRemoteModule: true,
       },
       icon: `${__dirname}/images/icons/png/256x256_w.png`,
     });

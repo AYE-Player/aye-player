@@ -187,7 +187,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
   };
 
   return (
-    <ClickAwayListener onClickAway={_handleClose}>
+    <ClickAwayListener onClickAway={_handleClose} disableReactTree>
       <Container onClick={_handleClick}>
         <MoreHorizIcon />
         <StyledMenu

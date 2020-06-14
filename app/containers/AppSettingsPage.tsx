@@ -140,7 +140,7 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   return (
-    <ClickAwayListener onClickAway={_handleClose}>
+    <ClickAwayListener onClickAway={_handleClose} disableReactTree>
       <Container>
         <Header>{t("AppSettingsPage.header")}</Header>
         <SettingsContainer>
