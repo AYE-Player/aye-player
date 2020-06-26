@@ -18,7 +18,8 @@ const createStore = (): RootStore => {
       minimizeToTray: Settings.get("minimizeToTray"),
       language: Settings.get("language"),
       devMode: Settings.get("devMode"),
-      autoRadio: Settings.get("autoRadio")
+      autoRadio: Settings.get("autoRadio"),
+      showNotifications: Settings.get("showNotifications")
     }),
     player: new Player({
       volume: 0.2,

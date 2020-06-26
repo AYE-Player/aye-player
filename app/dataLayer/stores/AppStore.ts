@@ -10,7 +10,8 @@ export default class AppStore extends Model({
   minimizeToTray: prop<boolean>(),
   language: prop<string>(),
   selectedPlaylist: prop<string>(),
-  autoRadio: prop(false)
+  autoRadio: prop(false),
+  showNotifications: prop(true)
 }) {
   @modelAction
   toggleQueueDisplay() {
@@ -71,6 +72,16 @@ export default class AppStore extends Model({
       Settings.set("autoRadio", true);
     } else {
       Settings.set("autoRadio", false);
+    }
+  }
+
+  @modelAction
+  toggleShowNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      Settings.set("showNotifications", true);
+    } else {
+      Settings.set("showNotifications", false);
     }
   }
 }

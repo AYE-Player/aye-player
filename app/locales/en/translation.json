@@ -109,7 +109,8 @@
     "language": "Language",
     "infoText": "* App will be restarted",
     "devMode": "Development Mode",
-    "autoRadio": "Autoradio"
+    "autoRadio": "Autoradio",
+    "showNotifications": "Show Notifications"
   },
   "LoginPage": {
     "header": "Login",

@@ -109,7 +109,8 @@
     "language": "Sprache",
     "infoText": "* App wird neugestartet",
     "devMode": "Entwicklermodus",
-    "autoRadio": "Autoradio"
+    "autoRadio": "Autoradio",
+    "showNotifications": "Systembenachrichtigungen anzeigen"
   },
   "LoginPage": {
     "header": "Einloggen",

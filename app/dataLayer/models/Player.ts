@@ -5,7 +5,8 @@ import {
   Model,
   modelAction,
   prop,
-  Ref
+  Ref,
+  getRoot,
 } from "mobx-keystone";
 import { Repeat } from "../../types/enums";
 import playlistRef from "../references/PlaylistRef";
@@ -14,6 +15,7 @@ import Settings from "../stores/PersistentSettings";
 import Playlist from "./Playlist";
 import Track from "./Track";
 import ListenMoeWebsocket from "../api/ListenMoeWebsocket";
+import RootStore from "../stores/RootStore";
 
 interface IRPCState {
   track?: Track;
@@ -41,10 +43,12 @@ export default class Player extends Model({
   currentPlaylist: prop<Maybe<Ref<Playlist>>>(),
   livestreamSource: prop<string>(),
   websocketConnected: prop(false),
-  listenMoeTrackData: prop<Maybe<IListenMoeTrackData>>()
+  listenMoeTrackData: prop<Maybe<IListenMoeTrackData>>(),
 }) {
   @modelAction
   playTrack(track: Track) {
+    const { app } = getRoot<RootStore>(this);
+
     this.playbackPosition = 0;
     Settings.set("playerSettings.playbackPosition", 0);
 
@@ -60,17 +64,19 @@ export default class Player extends Model({
 
     if (!this.isPlaying) this.isPlaying = true;
 
-    new Notification(`Now Playing: ${this.currentTrack.current.title}`, {
-      icon: `https://img.youtube.com/vi/${this.currentTrack.current.id}/hqdefault.jpg`,
-      silent: true
-    });
+    if (app.showNotifications) {
+      new Notification(`Now Playing: ${this.currentTrack.current.title}`, {
+        icon: `https://img.youtube.com/vi/${this.currentTrack.current.id}/hqdefault.jpg`,
+        silent: true,
+      });
+    }
     this.notifyRPC();
   }
 
   notifyRPC({ state }: IRPCState = {}) {
     if (state === "Idle") {
       ipcRenderer.send("setDiscordActivity", {
-        details: "Idle"
+        details: "Idle",
       });
       return;
     }
@@ -78,7 +84,7 @@ export default class Player extends Model({
     if (this.currentTrack?.current.isLivestream) {
       ipcRenderer.send("setDiscordActivity", {
         details: this.currentTrack?.current.title,
-        state: state ?? null
+        state: state ?? null,
       });
     } else {
       ipcRenderer.send("setDiscordActivity", {
@@ -92,7 +98,7 @@ export default class Player extends Model({
         state: state ?? null,
         duration:
           this.currentTrack?.current.duration ||
-          this.listenMoeTrackData.duration
+          this.listenMoeTrackData.duration,
       });
     }
 
@@ -105,8 +111,8 @@ export default class Player extends Model({
         duration:
           this.currentTrack?.current.duration ||
           this.listenMoeTrackData?.duration ||
-          0
-      }
+          0,
+      },
     });
   }
 
@@ -174,7 +180,7 @@ export default class Player extends Model({
 
     ipcRenderer.send("player2Win", {
       type: "onStateChange",
-      data: this.isPlaying
+      data: this.isPlaying,
     });
   }
 
@@ -208,7 +214,7 @@ export default class Player extends Model({
 
     ipcRenderer.send("player2Win", {
       type: "currentTime",
-      data: this.playbackPosition
+      data: this.playbackPosition,
     });
   }
 

@@ -48,7 +48,7 @@ const AccountPage: React.FunctionComponent = () => {
     app,
     user,
     playlists,
-    trackCache
+    trackCache,
   });
 
   const { app, user, playlists, trackCache } = useInject(store);
@@ -79,6 +79,10 @@ const AccountPage: React.FunctionComponent = () => {
 
   const _switchAutoRadio = () => {
     app.toggleAutoRadio();
+  };
+
+  const _switchShowNotifications = () => {
+    app.toggleShowNotifications();
   };
 
   const _createSpotifyAuth = async () => {
@@ -112,7 +116,7 @@ const AccountPage: React.FunctionComponent = () => {
         const mobxTrack = new Track({
           id: track.id,
           duration: track.duration,
-          title: track.title
+          title: track.title,
         });
 
         if (!trackCache.getTrackById(mobxTrack.id)) {
@@ -127,14 +131,14 @@ const AccountPage: React.FunctionComponent = () => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Playlist.couldNotCreate")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -161,12 +165,18 @@ const AccountPage: React.FunctionComponent = () => {
             onChange={_switchAutoRadio}
             checked={app.autoRadio}
           />
+          <Divider size={2} />
+          <CustomSwitch
+            label={t("AppSettingsPage.showNotifications")}
+            onChange={_switchShowNotifications}
+            checked={app.showNotifications}
+          />
           <CustomDropDown
             name={t("AppSettingsPage.language")}
             id="language-select"
             options={[
               { value: "en", text: "English" },
-              { value: "de", text: "Deutsch" }
+              { value: "de", text: "Deutsch" },
             ]}
             selected={language}
             setSelected={setLanguage}
@@ -201,7 +211,7 @@ const AccountPage: React.FunctionComponent = () => {
           options={spotifyListnames.map(({ name, id }) => {
             return {
               name,
-              id
+              id,
             };
           })}
         />

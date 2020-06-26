@@ -9,6 +9,10 @@ const schema = {
     type: "boolean",
     default: false
   },
+  showNotifications: {
+    type: "boolean",
+    default: true
+  },
   devMode: {
     type: "boolean",
     default: false
