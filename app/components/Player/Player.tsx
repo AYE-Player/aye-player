@@ -476,7 +476,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               style={{
                 zIndex: 1000,
                 position: "absolute",
-                bottom: "24px",
+                bottom: "8px",
+                width: "264px",
+                height: "48px",
               }}
             >
               {player.listenMoeTrackData.title}{" "}
@@ -491,7 +493,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
                 style={{
                   position: "absolute",
                   zIndex: 1000,
-                  bottom: "20px",
+                  bottom: "-28px",
                   right: "5px",
                 }}
                 onClick={() => _deFavoriteSong()}
@@ -501,7 +503,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
                 style={{
                   position: "absolute",
                   zIndex: 1000,
-                  bottom: "20px",
+                  bottom: "-28px",
                   right: "5px",
                 }}
                 onClick={() => _favoriteSong()}
