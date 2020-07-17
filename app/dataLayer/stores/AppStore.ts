@@ -11,8 +11,13 @@ export default class AppStore extends Model({
   language: prop<string>(),
   selectedPlaylist: prop<string>(),
   autoRadio: prop(false),
-  showNotifications: prop(true)
+  showNotifications: prop(true),
+  listenMoeLoggedIn: prop(false),
 }) {
+  onInit() {
+    this.listenMoeLoggedIn = !!localStorage.getItem("listenMoe_token");
+  }
+
   @modelAction
   toggleQueueDisplay() {
     this.showQueue = !this.showQueue;
@@ -56,7 +61,7 @@ export default class AppStore extends Model({
     Settings.set("language", lang);
 
     ipcRenderer.send("changeLang", {
-      lang
+      lang,
     });
   }
 
@@ -83,5 +88,10 @@ export default class AppStore extends Model({
     } else {
       Settings.set("showNotifications", false);
     }
+  }
+
+  @modelAction
+  setListenMoeLogin(value: boolean) {
+    this.listenMoeLoggedIn = value;
   }
 }

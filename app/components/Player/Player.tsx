@@ -12,7 +12,10 @@ import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { IncomingMessageType, LogType, Repeat } from "../../types/enums";
 import { IListenMoeSongUpdate } from "../../types/response";
+import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import PlayerControlsContainer from "./PlayerControlsContainer";
+import ListenMoeApiClient from "../../dataLayer/api/ListenMoeApiClient";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 const ListenMoe = require("../../images/listenmoe.svg");
 
@@ -35,7 +38,7 @@ ipcRenderer.on("play-pause", (event, message) => {
 
   if (queue.isEmpty) {
     queue.addTracks(
-      player.currentPlaylist.current.tracks.map(track => track.current)
+      player.currentPlaylist.current.tracks.map((track) => track.current)
     );
     player.playTrack(queue.currentTrack.current);
     PlayerInterop.playTrack(queue.currentTrack.current);
@@ -53,14 +56,14 @@ ipcRenderer.on("play-next", (event, message) => {
   if (!track) {
     if (player.repeat === Repeat.ALL && player.isShuffling) {
       queue.addTracks(
-        player.currentPlaylist.current.tracks.map(track => track.current)
+        player.currentPlaylist.current.tracks.map((track) => track.current)
       );
       queue.shuffel();
       player.playTrack(queue.currentTrack.current);
       PlayerInterop.playTrack(queue.currentTrack.current);
     } else if (player.repeat === Repeat.ALL) {
       queue.addTracks(
-        player.currentPlaylist.current.tracks.map(track => track.current)
+        player.currentPlaylist.current.tracks.map((track) => track.current)
       );
       player.playTrack(player.currentPlaylist.current.tracks[0].current);
       PlayerInterop.playTrack(player.currentPlaylist.current.tracks[0].current);
@@ -85,7 +88,7 @@ ipcRenderer.on("play-song", async (event, message) => {
       player,
       trackHistory,
       trackCache,
-      searchResult
+      searchResult,
     } = Root.stores;
     const prevTrack = player.currentTrack;
 
@@ -98,7 +101,7 @@ ipcRenderer.on("play-song", async (event, message) => {
       track = new Track({
         id: trackInfo.id,
         duration: trackInfo.duration,
-        title: trackInfo.title
+        title: trackInfo.title,
       });
       trackCache.add(track);
     } else {
@@ -141,14 +144,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     queue,
     trackHistory,
     app,
-    trackCache
+    trackCache,
   }: RootStore) => ({
     player,
     queue,
     playlists,
     trackHistory,
     app,
-    trackCache
+    trackCache,
   });
 
   const { player, queue, trackHistory, app, trackCache } = useInject(Store);
@@ -196,7 +199,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
   // Handle listenmoe websocket song updates
   if (player.websocketConnected) {
-    ListenMoeWebsocket.ws.onmessage = message => {
+    ListenMoeWebsocket.ws.onmessage = async (message) => {
       if (!message.data.length) return;
       let response: IListenMoeSongUpdate;
       try {
@@ -220,17 +223,32 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
 
           ipcRenderer.send("setDiscordActivity", {
             startTimestamp: response.d.startTime,
-            details: `${response.d.song.artists[0].name} - ${response.d.song.title} (Listen.moe)`,
+            details: `${response.d.song.artists[0]?.name ?? "<no artist>"} - ${
+              response.d.song.title ?? "<no title>"
+            } (Listen.moe)`,
             state: null,
-            duration: response.d.song.duration
+            duration: response.d.song.duration,
           });
 
+          let favorite = [];
+          if (app.listenMoeLoggedIn) {
+            favorite = await ListenMoeApiClient.checkFavorite([
+              response.d.song.id,
+            ]).catch((err) => {
+              console.error("Error checking for favorit entry", err);
+              return [];
+            });
+          }
+
           player.setListeMoeData({
-            artists: response.d.song.artists
-              .map(artist => artist.name)
-              .toString(),
-            title: response.d.song.title,
-            duration: response.d.song.duration
+            id: response.d.song.id,
+            artists:
+              response.d.song.artists
+                ?.map((artist) => artist.name)
+                .toString() ?? "<no artist>",
+            title: response.d.song.title ?? "<no title>",
+            duration: response.d.song.duration ?? 0,
+            favorite: favorite.includes(response.d.song.id),
           });
           break;
         default:
@@ -239,7 +257,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     };
 
     // listen for errors / disconnects
-    ListenMoeWebsocket.ws.onclose = error => {
+    ListenMoeWebsocket.ws.onclose = (error) => {
       console.log(
         "%c> [ListenMoe] Websocket connection closed.",
         "color: #ff015b;",
@@ -288,7 +306,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         track = new Track({
           id: trk.Id,
           title: trk.Title,
-          duration: trk.Duration
+          duration: trk.Duration,
         });
         trackCache.add(track);
       } else {
@@ -311,20 +329,20 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         queue.addTracks(
           player.currentPlaylist.current
             .getTracksStartingFrom(idx + 1)
-            .map(track => track.current)
+            .map((track) => track.current)
         );
         player.playTrack(queue.currentTrack.current);
         PlayerInterop.playTrack(queue.currentTrack.current);
       } else if (player.repeat === Repeat.ALL && player.isShuffling) {
         queue.addTracks(
-          player.currentPlaylist.current.tracks.map(track => track.current)
+          player.currentPlaylist.current.tracks.map((track) => track.current)
         );
         queue.shuffel();
         player.playTrack(queue.currentTrack.current);
         PlayerInterop.setTrack(queue.currentTrack.current);
       } else if (player.repeat === Repeat.ALL) {
         queue.addTracks(
-          player.currentPlaylist.current.tracks.map(track => track.current)
+          player.currentPlaylist.current.tracks.map((track) => track.current)
         );
         player.playTrack(player.currentPlaylist.current.tracks[0].current);
         PlayerInterop.setTrack(
@@ -374,7 +392,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
     if (player.isShuffling) {
       queue.clear();
       queue.addTracks(
-        player.currentPlaylist.current.tracks.map(track => track.current)
+        player.currentPlaylist.current.tracks.map((track) => track.current)
       );
       queue.shuffel();
     } else {
@@ -386,7 +404,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       queue.addTracks(
         player.currentPlaylist.current
           .getTracksStartingFrom(idx)
-          .map(track => track.current)
+          .map((track) => track.current)
       );
     }
   };
@@ -403,6 +421,14 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   const _handleSeekMouseUp = (value: number) => {
     PlayerInterop.seekTo(value);
     player.notifyRPC();
+  };
+
+  const _favoriteSong = () => {
+    player.favoriteSong();
+  };
+
+  const _deFavoriteSong = () => {
+    player.deFavoriteSong();
   };
 
   return (
@@ -427,7 +453,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             marginTop: "45px",
             borderColor: "none",
             backgroundColor: "#161618",
-            zIndex: 999
+            zIndex: 999,
           }}
         />
       ) : null}
@@ -442,32 +468,53 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               marginTop: "35px",
               borderColor: "none",
               backgroundColor: "#161618",
-              zIndex: 999
+              zIndex: 999,
             }}
           />
           {player.listenMoeTrackData && (
-            <>
-              <div
-                style={{
-                  zIndex: 1000,
-                  position: "absolute",
-                  marginTop: "112px"
-                }}
-              >
-                {player.listenMoeTrackData.title}{" "}
-                {player.listenMoeTrackData.artists
-                  ? `- ${player.listenMoeTrackData.artists}`
-                  : ""}
-              </div>
-            </>
+            <div
+              style={{
+                zIndex: 1000,
+                position: "absolute",
+                bottom: "24px",
+              }}
+            >
+              {player.listenMoeTrackData.title}{" "}
+              {player.listenMoeTrackData.artists
+                ? `- ${player.listenMoeTrackData.artists}`
+                : ""}
+            </div>
           )}
+          {app.listenMoeLoggedIn ? (
+            player.listenMoeTrackData && player.listenMoeTrackData.favorite ? (
+              <FavoriteIcon
+                style={{
+                  position: "absolute",
+                  zIndex: 1000,
+                  bottom: "20px",
+                  right: "5px",
+                }}
+                onClick={() => _deFavoriteSong()}
+              />
+            ) : (
+              <FavoriteBorderOutlinedIcon
+                style={{
+                  position: "absolute",
+                  zIndex: 1000,
+                  bottom: "20px",
+                  right: "5px",
+                }}
+                onClick={() => _favoriteSong()}
+              />
+            )
+          ) : null}
         </>
       ) : null}
       <div
         style={{
           width: "320px",
           height: "215px",
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         {app.devMode ? (
@@ -478,7 +525,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               width: "320px",
               height: "215px",
               overflow: "hidden",
-              border: "none"
+              border: "none",
             }}
           />
         ) : (
@@ -489,7 +536,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               width: "320px",
               height: "215px",
               overflow: "hidden",
-              border: "none"
+              border: "none",
             }}
           />
         )}

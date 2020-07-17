@@ -131,3 +131,26 @@ export interface RelatedTracks {
 export interface GetTrackFromUrl {
   Song: ITrackDto;
 }
+
+export interface ListenMoeLoginInput {
+  username: Scalars["String"];
+  password: Scalars["String"];
+}
+
+export interface ListenMoeLoginData {
+  login: {
+    token: string;
+  };
+}
+
+export interface ListenMoeFavoriteInput {
+  id: Scalars["Int"];
+}
+
+export interface ListenMoeCheckFavoriteInput {
+  songs: Scalars["Int"][];
+}
+
+export interface ListenMoeCheckFavoriteData {
+  checkFavorite: Scalars["Int"][];
+}
