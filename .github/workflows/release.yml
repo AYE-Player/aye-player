@@ -14,8 +14,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@AYE-Player"
+          registry-url: https://npm.pkg.github.com
+          scope: "@aye-player"
 
       - name: Install dependencies
         run: yarn install
@@ -43,8 +43,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@AYE-Player"
+          registry-url: https://npm.pkg.github.com
+          scope: "@aye-player"
 
       - name: Install dependencies
         run: yarn install
@@ -72,8 +72,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@AYE-Player"
+          registry-url: https://npm.pkg.github.com
+          scope: "@aye-player"
 
       - name: Install dependencies
         run: yarn install
