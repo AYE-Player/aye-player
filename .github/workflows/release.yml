@@ -3,36 +3,77 @@ name: Build/release
 on: push
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-
-    # Platforms to build on/for
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
+  artifact_linux:
+    name: Upload Artifact (Linux)
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v1
 
-      - name: Install Node.js, NPM and Yarn
+      - name: Install Node v12
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: 'Install dependecies'
-        uses: Borales/actions-yarn@v2.1.0
-        with:
-          auth-token: ${{ secrets.github_token }}
-          registry-url: https://npm.pkg.github.com
-          cmd: install
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
+      - name: Install dependencies
+        run: yarn install
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - name: Build application
+        run: yarn electron:build
+
+      - name: Upload artifact to release
+        uses: icrawl/action-artifact@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: 'dist_electron/AYE*.AppImage'
+
+  artifact_macos:
+    name: Upload Artifact (macOS)
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Install Node v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build application
+        run: yarn electron:build
+
+      - name: Upload artifact to release
+        uses: icrawl/action-artifact@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: 'dist_electron/AYE*.dmg'
+
+  artifact_windows:
+    name: Upload Artifact (Windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: install node v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build application
+        run: yarn electron:build
+
+      - name: Upload artifact to release
+        uses: icrawl/action-artifact@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: 'dist_electron/AYE*.exe'
