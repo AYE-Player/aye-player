@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: 12
           registry-url: "https://npm.pkg.github.com"
+          scope: "@AYE-Player"
 
       - name: Install dependencies
         run: yarn install
@@ -43,6 +44,7 @@ jobs:
         with:
           node-version: 12
           registry-url: "https://npm.pkg.github.com"
+          scope: "@AYE-Player"
 
       - name: Install dependencies
         run: yarn install
@@ -71,6 +73,7 @@ jobs:
         with:
           node-version: 12
           registry-url: "https://npm.pkg.github.com"
+          scope: "@AYE-Player"
 
       - name: Install dependencies
         run: yarn install
