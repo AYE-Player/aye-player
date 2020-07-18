@@ -14,19 +14,20 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Install dependencies
         run: yarn install
 
       - name: Build application
-        run: yarn electron:build
+        run: yarn build
 
       - name: Upload artifact to release
         uses: icrawl/action-artifact@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: 'dist_electron/AYE*.AppImage'
+          path: "release/AYE*.AppImage"
 
   artifact_macos:
     name: Upload Artifact (macOS)
@@ -39,19 +40,20 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Install dependencies
         run: yarn install
 
       - name: Build application
-        run: yarn electron:build
+        run: yarn build
 
       - name: Upload artifact to release
         uses: icrawl/action-artifact@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: 'dist_electron/AYE*.dmg'
+          path: "release/AYE*.dmg"
 
   artifact_windows:
     name: Upload Artifact (Windows)
@@ -64,16 +66,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Install dependencies
         run: yarn install
 
       - name: Build application
-        run: yarn electron:build
+        run: yarn build
 
       - name: Upload artifact to release
         uses: icrawl/action-artifact@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: 'dist_electron/AYE*.exe'
+          path: "release/AYE*.exe"
