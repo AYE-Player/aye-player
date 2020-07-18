@@ -19,6 +19,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+      - name: 'Install dependecies'
+        uses: Borales/actions-yarn@v2.1.0
+        with:
+          auth-token: ${{ secrets.github_token }}
+          registry-url: https://npm.pkg.github.com
+          cmd: install
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
