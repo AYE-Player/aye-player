@@ -7,6 +7,9 @@ import {
   prop,
   Ref,
   getRoot,
+  modelFlow,
+  _async,
+  _await,
 } from "mobx-keystone";
 import { Repeat } from "../../types/enums";
 import playlistRef from "../references/PlaylistRef";
@@ -16,6 +19,7 @@ import Playlist from "./Playlist";
 import Track from "./Track";
 import ListenMoeWebsocket from "../api/ListenMoeWebsocket";
 import RootStore from "../stores/RootStore";
+import ListenMoeApiClient from "../api/ListenMoeApiClient";
 
 interface IRPCState {
   track?: Track;
@@ -23,9 +27,11 @@ interface IRPCState {
 }
 
 interface IListenMoeTrackData {
+  id: number;
   title: string;
   artists: string;
   duration: number;
+  favorite: boolean;
 }
 
 @model("Player")
@@ -44,6 +50,7 @@ export default class Player extends Model({
   livestreamSource: prop<string>(),
   websocketConnected: prop(false),
   listenMoeTrackData: prop<Maybe<IListenMoeTrackData>>(),
+  externalPlayerVersion: prop<string>({ setterAction: true }),
 }) {
   @modelAction
   playTrack(track: Track) {
@@ -258,4 +265,17 @@ export default class Player extends Model({
   setListeMoeData(data: IListenMoeTrackData) {
     this.listenMoeTrackData = data;
   }
+
+  @modelFlow
+  favoriteSong = _async(function* (this: Player) {
+    yield* _await(ListenMoeApiClient.favorite(this.listenMoeTrackData.id));
+    this.listenMoeTrackData.favorite = true;
+    console.log("this listenMoeData", this.listenMoeTrackData);
+  });
+
+  @modelFlow
+  deFavoriteSong = _async(function* (this: Player) {
+    yield* _await(ListenMoeApiClient.favorite(this.listenMoeTrackData.id));
+    this.listenMoeTrackData.favorite = false;
+  });
 }

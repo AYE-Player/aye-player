@@ -9,8 +9,20 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   //add authorization header
   operation.setContext({
     headers: {
-      Authorization: token ? `Bearer ${token}` : null
-    }
+      Authorization: token ? `Bearer ${token}` : null,
+    },
+  });
+
+  return forward(operation);
+});
+
+const authMiddlewareListenMoe = new ApolloLink((operation, forward) => {
+  const token = localStorage.getItem("listenMoe_token") || null;
+  //add authorization header
+  operation.setContext({
+    headers: {
+      Authorization: token ? `Bearer ${token}` : null,
+    },
   });
 
   return forward(operation);
@@ -23,17 +35,17 @@ export const graphQLClientPlaylists = new ApolloClient({
     authMiddleware,
     new HttpLink({
       uri: "https://api.aye-player.de/v1/playlists/gql",
-      fetch
+      fetch,
     })
   ),
   defaultOptions: {
     query: {
-      fetchPolicy: "no-cache"
+      fetchPolicy: "no-cache",
     },
     mutate: {
-      fetchPolicy: "no-cache"
-    }
-  }
+      fetchPolicy: "no-cache",
+    },
+  },
 });
 
 export const graphQLClientSearch = new ApolloClient({
@@ -42,17 +54,36 @@ export const graphQLClientSearch = new ApolloClient({
     authMiddleware,
     new HttpLink({
       uri: "https://api.aye-player.de/v1/search/gql",
-      fetch
+      fetch,
     })
   ),
   defaultOptions: {
     query: {
-      fetchPolicy: "no-cache"
+      fetchPolicy: "no-cache",
     },
     mutate: {
-      fetchPolicy: "no-cache"
-    }
-  }
+      fetchPolicy: "no-cache",
+    },
+  },
+});
+
+export const graphQLListenMoe = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: concat(
+    authMiddlewareListenMoe,
+    new HttpLink({
+      uri: "https://listen.moe/graphql",
+      fetch,
+    })
+  ),
+  defaultOptions: {
+    query: {
+      fetchPolicy: "no-cache",
+    },
+    mutate: {
+      fetchPolicy: "no-cache",
+    },
+  },
 });
 
 export const GRAPHQL = {
@@ -121,7 +152,20 @@ export const GRAPHQL = {
           Id
         }
       }
-    `
+    `,
+
+    LISTEN_MOE_CHECK_FAVORITE: gql`
+      query checkFavorite($songs: [Int!]!) {
+        checkFavorite(songs: $songs)
+      }
+    `,
+
+    LISTEN_MOE_CHECK_FAVORITES: gql`
+      query($songs: [Int!]!, $songsWithoutAlbum: [Int!]!) {
+        songs: checkFavorite(songs: $songs)
+        songsWithoutAlbum: checkFavorite(songs: $songsWithoutAlbum)
+      }
+    `,
   },
 
   MUTATION: {
@@ -209,6 +253,47 @@ export const GRAPHQL = {
           removeReadingUserFromPlaylistArgs: { PlaylistId: $id }
         )
       }
-    `
-  }
+    `,
+
+    LISTEN_MOE_FAVORITE_SONG: gql`
+      mutation($id: Int!) {
+        favoriteSong(id: $id) {
+          id
+        }
+      }
+    `,
+
+    LISTEN_MOE_LOGIN: gql`
+      mutation($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+          user {
+            uuid
+            username
+            displayName
+            avatarImage
+            bannerImage
+            bio
+            roles {
+              name
+              slug
+              color
+              songRequests
+            }
+            additionalSongRequests
+            uploadLimit
+          }
+          token
+          mfa
+        }
+      }
+    `,
+
+    LISTEN_MOE_FAVORITE: gql`
+      mutation($id: Int!) {
+        favoriteSong(id: $id) {
+          id
+        }
+      }
+    `,
+  },
 };

@@ -18,7 +18,10 @@ import spotifyToLocalTracks from "../helpers/spotify/spotifyToLocalTracks";
 import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
+import ListenMoeLoginDialog from "../components/ListenMoeLoginDialog";
+import ListenMoeApiClient from "../dataLayer/api/ListenMoeApiClient";
 const SpotifyLogo = require("../images/Spotify_Logo_CMYK_Green.png");
+const ListenMoeLogo = require("../images/listenmoe.svg");
 
 const Header = styled.div`
   font-size: 24px;
@@ -35,27 +38,29 @@ const SettingsContainer = styled.div`
 `;
 
 const InfoText = styled.div`
-  position: absolute;
-  bottom: 56px;
-  right: 8px;
   font-size: 14px;
 `;
 
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const store = ({ app, user, playlists, trackCache }: RootStore) => ({
+  const store = ({ app, user, playlists, trackCache, player }: RootStore) => ({
     app,
     user,
     playlists,
     trackCache,
+    player,
   });
 
-  const { app, user, playlists, trackCache } = useInject(store);
+  const { app, user, playlists, trackCache, player } = useInject(store);
 
   const [spotifyListnames, setSpotifyListNames] = React.useState<any[]>([]);
   const [spotifyLists, setSpotifyLists] = React.useState<any>();
   const [open, setOpen] = React.useState(false);
+
+  const [listenMoeOpen, setListenMoeOpen] = React.useState(false);
+  const [listenMoeUsername, setListenMoeUsername] = React.useState("");
+  const [listenMoePassword, setListenMoePassword] = React.useState("");
 
   const _switchRPCStatus = () => {
     app.toggleRPC();
@@ -143,6 +148,25 @@ const AccountPage: React.FunctionComponent = () => {
     }
   };
 
+  const _handleLoginClick = async () => {
+    const token = await ListenMoeApiClient.login(
+      listenMoeUsername,
+      listenMoePassword
+    );
+    localStorage.setItem("listenMoe_token", token);
+    app.setListenMoeLogin(true);
+
+    setListenMoeUsername("");
+    setListenMoePassword("");
+    setListenMoeOpen(false);
+  };
+
+  const _handleCancelClick = () => {
+    setListenMoeUsername("");
+    setListenMoePassword("");
+    setListenMoeOpen(false);
+  };
+
   return (
     <ClickAwayListener onClickAway={_handleClose} disableReactTree>
       <Container>
@@ -191,6 +215,15 @@ const AccountPage: React.FunctionComponent = () => {
             style={{ cursor: "pointer" }}
             onClick={() => _createSpotifyAuth()}
           />
+          <Divider size={2} />
+          <img
+            src={ListenMoeLogo}
+            width={150}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              setListenMoeOpen(true);
+            }}
+          />
           {user.roles.find((role: string) => role === "admin") && (
             <>
               <Divider size={2} />
@@ -202,7 +235,20 @@ const AccountPage: React.FunctionComponent = () => {
             </>
           )}
         </SettingsContainer>
-        <InfoText>v{version}</InfoText>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "56px",
+            right: "8px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "220px"
+          }}
+        >
+          <InfoText>App v{version}</InfoText>
+          <InfoText>externalPlayer v{player.externalPlayerVersion}</InfoText>
+        </div>
         <CustomListDialog
           dialogTitle={t("Spotify.importPlaylist")}
           open={open}
@@ -214,6 +260,16 @@ const AccountPage: React.FunctionComponent = () => {
               id,
             };
           })}
+        />
+        <ListenMoeLoginDialog
+          open={listenMoeOpen}
+          handleClose={_handleClose}
+          username={listenMoeUsername}
+          setUsername={setListenMoeUsername}
+          password={listenMoePassword}
+          setPassword={setListenMoePassword}
+          handleLoginClick={_handleLoginClick}
+          handleCancelClick={_handleCancelClick}
         />
       </Container>
     </ClickAwayListener>

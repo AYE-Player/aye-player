@@ -25,6 +25,7 @@ export enum OutgoingMessageType {
 export enum IncomingMessageType {
   START,
   PAUSE,
+  READY,
   PLAY_NEXT_TRACK,
   SET_PLAYBACK_POSITION,
   NOTIFY_RPC,
