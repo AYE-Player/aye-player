@@ -50,6 +50,7 @@ export default class Player extends Model({
   livestreamSource: prop<string>(),
   websocketConnected: prop(false),
   listenMoeTrackData: prop<Maybe<IListenMoeTrackData>>(),
+  externalPlayerVersion: prop<string>({ setterAction: true }),
 }) {
   @modelAction
   playTrack(track: Track) {

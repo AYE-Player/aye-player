@@ -191,6 +191,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             LogType.ERROR
           );
           break;
+        case IncomingMessageType.READY:
+          player.externalPlayerVersion = data.version;
         default:
           break;
       }
