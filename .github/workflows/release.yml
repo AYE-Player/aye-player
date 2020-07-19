@@ -29,29 +29,40 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build application
-        run: yarn build
-
-      - name: Package application
-        run: yarn package
-
-        # Create a release with the given tag
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-        # upload package to release page
-      - name: Upload asset to release
-        uses: csexton/release-asset-action@v2
-        with:
-          file: release/aye-player*.AppImage
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      # - name: Build application
+      #   run: yarn build
+
+      # - name: Package application
+      #   run: yarn package
+
+      #   # Create a release with the given tag
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false
+      #   # upload package to release page
+      # - name: Upload asset to release
+      #   uses: csexton/release-asset-action@v2
+      #   with:
+      #     file: release/aye-player*.AppImage
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
 
   # artifact_macos:
   #   name: Upload Artifact (macOS)
