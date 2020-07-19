@@ -1,0 +1,26 @@
+name: Build/release
+
+on:
+  release:
+    types:
+      - created
+
+
+jobs:
+  artifact_linux:
+    name: Upload Artifact (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: success()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "release linux"
+          description: "New AYE-Player Release"
+          nofail: false
+          nodetail: false
+          color: 0x0000ff
+          username: GitHub Actions
+          avatar_url: ${{ secrets.AVATAR_URL }}
