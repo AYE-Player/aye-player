@@ -23,18 +23,36 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@aye-player"
 
-      - name: Add authToken to npmrc
+      # - name: Add authToken to npmrc
+      #   run: |
+      #     if [ '$RUNNER_OS' == 'Linux' ]; then
+      #       echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+      #       echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+      #     elif [ '$RUNNER_OS' == 'macOS']; then
+      #       echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+      #       echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+      #     else
+      #       Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
+      #       Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
+      #     fi
+
+      - name: Add authToken to linux os
         run: |
-          if [ '$RUNNER_OS' == 'Linux' ]; then
-            echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-            echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-          elif [ '$RUNNER_OS' == 'macOS']; then
-            echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-            echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-          else
-            Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
-            Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
-          fi
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+        if: matrix.os == 'linux-latest'
+
+      - name: Add authToken to macOS
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+        if: matrix.os == 'macOS-latest'
+
+      - nam: Add authToken to windows
+        run: |
+          Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
+          Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
+        if: matrix.os == 'windows-latest'
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
