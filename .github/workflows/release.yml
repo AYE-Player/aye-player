@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -40,13 +40,13 @@ jobs:
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
           echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        if: matrix.os == 'linux-latest'
+        if: matrix.os == 'ubuntu-latest'
 
       - name: Add authToken to macOS
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
           echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        if: matrix.os == 'macOS-latest'
+        if: matrix.os == 'macos-latest'
 
       - name: Add authToken to windows
         run: |
