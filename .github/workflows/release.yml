@@ -35,6 +35,7 @@ jobs:
       - name: Package application
         run: yarn package
 
+        # Create a release with the given tag
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -45,6 +46,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+        # upload package to release page
       - name: Upload asset to release
         uses: csexton/release-asset-action@v2
         with:
