@@ -1,0 +1,136 @@
+name: Build/release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+
+jobs:
+  artifact_linux:
+    name: Upload Artifact (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Install Node v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://npm.pkg.github.com
+          scope: "@aye-player"
+
+      - name: Add authToken to npmrc
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      # - name: Build application
+      #   run: yarn build
+
+      # - name: Package application
+      #   run: yarn package
+
+      #   # Create a release with the given tag
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false
+      #   # upload package to release page
+      # - name: Upload asset to release
+      #   uses: csexton/release-asset-action@v2
+      #   with:
+      #     file: release/aye-player*.AppImage
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # artifact_macos:
+  #   name: Upload Artifact (macOS)
+  #   runs-on: macOS-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v1
+
+  #     - name: Install Node v12
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
+  #         registry-url: https://npm.pkg.github.com
+  #         scope: "@aye-player"
+
+  #     - name: Add authToken to npmrc
+  #       run: |
+  #         echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+  #         echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
+  #     - name: Install dependencies
+  #       run: yarn install
+
+  #     - name: Build application
+  #       run: yarn build
+
+  #     - name: Package application
+  #       run: yarn package
+
+  #     - name: Upload artifact to release
+  #       uses: icrawl/action-artifact@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         path: "release/aye-player*.dmg"
+
+  # artifact_windows:
+  #   name: Upload Artifact (Windows)
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v1
+
+  #     - name: install node v12
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         always-auth: true
+  #         node-version: 12
+  #         registry-url: https://npm.pkg.github.com
+  #         scope: "@aye-player"
+
+  #     - name: Add authToken to npmrc
+  #       run: |
+  #         echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+  #         echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
+  #     - name: Install dependencies
+  #       run: yarn install
+
+  #     - name: Build application
+  #       run: yarn build
+
+  #     - name: Package application
+  #       run: yarn package
+
+  #     - name: Upload artifact to release
+  #       uses: icrawl/action-artifact@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         path: "release/AYE*.exe"
