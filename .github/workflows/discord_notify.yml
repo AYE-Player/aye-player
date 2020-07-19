@@ -1,10 +1,9 @@
-name: Build/release
+name: Discord Notify
 
 on:
   release:
     types:
       - created
-
 
 jobs:
   artifact_linux:
@@ -17,7 +16,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          title: "release linux"
+          title: "Release"
           description: "New AYE-Player Release"
           nofail: false
           nodetail: false
