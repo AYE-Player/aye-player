@@ -18,8 +18,9 @@ jobs:
           scope: "@aye-player"
 
       - name: Add authToken to npmrc
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        run: echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
 
       - name: Install dependencies
         run: yarn install
@@ -49,8 +50,9 @@ jobs:
           scope: "@aye-player"
 
       - name: Add authToken to npmrc
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        run: echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
 
       - name: Install dependencies
         run: yarn install
@@ -81,8 +83,9 @@ jobs:
           scope: "@aye-player"
 
       - name: Add authToken to npmrc
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        run: echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
 
       - name: Install dependencies
         run: yarn install
