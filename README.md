@@ -1,12 +1,15 @@
+
 # Aye Player
+
+![Build/release](https://github.com/AYE-Player/aye-player/workflows/Build/release/badge.svg)
 
 > “The computer was born to solve problems that did not exist before.”
 > — Bill Gates
 
-## Idee
+## Feature Ideen
 
 - Electron basierter YouTube Musik Player
-- React, TypeScript, MobX
+- React, TypeScript, MobX-Keystone
 - i18n
 - Features
 
