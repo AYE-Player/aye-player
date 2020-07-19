@@ -1,4 +1,4 @@
-import AyeRemote from "@aye/aye-remote-client";
+import AyeRemote from "aye-remote-client";
 import { Grid } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-keystone";
