@@ -36,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: "release/AYE*.AppImage"
+          path: "release/aye-player*.AppImage"
 
   artifact_macos:
     name: Upload Artifact (macOS)
@@ -71,40 +71,40 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: "release/AYE*.dmg"
+          path: "release/aye-player*.dmg"
 
-  artifact_windows:
-    name: Upload Artifact (Windows)
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
+  # artifact_windows:
+  #   name: Upload Artifact (Windows)
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v1
 
-      - name: install node v12
-        uses: actions/setup-node@v1
-        with:
-          always-auth: true
-          node-version: 12
-          registry-url: https://npm.pkg.github.com
-          scope: "@aye-player"
+  #     - name: install node v12
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         always-auth: true
+  #         node-version: 12
+  #         registry-url: https://npm.pkg.github.com
+  #         scope: "@aye-player"
 
-      - name: Add authToken to npmrc
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+  #     - name: Add authToken to npmrc
+  #       run: |
+  #         echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+  #         echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
 
-      - name: Install dependencies
-        run: yarn install
+  #     - name: Install dependencies
+  #       run: yarn install
 
-      - name: Build application
-        run: yarn build
+  #     - name: Build application
+  #       run: yarn build
 
-      - name: Package application
-        run: yarn package
+  #     - name: Package application
+  #       run: yarn package
 
-      - name: Upload artifact to release
-        uses: icrawl/action-artifact@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          path: "release/AYE*.exe"
+  #     - name: Upload artifact to release
+  #       uses: icrawl/action-artifact@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         path: "release/AYE*.exe"
