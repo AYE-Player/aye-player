@@ -7,7 +7,7 @@ on:
 
 jobs:
   artifact_linux:
-    name: Upload Artifact (Linux)
+    name: Build and Upload
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,19 +22,6 @@ jobs:
           node-version: 12
           registry-url: https://npm.pkg.github.com
           scope: "@aye-player"
-
-      # - name: Add authToken to npmrc
-      #   run: |
-      #     if [ '$RUNNER_OS' == 'Linux' ]; then
-      #       echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-      #       echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-      #     elif [ '$RUNNER_OS' == 'macOS']; then
-      #       echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-      #       echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-      #     else
-      #       Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
-      #       Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
-      #     fi
 
       - name: Add authToken to linux os
         run: |
@@ -64,64 +51,3 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-  # artifact_macos:
-  #   name: Upload Artifact (macOS)
-  #   runs-on: macOS-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v1
-
-  #     - name: Install Node v12
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12
-  #         registry-url: https://npm.pkg.github.com
-  #         scope: "@aye-player"
-
-  #     - name: Add authToken to npmrc
-  #       run: |
-  #         echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-  #         echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-
-  #     - name: Build/release Electron app
-  #       uses: samuelmeuli/action-electron-builder@v1
-  #       with:
-  #         # GitHub token, automatically provided to the action
-  #         # (No need to define this secret in the repo settings)
-  #         github_token: ${{ secrets.github_token }}
-
-  #         # If the commit is tagged with a version (e.g. "v1.0.0"),
-  #         # release the app after building
-  #         release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-  # artifact_windows:
-  #   name: Upload Artifact (Windows)
-  #   runs-on: windows-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v1
-
-  #     - name: install node v12
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         always-auth: true
-  #         node-version: 12
-  #         registry-url: https://npm.pkg.github.com
-  #         scope: "@aye-player"
-
-  #     - name: Add authToken to npmrc
-  #       run: |
-  #         Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
-  #         Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
-
-  #     - name: Build/release Electron app
-  #       uses: samuelmeuli/action-electron-builder@v1
-  #       with:
-  #         # GitHub token, automatically provided to the action
-  #         # (No need to define this secret in the repo settings)
-  #         github_token: ${{ secrets.github_token }}
-
-  #         # If the commit is tagged with a version (e.g. "v1.0.0"),
-  #         # release the app after building
-  #         release: ${{ startsWith(github.ref, 'refs/tags/v') }}
