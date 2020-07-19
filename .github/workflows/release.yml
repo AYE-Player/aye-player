@@ -48,7 +48,7 @@ jobs:
           echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
         if: matrix.os == 'macOS-latest'
 
-      - nam: Add authToken to windows
+      - name: Add authToken to windows
         run: |
           Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
           Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
