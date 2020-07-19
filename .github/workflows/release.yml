@@ -6,7 +6,7 @@ on:
       - "v*"
 
 jobs:
-  artifact_linux:
+  build_and_release_artifacts:
     name: Build and Upload
     runs-on: ${{ matrix.os }}
     strategy:
