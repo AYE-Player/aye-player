@@ -17,10 +17,11 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@aye-player"
 
+      - name: Add authToken to npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
       - name: Install dependencies
         run: yarn install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Build application
         run: yarn build
@@ -46,10 +47,11 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@aye-player"
 
+      - name: Add authToken to npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
       - name: Install dependencies
         run: yarn install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Build application
         run: yarn build
@@ -71,14 +73,16 @@ jobs:
       - name: install node v12
         uses: actions/setup-node@v1
         with:
+          always-auth: true
           node-version: 12
           registry-url: https://npm.pkg.github.com
           scope: "@aye-player"
 
+      - name: Add authToken to npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
       - name: Install dependencies
         run: yarn install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Build application
         run: yarn build
