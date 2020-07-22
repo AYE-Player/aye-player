@@ -312,7 +312,7 @@
     "source-map-support": "^0.5.19",
     "styled-components": "^5.1.1",
     "v8-compile-cache": "^2.1.1",
-    "ytsr": "github:majesnix/node-ytsr#c9c2deb22a7cbdfdf7ea6c7038b1b33c3c74260a"
+    "ytsr": "^0.1.17"
   },
   "devEngines": {
     "node": ">=7.x",
