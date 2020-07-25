@@ -223,15 +223,6 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           )
             break;
 
-          ipcRenderer.send("setDiscordActivity", {
-            startTimestamp: response.d.startTime,
-            details: `${response.d.song.artists[0]?.name ?? "<no artist>"} - ${
-              response.d.song.title ?? "<no title>"
-            } (Listen.moe)`,
-            state: null,
-            duration: response.d.song.duration,
-          });
-
           let favorite = [];
           if (app.listenMoeLoggedIn) {
             favorite = await ListenMoeApiClient.checkFavorite([
@@ -242,8 +233,13 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             });
           }
 
+          if (player.currentTrack) {
+            player.setCurrentTrack();
+          }
+
           player.setListenMoeData({
             id: response.d.song.id,
+            startTime: response.d.startTime,
             artists:
               response.d.song.artists
                 ?.map((artist) => artist.name)
@@ -252,6 +248,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             duration: response.d.song.duration ?? 0,
             favorite: favorite.includes(response.d.song.id),
           });
+          player.notifyRPC();
           break;
         default:
           break;

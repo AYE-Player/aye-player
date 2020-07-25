@@ -32,6 +32,7 @@ interface IListenMoeTrackData {
   artists: string;
   duration: number;
   favorite: boolean;
+  startTime: string;
 }
 
 @model("Player")
@@ -94,22 +95,49 @@ export default class Player extends Model({
         state: state ?? null,
       });
     } else {
-      ipcRenderer.send("setDiscordActivity", {
-        playbackPosition: this.playbackPosition,
-        endTime: state
-          ? null
-          : this.currentTrack?.current.duration ||
-            this.listenMoeTrackData.duration,
-        details:
-          this.currentTrack?.current.title ||
-          this.listenMoeTrackData.title.length >= 50
-            ? this.listenMoeTrackData.title.substring(0, 50)
-            : this.listenMoeTrackData.title,
-        state: state ?? null,
-        duration:
-          this.currentTrack?.current.duration ||
-          this.listenMoeTrackData.duration,
-      });
+      if (this.currentTrack) {
+        ipcRenderer.send("player2Win", {
+          type: "isYoutube",
+        });
+        ipcRenderer.send("setDiscordActivity", {
+          playbackPosition: this.playbackPosition,
+          endTime: state ? null : this.currentTrack.current.duration,
+          details: this.currentTrack.current.title,
+          state: state ?? null,
+          duration: this.currentTrack.current.duration,
+        });
+        ipcRenderer.send("player2Win", {
+          type: "trackInfo",
+          data: {
+            id: this.currentTrack.current.id || 0,
+            title: this.currentTrack.current.title,
+            duration: this.currentTrack.current.duration || 0,
+          },
+        });
+      } else if (this.listenMoeTrackData) {
+        ipcRenderer.send("player2Win", {
+          type: "isRadio",
+        });
+        ipcRenderer.send("setDiscordActivity", {
+          playbackPosition: this.playbackPosition,
+          endTime: this.listenMoeTrackData.duration,
+          startTimestamp: this.listenMoeTrackData.startTime,
+          details: `${this.listenMoeTrackData.artists} - ${this.listenMoeTrackData.title} (Listen.moe)`,
+          state: null,
+          duration: this.listenMoeTrackData.duration,
+        });
+        ipcRenderer.send("player2Win", {
+          type: "trackInfo",
+          data: {
+            id: 0,
+            title:
+              this.listenMoeTrackData.title.length >= 50
+                ? this.listenMoeTrackData.title.substring(0, 50)
+                : this.listenMoeTrackData.title,
+            duration: this.listenMoeTrackData.duration || 0,
+          },
+        });
+      }
     }
 
     ipcRenderer.send("player2Win", {
@@ -118,9 +146,9 @@ export default class Player extends Model({
         id: this.currentTrack?.current.id || 0,
         title:
           this.currentTrack?.current.title ||
-          this.listenMoeTrackData.title.length >= 50
-            ? this.listenMoeTrackData.title.substring(0, 50)
-            : this.listenMoeTrackData.title,
+          this.listenMoeTrackData?.title.length >= 50
+            ? this.listenMoeTrackData?.title.substring(0, 50)
+            : this.listenMoeTrackData?.title,
         duration:
           this.currentTrack?.current.duration ||
           this.listenMoeTrackData?.duration ||
@@ -278,7 +306,6 @@ export default class Player extends Model({
   favoriteSong = _async(function* (this: Player) {
     yield* _await(ListenMoeApiClient.favorite(this.listenMoeTrackData.id));
     this.listenMoeTrackData.favorite = true;
-    console.log("this listenMoeData", this.listenMoeTrackData);
   });
 
   @modelFlow
