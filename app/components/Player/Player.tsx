@@ -242,7 +242,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             });
           }
 
-          player.setListeMoeData({
+          player.setListenMoeData({
             id: response.d.song.id,
             artists:
               response.d.song.artists
@@ -270,6 +270,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       if (ListenMoeWebsocket.ws) {
         ListenMoeWebsocket.ws.close();
         ListenMoeWebsocket.ws = null;
+        player.setWebsocketConnected(false);
       }
       if (!error.wasClean) {
         console.log("%c> [ListenMoe] Reconnecting...", "color: #008000;");
@@ -277,7 +278,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
           player.setLivestreamSource("listen.moe");
         }, 5000);
         player.setWebsocketConnected(false);
-        player.setListeMoeData(undefined);
+        player.setListenMoeData(undefined);
       }
     };
   }
@@ -485,7 +486,12 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             >
               {player.listenMoeTrackData.title}{" "}
               {player.listenMoeTrackData.artists
-                ? `- ${player.listenMoeTrackData.artists}`
+                ? `- ${
+                    player.listenMoeTrackData.artists.length >= 20
+                      ? player.listenMoeTrackData.artists.substring(0, 20) +
+                        "..."
+                      : player.listenMoeTrackData.artists
+                  }`
                 : ""}
             </div>
           )}
