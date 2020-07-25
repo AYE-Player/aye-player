@@ -101,7 +101,10 @@ export default class Player extends Model({
           : this.currentTrack?.current.duration ||
             this.listenMoeTrackData.duration,
         details:
-          this.currentTrack?.current.title || this.listenMoeTrackData.title,
+          this.currentTrack?.current.title ||
+          this.listenMoeTrackData.title.length >= 50
+            ? this.listenMoeTrackData.title.substring(0, 50)
+            : this.listenMoeTrackData.title,
         state: state ?? null,
         duration:
           this.currentTrack?.current.duration ||
@@ -114,7 +117,10 @@ export default class Player extends Model({
       data: {
         id: this.currentTrack?.current.id || 0,
         title:
-          this.currentTrack?.current.title || this.listenMoeTrackData.title,
+          this.currentTrack?.current.title ||
+          this.listenMoeTrackData.title.length >= 50
+            ? this.listenMoeTrackData.title.substring(0, 50)
+            : this.listenMoeTrackData.title,
         duration:
           this.currentTrack?.current.duration ||
           this.listenMoeTrackData?.duration ||
@@ -242,19 +248,21 @@ export default class Player extends Model({
 
   @modelAction
   setLivestreamSource(source: string) {
-    if (!this.websocketConnected) {
-      // Connect to listenMoe websocket
-      ListenMoeWebsocket.connect();
-      // Listen for successfull connection
-      ListenMoeWebsocket.ws.onopen = () => {
-        console.log(
-          "%c> [ListenMoe] Websocket connection established.",
-          "color: #008000;"
-        );
-        clearInterval(ListenMoeWebsocket.heartbeatInterval);
-        ListenMoeWebsocket.heartbeatInterval = null;
-        this.setWebsocketConnected(true);
-      };
+    if (source === "listen.moe") {
+      if (!this.websocketConnected) {
+        // Connect to listenMoe websocket
+        ListenMoeWebsocket.connect();
+        // Listen for successfull connection
+        ListenMoeWebsocket.ws.onopen = () => {
+          console.log(
+            "%c> [ListenMoe] Websocket connection established.",
+            "color: #008000;"
+          );
+          clearInterval(ListenMoeWebsocket.heartbeatInterval);
+          ListenMoeWebsocket.heartbeatInterval = null;
+          this.setWebsocketConnected(true);
+        };
+      }
     }
 
     this.currentTrack = undefined;
@@ -262,7 +270,7 @@ export default class Player extends Model({
   }
 
   @modelAction
-  setListeMoeData(data: IListenMoeTrackData) {
+  setListenMoeData(data: IListenMoeTrackData) {
     this.listenMoeTrackData = data;
   }
 
