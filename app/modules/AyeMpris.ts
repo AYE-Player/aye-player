@@ -16,13 +16,15 @@ class AyeMpris extends BaseModule {
       identity: "AYE Player",
       canRaise: true,
       supportedInterfaces: ["player"],
-      desktopEntry: "ayeplayer"
+      desktopEntry: "ayeplayer",
     });
 
     this.player.playbackStatus = "Stopped";
     this.player.rate = 1;
     this.player.canSeek = true;
     this.player.canControl = true;
+    this.player.canGoNext = true;
+    this.player.canGoPrevious = true;
     this.player.minimumRate = 1;
     this.player.maximumRate = 1;
     this.player.volume = 0.2;
@@ -103,7 +105,7 @@ class AyeMpris extends BaseModule {
         this.changeVolumeState(this.window, volume * 100);
         this.window.webContents.send("win2Player", {
           type: "setVolume",
-          info: volume * 100
+          info: volume * 100,
         });
         this.player.volume = volume;
       }
@@ -114,7 +116,7 @@ class AyeMpris extends BaseModule {
         AyeLogger.media(`Seek ${seek / 1e6} sec`);
         this.window.webContents.send("player2Win", {
           type: "seekTo",
-          info: (this.player.getPosition() + seek) / 1e6
+          info: (this.player.getPosition() + seek) / 1e6,
         }); // in seconds
       }
     });
@@ -124,23 +126,23 @@ class AyeMpris extends BaseModule {
         AyeLogger.media(`Go to position ${arg.position / 1e6} sec`);
         this.window.webContents.send("position", {
           type: "seekTo",
-          pos: arg.position / 1e6
+          pos: arg.position / 1e6,
         }); // in seconds
       }
     });
 
-    this.player.on("shuffle", shuffle => {
+    this.player.on("shuffle", (shuffle) => {
       if (this.player.playbackStatus !== "Stopped") {
         AyeLogger.media(`Set shuffling: ${shuffle}`);
         this.window.webContents.send("player2Win", {
           type: "onMprisShuffle",
-          info: shuffle
+          info: shuffle,
         });
         this.player.shuffle = shuffle;
       }
     });
 
-    this.player.on("loopStatus", loop => {
+    this.player.on("loopStatus", (loop) => {
       if (this.player.playbackStatus !== "Stopped") {
         AyeLogger.media(`Set looping to: ${loop}`);
         this.player.loopStatus = loop;
@@ -150,7 +152,7 @@ class AyeMpris extends BaseModule {
         if (loop === "None") repeat = null;
         this.window.webContents.send("player2Win", {
           type: "onMprisRepeat",
-          info: repeat
+          info: repeat,
         });
       }
     });
@@ -186,14 +188,17 @@ class AyeMpris extends BaseModule {
           // AyeLogger.media(`Playback status: ${this.player.playbackStatus}`);
           break;
         case "trackInfo":
-          if (this.player.metadata["xesam:url"] !== `https://www.youtube.com/watch?v=${args.data.id}`) {
+          if (
+            this.player.metadata["xesam:url"] !==
+            `https://www.youtube.com/watch?v=${args.data.id}`
+          ) {
             this.player.metadata = {
               /*"xesam:artist": [args.data.artist],*/
               "xesam:title": args.data.title,
               "xesam:url": `https://www.youtube.com/watch?v=${args.data.id}`,
               "mpris:trackid": this.player.objectPath("track/0"),
               "mpris:artUrl": `https://img.youtube.com/vi/${args.data.id}/hqdefault.jpg`,
-              "mpris:length": args.data.duration * 1e6 // in microseconds
+              "mpris:length": args.data.duration * 1e6, // in microseconds
             };
           }
 
@@ -202,6 +207,13 @@ class AyeMpris extends BaseModule {
             `Track Info:\n${JSON.stringify(this.player.metadata, null, 2)}`
           ); */
           break;
+        case "isRadio":
+          this.player.canGoPrevious = false;
+          this.player.canGoNext = false;
+          break;
+        case "isYoutube":
+          this.player.canGoPrevious = true;
+          this.player.canGoNext = true;
         default:
       }
     });
