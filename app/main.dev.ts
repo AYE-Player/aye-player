@@ -51,6 +51,8 @@ export default class Main {
     // Fix the player not being able to play audio when the user did not interact
     // with the page
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+    // Disable the http cache, to always load newest version of external player
+    app.commandLine.appendSwitch("disable-http-cache");
     // Set default protocol, to open pages/songs with an external link
     app.setAsDefaultProtocolClient("aye-player");
 
