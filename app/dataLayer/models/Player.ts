@@ -91,7 +91,10 @@ export default class Player extends Model({
 
     if (this.currentTrack?.current.isLivestream) {
       ipcRenderer.send("setDiscordActivity", {
-        details: this.currentTrack?.current.title,
+        details:
+          this.currentTrack.current.title.length >= 128
+            ? `${this.currentTrack.current.title.substr(0, 123)}...`
+            : this.currentTrack.current.title,
         state: state ?? null,
       });
     } else {
@@ -99,10 +102,14 @@ export default class Player extends Model({
         ipcRenderer.send("player2Win", {
           type: "isYoutube",
         });
+
         ipcRenderer.send("setDiscordActivity", {
           playbackPosition: this.playbackPosition,
           endTime: state ? null : this.currentTrack.current.duration,
-          details: this.currentTrack.current.title,
+          details:
+            this.currentTrack.current.title.length >= 128
+              ? `${this.currentTrack.current.title.substr(0, 123)}...`
+              : this.currentTrack.current.title,
           state: state ?? null,
           duration: this.currentTrack.current.duration,
         });
@@ -118,11 +125,15 @@ export default class Player extends Model({
         ipcRenderer.send("player2Win", {
           type: "isRadio",
         });
+
+        const details = `${this.listenMoeTrackData.artists} - ${this.listenMoeTrackData.title} (Listen.moe)`;
+
         ipcRenderer.send("setDiscordActivity", {
           playbackPosition: this.playbackPosition,
           endTime: this.listenMoeTrackData.duration,
           startTimestamp: this.listenMoeTrackData.startTime,
-          details: `${this.listenMoeTrackData.artists} - ${this.listenMoeTrackData.title} (Listen.moe)`,
+          details:
+            details.length >= 128 ? `${details.substr(0, 123)}...` : details,
           state: null,
           duration: this.listenMoeTrackData.duration,
         });
