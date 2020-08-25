@@ -16,6 +16,7 @@ import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutline
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PlayerControlsContainer from "./PlayerControlsContainer";
 import ListenMoeApiClient from "../../dataLayer/api/ListenMoeApiClient";
+import { searchYoutube, timestringToSeconds } from "../../helpers";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 const ListenMoe = require("../../images/listenmoe.svg");
 
@@ -31,6 +32,8 @@ const Container = styled.div`
   position: absolute;
   bottom: 32px;
 `;
+
+let retryCounter = 0;
 
 // Listeners
 ipcRenderer.on("play-pause", (event, message) => {
@@ -157,7 +160,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
   const { player, queue, trackHistory, app, trackCache } = useInject(Store);
   PlayerInterop.init();
 
-  window.onmessage = (message: any) => {
+  window.onmessage = async (message: any) => {
     const { data, origin } = message;
     const playerUrl = app.devMode
       ? "http://localhost:3000"
@@ -190,6 +193,38 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             `Error from External Player ${JSON.stringify(data.error)}`,
             LogType.ERROR
           );
+          if (data.error === 150) {
+            if (retryCounter >= 2) {
+              retryCounter = 0;
+              _playNextTrack();
+            }
+
+            // increase retry counter to stop infinite retries
+            retryCounter++;
+
+            console.log("got 150 error, searching replacement track");
+
+            // Search youtube for new track
+            const newSongs = await searchYoutube(
+              player.currentTrack.current.title
+            );
+
+            // create local track
+            const track = new Track({
+              id: newSongs.items[0].link.split("watch?v=")[1],
+              title: newSongs.items[0].title,
+              duration: timestringToSeconds(newSongs.items[0].duration),
+            });
+
+            // add to cache
+            trackCache.add(track);
+
+            // play the track
+            player.playTrack(track);
+            PlayerInterop.playTrack(track);
+          } else {
+            _playNextTrack();
+          }
           break;
         case IncomingMessageType.READY:
           player.externalPlayerVersion = data.version;
