@@ -3,6 +3,7 @@
 const developmentEnvironments = ['development', 'test'];
 
 const developmentPlugins = [require('react-hot-loader/babel')];
+const t = require('electron/package.json').version;
 
 const productionPlugins = [
   require('babel-plugin-dev-expression'),
@@ -23,7 +24,7 @@ module.exports = api => {
       [
         require('@babel/preset-env'),
         {
-          targets: { electron: require('electron/package.json').version },
+          targets: { electron: require("./package.json").devDependencies.electron.substring(1) },
           useBuiltIns: 'usage',
           corejs: '3.0.0'
         }

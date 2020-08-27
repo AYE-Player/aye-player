@@ -17,7 +17,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-top: 266px;
+  bottom: 0px;
   width: 320px;
   background-color: #161618;
 `;

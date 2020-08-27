@@ -86,7 +86,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = pr
       setAnchorEl(null);
     } catch (error) {
       AyeLogger.player(
-        `Error removing track from playlist ${this.id} ${JSON.stringify(
+        `Error removing track from playlist ${props.trackRef.current.id} ${JSON.stringify(
           error,
           null,
           2

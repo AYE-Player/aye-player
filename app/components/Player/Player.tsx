@@ -24,13 +24,13 @@ interface IPlayerProps {}
 
 const Container = styled.div`
   width: 320px;
-  height: 296px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   margin-bottom: 8px;
   justify-content: center;
   position: absolute;
-  bottom: 32px;
+  bottom: 0px;
 `;
 
 let retryCounter = 0;
@@ -511,7 +511,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               style={{
                 zIndex: 1000,
                 position: "absolute",
-                bottom: "8px",
+                bottom: "32px",
                 width: "264px",
                 height: "48px",
               }}
@@ -533,7 +533,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
                 style={{
                   position: "absolute",
                   zIndex: 1000,
-                  bottom: "-28px",
+                  bottom: "8pxpx",
                   right: "5px",
                 }}
                 onClick={() => _deFavoriteSong()}
@@ -543,7 +543,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
                 style={{
                   position: "absolute",
                   zIndex: 1000,
-                  bottom: "-28px",
+                  bottom: "0px",
                   right: "5px",
                 }}
                 onClick={() => _favoriteSong()}
@@ -555,7 +555,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       <div
         style={{
           width: "320px",
-          height: "215px",
+          height: "290px",
           overflow: "hidden",
         }}
       >
@@ -565,7 +565,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             src="http://localhost:3000"
             style={{
               width: "320px",
-              height: "215px",
+              height: "290px",
               overflow: "hidden",
               border: "none",
             }}
@@ -576,7 +576,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             src="https://player.aye-player.de"
             style={{
               width: "320px",
-              height: "215px",
+              height: "290px",
               overflow: "hidden",
               border: "none",
             }}
