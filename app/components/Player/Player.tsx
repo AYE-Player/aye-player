@@ -140,6 +140,10 @@ ipcRenderer.on("position", (event, message) => {
   PlayerInterop.seekTo(message.pos);
 });
 
+ipcRenderer.on("reconnect-stream", () => {
+  PlayerInterop.reconnectLivestream();
+});
+
 const Player: React.FunctionComponent<IPlayerProps> = () => {
   const Store = ({
     player,

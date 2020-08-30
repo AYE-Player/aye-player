@@ -100,6 +100,14 @@ class PlayerInterop {
     );
   }
 
+  reconnectLivestream() {
+    this.player.contentWindow.postMessage(
+      {
+        type: OutgoingMessageType.RECONNECT_STREAM
+      }
+    )
+  }
+
   seekTo(time: number) {
     this.player.contentWindow.postMessage(
       {

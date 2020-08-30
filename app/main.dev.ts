@@ -369,6 +369,13 @@ export default class Main {
       }
     });
 
+    this.mainWindow.webContents.session.webRequest.onErrorOccurred(
+      { urls: ["https://listen.moe/stream"] },
+      (details) => {
+        this.mainWindow.webContents.send("reconnect-stream")
+      }
+    );
+
     this.menu = new AyeMenu(this.mainWindow, i18n);
 
     this.menu.i18n.on("languageChanged", (lng) => {

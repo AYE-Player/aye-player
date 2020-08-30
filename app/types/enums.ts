@@ -19,7 +19,8 @@ export enum OutgoingMessageType {
   SEEK,
   VOLUME,
   MUTE,
-  INIT
+  INIT,
+  RECONNECT_STREAM
 }
 
 export enum IncomingMessageType {
