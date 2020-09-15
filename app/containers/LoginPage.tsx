@@ -15,6 +15,7 @@ import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
+import ky from "ky";
 
 const Header = styled.div`
   font-size: 24px;
@@ -26,7 +27,7 @@ const LoginPage: React.FunctionComponent = () => {
 
   const Store = ({ user, playlists }: RootStore) => ({
     user,
-    playlists
+    playlists,
   });
 
   const { user, playlists } = useInject(Store);
@@ -63,7 +64,7 @@ const LoginPage: React.FunctionComponent = () => {
         duration: playlist.Duration,
         trackCount: playlist.SongsCount,
         isReadonly: playlist.IsReadonly,
-        tracks: []
+        tracks: [],
       });
 
       playlists.add(pl);
@@ -78,16 +79,27 @@ const LoginPage: React.FunctionComponent = () => {
         routes.SEARCH
       }`;
     } catch (error) {
-      AyeLogger.player(
-        `Error on login ${JSON.stringify(error, null, 2)}`,
-        LogType.ERROR
-      );
-      enqueueSnackbar("", {
-        content: key => (
-          <SnackMessage id={key} variant="error" message={t("General.error")} />
-        ),
-        disableWindowBlurListener: true
-      });
+      const err = error as ky.HTTPError;
+      console.log(JSON.stringify(err));
+      if (err.response.status === 401) {
+        enqueueSnackbar("", {
+          content: (key) => (
+            <SnackMessage id={key} variant="error" message={t("LoginPage.error.invalidCredentials")} />
+          ),
+          disableWindowBlurListener: true,
+        });
+      } else {
+        AyeLogger.player(
+          `Error on login ${JSON.stringify(error, null, 2)}`,
+          LogType.ERROR
+        );
+        enqueueSnackbar("", {
+          content: (key) => (
+            <SnackMessage id={key} variant="error" message={t("General.error")} />
+          ),
+          disableWindowBlurListener: true,
+        });
+      }
     }
   };
 

@@ -118,7 +118,10 @@
     "password": "Password",
     "loginButton": "Login",
     "registerLink": "Need an account?",
-    "forgotPasswordLink": "Forgot password?"
+    "forgotPasswordLink": "Forgot password?",
+    "error": {
+      "invalidCredentials": "Username/Password incorrect"
+    }
   },
   "AccountPage": {
     "header": "Profile",
