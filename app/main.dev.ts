@@ -239,6 +239,7 @@ export default class Main {
         backgroundThrottling: false,
         enableRemoteModule: true,
         nodeIntegration: true,
+        contextIsolation: false,
         //contextIsolation: true,
         //preload: path.join(app.getAppPath(), "preload.js"),
       },
