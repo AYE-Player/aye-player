@@ -20,12 +20,12 @@ import "v8-compile-cache";
 import config from "./configs/app.config";
 import i18n from "./configs/i18next.config";
 import Settings from "./dataLayer/stores/PersistentSettings";
-import AyeMenu from "./modules/AyeMenu";
 import AyeDiscordRPC from "./modules/AyeDiscordRPC";
+import AyeLogger from "./modules/AyeLogger";
 import AyeMediaKeys from "./modules/AyeMediaKeys";
+import AyeMenu from "./modules/AyeMenu";
 import AyeMpris from "./modules/AyeMpris";
 import AyeTray from "./modules/AyeTray";
-import AyeLogger from "./modules/AyeLogger";
 
 export default class Main {
   tray: AyeTray;
@@ -198,7 +198,7 @@ export default class Main {
       /// and set the transparency, to remove any window background color
       transparent: true,
       webPreferences: {
-        nodeIntegration: true,
+        contextIsolation: true,
       },
       icon: `${__dirname}/images/icons/png/256x256_w.png`,
     });
@@ -236,9 +236,11 @@ export default class Main {
       titleBarStyle: "hidden",
       maximizable: false,
       webPreferences: {
-        nodeIntegration: true,
         backgroundThrottling: false,
         enableRemoteModule: true,
+        nodeIntegration: true,
+        //contextIsolation: true,
+        //preload: path.join(app.getAppPath(), "preload.js"),
       },
       icon: `${__dirname}/images/icons/png/256x256_w.png`,
     });
@@ -372,7 +374,7 @@ export default class Main {
     this.mainWindow.webContents.session.webRequest.onErrorOccurred(
       { urls: ["https://listen.moe/stream"] },
       (details) => {
-        this.mainWindow.webContents.send("reconnect-stream")
+        this.mainWindow.webContents.send("reconnect-stream");
       }
     );
 
@@ -390,6 +392,10 @@ export default class Main {
     ipcMain.on("changeLang", (_event: any, arg: any) => {
       this.menu.i18n.changeLanguage(arg.lang);
       this.tray.i18n.changeLanguage(arg.lang);
+    });
+
+    ipcMain.on("streamPaused", () => {
+      this.mainWindow.webContents.session.webRequest.onErrorOccurred = null;
     });
   };
 }

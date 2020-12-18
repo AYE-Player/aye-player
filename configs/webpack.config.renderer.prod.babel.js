@@ -174,8 +174,6 @@ export default merge.smart(baseConfig, {
       : [
           new TerserPlugin({
             parallel: true,
-            sourceMap: true,
-            cache: true
           }),
           new OptimizeCSSAssetsPlugin({
             cssProcessorOptions: {

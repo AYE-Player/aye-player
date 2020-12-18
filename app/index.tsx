@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import unhandled from "electron-unhandled";
-import "mobx-react-lite/batchingForReactDom";
+//import "mobx-react-lite/batchingForReactDom";
 import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";

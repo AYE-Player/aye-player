@@ -141,6 +141,9 @@ ipcRenderer.on("position", (event, message) => {
 });
 
 ipcRenderer.on("reconnect-stream", () => {
+  const { player } = Root.stores;
+  player.setPlaying(false);
+  setTimeout(() => player.setPlaying(true), 3000);
   PlayerInterop.reconnectLivestream();
 });
 
@@ -190,6 +193,9 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
         case IncomingMessageType.PAUSE:
           if (player.isPlaying) {
             player.togglePlayingState();
+            if (player.websocketConnected) {
+              ipcRenderer.send("streamPaused");
+            }
           }
           break;
         case IncomingMessageType.ERROR:
@@ -213,9 +219,11 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
               player.currentTrack.current.title
             );
 
+            console.log("new songs", newSongs);
+
             // create local track
             const track = new Track({
-              id: newSongs.items[0].link.split("watch?v=")[1],
+              id: newSongs.items[0].url.split("watch?v=")[1],
               title: newSongs.items[0].title,
               duration: timestringToSeconds(newSongs.items[0].duration),
             });
@@ -537,7 +545,7 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
                 style={{
                   position: "absolute",
                   zIndex: 1000,
-                  bottom: "8pxpx",
+                  bottom: "0px",
                   right: "5px",
                 }}
                 onClick={() => _deFavoriteSong()}

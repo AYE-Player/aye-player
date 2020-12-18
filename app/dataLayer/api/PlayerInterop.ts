@@ -104,7 +104,8 @@ class PlayerInterop {
     this.player.contentWindow.postMessage(
       {
         type: OutgoingMessageType.RECONNECT_STREAM
-      }
+      },
+      this.apiUrl
     )
   }
 
