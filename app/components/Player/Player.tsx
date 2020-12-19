@@ -275,7 +275,10 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
             favorite = await ListenMoeApiClient.checkFavorite([
               response.d.song.id,
             ]).catch((err) => {
-              console.error("Error checking for favorit entry", err);
+              AyeLogger.player(
+                `[ListenMoe] Error checking for favorit entry ${JSON.stringify(err)}`,
+                LogType.ERROR
+              );
               return [];
             });
           }
