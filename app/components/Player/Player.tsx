@@ -20,8 +20,6 @@ import { searchYoutube, timestringToSeconds } from "../../helpers";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 const ListenMoe = require("../../images/listenmoe.svg");
 
-interface IPlayerProps {}
-
 const Container = styled.div`
   width: 320px;
   height: 320px;
@@ -147,7 +145,7 @@ ipcRenderer.on("reconnect-stream", () => {
   PlayerInterop.reconnectLivestream();
 });
 
-const Player: React.FunctionComponent<IPlayerProps> = () => {
+const Player: React.FunctionComponent = () => {
   const Store = ({
     player,
     playlists,
@@ -176,9 +174,8 @@ const Player: React.FunctionComponent<IPlayerProps> = () => {
       switch (data.type) {
         case IncomingMessageType.SET_PLAYBACK_POSITION:
           if (data.playbackPosition === 0) return;
-          const oldPosition = player.playbackPosition;
           player.setPlaybackPosition(data.playbackPosition);
-          if (data.playbackPosition < oldPosition && player.currentTrack) {
+          if (data.playbackPosition < player.playbackPosition && player.currentTrack) {
             player.notifyRPC();
           }
           break;
