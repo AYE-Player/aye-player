@@ -1,5 +1,6 @@
 export type Maybe<T> = T | null;
 export type SongInputType = { Url: string };
+export type ResolvedSong = { Id: string; Title: string; Duration: number };
 
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
@@ -64,6 +65,19 @@ export interface AddTrackToPlaylistInput {
 export interface RemoveTrackFromPlaylistInput {
   id: Scalars["ID"];
   trackId: Scalars["String"];
+}
+
+export interface ReplaceTrackInput {
+  oldSong: {
+    Id: Scalars["ID"];
+    Title: Scalars["String"];
+    Duration: Scalars["Float"];
+  };
+  newSong: {
+    Id: Scalars["ID"];
+    Title: Scalars["String"];
+    Duration: Scalars["Float"];
+  };
 }
 
 export interface MoveTrackToInput {

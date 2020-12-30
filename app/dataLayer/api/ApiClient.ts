@@ -9,7 +9,7 @@ import Track from "../models/Track";
 import {
   GRAPHQL,
   graphQLClientPlaylists,
-  graphQLClientSearch
+  graphQLClientSearch,
 } from "./graphQL";
 import {
   AddTracksToPlaylistByUrlInput,
@@ -36,7 +36,8 @@ import {
   SearchTracks,
   SongInputType,
   SubscribePlaylistInpt,
-  UnsubscribePlaylistInpt
+  UnsubscribePlaylistInpt,
+  ReplaceTrackInput,
 } from "./graphQLTypes";
 
 /**
@@ -55,16 +56,16 @@ class ApiClient {
       throwHttpErrors: true,
       hooks: {
         beforeRequest: [
-          request => {
+          (request) => {
             const token = localStorage.getItem("token");
 
             if (token != null) {
               request.headers.set("x-access-token", token);
               request.headers.set("Authorization", `Bearer ${token}`);
             }
-          }
-        ]
-      }
+          },
+        ],
+      },
     });
   }
 
@@ -73,9 +74,9 @@ class ApiClient {
    */
   async getPlaylists(): Promise<IPlaylistDto[]> {
     const {
-      data: { Playlists }
+      data: { Playlists },
     } = await graphQLClientPlaylists.query<PlaylistsData, any>({
-      query: GRAPHQL.QUERY.PLAYLISTS
+      query: GRAPHQL.QUERY.PLAYLISTS,
     });
 
     return Playlists;
@@ -87,12 +88,12 @@ class ApiClient {
    */
   async getPlaylist(id: string): Promise<IPlaylistDto> {
     const {
-      data: { Playlist }
+      data: { Playlist },
     } = await graphQLClientPlaylists.query<PlaylistData, QueryPlaylist>({
       query: GRAPHQL.QUERY.PLAYLIST,
       variables: {
-        id
-      }
+        id,
+      },
     });
 
     return Playlist;
@@ -104,15 +105,15 @@ class ApiClient {
    */
   async createPlaylist(name: string): Promise<string> {
     const {
-      data: { CreateNewPlaylist }
+      data: { CreateNewPlaylist },
     } = await graphQLClientPlaylists.mutate<
       CreatePlaylistData,
       CreatePlaylistInput
     >({
       mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST,
       variables: {
-        name
-      }
+        name,
+      },
     });
 
     return CreateNewPlaylist.Id;
@@ -128,7 +129,7 @@ class ApiClient {
     songs: SongInputType[]
   ): Promise<string> {
     const {
-      data: { CreateNewPlaylistByVideoUrls }
+      data: { CreateNewPlaylistByVideoUrls },
     } = await graphQLClientPlaylists.mutate<
       CreatePlaylistByVideoUrls,
       CreatePlaylistWithSongsInput
@@ -136,8 +137,8 @@ class ApiClient {
       mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST_WITH_SONGS,
       variables: {
         name,
-        songs
-      }
+        songs,
+      },
     });
 
     return CreateNewPlaylistByVideoUrls.Id;
@@ -151,8 +152,8 @@ class ApiClient {
     graphQLClientPlaylists.mutate<void, DeletePlaylistInput>({
       mutation: GRAPHQL.MUTATION.DELETE_PLAYLIST,
       variables: {
-        id
-      }
+        id,
+      },
     });
   }
 
@@ -167,7 +168,7 @@ class ApiClient {
     skip: number = 0
   ): Promise<ITrackDto[]> {
     const {
-      data: { PlaylistSongs }
+      data: { PlaylistSongs },
     } = await graphQLClientPlaylists.query<
       PlaylistTracks,
       QueryTracksFromPlaylist
@@ -176,8 +177,8 @@ class ApiClient {
       variables: {
         id,
         amount,
-        skip
-      }
+        skip,
+      },
     });
 
     return PlaylistSongs;
@@ -195,8 +196,8 @@ class ApiClient {
         id,
         trackId: track.id,
         title: track.title,
-        duration: track.duration
-      }
+        duration: track.duration,
+      },
     });
   }
 
@@ -210,8 +211,8 @@ class ApiClient {
       mutation: GRAPHQL.MUTATION.ADD_TRACKS_TO_PLAYLIST_BY_URLS,
       variables: {
         id,
-        songs
-      }
+        songs,
+      },
     });
   }
 
@@ -225,8 +226,8 @@ class ApiClient {
       mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
       variables: {
         id,
-        trackId: track.id
-      }
+        trackId: track.id,
+      },
     });
   }
 
@@ -240,8 +241,8 @@ class ApiClient {
       mutation: GRAPHQL.MUTATION.REMOVE_TRACK_FROM_PLAYLIST,
       variables: {
         id,
-        trackId
-      }
+        trackId,
+      },
     });
   }
 
@@ -258,8 +259,8 @@ class ApiClient {
       variables: {
         id,
         trackId,
-        position: position.toString()
-      }
+        position: position.toString(),
+      },
     });
   }
 
@@ -271,8 +272,8 @@ class ApiClient {
     graphQLClientPlaylists.mutate<void, SubscribePlaylistInpt>({
       mutation: GRAPHQL.MUTATION.SUBSCRIBE_PLAYLIST,
       variables: {
-        id
-      }
+        id,
+      },
     });
   }
 
@@ -284,8 +285,8 @@ class ApiClient {
     graphQLClientPlaylists.mutate<void, UnsubscribePlaylistInpt>({
       mutation: GRAPHQL.MUTATION.UNSUBSCRIBE_PLAYLIST,
       variables: {
-        id
-      }
+        id,
+      },
     });
   }
 
@@ -299,8 +300,8 @@ class ApiClient {
       json: {
         Email: email,
         Password: password,
-        Username: username
-      }
+        Username: username,
+      },
     });
   }
 
@@ -314,8 +315,8 @@ class ApiClient {
       .post("auth/", {
         json: {
           Email: email,
-          Password: password
-        }
+          Password: password,
+        },
       })
       .json();
   }
@@ -327,8 +328,8 @@ class ApiClient {
   async forgotPassword(email: string) {
     this.ky.put("userIdentity/password", {
       json: {
-        Email: email
-      }
+        Email: email,
+      },
     });
   }
 
@@ -349,9 +350,9 @@ class ApiClient {
         {
           op: "replace",
           path: "/Password",
-          value: password
-        }
-      ]
+          value: password,
+        },
+      ],
     });
   }
 
@@ -362,7 +363,7 @@ class ApiClient {
   async updateAvatar(data: FormData): Promise<string> {
     return this.ky
       .post("userIdentity/avatar", {
-        body: data
+        body: data,
       })
       .json();
   }
@@ -377,9 +378,9 @@ class ApiClient {
         {
           op: "replace",
           path: "/Avatar",
-          value: url
-        }
-      ]
+          value: url,
+        },
+      ],
     });
   }
 
@@ -396,12 +397,12 @@ class ApiClient {
    */
   async searchTrack(term: string): Promise<ITrackDto[]> {
     const {
-      data: { Songs }
+      data: { Songs },
     } = await graphQLClientSearch.query<SearchTracks, QuerySearchTrack>({
       query: GRAPHQL.QUERY.SEARCH_TRACK,
       variables: {
-        term
-      }
+        term,
+      },
     });
 
     return Songs;
@@ -413,12 +414,12 @@ class ApiClient {
    */
   async getTrackFromUrl(url: string): Promise<ITrackDto> {
     const {
-      data: { Song }
+      data: { Song },
     } = await graphQLClientSearch.query<GetTrackFromUrl, QueryTrackFromUrl>({
       query: GRAPHQL.QUERY.TRACK_FROM_URL,
       variables: {
-        url
-      }
+        url,
+      },
     });
 
     return Song;
@@ -430,15 +431,28 @@ class ApiClient {
    */
   async getRelatedTracks(id: string): Promise<ITrackDto[]> {
     const {
-      data: { Radio }
+      data: { Radio },
     } = await graphQLClientSearch.query<RelatedTracks, QueryRelatedTracks>({
       query: GRAPHQL.QUERY.RELATED_TRACKS,
       variables: {
-        id
-      }
+        id,
+      },
     });
 
     return Radio;
+  }
+
+  /**
+   * Replaces a delete Song/Video with a new one
+   */
+  async replaceSong(oldTrack: ITrackDto, newTrack: ITrackDto): Promise<void> {
+    await graphQLClientPlaylists.mutate<void, ReplaceTrackInput>({
+      mutation: GRAPHQL.MUTATION.REPLACE_TRACK,
+      variables: {
+        oldSong: oldTrack,
+        newSong: newTrack,
+      },
+    });
   }
 }
 

@@ -295,5 +295,11 @@ export const GRAPHQL = {
         }
       }
     `,
+
+    REPLACE_TRACK: gql`
+      mutation($oldSong: ResolvedSong!, $newSong: ResolvedSong!) {
+        ReplaceSong(replaceSongArgs: { OldSong: $oldSong, NewSong: $newSong })
+      }
+    `,
   },
 };

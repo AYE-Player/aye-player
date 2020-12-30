@@ -148,7 +148,6 @@ ipcRenderer.on("reconnect-stream", () => {
 const Player: React.FunctionComponent = () => {
   const Store = ({
     player,
-    playlists,
     queue,
     trackHistory,
     app,
@@ -156,7 +155,6 @@ const Player: React.FunctionComponent = () => {
   }: RootStore) => ({
     player,
     queue,
-    playlists,
     trackHistory,
     app,
     trackCache,
@@ -175,7 +173,10 @@ const Player: React.FunctionComponent = () => {
         case IncomingMessageType.SET_PLAYBACK_POSITION:
           if (data.playbackPosition === 0) return;
           player.setPlaybackPosition(data.playbackPosition);
-          if (data.playbackPosition < player.playbackPosition && player.currentTrack) {
+          if (
+            data.playbackPosition < player.playbackPosition &&
+            player.currentTrack
+          ) {
             player.notifyRPC();
           }
           break;
@@ -228,6 +229,12 @@ const Player: React.FunctionComponent = () => {
             // add to cache
             trackCache.add(track);
 
+            // replace track in playlist
+            player.currentPlaylist.current.replaceTrack(
+              player.currentTrack,
+              track
+            );
+
             // play the track
             player.playTrack(track);
             PlayerInterop.playTrack(track);
@@ -273,7 +280,9 @@ const Player: React.FunctionComponent = () => {
               response.d.song.id,
             ]).catch((err) => {
               AyeLogger.player(
-                `[ListenMoe] Error checking for favorit entry ${JSON.stringify(err)}`,
+                `[ListenMoe] Error checking for favorit entry ${JSON.stringify(
+                  err
+                )}`,
                 LogType.ERROR
               );
               return [];
@@ -316,14 +325,14 @@ const Player: React.FunctionComponent = () => {
         ListenMoeWebsocket.ws = null;
         player.setWebsocketConnected(false);
       }
-      if (!error.wasClean) {
+      /* if (!error.wasClean) {
         console.log("%c> [ListenMoe] Reconnecting...", "color: #008000;");
         setTimeout(() => {
           player.setLivestreamSource("listen.moe");
         }, 5000);
         player.setWebsocketConnected(false);
         player.setListenMoeData(undefined);
-      }
+      } */
     };
   }
 
