@@ -5,7 +5,7 @@ import {
   modelFlow,
   prop,
   _async,
-  _await
+  _await,
 } from "mobx-keystone";
 import Root from "../../containers/Root";
 import ApiClient from "../api/ApiClient";
@@ -14,20 +14,20 @@ import Track from "../models/Track";
 
 @model("Playlists")
 export default class Playlists extends Model({
-  lists: prop<Playlist[]>()
+  lists: prop<Playlist[]>(),
 }) {
   getListById(id: string) {
-    return this.lists.find(list => list.id === id);
+    return this.lists.find((list) => list.id === id);
   }
 
   @modelFlow
-  createList = _async(function*(this: Playlists, name: string) {
+  createList = _async(function* (this: Playlists, name: string) {
     const id = yield* _await(ApiClient.createPlaylist(name));
 
     const playlist = new Playlist({
       name,
       id,
-      tracks: []
+      tracks: [],
     });
 
     this.lists.push(playlist);
@@ -36,7 +36,7 @@ export default class Playlists extends Model({
   });
 
   @modelFlow
-  createListWithSongs = _async(function*(
+  createListWithSongs = _async(function* (
     name: string,
     songs: { Url: string }[]
   ) {
@@ -49,7 +49,7 @@ export default class Playlists extends Model({
       id,
       duration: pl.Duration,
       trackCount: pl.SongsCount,
-      tracks: []
+      tracks: [],
     });
 
     const tracks = yield* _await(
@@ -61,7 +61,7 @@ export default class Playlists extends Model({
         id: track.Id,
         title: track.Title,
         duration: track.Duration,
-        isLivestream: false
+        isLivestream: false,
       });
 
       if (!Root.stores.trackCache.getTrackById(track.Id)) {
@@ -82,15 +82,17 @@ export default class Playlists extends Model({
   }
 
   @modelFlow
-  remove = _async(function*(this: Playlists, id: string, subscribed: boolean) {
+  remove = _async(function* (this: Playlists, id: string, subscribed: boolean) {
     if (subscribed) {
       yield* _await(ApiClient.unsubscribePlaylist(id));
     } else {
       yield* _await(ApiClient.deletePlaylist(id));
     }
-    const foundList = this.lists.find(playlist => playlist.id === id);
-    const idx = this.lists.indexOf(foundList);
-    this.lists.splice(idx, 1);
+
+    this.lists.splice(
+      this.lists.findIndex((playlist) => playlist.id === id),
+      1
+    );
   });
 
   @modelAction

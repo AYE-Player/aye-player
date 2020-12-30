@@ -3,10 +3,10 @@ import Track from "../models/Track";
 
 @model("TrackCache")
 export default class TrackCache extends Model({
-  tracks: prop<Track[]>()
+  tracks: prop<Track[]>(),
 }) {
   getTrackById(id: string) {
-    return this.tracks.find(track => track.id === id);
+    return this.tracks.find((track) => track.id === id);
   }
 
   @modelAction
@@ -16,8 +16,9 @@ export default class TrackCache extends Model({
 
   @modelAction
   removeTrack(id: string) {
-    const foundTrack = this.tracks.find(track => track.id === id);
-    const idx = this.tracks.indexOf(foundTrack);
-    this.tracks.splice(idx, 1);
+    this.tracks.splice(
+      this.tracks.findIndex((track) => track.id === id),
+      1
+    );
   }
 }

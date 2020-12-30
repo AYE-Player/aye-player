@@ -6,7 +6,7 @@ import {
   prop,
   Ref,
   _async,
-  _await
+  _await,
 } from "mobx-keystone";
 import Root from "../../containers/Root";
 import ApiClient from "../api/ApiClient";
@@ -20,15 +20,15 @@ export default class Playlist extends Model({
   tracks: prop<Ref<Track>[]>(),
   duration: prop(0),
   trackCount: prop(0),
-  isReadonly: prop<Maybe<boolean>>()
+  isReadonly: prop<Maybe<boolean>>(),
 }) {
   getTrackById(id: string) {
     if (!this.tracks) return null;
-    return this.tracks.find(track => track.current.id === id);
+    return this.tracks.find((track) => track.current.id === id);
   }
 
   getIndexOfTrack(track: Ref<Track>) {
-    return this.tracks.map(t => t.current.id).indexOf(track.current.id);
+    return this.tracks.findIndex((t) => t.current.id === track.current.id);
   }
 
   getTracksStartingFrom(idx: number) {
@@ -36,7 +36,7 @@ export default class Playlist extends Model({
   }
 
   @modelFlow
-  addTrack = _async(function*(this: Playlist, track: Track) {
+  addTrack = _async(function* (this: Playlist, track: Track) {
     yield* _await(ApiClient.addTrackToPlaylist(this.id, track));
 
     this.trackCount = this.trackCount + 1;
@@ -54,7 +54,10 @@ export default class Playlist extends Model({
   }
 
   @modelFlow
-  addTracksByUrls = _async(function*(this: Playlist, songs: { Url: string }[]) {
+  addTracksByUrls = _async(function* (
+    this: Playlist,
+    songs: { Url: string }[]
+  ) {
     // Add tracks to the playlist
     yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
 
@@ -74,7 +77,7 @@ export default class Playlist extends Model({
           id: track.Id,
           title: track.Title,
           duration: track.Duration,
-          isLivestream: false
+          isLivestream: false,
         });
         Root.stores.trackCache.add(tr);
       }
@@ -89,19 +92,18 @@ export default class Playlist extends Model({
   });
 
   @modelFlow
-  removeTrackById = _async(function*(this: Playlist, id: string) {
+  removeTrackById = _async(function* (this: Playlist, id: string) {
     yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, id));
 
-    const foundTrack = this.tracks.find(trk => trk.current.id === id);
-    const idx = this.tracks.indexOf(foundTrack);
+    const idx = this.tracks.findIndex((trk) => trk.current.id === id);
 
     this.trackCount = this.trackCount - 1;
-    this.duration = this.duration - foundTrack.current.duration;
+    this.duration = this.duration - this.tracks[idx].current.duration;
     this.tracks.splice(idx, 1);
   });
 
   @modelFlow
-  moveTrackTo = _async(function*(
+  moveTrackTo = _async(function* (
     this: Playlist,
     oldIndex: number,
     newIndex: number
@@ -112,5 +114,35 @@ export default class Playlist extends Model({
     this.tracks.splice(newIndex, 0, trackRef(track));
 
     yield* _await(ApiClient.moveTrackTo(this.id, track.id, newIndex));
+  });
+
+  @modelFlow
+  replaceTrack = _async(function* (
+    this: Playlist,
+    oldTrack: Ref<Track>,
+    newTrack: Track
+  ) {
+    this.tracks.splice(
+      this.tracks.findIndex(
+        (track) => track.current.id === oldTrack.current.id
+      ),
+      1,
+      trackRef(newTrack)
+    );
+
+    yield* _await(
+      ApiClient.replaceSong(
+        {
+          Id: oldTrack.current.id,
+          Title: oldTrack.current.title,
+          Duration: oldTrack.current.duration,
+        },
+        {
+          Id: newTrack.id,
+          Title: newTrack.title,
+          Duration: newTrack.duration,
+        }
+      )
+    );
   });
 }
