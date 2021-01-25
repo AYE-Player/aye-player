@@ -1,4 +1,3 @@
-
 # Aye Player
 
 ![Build/release](https://github.com/AYE-Player/aye-player/workflows/Build/release/badge.svg)
@@ -27,7 +26,7 @@
   - Dark Mode ✓
 
 - Backend
-  - TypeScript auf Node 10.16 LTS
+  - TypeScript/Node.JS
   - Docker mit pm2 ✓
   - VPS bei [netcup](https://netcup.de) ✓
   - Microservice Architektur ✓
