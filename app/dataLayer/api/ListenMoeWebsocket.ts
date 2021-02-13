@@ -1,6 +1,6 @@
 // https://github.com/LISTEN-moe/desktop-app/blob/master/src/assets/worker/websocket.worker.js
 class ListenMoeWebsocket {
-  public heartbeatInterval: number;
+  public heartbeatInterval: NodeJS.Timer;
   public ws: WebSocket;
 
   connect() {

@@ -5,7 +5,7 @@
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
 export default function debounce(func: Function, wait: number, immediate?: boolean) {
-  let timeout: number;
+  let timeout: NodeJS.Timer;
   return function() {
     const context = this,
       args = arguments;

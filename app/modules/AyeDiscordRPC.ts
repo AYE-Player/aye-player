@@ -28,8 +28,8 @@ export default class AyeDiscordRPC {
 
   private readonly _clientId: string;
 
-  private _activityTimer: number;
-  private _activityBlocker: number;
+  private _activityTimer: NodeJS.Timer;
+  private _activityBlocker: NodeJS.Timer;
   private _activity: IActivityParameters;
   private _canSetActivity = true;
 
