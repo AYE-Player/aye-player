@@ -3,7 +3,6 @@
 const developmentEnvironments = ['development', 'test'];
 
 const developmentPlugins = [require('react-hot-loader/babel')];
-const t = require('electron/package.json').version;
 
 const productionPlugins = [
   require('babel-plugin-dev-expression'),
