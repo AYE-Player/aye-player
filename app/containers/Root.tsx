@@ -1,4 +1,3 @@
-import AyeRemote from "aye-remote-client";
 import { Grid } from "@material-ui/core";
 import { ipcRenderer } from "electron";
 import { getSnapshot } from "mobx-keystone";
@@ -34,20 +33,6 @@ interface IPlayerSettings {
 }
 
 const rootStore = createStore();
-
-const remote = new AyeRemote("http://localhost:8337", rootStore.user.id);
-
-remote.socket.on("play", () => {
-  console.log("received play");
-  rootStore.player.togglePlayingState();
-  PlayerInterop.togglePlayingState();
-});
-
-remote.socket.on("pause", () => {
-  console.log("received pause");
-  rootStore.player.togglePlayingState();
-  PlayerInterop.togglePlayingState();
-});
 
 ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.volume", rootStore.player.volume);
