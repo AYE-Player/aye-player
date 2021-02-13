@@ -2,7 +2,7 @@ import { remote, BrowserWindow } from "electron";
 
 let win: Maybe<BrowserWindow>;
 const clientId = "4f1d7c536d8e4ed384931270fcbfb82f";
-const redirectUri = "https://api.aye-player.de/spotify-catch";
+const redirectUri = "https://api.aye-playr.de/spotify-catch";
 
 const getSpotifyAccessToken = (): Promise<string> => {
   return new Promise((resolve, reject) => {

@@ -51,7 +51,7 @@ class ApiClient {
    */
   constructor() {
     this.ky = ky.extend({
-      prefixUrl: "https://api.aye-player.de/v1/",
+      prefixUrl: "https://api.aye-playr.de/v1/",
       timeout: 5000,
       throwHttpErrors: true,
       hooks: {

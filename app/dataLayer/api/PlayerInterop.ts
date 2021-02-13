@@ -16,7 +16,7 @@ class PlayerInterop {
       this.player = document.querySelector("#embedded-player") as any;
       this.apiUrl = Root.stores.app.devMode
         ? "http://localhost:3000"
-        : "https://player.aye-player.de";
+        : "https://player.aye-playr.de";
       if (this.initTrack && this.player) {
         this.setInitState();
       }

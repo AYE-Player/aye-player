@@ -34,7 +34,7 @@ export const graphQLClientPlaylists = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: "https://api.aye-player.de/v1/playlists/gql",
+      uri: "https://api.aye-playr.de/v1/playlists/gql",
       fetch,
     })
   ),
@@ -53,7 +53,7 @@ export const graphQLClientSearch = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: "https://api.aye-player.de/v1/search/gql",
+      uri: "https://api.aye-playr.de/v1/search/gql",
       fetch,
     })
   ),
@@ -87,7 +87,7 @@ export const graphQLListenMoe = new ApolloClient({
 });
 
 export const GRAPHQL = {
-  ENDPOINT: "https://api.aye-player.de/v1/playlists/gql",
+  ENDPOINT: "https://api.aye-playr.de/v1/playlists/gql",
 
   QUERY: {
     PLAYLISTS: gql`

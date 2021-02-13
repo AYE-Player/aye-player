@@ -167,7 +167,7 @@ const Player: React.FunctionComponent = () => {
     const { data, origin } = message;
     const playerUrl = app.devMode
       ? "http://localhost:3000"
-      : "https://player.aye-player.de";
+      : "https://player.aye-playr.de";
     if (origin === playerUrl) {
       switch (data.type) {
         case IncomingMessageType.SET_PLAYBACK_POSITION:
@@ -594,7 +594,7 @@ const Player: React.FunctionComponent = () => {
         ) : (
           <iframe
             id="embedded-player"
-            src="https://player.aye-player.de"
+            src="https://player.aye-playr.de"
             style={{
               width: "320px",
               height: "290px",
