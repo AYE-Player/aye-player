@@ -186,6 +186,7 @@ export default merge.smart(baseConfig, {
             options: {
               limit: 10000,
               mimetype: "image/svg+xml",
+              esModule: false,
             },
           },
         ],
@@ -196,6 +197,9 @@ export default merge.smart(baseConfig, {
         use: [
           {
             loader: "url-loader",
+            options: {
+              esModule: false,
+            },
           },
         ],
       },
