@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { version } from "../../package.json";
+import packageInfo from "../../package.json";
 import CustomDropDown from "../components/Customs/CustomDropDown";
 import CustomListDialog from "../components/Customs/CustomListDialog";
 import CustomSwitch from "../components/Customs/CustomSwitch";
@@ -246,7 +246,7 @@ const AccountPage: React.FunctionComponent = () => {
             width: "220px"
           }}
         >
-          <InfoText>App v{version}</InfoText>
+          <InfoText>App v{packageInfo.version}</InfoText>
           <InfoText>externalPlayer v{player.externalPlayerVersion}</InfoText>
         </div>
         <CustomListDialog
