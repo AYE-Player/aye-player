@@ -3,7 +3,7 @@
  * https://graphql.org/learn/best-practices/
  */
 
-import ky from "ky/umd";
+import ky from "ky";
 import { IUserInfoDto } from "../../types/response";
 import Track from "../models/Track";
 import {
