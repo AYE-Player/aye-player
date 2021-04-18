@@ -4,7 +4,7 @@ import trackRef from "../references/TrackRef";
 
 @model("TrackHistory")
 export default class TrackHistory extends Model({
-  tracks: prop<Ref<Track>[]>()
+  tracks: prop<Ref<Track>[]>(() => [])
 }) {
   get isEmpty() {
     return this.tracks.length === 0;

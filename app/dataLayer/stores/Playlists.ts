@@ -37,6 +37,7 @@ export default class Playlists extends Model({
 
   @modelFlow
   createListWithSongs = _async(function* (
+    this: Playlists,
     name: string,
     songs: { Url: string }[]
   ) {

@@ -4,7 +4,7 @@ import trackRef from "../references/TrackRef";
 
 @model("Queue")
 export default class Queue extends Model({
-  tracks: prop<Maybe<Ref<Track>[]>>(),
+  tracks: prop<Ref<Track>[]>(() => []),
 }) {
   get currentTrack() {
     if (!this.tracks || this.tracks.length === 0) return null;

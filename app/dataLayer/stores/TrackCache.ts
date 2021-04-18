@@ -3,7 +3,7 @@ import Track from "../models/Track";
 
 @model("TrackCache")
 export default class TrackCache extends Model({
-  tracks: prop<Track[]>(),
+  tracks: prop<Track[]>(() => []),
 }) {
   getTrackById(id: string) {
     return this.tracks.find((track) => track.id === id);
