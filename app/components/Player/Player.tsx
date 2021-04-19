@@ -171,6 +171,10 @@ const Player: React.FunctionComponent = () => {
     if (origin === playerUrl) {
       switch (data.type) {
         case IncomingMessageType.SET_PLAYBACK_POSITION:
+          if (data.playbackPosition === 0 && data.isLooping) {
+            player.setPlaybackPosition(data.playbackPosition);
+            player.notifyRPC();
+          }
           if (data.playbackPosition === 0) return;
           player.setPlaybackPosition(data.playbackPosition);
           if (
