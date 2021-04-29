@@ -16,13 +16,12 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import PlaylistWithMultiSongDialog from "../components/Playlist/PlaylistWithMultiSongDialog";
 import PlaylistPageMenu from "../components/PlaylistPageMenu";
+import { useStore } from "../components/StoreProvider";
 import routes from "../constants/routes.json";
 import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
-import RootStore from "../dataLayer/stores/RootStore";
 import { formattedDuration, removeControlCharacters } from "../helpers";
-import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 
@@ -63,14 +62,7 @@ const PlaylistPage: React.FunctionComponent = () => {
 
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-
-  const Store = ({ playlists, trackCache, user }: RootStore) => ({
-    playlists,
-    trackCache,
-    user
-  });
-
-  const { playlists, trackCache, user } = useInject(Store);
+  const { playlists, trackCache, user } = useStore();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -78,9 +70,11 @@ const PlaylistPage: React.FunctionComponent = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        ApiClient.getPlaylists().then(data => {
+        ApiClient.getPlaylists().then((data) => {
           for (const playlist of data) {
-            const oldPl = playlists.lists.find(list => list.id === playlist.Id);
+            const oldPl = playlists.lists.find(
+              (list) => list.id === playlist.Id
+            );
             if (
               oldPl ||
               (oldPl && playlist.Tracks?.length !== oldPl.trackCount)
@@ -92,14 +86,14 @@ const PlaylistPage: React.FunctionComponent = () => {
               trackCount: playlist.SongsCount,
               duration: playlist.Duration,
               isReadonly: playlist.IsReadonly,
-              tracks: []
+              tracks: [],
             });
             if (playlist.Tracks) {
               for (const track of playlist.Tracks) {
                 const tr = new Track({
                   id: track.Id,
                   title: track.Title,
-                  duration: track.Duration
+                  duration: track.Duration,
                 });
                 if (!trackCache.getTrackById(track.Id)) {
                   trackCache.add(tr);
@@ -118,14 +112,14 @@ const PlaylistPage: React.FunctionComponent = () => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Error.getPlaylists")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
 
@@ -148,14 +142,14 @@ const PlaylistPage: React.FunctionComponent = () => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Playlist.couldNotCreate")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -184,8 +178,8 @@ const PlaylistPage: React.FunctionComponent = () => {
     setNewPlaylistSongs(
       removeControlCharacters(event.target.value)
         .split(",")
-        .map(url => ({
-          Url: url
+        .map((url) => ({
+          Url: url,
         }))
     );
   };
@@ -194,8 +188,8 @@ const PlaylistPage: React.FunctionComponent = () => {
     setSongsToAdd(
       removeControlCharacters(event.target.value)
         .split(",")
-        .map(url => ({
-          Url: url
+        .map((url) => ({
+          Url: url,
         }))
     );
   };
@@ -215,14 +209,14 @@ const PlaylistPage: React.FunctionComponent = () => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Error.couldNotAddTrack")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -243,7 +237,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   style={{
                     color: "#f2f5f4",
                     backgroundColor: "#3d4653",
-                    borderBottom: "none"
+                    borderBottom: "none",
                   }}
                 >
                   {t("PlaylistPage.name")}
@@ -253,7 +247,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   style={{
                     color: "#f2f5f4",
                     backgroundColor: "#3d4653",
-                    borderBottom: "none"
+                    borderBottom: "none",
                   }}
                 >
                   {t("PlaylistPage.tracks")}
@@ -263,7 +257,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                   style={{
                     color: "#f2f5f4",
                     backgroundColor: "#3d4653",
-                    borderBottom: "none"
+                    borderBottom: "none",
                   }}
                 >
                   {t("PlaylistPage.length")}
@@ -273,13 +267,13 @@ const PlaylistPage: React.FunctionComponent = () => {
                   style={{
                     color: "#f2f5f4",
                     backgroundColor: "#3d4653",
-                    borderBottom: "none"
+                    borderBottom: "none",
                   }}
                 ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {playlists.lists.map(playlist => (
+              {playlists.lists.map((playlist) => (
                 <TableRow key={playlist.id}>
                   <TableCell component="th" scope="row">
                     <Link
@@ -319,7 +313,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 height: "40px",
                 position: "absolute",
                 bottom: "56px",
-                right: "16px"
+                right: "16px",
               }}
             >
               {t("PlaylistPage.dialog.title")}
@@ -337,7 +331,7 @@ const PlaylistPage: React.FunctionComponent = () => {
           textField={{
             placeholder: "https://www.youtube.com/watch?v=A3rvyaZFCN4",
             label: t("PlaylistPage.dialog.textField.label"),
-            dialogText: t("PlaylistPage.dialog.textField.dialogText")
+            dialogText: t("PlaylistPage.dialog.textField.dialogText"),
           }}
           handleSongsChange={_onPlaylistSongsChange}
         />
@@ -380,7 +374,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                     height: "40px",
                     position: "absolute",
                     bottom: "56px",
-                    right: "24px"
+                    right: "24px",
                   }}
                 >
                   {t("PlaylistPage.dialog.title")}
@@ -398,7 +392,7 @@ const PlaylistPage: React.FunctionComponent = () => {
               textField={{
                 placeholder: "https://www.youtube.com/watch?v=A3rvyaZFCN4",
                 label: t("PlaylistPage.dialog.textField.label"),
-                dialogText: t("PlaylistPage.dialog.textField.dialogText")
+                dialogText: t("PlaylistPage.dialog.textField.dialogText"),
               }}
               handleSongsChange={_onPlaylistSongsChange}
             />{" "}
@@ -414,7 +408,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 }#${routes.REGISTER}`)
               }
               style={{
-                width: "200px"
+                width: "200px",
               }}
             >
               {t("PlaylistPage.createAccount")}
@@ -427,7 +421,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 }#${routes.LOGIN}`)
               }
               style={{
-                width: "200px"
+                width: "200px",
               }}
             >
               {t("PlaylistPage.login")}

@@ -6,8 +6,7 @@ import VolumeUp from "@material-ui/icons/VolumeUp";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import PlayerInterop from "../../../dataLayer/api/PlayerInterop";
-import RootStore from "../../../dataLayer/stores/RootStore";
-import useInject from "../../../hooks/useInject";
+import { useStore } from "../../StoreProvider";
 
 const StyledSlider = withStyles({
   root: {
@@ -18,14 +17,7 @@ const StyledSlider = withStyles({
 const VolumeSlider: React.FunctionComponent = () => {
   PlayerInterop.init();
 
-  const Store = ({ app, player, queue, trackHistory }: RootStore) => ({
-    app,
-    player,
-    queue,
-    trackHistory
-  });
-
-  const { player } = useInject(Store);
+  const { player } = useStore();
 
   const _handleVolumeChange = (_event: any, newValue: number) => {
     player.setVolume(newValue / 100);

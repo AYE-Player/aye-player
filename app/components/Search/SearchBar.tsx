@@ -6,13 +6,12 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
 import { detectLink } from "../../helpers";
-import useInject from "../../hooks/useInject";
 import SnackMessage from "../Customs/SnackMessage";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import ApiClient from "../../dataLayer/api/ApiClient";
+import { useStore } from "../StoreProvider";
 
 const Search = styled.div`
   width: 100%;
@@ -28,26 +27,8 @@ const SearchBar: React.FunctionComponent = () => {
   const { t } = useTranslation();
   PlayerInterop.init();
 
-  const Store = ({
-    player,
-    queue,
-    searchResult,
-    trackCache,
-    trackHistory
-  }: RootStore) => ({
-    player,
-    queue,
-    searchResult,
-    trackCache,
-    trackHistory
-  });
-
-  const { player, queue, searchResult, trackCache, trackHistory } = useInject(
-    Store
-  );
-
+  const { player, queue, searchResult, trackCache, trackHistory } = useStore();
   const { enqueueSnackbar } = useSnackbar();
-
   const [term, setTerm] = React.useState("");
 
   const _handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,14 +53,14 @@ const SearchBar: React.FunctionComponent = () => {
       if (term.includes("aye://playlist/")) {
         await ApiClient.subscribePlaylist(term.split("//playlist/")[1]);
         enqueueSnackbar("", {
-          content: key => (
+          content: (key) => (
             <SnackMessage
               id={key}
               variant="success"
               message={t("Playlist.subscribed")}
             />
           ),
-          disableWindowBlurListener: true
+          disableWindowBlurListener: true,
         });
       } else if (detectLink(term)) {
         const trackInfo = await searchResult.getTrackFromUrl(term);
@@ -90,7 +71,7 @@ const SearchBar: React.FunctionComponent = () => {
           track = new Track(trackInfo);
         }
 
-        if (!trackCache.tracks.find(t => t.id === track.id)) {
+        if (!trackCache.tracks.find((t) => t.id === track.id)) {
           trackCache.add(track);
         }
         searchResult.clear();
@@ -110,7 +91,7 @@ const SearchBar: React.FunctionComponent = () => {
           } else {
             track = new Track(result);
           }
-          if (!trackCache.tracks.find(t => t.id === track.id)) {
+          if (!trackCache.tracks.find((t) => t.id === track.id)) {
             trackCache.add(track);
           }
           foundTracks.push(track);
@@ -122,10 +103,10 @@ const SearchBar: React.FunctionComponent = () => {
     } catch (error) {
       AyeLogger.player(`Error in SearchBar Component ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -145,7 +126,7 @@ const SearchBar: React.FunctionComponent = () => {
           backgroundColor: "#3d4653",
           height: "100%",
           borderRadius: "4px",
-          width: "38px"
+          width: "38px",
         }}
         onClick={_handleSearchIconClick}
       />

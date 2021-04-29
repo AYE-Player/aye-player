@@ -12,9 +12,8 @@ import CustomButton from "../components/Customs/CustomButton";
 import CustomizedDialogs from "../components/Customs/CustomDialog";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
-import RootStore from "../dataLayer/stores/RootStore";
-import useInject from "../hooks/useInject";
 import LoginPage from "./LoginPage";
+import { useStore } from "../components/StoreProvider";
 
 const Header = styled.div`
   font-size: 24px;
@@ -41,15 +40,7 @@ const AvatarInfoText = styled.div`
 
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
-
-  const store = ({ user, player, playlists }: RootStore) => ({
-    user,
-    player,
-    playlists
-  });
-
-  const { user, player, playlists } = useInject(store);
-
+  const { user, player, playlists } = useStore();
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
   const [passwordsMatch, setPasswordsMatch] = React.useState(false);
@@ -115,22 +106,22 @@ const AccountPage: React.FunctionComponent = () => {
       }
 
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="success"
             message={t("AccountPage.updateSuccessMessage")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     } catch (error) {
       AyeLogger.player(`Error updating User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -143,22 +134,22 @@ const AccountPage: React.FunctionComponent = () => {
       playlists.clear();
 
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="success"
             message={t("AccountPage.deleteSuccess")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     } catch (error) {
       AyeLogger.player(`Error deleting User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -211,7 +202,7 @@ const AccountPage: React.FunctionComponent = () => {
               width: "140px",
               padding: "0 16px",
               backgroundColor: "#DC143C",
-              borderRadius: "5px"
+              borderRadius: "5px",
             }}
             onClick={() => _handleDeleteClickOpen()}
           >

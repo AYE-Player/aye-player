@@ -1,23 +1,17 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import RootStore from "../dataLayer/stores/RootStore";
-import useInject from "../hooks/useInject";
 import Playlist from "./Playlist/Playlist";
 import Queue from "./Queue/Queue";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
+import { useStore } from "./StoreProvider";
 
 const QueuePlaylistSwitch: React.FunctionComponent = () => {
-  const Store = ({ app, player }: RootStore) => ({
-    app,
-    player
-  });
-
-  const { app, player } = useInject(Store);
+  const { app, player } = useStore();
 
   const _toggleExternalRadio = () => {
     if (!player.isPlaying) player.togglePlayingState();
 
-    player.setLivestreamSource("listen.moe")
+    player.setLivestreamSource("listen.moe");
     PlayerInterop.playLivestream("https://listen.moe/stream");
   };
 

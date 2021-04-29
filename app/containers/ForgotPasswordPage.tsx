@@ -7,9 +7,8 @@ import CustomButton from "../components/Customs/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
-import RootStore from "../dataLayer/stores/RootStore";
+import { useStore } from "../components/StoreProvider";
 import { validateEmail } from "../helpers";
-import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 
@@ -19,11 +18,7 @@ const Header = styled.div`
 `;
 
 const PasswordForgotPage: React.FunctionComponent = () => {
-  const store = ({ user }: RootStore) => ({
-    user
-  });
-
-  const { user } = useInject(store);
+  const { user } = useStore();
 
   const [email, setEmail] = React.useState("");
   const [invalidEmail, setInvalidEmail] = React.useState(false);

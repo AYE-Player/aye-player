@@ -10,8 +10,7 @@ import styled from "styled-components";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
+import { useStore } from "../StoreProvider";
 
 interface ISearchEntityMenuProps {
   trackRef: Ref<Track>;
@@ -52,15 +51,7 @@ const StyledMenu = withStyles({
 
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = props => {
   const { t } = useTranslation();
-
-  const Store = ({ queue, trackCache, player }: RootStore) => ({
-    queue,
-    trackCache,
-    player
-  });
-
-  const { queue, trackCache, player } = useInject(Store);
-
+  const { queue, trackCache, player } = useStore();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const _handleClick = (event: any) => {

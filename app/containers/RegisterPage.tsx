@@ -7,10 +7,9 @@ import CustomButton from "../components/Customs/CustomButton";
 import CustomTextField from "../components/Customs/CustomTextField";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
+import { useStore } from "../components/StoreProvider";
 import routes from "../constants/routes.json";
-import RootStore from "../dataLayer/stores/RootStore";
 import { validateEmail } from "../helpers/";
-import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 
@@ -20,11 +19,7 @@ const Header = styled.div`
 `;
 
 const RegisterPage: React.FunctionComponent = () => {
-  const store = ({ user }: RootStore) => ({
-    user
-  });
-
-  const { user } = useInject(store);
+  const { user } = useStore();
 
   const [name, setName] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -75,14 +70,14 @@ const RegisterPage: React.FunctionComponent = () => {
     try {
       await user.register(name, email, password);
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="success"
             message={t("RegisterPage.success")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
       window.location.href = `${window.location.href.split("#/")[0]}#${
         routes.LOGIN
@@ -90,10 +85,10 @@ const RegisterPage: React.FunctionComponent = () => {
     } catch (error) {
       AyeLogger.player(`Error registering User ${error}`, LogType.ERROR);
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage id={key} variant="error" message={t("General.error")} />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };

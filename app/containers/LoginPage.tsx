@@ -9,13 +9,12 @@ import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import SmallLink from "../components/Link/SmallLink";
 import routes from "../constants/routes.json";
-import RootStore from "../dataLayer/stores/RootStore";
-import useInject from "../hooks/useInject";
 import ApiClient from "../dataLayer/api/ApiClient";
 import Playlist from "../dataLayer/models/Playlist";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 import ky from "ky";
+import { useStore } from "../components/StoreProvider";
 
 const Header = styled.div`
   font-size: 24px;
@@ -24,13 +23,7 @@ const Header = styled.div`
 
 const LoginPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
-
-  const Store = ({ user, playlists }: RootStore) => ({
-    user,
-    playlists,
-  });
-
-  const { user, playlists } = useInject(Store);
+  const { user, playlists } = useStore();
   const { enqueueSnackbar } = useSnackbar();
 
   const [name, setName] = React.useState("");
@@ -84,7 +77,11 @@ const LoginPage: React.FunctionComponent = () => {
       if (err.response.status === 401) {
         enqueueSnackbar("", {
           content: (key) => (
-            <SnackMessage id={key} variant="error" message={t("LoginPage.error.invalidCredentials")} />
+            <SnackMessage
+              id={key}
+              variant="error"
+              message={t("LoginPage.error.invalidCredentials")}
+            />
           ),
           disableWindowBlurListener: true,
         });
@@ -95,7 +92,11 @@ const LoginPage: React.FunctionComponent = () => {
         );
         enqueueSnackbar("", {
           content: (key) => (
-            <SnackMessage id={key} variant="error" message={t("General.error")} />
+            <SnackMessage
+              id={key}
+              variant="error"
+              message={t("General.error")}
+            />
           ),
           disableWindowBlurListener: true,
         });

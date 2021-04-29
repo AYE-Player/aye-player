@@ -7,8 +7,6 @@ import ApiClient from "../../dataLayer/api/ApiClient";
 import ListenMoeWebsocket from "../../dataLayer/api/ListenMoeWebsocket";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { IncomingMessageType, LogType, Repeat } from "../../types/enums";
 import { IListenMoeSongUpdate } from "../../types/response";
@@ -17,6 +15,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import PlayerControlsContainer from "./PlayerControlsContainer";
 import ListenMoeApiClient from "../../dataLayer/api/ListenMoeApiClient";
 import { searchYoutube, timestringToSeconds } from "../../helpers";
+import { useStore } from "../StoreProvider";
 const AyeLogo = require("../../images/aye_temp_logo.png");
 const ListenMoe = require("../../images/listenmoe.svg");
 
@@ -146,21 +145,7 @@ ipcRenderer.on("reconnect-stream", () => {
 });
 
 const Player: React.FunctionComponent = () => {
-  const Store = ({
-    player,
-    queue,
-    trackHistory,
-    app,
-    trackCache,
-  }: RootStore) => ({
-    player,
-    queue,
-    trackHistory,
-    app,
-    trackCache,
-  });
-
-  const { player, queue, trackHistory, app, trackCache } = useInject(Store);
+  const { player, queue, trackHistory, app, trackCache } = useStore();
   PlayerInterop.init();
 
   window.onmessage = async (message: any) => {
@@ -247,7 +232,7 @@ const Player: React.FunctionComponent = () => {
           }
           break;
         case IncomingMessageType.READY:
-          player.externalPlayerVersion = data.version;
+          player.setExternalPlayerVersion(data.version);
         default:
           break;
       }

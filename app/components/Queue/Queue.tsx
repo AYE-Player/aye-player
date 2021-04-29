@@ -11,8 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
+import { useStore } from "../StoreProvider";
 import QueueEntity from "./QueueEntity";
 
 interface IProps {
@@ -57,15 +56,7 @@ const Queue: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
 
   const [value, setValue] = React.useState(true); //boolean state
-
-  const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
-    app,
-    queue,
-    player,
-    trackHistory
-  });
-
-  const { app, queue, player, trackHistory } = useInject(Store);
+  const { app, queue, player, trackHistory } = useStore();
 
   const _handleClick = (index: number) => {
     if (player.currentTrack) {

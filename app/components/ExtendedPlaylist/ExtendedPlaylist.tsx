@@ -7,21 +7,20 @@ import {
   DragDropContext,
   Droppable,
   DropResult,
-  ResponderProvided
+  ResponderProvided,
 } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
 import { removeControlCharacters } from "../../helpers";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import CustomButton from "../Customs/CustomButton";
 import CustomTextareaDialog from "../Customs/CustomTextareaDialog";
 import SnackMessage from "../Customs/SnackMessage";
+import { useStore } from "../StoreProvider";
 import ExtendedPlaylistEntity from "./ExtendedPlaylistEntity";
 
 interface IProps {
@@ -45,7 +44,7 @@ const Header = styled.div`
   margin-bottom: 8px;
 `;
 
-const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
+const ExtendedPlaylist: React.FunctionComponent<IProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
 
@@ -54,25 +53,14 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
   const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
   PlayerInterop.init();
 
-  const Store = ({
+  const {
     queue,
     player,
     playlists,
     trackCache,
     app,
-    trackHistory
-  }: RootStore) => ({
-    queue,
-    player,
-    playlists,
-    trackCache,
-    app,
-    trackHistory
-  });
-
-  const { queue, player, playlists, trackCache, app, trackHistory } = useInject(
-    Store
-  );
+    trackHistory,
+  } = useStore();
 
   const { id } = props.match.params;
   const playlist = playlists.getListById(id);
@@ -89,12 +77,12 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
 
     if (!isLoaded) {
       ApiClient.getTracksFromPlaylist(id, playlist.trackCount)
-        .then(songs => {
-          songs.map(song => {
+        .then((songs) => {
+          songs.map((song) => {
             const track = new Track({
               id: song.Id,
               title: song.Title,
-              duration: song.Duration
+              duration: song.Duration,
             });
             if (!trackCache.getTrackById(track.id)) {
               trackCache.add(track);
@@ -105,14 +93,11 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
           });
           setIsLoaded(true);
         })
-        .catch(error =>
+        .catch((error) =>
           AyeLogger.player(
-            `[ExtendedPlaylist] error getting playlist tracks ${(JSON.stringify(
-              error,
-              null,
-              2
-            ),
-            LogType.ERROR)}`
+            `[ExtendedPlaylist] error getting playlist tracks ${
+              (JSON.stringify(error, null, 2), LogType.ERROR)
+            }`
           )
         );
     }
@@ -130,7 +115,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     }
     queue.clear();
     queue.addTracks(
-      playlist.getTracksStartingFrom(idx).map(track => track.current)
+      playlist.getTracksStartingFrom(idx).map((track) => track.current)
     );
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack.current);
@@ -150,14 +135,14 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={t("Error.couldNotMoveTrack")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -166,8 +151,8 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
     setSongsToAdd(
       removeControlCharacters(event.target.value)
         .split(",")
-        .map(url => ({
-          Url: url
+        .map((url) => ({
+          Url: url,
         }))
     );
   };
@@ -186,14 +171,14 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Error.couldNotAddTrack")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -208,7 +193,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
         <Header>{playlist.name}</Header>
         <Container>
           <Droppable droppableId="droppable">
-            {provided => (
+            {(provided) => (
               <Observer>
                 {() => (
                   <ScrollContainer
@@ -251,7 +236,7 @@ const ExtendedPlaylist: React.FunctionComponent<IProps> = props => {
               height: "40px",
               position: "absolute",
               bottom: "56px",
-              right: "16px"
+              right: "16px",
             }}
           >
             {t("PlaylistPage.addTracks.confirmButton")}

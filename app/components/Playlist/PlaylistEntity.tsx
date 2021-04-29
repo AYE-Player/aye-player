@@ -6,14 +6,13 @@ import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import ScrollingText from "../ScrollingText";
+import { useStore } from "../StoreProvider";
 import PlaylistEntityMenu from "./PlaylistEntityMenu";
 
 interface IProps {
@@ -59,7 +58,7 @@ const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   width: 224px;
   padding: 8px 0;
   padding-left: 8px;
-  color: ${props => (props.active ? "#f0ad4e" : "")};
+  color: ${(props) => (props.active ? "#f0ad4e" : "")};
 `;
 
 const Title = styled.div`
@@ -72,20 +71,16 @@ const Duration = styled.div`
   font-size: 12px;
 `;
 
-const PlaylistEntity: React.FunctionComponent<IProps> = props => {
+const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ playlists }: RootStore) => ({
-    playlists
-  });
-
-  const { playlists } = useInject(Store);
+  const { playlists } = useStore();
 
   const [open, setOpen] = React.useState(false);
   const [
     openCreatePlaylistDialog,
-    setOpenCreatePlaylistDialog
+    setOpenCreatePlaylistDialog,
   ] = React.useState(false);
   const [newPlaylistName, setNewPlaylistName] = React.useState("");
 
@@ -97,28 +92,28 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpen(false);
     const playlist = playlists.getListById(id);
     try {
-      if (playlist.tracks.find(track => track.current.id === givenTrack.id)) {
+      if (playlist.tracks.find((track) => track.current.id === givenTrack.id)) {
         enqueueSnackbar("", {
-          content: key => (
+          content: (key) => (
             <SnackMessage
               id={key}
               variant="warning"
               message={t("SearchEntity.trackExists")}
             />
           ),
-          disableWindowBlurListener: true
+          disableWindowBlurListener: true,
         });
       } else {
         await playlist.addTrack(givenTrack);
         enqueueSnackbar("", {
-          content: key => (
+          content: (key) => (
             <SnackMessage
               id={key}
               variant="info"
               message={`${t("SearchEntity.trackAdded")} ${playlist.name}`}
             />
           ),
-          disableWindowBlurListener: true
+          disableWindowBlurListener: true,
         });
       }
     } catch (error) {
@@ -131,14 +126,14 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={t("Error.couldNotAddTrack")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -152,18 +147,18 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
     setOpenCreatePlaylistDialog(false);
     try {
       await playlists.createListWithSongs(newPlaylistName, [
-        { Url: `https://www.youtube.com/watch?v${props.track.current.id}` }
+        { Url: `https://www.youtube.com/watch?v${props.track.current.id}` },
       ]);
 
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="info"
             message={`${t("createdAndAdded")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     } catch (error) {
       AyeLogger.player(
@@ -175,14 +170,14 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Playlist.couldNotCreate")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -208,7 +203,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         draggableId={props.track.current.id}
         index={props.index}
       >
-        {provided => (
+        {(provided) => (
           <Container
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -244,11 +239,11 @@ const PlaylistEntity: React.FunctionComponent<IProps> = props => {
         createListItem={_createListItem}
         listItemText={t("SearchEntity.createListText")}
         options={playlists.lists
-          .filter(list => !list.isReadonly)
-          .map(list => {
+          .filter((list) => !list.isReadonly)
+          .map((list) => {
             return {
               name: list.name,
-              id: list.id
+              id: list.id,
             };
           })}
       />

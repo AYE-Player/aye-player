@@ -6,9 +6,8 @@ import SearchBar from "../components/Search/SearchBar";
 import SearchEntity from "../components/Search/SearchEntity";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Track from "../dataLayer/models/Track";
-import RootStore from "../dataLayer/stores/RootStore";
-import useInject from "../hooks/useInject";
 import { Ref } from "mobx-keystone";
+import { useStore } from "../components/StoreProvider";
 
 const Header = styled.div`
   font-size: 24px;
@@ -32,14 +31,7 @@ const ScrollContainer = styled.div`
 `;
 
 const SearchPage: React.FunctionComponent = () => {
-  const Store = ({ player, queue, searchResult, trackHistory }: RootStore) => ({
-    player,
-    queue,
-    searchResult,
-    trackHistory
-  });
-
-  const { player, queue, searchResult, trackHistory } = useInject(Store);
+  const { player, queue, searchResult, trackHistory } = useStore();
 
   const { t } = useTranslation();
 

@@ -11,11 +11,10 @@ import styled from "styled-components";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
+import { useStore } from "../StoreProvider";
 
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
@@ -36,37 +35,31 @@ const StyledMenu = withStyles({
     backgroundColor: "#3D4653",
     boxShadow:
       "0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)",
-    color: "#f2f5f4"
-  }
+    color: "#f2f5f4",
+  },
 })((props: MenuProps) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "top",
-      horizontal: "left"
+      horizontal: "left",
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "right"
+      horizontal: "right",
     }}
     {...props}
   />
 ));
 
-const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
+const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
+  props
+) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const Store = ({ queue, playlists, app, player, trackCache }: RootStore) => ({
-    queue,
-    playlists,
-    app,
-    player,
-    trackCache
-  });
-
-  const { queue, playlists, app, player, trackCache } = useInject(Store);
+  const { queue, playlists, app, player, trackCache } = useStore();
   const playlist = playlists.getListById(app.selectedPlaylist);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -93,14 +86,14 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={`${t("Error.couldNotDeleteTrack")}`}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -142,7 +135,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuPro
         track = new Track({
           id: trk.Id,
           title: trk.Title,
-          duration: trk.Duration
+          duration: trk.Duration,
         });
         trackCache.add(track);
       } else {

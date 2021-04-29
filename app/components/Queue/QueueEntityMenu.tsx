@@ -6,12 +6,11 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import { Ref } from "mobx-keystone";
 import Track from "../../dataLayer/models/Track";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
+import { useStore } from "../StoreProvider";
 
 interface IQueueEntityMenuProps {
   trackRef: Ref<Track>;
@@ -53,15 +52,7 @@ const StyledMenu = withStyles({
 
 const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = props => {
   const { t } = useTranslation();
-
-  const Store = ({ queue, player, trackCache }: RootStore) => ({
-    queue,
-    player,
-    trackCache
-  });
-
-  const { queue, player, trackCache } = useInject(Store);
-
+  const { queue, player, trackCache } = useStore();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const _handleClick = (event: any) => {

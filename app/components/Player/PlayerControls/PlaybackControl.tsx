@@ -4,9 +4,8 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
 import PlayerInterop from "../../../dataLayer/api/PlayerInterop";
-import RootStore from "../../../dataLayer/stores/RootStore";
 import { formattedDuration } from "../../../helpers/";
-import useInject from "../../../hooks/useInject";
+import { useStore } from "../../StoreProvider";
 
 interface IProps {
   seekingStop: (value: number) => void;
@@ -30,7 +29,7 @@ const PrettoSlider = withStyles({
   root: {
     color: "#f0ad4e",
     height: 8,
-    width: 200
+    width: 200,
   },
   thumb: {
     height: 12,
@@ -39,34 +38,27 @@ const PrettoSlider = withStyles({
     border: "2px solid currentColor",
     marginTop: -2,
     "&:focus,&:hover,&$active": {
-      boxShadow: "inherit"
-    }
+      boxShadow: "inherit",
+    },
   },
   active: {},
   valueLabel: {
-    left: "calc(-50% + 4px)"
+    left: "calc(-50% + 4px)",
   },
   track: {
     height: 8,
-    borderRadius: 4
+    borderRadius: 4,
   },
   rail: {
     height: 8,
-    borderRadius: 4
-  }
+    borderRadius: 4,
+  },
 })(Slider);
 
-const PlaybackControl: React.FunctionComponent<IProps> = props => {
+const PlaybackControl: React.FunctionComponent<IProps> = (props) => {
   PlayerInterop.init();
 
-  const Store = ({ app, player, queue, trackHistory }: RootStore) => ({
-    app,
-    player,
-    queue,
-    trackHistory
-  });
-
-  const { player } = useInject(Store);
+  const { player } = useStore();
   let seekTo: number;
 
   const _handlePlaybackChange = (_event: any, newValue: number) => {

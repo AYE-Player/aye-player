@@ -7,14 +7,13 @@ import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import CustomFormDialog from "../Customs/CustomFormDialog";
 import CustomListDialog from "../Customs/CustomListDialog";
 import SnackMessage from "../Customs/SnackMessage";
 import ScrollingText from "../ScrollingText";
+import { useStore } from "../StoreProvider";
 import QueueEntityMenu from "./QueueEntityMenu";
 
 interface IProps {
@@ -79,12 +78,7 @@ const Dot = styled.span`
 const QueueEntity: React.FunctionComponent<IProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-
-  const Store = ({ playlists }: RootStore) => ({
-    playlists
-  });
-
-  const { playlists } = useInject(Store);
+  const { playlists } = useStore();
 
   const [open, setOpen] = React.useState(false);
   const [

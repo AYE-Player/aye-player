@@ -9,9 +9,8 @@ import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import styled from "styled-components";
-import RootStore from "../../../dataLayer/stores/RootStore";
-import useInject from "../../../hooks/useInject";
 import { Repeat } from "../../../types/enums";
+import { useStore } from "../../StoreProvider";
 
 interface IProps {
   play: () => void;
@@ -37,15 +36,8 @@ const PlayControl = styled.div`
   height: 32px;
 `;
 
-const PlayerControlElements: React.FunctionComponent<IProps> = props => {
-  const Store = ({ app, player, queue, trackHistory }: RootStore) => ({
-    app,
-    player,
-    queue,
-    trackHistory
-  });
-
-  const { app, player, queue, trackHistory } = useInject(Store);
+const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
+  const { app, player, queue, trackHistory } = useStore();
 
   return (
     <Grid container justify="center" alignItems="center" spacing={2}>

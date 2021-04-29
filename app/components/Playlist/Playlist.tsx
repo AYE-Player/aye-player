@@ -14,11 +14,10 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
+import { useStore } from "../StoreProvider";
 import PlaylistEntity from "./PlaylistEntity";
 
 interface IProps {
@@ -64,14 +63,7 @@ const Playlist: React.FunctionComponent<IProps> = props => {
   const { enqueueSnackbar } = useSnackbar();
   PlayerInterop.init();
 
-  const Store = ({ app, queue, player, trackHistory }: RootStore) => ({
-    app,
-    queue,
-    player,
-    trackHistory
-  });
-
-  const { app, queue, player, trackHistory } = useInject(Store);
+  const { app, queue, player, trackHistory } = useStore();
 
   const _handleClick = (track: Ref<Track>) => {
     const idx = player.currentPlaylist.current.getIndexOfTrack(track);

@@ -11,11 +11,10 @@ import styled from "styled-components";
 import ApiClient from "../../dataLayer/api/ApiClient";
 import PlayerInterop from "../../dataLayer/api/PlayerInterop";
 import Track from "../../dataLayer/models/Track";
-import RootStore from "../../dataLayer/stores/RootStore";
-import useInject from "../../hooks/useInject";
 import AyeLogger from "../../modules/AyeLogger";
 import { LogType } from "../../types/enums";
 import SnackMessage from "../Customs/SnackMessage";
+import { useStore } from "../StoreProvider";
 
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
@@ -59,14 +58,7 @@ const StyledMenu = withStyles({
 const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = props => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-
-  const Store = ({ queue, player, trackCache }: RootStore) => ({
-    queue,
-    player,
-    trackCache
-  });
-
-  const { queue, player, trackCache } = useInject(Store);
+  const { queue, player, trackCache } = useStore();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

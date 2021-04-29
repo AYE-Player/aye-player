@@ -11,11 +11,10 @@ import ApiClient from "../dataLayer/api/ApiClient";
 import PlayerInterop from "../dataLayer/api/PlayerInterop";
 import Playlist from "../dataLayer/models/Playlist";
 import Track from "../dataLayer/models/Track";
-import RootStore from "../dataLayer/stores/RootStore";
-import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 import SnackMessage from "./Customs/SnackMessage";
+import { useStore } from "./StoreProvider";
 
 interface IPlaylistPageMenuProps {
   id: string;
@@ -36,37 +35,32 @@ const StyledMenu = withStyles({
     backgroundColor: "#3D4653",
     boxShadow:
       "0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)",
-    color: "#f2f5f4"
-  }
+    color: "#f2f5f4",
+  },
 })((props: MenuProps) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: "top",
-      horizontal: "center"
+      horizontal: "center",
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "right"
+      horizontal: "right",
     }}
     {...props}
   />
 ));
 
-const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props => {
+const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
+  props
+) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   PlayerInterop.init();
 
-  const Store = ({ player, playlists, queue, trackCache }: RootStore) => ({
-    player,
-    playlists,
-    queue,
-    trackCache
-  });
-
-  const { player, playlists, queue, trackCache } = useInject(Store);
+  const { player, playlists, queue, trackCache } = useStore();
   const playlist = playlists.getListById(props.id);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -86,7 +80,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
       }
 
       queue.clear();
-      queue.addTracks(playlist.tracks.map(track => track.current));
+      queue.addTracks(playlist.tracks.map((track) => track.current));
       player.setCurrentPlaylist(playlist);
       player.playTrack(playlist.tracks[0].current);
       PlayerInterop.playTrack(playlist.tracks[0].current);
@@ -96,14 +90,14 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
         `Error loading PlaylistTracks ${JSON.stringify(error, null, 2)}`
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={t("Error.getPlaylists")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -113,14 +107,14 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
       setAnchorEl(null);
       await playlists.remove(playlist.id, playlist.isReadonly);
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="success"
             message={t("Playlist.deleted")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     } catch (error) {
       AyeLogger.player(
@@ -128,14 +122,14 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
         LogType.ERROR
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={t("Playlist.couldNotDelete")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -146,20 +140,20 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
         await _getTracksOfPlaylist(playlist);
       }
 
-      queue.addTracks(playlist.tracks.map(track => track.current));
+      queue.addTracks(playlist.tracks.map((track) => track.current));
     } catch (error) {
       AyeLogger.player(
         `Error loading PlaylistTracks ${JSON.stringify(error, null, 2)}`
       );
       enqueueSnackbar("", {
-        content: key => (
+        content: (key) => (
           <SnackMessage
             id={key}
             variant="error"
             message={t("Error.getPlaylists")}
           />
         ),
-        disableWindowBlurListener: true
+        disableWindowBlurListener: true,
       });
     }
   };
@@ -173,9 +167,9 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = props 
       const tr = new Track({
         id: track.Id,
         duration: track.Duration,
-        title: track.Title
+        title: track.Title,
       });
-      if (!trackCache.tracks.find(t => t.id === tr.id)) {
+      if (!trackCache.tracks.find((t) => t.id === tr.id)) {
         trackCache.add(tr);
       }
       playlist.addLoadedTrack(tr);

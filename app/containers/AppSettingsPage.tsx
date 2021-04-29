@@ -12,14 +12,13 @@ import CustomSwitch from "../components/Customs/CustomSwitch";
 import SnackMessage from "../components/Customs/SnackMessage";
 import Divider from "../components/Divider";
 import Track from "../dataLayer/models/Track";
-import RootStore from "../dataLayer/stores/RootStore";
 import { getSpotifyAccessToken, getSpotifyPlaylists } from "../helpers";
 import spotifyToLocalTracks from "../helpers/spotify/spotifyToLocalTracks";
-import useInject from "../hooks/useInject";
 import AyeLogger from "../modules/AyeLogger";
 import { LogType } from "../types/enums";
 import ListenMoeLoginDialog from "../components/ListenMoeLoginDialog";
 import ListenMoeApiClient from "../dataLayer/api/ListenMoeApiClient";
+import { useStore } from "../components/StoreProvider";
 const SpotifyLogo = require("../images/Spotify_Logo_CMYK_Green.png");
 const ListenMoeLogo = require("../images/listenmoe.svg");
 
@@ -44,15 +43,7 @@ const InfoText = styled.div`
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const store = ({ app, user, playlists, trackCache, player }: RootStore) => ({
-    app,
-    user,
-    playlists,
-    trackCache,
-    player,
-  });
-
-  const { app, user, playlists, trackCache, player } = useInject(store);
+  const { app, user, playlists, trackCache, player } = useStore();
 
   const [spotifyListnames, setSpotifyListNames] = React.useState<any[]>([]);
   const [spotifyLists, setSpotifyLists] = React.useState<any>();

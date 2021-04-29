@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import { ipcRenderer } from "electron";
-import { getSnapshot } from "mobx-keystone";
+import { getSnapshot, registerRootStore } from "mobx-keystone";
 import { SnackbarProvider } from "notistack";
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
@@ -34,6 +34,8 @@ interface IPlayerSettings {
 
 const rootStore = createStore();
 
+registerRootStore(rootStore);
+
 ipcRenderer.on("app-close", (event, message) => {
   Settings.set("playerSettings.volume", rootStore.player.volume);
   if (rootStore.player.currentTrack) {
@@ -50,7 +52,7 @@ ipcRenderer.on("app-close", (event, message) => {
     Settings.set("playerSettings.currentPlaylist", {
       id: rootStore.player.currentPlaylist.current.id,
       trackCount: rootStore.player.currentPlaylist.current.trackCount,
-      duration: rootStore.player.currentPlaylist.current.duration
+      duration: rootStore.player.currentPlaylist.current.duration,
     });
   }
   if (
@@ -99,7 +101,7 @@ const getPlaylists = async () => {
           duration: playlist.Duration,
           trackCount: playlist.SongsCount,
           isReadonly: playlist.IsReadonly,
-          tracks: []
+          tracks: [],
         });
 
         rootStore.playlists.add(pl);
@@ -145,7 +147,7 @@ export default class Root extends Component {
               const currentTrack = new Track(playerSettings.currentTrack);
               if (
                 !rootStore.trackCache.tracks.find(
-                  t => t.id === playerSettings.currentTrack.id
+                  (t) => t.id === playerSettings.currentTrack.id
                 )
               ) {
                 rootStore.trackCache.add(currentTrack);
@@ -166,15 +168,15 @@ export default class Root extends Component {
                 ApiClient.getTracksFromPlaylist(
                   playlist.id,
                   playlist.trackCount
-                ).then(tracks => {
+                ).then((tracks) => {
                   for (const track of tracks) {
                     const tr = new Track({
                       id: track.Id,
                       duration: track.Duration,
-                      title: track.Title
+                      title: track.Title,
                     });
                     if (
-                      !rootStore.trackCache.tracks.find(t => t.id === tr.id)
+                      !rootStore.trackCache.tracks.find((t) => t.id === tr.id)
                     ) {
                       rootStore.trackCache.add(tr);
                     }
@@ -224,7 +226,7 @@ export default class Root extends Component {
         <SnackbarProvider
           anchorOrigin={{
             vertical: "top",
-            horizontal: "center"
+            horizontal: "center",
           }}
         >
           <Grid
@@ -240,7 +242,7 @@ export default class Root extends Component {
                 borderRight: "1px solid #565f6c",
                 width: "336px",
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               <QueuePlaylistSwitch />
