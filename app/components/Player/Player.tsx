@@ -232,7 +232,7 @@ const Player: React.FunctionComponent = () => {
           }
           break;
         case IncomingMessageType.READY:
-          player.setExternalPlayerVersion(data.version);
+          player.externalPlayerVersion = data.version;
         default:
           break;
       }
