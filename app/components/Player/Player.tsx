@@ -206,8 +206,6 @@ const Player: React.FunctionComponent = () => {
               player.currentTrack.current.title
             );
 
-            console.log("new songs", newSongs);
-
             // create local track
             const track = new Track({
               id: newSongs.items[0].url.split("watch?v=")[1],

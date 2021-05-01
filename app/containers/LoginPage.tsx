@@ -73,7 +73,7 @@ const LoginPage: React.FunctionComponent = () => {
       }`;
     } catch (error) {
       const err = error as ky.HTTPError;
-      console.log(JSON.stringify(err));
+      console.error(JSON.stringify(err));
       if (err.response.status === 401) {
         enqueueSnackbar("", {
           content: (key) => (

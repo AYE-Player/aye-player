@@ -161,6 +161,7 @@ class ApiClient {
    * Retrieves the given amount of Tracks of a playlist
    * @param id id of the playlist
    * @param amount amount of tracks to retrieve
+   * @param skip amount of tracks to skip
    */
   async getTracksFromPlaylist(
     id: string,
@@ -250,8 +251,7 @@ class ApiClient {
    * Moves a track from a playlist to a new position
    * @param id id of the playlist
    * @param trackId if of the track
-   * @param index position to move to
-   * @param oldIndex old position
+   * @param position position to move to
    */
   async moveTrackTo(id: string, trackId: string, position: number) {
     graphQLClientPlaylists.mutate<void, MoveTrackToInput>({
@@ -443,7 +443,9 @@ class ApiClient {
   }
 
   /**
-   * Replaces a delete Song/Video with a new one
+   * Replaces a delete Song with a new one
+   * @param oldTrack old track
+   * @param newTrack new track
    */
   async replaceSong(oldTrack: ITrackDto, newTrack: ITrackDto): Promise<void> {
     await graphQLClientPlaylists.mutate<void, ReplaceTrackInput>({

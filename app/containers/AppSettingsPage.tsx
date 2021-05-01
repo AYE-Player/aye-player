@@ -89,7 +89,6 @@ const AccountPage: React.FunctionComponent = () => {
     const playlistNames = importedPlaylists.map((playlist: any) => {
       return { id: playlist.id, name: playlist.name };
     });
-    console.log("playlist names", playlistNames);
 
     setSpotifyListNames(playlistNames);
     setSpotifyLists(importedPlaylists);
@@ -234,7 +233,7 @@ const AccountPage: React.FunctionComponent = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            width: "220px"
+            width: "220px",
           }}
         >
           <InfoText>App v{packageInfo.version}</InfoText>
