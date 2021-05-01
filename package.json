@@ -13,7 +13,7 @@
     "dev": "cross-env node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
     "lint": "cross-env NODE_ENV=development eslint --cache --format=pretty .",
     "lint-fix": "yarn --silent lint --fix; exit 0",
-    "ncu": "ncu -x webpack-merge -u",
+    "ncu": "ncu -x webpack-merge,mobx-keystone -u",
     "graphql:codegen": "graphql-codegen",
     "package": "yarn build && rimraf release && electron-builder build --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
@@ -74,6 +74,16 @@
           "path": "/Applications"
         }
       ]
+    },
+    "mac": {
+      "category": "productivity",
+      "target": {
+        "target": "dmg",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      }
     },
     "win": {
       "target": [
