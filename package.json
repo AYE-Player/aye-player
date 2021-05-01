@@ -13,8 +13,6 @@
     "dev": "cross-env node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
     "lint": "cross-env NODE_ENV=development eslint --cache --format=pretty .",
     "lint-fix": "yarn --silent lint --fix; exit 0",
-    "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
-    "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
     "ncu": "ncu -x webpack-merge -u",
     "graphql:codegen": "graphql-codegen",
     "package": "yarn build && rimraf release && electron-builder build --publish never",
@@ -23,8 +21,7 @@
     "package-linux": "yarn build && electron-builder build --linux",
     "package-win": "yarn build && electron-builder build --win --x64",
     "postinstall": "electron-builder install-app-deps && yarn build-dll",
-    "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
-    "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
+    "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc}'",
     "precommit": "lint-staged",
     "prestart": "yarn build",
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
@@ -42,12 +39,11 @@
       "prettier --ignore-path .eslintignore --single-quote --write",
       "git add"
     ],
-    "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
+    "{*.json,.{babelrc,eslintrc,prettierrc}}": [
       "prettier --ignore-path .eslintignore --parser json --write",
       "git add"
     ],
     "*.{css,scss}": [
-      "stylelint --ignore-path .eslintignore --syntax scss --fix",
       "prettier --ignore-path .eslintignore --single-quote --write",
       "git add"
     ],
@@ -133,7 +129,6 @@
     "react",
     "mobx",
     "typescript",
-    "sass",
     "webpack",
     "hot",
     "reload"
@@ -143,7 +138,7 @@
     "testURL": "http://localhost/",
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "\\.(css)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "js",
@@ -189,7 +184,6 @@
     "@graphql-codegen/cli": "^1.19.4",
     "@graphql-codegen/typescript": "^1.19.0",
     "@types/i18next-node-fs-backend": "^2.1.0",
-    "@types/jest": "^26.0.19",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.0",
@@ -198,7 +192,6 @@
     "@types/styled-components": "^5.1.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-dev-expression": "^0.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -220,7 +213,6 @@
     "eslint-plugin-compat": "^3.9.0",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.1.3",
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.21.5",
@@ -230,25 +222,13 @@
     "file-loader": "^6.2.0",
     "husky": "^4.3.6",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.6.3",
     "lint-staged": "^10.5.3",
     "mini-css-extract-plugin": "^1.3.3",
-    "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.1",
     "rimraf": "^3.0.2",
-    "sass-loader": "^10.1.0",
-    "sinon": "^9.2.2",
-    "spectron": "^13.0.0",
     "style-loader": "^2.0.0",
-    "stylelint": "^13.8.0",
-    "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-standard": "^20.0.0",
     "terser-webpack-plugin": "^5.0.3",
-    "testcafe": "^1.10.0",
-    "testcafe-browser-provider-electron": "^0.0.16",
-    "testcafe-live": "^0.1.4",
-    "testcafe-react-selectors": "^4.1.3",
     "ts-loader": "^8.0.12",
     "typescript": "4.1.3",
     "url-loader": "^4.1.1",
@@ -300,7 +280,7 @@
     "react-window": "^1.8.6",
     "register-scheme": "github:devsnek/node-register-scheme",
     "source-map-support": "^0.5.19",
-    "styled-components": "^5.2.1",
+    "styled-components": "^5.2.3",
     "v8-compile-cache": "^2.2.0",
     "ytsr": "3.0.0"
   },
