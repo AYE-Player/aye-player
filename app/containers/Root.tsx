@@ -68,6 +68,7 @@ ipcRenderer.on("app-close", (event, message) => {
 
 const MainGrid = styled.div`
   height: 100%;
+  padding-top: 8px;
   width: calc(100% - 336px);
   flex-direction: column;
 `;
