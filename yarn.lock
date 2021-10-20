@@ -8629,10 +8629,10 @@ mini-css-extract-plugin@^1.3.3:
     schema-utils "^3.0.0"
     webpack-sources "^1.1.0"
 
-miniget@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/miniget/-/miniget-4.2.0.tgz#0004e95536b192d95a7d09f4435d67b9285481d0"
-  integrity sha512-IzTOaNgBw/qEpzkPTE7X2cUVXQfSKbG8w52Emi93zb+Zya2ZFrbmavpixzebuDJD9Ku4ecbaFlC7Y1cEESzQtQ==
+miniget@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/miniget/-/miniget-4.2.1.tgz#11a1c24817a059e292378eb9cff4328d9240c665"
+  integrity sha512-O/DduzDR6f+oDtVype9S/Qu5hhnx73EDYGyZKwU/qN82lehFZdfhoa4DT51SpsO+8epYrB3gcRmws56ROfTIoQ==
 
 minimalistic-assert@^1.0.0, minimalistic-assert@^1.0.1:
   version "1.0.1"
@@ -12724,12 +12724,12 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-ytsr@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/ytsr/-/ytsr-3.0.0.tgz#bcf5d3377f86fd13e602996e75286641e094551f"
-  integrity sha512-/HgM0Vi8a3bJOpw8QZVWhfka0OygluQtfK7B8Kv5gkGdZEDLLJKFUb5i0ytUMWUNzUSNtO4vIAeLBVYYX4B4Dg==
+ytsr@3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/ytsr/-/ytsr-3.5.3.tgz#88e8e2df11ce53c28b456b5510272495cb42ac3a"
+  integrity sha512-BEyIKbQULmk27hiVUQ1cBszAqP8roPBOQTWPZpBioKxjSZBeicfgF2qPIQoY7koodQwRuo1DmCFz3DyrXjADxg==
   dependencies:
-    miniget "^4.1.0"
+    miniget "^4.2.1"
 
 zen-observable-ts@^0.8.21:
   version "0.8.21"

@@ -256,7 +256,7 @@
     "source-map-support": "^0.5.19",
     "styled-components": "^5.2.3",
     "v8-compile-cache": "^2.2.0",
-    "ytsr": "3.0.0"
+    "ytsr": "3.5.3"
   },
   "devEngines": {
     "node": ">=7.x",
