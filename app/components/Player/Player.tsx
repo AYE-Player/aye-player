@@ -267,7 +267,7 @@ const Player: React.FunctionComponent = () => {
               response.d.song.id,
             ]).catch((err) => {
               AyeLogger.player(
-                `[ListenMoe] Error checking for favorit entry ${JSON.stringify(
+                `[ListenMoe] Error checking for favorite entry ${JSON.stringify(
                   err
                 )}`,
                 LogType.ERROR
