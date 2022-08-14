@@ -1,0 +1,31 @@
+{
+  "name": "aye-player",
+  "version": "0.8.1",
+  "description": "A new Youtube Music Player to deliver you the best experience possible.",
+  "private": true,
+  "license": "UNLICENSED",
+  "author": {
+    "name": "Dominic Claßen",
+    "email": "dominic@aye-player.de",
+    "url": "https://majesnix.dev"
+  },
+  "contributors": [
+    {
+      "name": "Erek Röös",
+      "email": "erek@aye-player.de",
+      "url": "https://github.com/caringdeveloper"
+    }
+  ],
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "yarn electron-rebuild && yarn link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {
+    "dbus-next": "^0.10.2",
+    "discord-rpc": "^4.0.1",
+    "mpris-service": "^2.1.2",
+    "v8-compile-cache": "^2.3.0"
+  }
+}

@@ -1,66 +1,237 @@
 {
   "name": "aye-player",
   "productName": "AYE Player",
-  "version": "0.7.14",
+  "version": "0.8.1",
   "description": "A new Youtube Music Player to deliver you the best experience possible.",
   "private": true,
+  "keywords": [
+    "electron",
+    "react",
+    "typescript",
+    "ts",
+    "sass",
+    "webpack",
+    "hot",
+    "reload"
+  ],
+  "license": "UNLICENSED",
+  "author": {
+    "name": "Dominic Claßen",
+    "email": "dominic@aye-player.de",
+    "url": "https://majesnix.dev"
+  },
+  "contributors": [
+    {
+      "name": "Erek Röös",
+      "email": "erek@aye-player.de",
+      "url": "https://github.com/caringdeveloper"
+    }
+  ],
+  "main": "./src/main/main.ts",
   "scripts": {
-    "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
-    "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --color",
-    "build-e2e": "cross-env E2E_BUILD=true yarn build",
-    "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --color",
-    "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --color",
-    "dev": "cross-env node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
-    "lint": "cross-env NODE_ENV=development eslint --cache --format=pretty .",
-    "lint-fix": "yarn --silent lint --fix; exit 0",
-    "ncu": "ncu -x webpack-merge,mobx-keystone -u",
-    "graphql:codegen": "graphql-codegen",
-    "package": "yarn build && rimraf release && electron-builder build --publish never",
-    "package-all": "yarn build && electron-builder build -mwl",
-    "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
-    "package-linux": "yarn build && electron-builder build --linux",
-    "package-win": "yarn build && electron-builder build --win --x64",
-    "postinstall": "electron-builder install-app-deps && yarn build-dll",
-    "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc}'",
-    "precommit": "lint-staged",
-    "prestart": "yarn build",
-    "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
-    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./app/main.dev.babel.js",
-    "start-renderer-dev": "cross-env NODE_ENV=development webpack serve --config configs/webpack.config.renderer.dev.babel.js"
+    "build": "concurrently \"yarn run build:main\" \"yarn run build:renderer\"",
+    "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
+    "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
+    "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
+    "package": "ts-node ./.erb/scripts/clean.js dist && yarn run build && electron-builder build --publish never",
+    "prepare": "husky install",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
+    "start": "ts-node ./.erb/scripts/check-port-in-use.js && yarn run start:renderer",
+    "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
+    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
+    "test": "jest --transformIgnorePatterns \"node_modules/(?!ky)/\""
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "cross-env NODE_ENV=development eslint --cache --format=pretty",
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
+    "*.{js,jsx,ts,tsx}": [
+      "cross-env NODE_ENV=development eslint --cache"
     ],
-    "{*.json,.{babelrc,eslintrc,prettierrc}}": [
-      "prettier --ignore-path .eslintignore --parser json --write",
-      "git add"
+    "*.json,.{eslintrc,prettierrc}": [
+      "prettier --ignore-path .eslintignore --parser json --write"
     ],
     "*.{css,scss}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
+      "prettier --ignore-path .eslintignore --single-quote --write"
     ],
-    "*.{yml,md}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
+    "*.{html,md,yml}": [
+      "prettier --ignore-path .eslintignore --single-quote --write"
     ]
   },
-  "main": "./app/main.prod.js",
+  "browserslist": [],
+  "prettier": {
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": [
+          ".prettierrc",
+          ".eslintrc"
+        ],
+        "options": {
+          "parser": "json"
+        }
+      }
+    ]
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "release/app/node_modules"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "./.erb/scripts/check-build-exists.ts"
+    ],
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
+    "testPathIgnorePatterns": [
+      "release/app/dist"
+    ],
+    "transform": {
+      "\\.(ts|tsx|js|jsx)$": "ts-jest"
+    }
+  },
+  "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@fortawesome/fontawesome-free": "^6.1.2",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@mui/material": "^5.9.2",
+    "custom-electron-titlebar": "^4.1.0",
+    "electron-debug": "^3.2.0",
+    "electron-log": "^4.4.8",
+    "electron-store": "^6.0.1",
+    "electron-unhandled": "^4.0.1",
+    "electron-updater": "^5.0.3",
+    "graphql": "^16.5.0",
+    "i18next": "^21.8.14",
+    "i18next-node-fs-backend": "^2.1.3",
+    "ky": "^0.31.1",
+    "mobx": "^6.6.1",
+    "mobx-keystone": "^0.69.5",
+    "mobx-react-lite": "^3.4.0",
+    "nanoid": "^4.0.0",
+    "notistack": "^2.0.5",
+    "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^11.18.3",
+    "react-router-dom": "^6.3.0",
+    "react-switch": "^7.0.0",
+    "react-window": "^1.8.7",
+    "styled-components": "^5.3.5",
+    "ytsr": "^3.8.0"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.6",
+    "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@types/i18next-node-fs-backend": "^2.1.1",
+    "@types/jest": "^27.5.1",
+    "@types/node": "17.0.33",
+    "@types/react": "^18.0.9",
+    "@types/react-beautiful-dnd": "^13.1.2",
+    "@types/react-dom": "^18.0.4",
+    "@types/react-test-renderer": "^18.0.0",
+    "@types/styled-components": "^5.1.25",
+    "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/webpack-bundle-analyzer": "^4.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "browserslist-config-erb": "^0.0.3",
+    "chalk": "^4.1.2",
+    "concurrently": "^7.1.0",
+    "core-js": "^3.22.5",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^3.4.1",
+    "detect-port": "^1.3.0",
+    "electron": "^18.2.3",
+    "electron-builder": "^23.0.3",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-notarize": "^1.2.1",
+    "electron-rebuild": "^3.2.7",
+    "electronmon": "^2.0.2",
+    "eslint": "^8.15.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-erb": "^4.0.3",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-import-resolver-webpack": "^0.13.2",
+    "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^26.2.2",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
+    "lint-staged": "^12.4.1",
+    "mini-css-extract-plugin": "^2.6.0",
+    "prettier": "^2.6.2",
+    "react-refresh": "^0.13.0",
+    "react-test-renderer": "^18.1.0",
+    "rimraf": "^3.0.2",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.3.1",
+    "ts-jest": "^28.0.2",
+    "ts-loader": "^9.3.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.72.1",
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0",
+    "webpack-merge": "^5.8.0"
+  },
   "build": {
     "productName": "aye-player",
     "appId": "aye-player",
+    "asar": true,
+    "asarUnpack": "**\\*.{node,dll}",
     "files": [
-      "app/dist/",
-      "app/images/",
-      "app/locales/",
-      "app/app.html",
-      "app/loading.html",
-      "app/main.prod.js",
-      "app/main.prod.js.map",
+      "dist",
+      "node_modules",
       "package.json"
     ],
+    "afterSign": ".erb/scripts/notarize.js",
+    "mac": {
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      },
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "gatekeeperAssess": false
+    },
     "dmg": {
       "contents": [
         {
@@ -77,193 +248,37 @@
     },
     "win": {
       "target": [
-        "msi"
+        "nsis"
       ]
-    },
-    "nsis": {
-      "perMachine": true
     },
     "linux": {
       "target": [
         "deb",
         "AppImage"
       ],
-      "category": "Development"
+      "category": "Music"
     },
     "directories": {
-      "buildResources": "resources",
-      "output": "release"
+      "app": "release/app",
+      "buildResources": "assets",
+      "output": "release/build"
     },
-    "protocols": [
-      {
-        "name": "aye-player-deeplinking",
-        "role": "Viewer",
-        "schemes": [
-          "aye-player"
-        ]
-      }
+    "extraResources": [
+      "./assets/**"
     ]
   },
-  "author": {
-    "name": "Dominic Claßen",
-    "email": "dominic@aye-player.de",
-    "url": "https://majesnix.dev"
-  },
-  "contributors": [
-    {
-      "name": "Erek Röös",
-      "email": "erek@aye-player.de",
-      "url": "https://github.com/caringdeveloper"
-    }
-  ],
-  "license": "UNLICENSED",
-  "keywords": [
-    "electron",
-    "musicplayer",
-    "youtube",
-    "react",
-    "mobx",
-    "typescript",
-    "webpack",
-    "hot",
-    "reload"
-  ],
-  "homepage": "https://aye-player.de",
-  "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-proposal-decorators": "^7.12.1",
-    "@babel/plugin-proposal-do-expressions": "^7.12.1",
-    "@babel/plugin-proposal-export-default-from": "^7.12.1",
-    "@babel/plugin-proposal-export-namespace-from": "^7.12.1",
-    "@babel/plugin-proposal-function-bind": "^7.12.1",
-    "@babel/plugin-proposal-function-sent": "^7.12.1",
-    "@babel/plugin-proposal-json-strings": "^7.12.1",
-    "@babel/plugin-proposal-logical-assignment-operators": "^7.12.1",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1",
-    "@babel/plugin-proposal-numeric-separator": "^7.12.7",
-    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
-    "@babel/plugin-proposal-pipeline-operator": "^7.12.1",
-    "@babel/plugin-proposal-throw-expressions": "^7.12.1",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "@babel/plugin-transform-react-constant-elements": "^7.12.1",
-    "@babel/plugin-transform-react-inline-elements": "^7.12.1",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/preset-typescript": "^7.12.7",
-    "@babel/register": "^7.12.10",
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@graphql-codegen/add": "^2.0.2",
-    "@graphql-codegen/cli": "^1.19.4",
-    "@graphql-codegen/typescript": "^1.19.0",
-    "@types/i18next-node-fs-backend": "^2.1.0",
-    "@types/react": "^17.0.0",
-    "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-router-dom": "^5.1.6",
-    "@types/react-window": "^1.8.2",
-    "@types/styled-components": "^5.1.6",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.2",
-    "babel-plugin-dev-expression": "^0.2.2",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "chalk": "^4.1.0",
-    "concurrently": "^5.3.0",
-    "cross-env": "^7.0.3",
-    "cross-spawn": "^7.0.3",
-    "css-loader": "^5.0.1",
-    "debug": "^4.3.1",
-    "detect-port": "^1.3.0",
-    "electron": "^11.4.4",
-    "electron-builder": "^22.9.1",
-    "electron-devtools-installer": "^3.1.1",
-    "eslint": "^7.15.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-formatter-pretty": "^4.0.0",
-    "eslint-import-resolver-webpack": "^0.13.0",
-    "eslint-plugin-compat": "^3.9.0",
-    "eslint-plugin-flowtype": "^5.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "fbjs-scripts": "^3.0.0",
-    "file-loader": "^6.2.0",
-    "husky": "^4.3.6",
-    "identity-obj-proxy": "^3.0.0",
-    "lint-staged": "^10.5.3",
-    "mini-css-extract-plugin": "^1.3.3",
-    "prettier": "^2.2.1",
-    "react-test-renderer": "^17.0.1",
-    "rimraf": "^3.0.2",
-    "style-loader": "^2.0.0",
-    "terser-webpack-plugin": "^5.0.3",
-    "ts-loader": "^8.0.12",
-    "typescript": "4.1.3",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.11.0",
-    "webpack-bundle-analyzer": "^4.3.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.2.2"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/react-fontawesome": "^0.1.13",
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
-    "apollo-cache-inmemory": "^1.6.6",
-    "apollo-client": "^2.6.10",
-    "apollo-link": "^1.2.14",
-    "apollo-link-http": "^1.5.17",
-    "core-js": "^3.8.1",
-    "css-minimizer-webpack-plugin": "^2.0.0",
-    "dbus-next": "^0.9.1",
-    "discord-rpc": "^3.2.0",
-    "electron-debug": "^3.1.0",
-    "electron-log": "^4.3.1",
-    "electron-store": "^6.0.1",
-    "electron-unhandled": "^3.0.2",
-    "electron-updater": "^4.3.5",
-    "graphql": "^15.4.0",
-    "graphql-tag": "^2.11.0",
-    "history": "^5.0.0",
-    "i18next": "^19.8.4",
-    "i18next-node-fs-backend": "^2.1.3",
-    "ky": "^0.25.1",
-    "mobx": "^6.0.4",
-    "mobx-keystone": "^0.48.3",
-    "mobx-react-lite": "^3.1.6",
-    "mpris-service": "^2.1.0",
-    "notistack": "^1.0.2",
-    "pj-custom-electron-titlebar": "^3.2.0",
-    "react": "^17.0.1",
-    "react-beautiful-dnd": "^13.0.0",
-    "react-dom": "^17.0.1",
-    "react-hot-loader": "^4.13.0",
-    "react-i18next": "^11.8.4",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-switch": "^6.0.0",
-    "react-window": "^1.8.6",
-    "register-scheme": "github:devsnek/node-register-scheme",
-    "source-map-support": "^0.5.19",
-    "styled-components": "^5.2.3",
-    "v8-compile-cache": "^2.2.0",
-    "ytsr": "3.5.3"
-  },
   "devEngines": {
-    "node": ">=7.x",
-    "npm": ">=4.x"
+    "node": ">=14.x",
+    "npm": ">=7.x"
+  },
+  "electronmon": {
+    "patterns": [
+      "!**/**",
+      "src/main/*"
+    ],
+    "logLevel": "quiet"
   },
   "resolutions": {
-    "@babel/runtime": "^7.12.5"
-  },
-  "browserslist": "electron 1.6"
+    "open": "7.4.2"
+  }
 }

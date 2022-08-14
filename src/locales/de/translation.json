@@ -1,0 +1,186 @@
+{
+  "menu": {
+    "View": "&Anzeigen",
+    "Reload": "&Neu Laden",
+    "ToggleDeveloperTools": "Developer Tools Anzeigen",
+    "Help": "Hilfe",
+    "LearnMore": "Mehr Erfahren",
+    "Documentation": "Dokumentation",
+    "CommunityDiscussions": "Community Diskussion",
+    "SearchIssues": "Probleme durchsuchen"
+  },
+  "macMenu": {
+    "AboutAYEPlayer": "Über AYE-Player",
+    "HideAYEPlayer": "Verstecke AYE-Player",
+    "HideOthers": "Verstecke andere",
+    "ShowAll": "Alle Anzeigen",
+    "Undo": "Rückgängig",
+    "Redo": "Wiederholen",
+    "Cut": "Ausschneiden",
+    "Copy": "Kopieren",
+    "Edit": "Editieren",
+    "Paste": "Einfügen",
+    "SelectAll": "Alles selektieren",
+    "View": "Anzeigen",
+    "Reload": "Neu Laden",
+    "ToggleFullScreen": "Fullscreen",
+    "ToggleDeveloperTools": "Entwickler Tools",
+    "Window": "Fenster",
+    "Minimize": "Minimieren",
+    "Close": "Schließen",
+    "BringAllToFront": "Alle Fenster In Vordergrund Bringen",
+    "Quit": "Beende AYE-Player"
+  },
+  "General": {
+    "error": "Etwas ist schief gelaufen, versuche es später nocheinmal."
+  },
+  "Error": {
+    "couldNotAddTrack": "Track konnte nicht hinzugefügt werden, versuche es später nocheinmal",
+    "couldNotMoveTrack": "Track konnte nicht verschoben werden, versuche es später nocheinmal",
+    "couldNotDeleteTrack": "Track konnte nicht gelöscht werden, versuche es später nocheinmal",
+    "getPlaylists": "Fehler beim laden der Playlist(s), versuche es später nocheinmal"
+  },
+  "SearchPage": {
+    "title": "Suchen",
+    "placeholder": "$t(SearchPage.title)"
+  },
+  "SearchEntity": {
+    "trackExists": "Track ist schon vorhanden",
+    "trackAdded": "Track wurde hinzugefügt",
+    "selectPlaylist": "Playlist auswählen",
+    "createListText": "Erstelle Playlist"
+  },
+  "Navigation": {
+    "search": "Suchen",
+    "playlists": "Playlists"
+  },
+  "RegisterPage": {
+    "minLengthPassword": "min. 8 Zeichen",
+    "matchPassword": "Passwörter stimmen nicht überein",
+    "username": "Benutzername",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "repeatPassword": "Passwort wiederholen",
+    "registerButton": "Registrieren",
+    "success": "Wir haben dir eine E-Mail geschickt, um deine Registrierung abzuschließen"
+  },
+  "PlaylistPage": {
+    "name": "Name",
+    "tracks": "Lieder",
+    "length": "Länge",
+    "noPlaylist": "Du hast keine Playlist. Erstelle nun deine erste",
+    "notAuthenticated": "Um eine Playlist zu erstellen, erstelle zuerst einen Account, oder logge dich ein.",
+    "createAccount": "Erstelle Account",
+    "login": "Einloggen",
+    "dialog": {
+      "title": "Erstelle Playlist",
+      "label": "Name der Playlist",
+      "text": "Gib deiner neuen Playlist einen Namen",
+      "confirmButton": "Erstellen",
+      "cancelButton": "Abbrechen",
+      "textField": {
+        "dialogText": "Füge deine Playlist direkt ein paar Songs hinzu",
+        "label": "Songs"
+      }
+    },
+    "addTracks": {
+      "title": "Füge deiner Playlist Songs hinzu",
+      "label": "Songs",
+      "text": "Gib hier die Urls an - mit einem Komma getrennt - welche zur playlist hinzugefügt werden sollen",
+      "confirmButton": "Songs hinzufügen",
+      "cancelButton": "Abbrechen"
+    }
+  },
+  "PasswordForgotPage": {
+    "header": "Passwort vergessen",
+    "text": "Bitte gebe uns deine E-Mail addresse, damit wir dir einen Reset-Link schicken können.",
+    "success": "Wir haben dir eine E-Mail gesendet, mit der du dein Passwort resetten kannst",
+    "textfield": {
+      "label": "E-Mail"
+    },
+    "resetButton": {
+      "name": "Zurücksetzen"
+    }
+  },
+  "AppSettingsPage": {
+    "header": "Profile",
+    "discord": "Discord Presence anzeigen",
+    "tray": "Minimieren",
+    "language": "Sprache",
+    "infoText": "* App wird neugestartet",
+    "devMode": "Entwicklermodus",
+    "autoRadio": "Autoradio",
+    "showNotifications": "Systembenachrichtigungen anzeigen",
+    "connectTo": "Verknüpfen mit:",
+    "devTools": "Entwickler tools:",
+    "ListenMoeLoginError": "ListenMoe login fehlgeschlagen"
+  },
+  "LoginPage": {
+    "header": "Einloggen",
+    "username": "E-Mail",
+    "password": "Passwort",
+    "loginButton": "Login",
+    "registerLink": "Noch keinen account?",
+    "forgotPasswordLink": "Passwort vergessen?",
+    "error": {
+      "invalidCredentials": "Benutzername/Passwort inkorrekt"
+    }
+  },
+  "AccountPage": {
+    "header": "Account Einstellungen",
+    "updateSuccessMessage": "Aktualisierung erfolreich",
+    "username": "Benutzername",
+    "email": "E-Mail",
+    "updateButton": "Aktualisieren",
+    "deleteButton": "Löschen",
+    "password": "Passwort",
+    "repeatPassword": "Passwort wiederholen",
+    "changeAvatarButton": "Ändern",
+    "avatarToBig": "Dein Avatar ist zu groß. (max size 2MB)",
+    "deleteDialog": {
+      "confirmButton": "Löschen bestätigen",
+      "title": "Account Löschung",
+      "text": "Möchtest du deinen Account wirklich löschen? Dies kann nicht rückgängig gemacht werden."
+    },
+    "deleteSuccess": "Dein Account wurde gelöscht."
+  },
+  "AccountDisplay": {
+    "loginButton": "Einloggen",
+    "Menu": {
+      "profile": "Profil",
+      "settings": "Einstellungen",
+      "logout": "Ausloggen"
+    }
+  },
+  "Queue": {
+    "noTracks": "Warteschlange is leer"
+  },
+  "Playlist": {
+    "noList": "Keine aktive Playlist",
+    "subscribed": "Erfolgreich subscribed",
+    "deleted": "Playlist gelöscht",
+    "couldNotDelete": "Fehler beim löschen der Playlist, versuche es später nocheinmal"
+  },
+  "EntityMenu": {
+    "playNext": "Als nächstes Spielen",
+    "addToQueue": "Zur Warteschlange hinzufügen",
+    "addToPlaylist": "Zu Playlist hinzufügen",
+    "remove": "Entfernen",
+    "copyURL": "Url kopieren",
+    "loadPlaylist": "Lade Playlist",
+    "deletePlaylist": "Lösche Playlist",
+    "addPlaylistToQueue": "Lade Playlist in Queue",
+    "addTracksToPlaylist": "Tracks hinzufügen",
+    "sharePlaylist": "Teile Playlist",
+    "startRadioMode": "Song Radio starten",
+    "replaceTrack": "Song mit neuem ersetzen"
+  },
+  "Tray": {
+    "play_pause": "Abspielen/Pausieren",
+    "skip": "Überspringen",
+    "previous": "Vorheriges",
+    "show": "Anzeigen",
+    "quit": "Beenden"
+  },
+  "createdAndAdded": "Playlist erstellt und Track hinzugefügt"
+}
