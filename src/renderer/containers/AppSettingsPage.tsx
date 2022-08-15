@@ -34,13 +34,19 @@ const Container = styled.div``;
 
 const SettingsContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-items: center;
   padding: 40px;
+  gap: 64px;
 `;
 
 const InfoText = styled.div`
   font-size: 12px;
+`;
+
+const SettingsColumn = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const AccountPage: React.FunctionComponent = () => {
@@ -202,82 +208,85 @@ const AccountPage: React.FunctionComponent = () => {
       <Container>
         <Header>{t('AppSettingsPage.header')}</Header>
         <SettingsContainer>
-          <CustomSwitch
-            label={t('AppSettingsPage.discord')}
-            onChange={switchRPCStatus}
-            checked={app.rpcEnabled}
-          />
-          <Divider size={2} />
-          <CustomSwitch
-            label={t('AppSettingsPage.tray')}
-            onChange={switchMinToTray}
-            checked={app.minimizeToTray}
-          />
-          <Divider size={2} />
-          <CustomSwitch
-            label={t('AppSettingsPage.autoRadio')}
-            onChange={switchAutoRadio}
-            checked={app.autoRadio}
-          />
-          <Divider size={2} />
-          <CustomSwitch
-            label={t('AppSettingsPage.showNotifications')}
-            onChange={switchShowNotifications}
-            checked={app.showNotifications}
-          />
-          <Divider size={2} />
-          <CustomDropDown
-            name={t('AppSettingsPage.language')}
-            id="language-select"
-            options={[
-              { value: 'en', text: 'English' },
-              { value: 'de', text: 'Deutsch' },
-            ]}
-            selected={language}
-            handleChange={handleChange}
-          />
-          <Divider size={4} />
-          {t('AppSettingsPage.connectTo')}
-          <Divider size={2} />
-          <img
-            src={SpotifyLogo}
-            width={150}
-            style={{ cursor: 'pointer' }}
-            onClick={createSpotifyAuth}
-          />
-          <Divider size={2} />
-          <img
-            src={ListenMoeLogo}
-            width={150}
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              setListenMoeOpen(true);
-            }}
-          />
-          <Divider size={4} />
-          Developer Tools:
-          {user.roles.find((role: string) => role === 'admin') && (
-            <>
-              <Divider size={2} />
-              <CustomSwitch
-                label={t('AppSettingsPage.devMode')}
-                onChange={activateDevMode}
-                checked={app.devMode}
-              />
-              <Divider size={2} />
-              <CustomButton
-                key="deselectTrack"
-                onClick={deselectTrack}
-                name="Deselect Track"
-              />
-              <Divider size={2} />
-              <CustomButton
-                key="deselectPlaylist"
-                onClick={deselectPlaylist}
-                name="Deselect Playlist"
-              />
-            </>
-          )}
+          <SettingsColumn>
+            <CustomSwitch
+              label={t('AppSettingsPage.discord')}
+              onChange={switchRPCStatus}
+              checked={app.rpcEnabled}
+            />
+            <Divider size={2} />
+            <CustomSwitch
+              label={t('AppSettingsPage.tray')}
+              onChange={switchMinToTray}
+              checked={app.minimizeToTray}
+            />
+            <Divider size={2} />
+            <CustomSwitch
+              label={t('AppSettingsPage.autoRadio')}
+              onChange={switchAutoRadio}
+              checked={app.autoRadio}
+            />
+            <Divider size={2} />
+            <CustomSwitch
+              label={t('AppSettingsPage.showNotifications')}
+              onChange={switchShowNotifications}
+              checked={app.showNotifications}
+            />
+            <Divider size={2} />
+            <CustomDropDown
+              name={t('AppSettingsPage.language')}
+              id="language-select"
+              options={[
+                { value: 'en', text: 'English' },
+                { value: 'de', text: 'Deutsch' },
+              ]}
+              selected={language}
+              handleChange={handleChange}
+            />
+            <Divider size={4} />
+            {t('AppSettingsPage.connectTo')}
+            <Divider size={2} />
+            <img
+              src={SpotifyLogo}
+              width={150}
+              style={{ cursor: 'pointer' }}
+              onClick={createSpotifyAuth}
+            />
+            <Divider size={2} />
+            <img
+              src={ListenMoeLogo}
+              width={150}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setListenMoeOpen(true);
+              }}
+            />
+          </SettingsColumn>
+          <SettingsColumn>
+            {user.roles.find((role: string) => role === 'admin') && (
+              <>
+                Developer Tools:
+                <Divider size={2} />
+                <CustomSwitch
+                  label={t('AppSettingsPage.devMode')}
+                  onChange={activateDevMode}
+                  checked={app.devMode}
+                />
+                <Divider size={2} />
+                <CustomButton
+                  key="deselectTrack"
+                  onClick={deselectTrack}
+                  name="Deselect Track"
+                />
+                <Divider size={2} />
+                <CustomButton
+                  key="deselectPlaylist"
+                  onClick={deselectPlaylist}
+                  name="Deselect Playlist"
+                />
+              </>
+            )}
+          </SettingsColumn>
         </SettingsContainer>
         <CustomListDialog
           createListItem={() => {}}
