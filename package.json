@@ -280,5 +280,10 @@
   },
   "resolutions": {
     "open": "7.4.2"
+  },
+  "overrides": {
+    "electron-rebuild": {
+      "node-abi": "3.24.0"
+    }
   }
 }
