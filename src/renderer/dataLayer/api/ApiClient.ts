@@ -8,14 +8,15 @@ import { IUserInfoDto } from '../../../types/response';
 import Track from '../models/Track';
 import {
   GRAPHQL,
+  graphQLClientAuth,
   graphQLClientPlaylists,
   graphQLClientSearch,
+  graphQLClientUserIdentity,
 } from './graphQL';
 import {
   AddTracksToPlaylistByUrlInput,
   AddTrackToPlaylistInput,
   CreatePlaylistByVideoUrls,
-  CreatePlaylistData,
   CreatePlaylistInput,
   CreatePlaylistWithSongsInput,
   DeletePlaylistInput,
@@ -23,7 +24,6 @@ import {
   IPlaylistDto,
   ITrackDto,
   MoveTrackToInput,
-  PlaylistData,
   PlaylistsData,
   PlaylistTracks,
   QueryPlaylist,
@@ -34,10 +34,13 @@ import {
   RelatedTracks,
   RemoveTrackFromPlaylistInput,
   SearchTracks,
-  SongInputType,
-  SubscribePlaylistInpt,
-  UnsubscribePlaylistInpt,
+  SongInput,
   ReplaceTrackInput,
+  RegisterAccountInput,
+  CreateTokenInput,
+  Token,
+  UpdatePassword,
+  User,
 } from './graphQLTypes';
 
 /**
@@ -75,12 +78,12 @@ class ApiClient {
    */
   getPlaylists = async (): Promise<IPlaylistDto[]> => {
     const {
-      data: { Playlists },
+      data: { playlists },
     } = await graphQLClientPlaylists.query<PlaylistsData, any>({
       query: GRAPHQL.QUERY.PLAYLISTS,
     });
 
-    return Playlists;
+    return playlists;
   };
 
   /**
@@ -88,25 +91,26 @@ class ApiClient {
    * @param id id of the playlist
    */
   getPlaylist = async (id: string): Promise<IPlaylistDto> => {
-    const {
-      data: { Playlist },
-    } = await graphQLClientPlaylists.query<PlaylistData, QueryPlaylist>({
+    const { data } = await graphQLClientPlaylists.query<
+      IPlaylistDto,
+      QueryPlaylist
+    >({
       query: GRAPHQL.QUERY.PLAYLIST,
       variables: {
         id,
       },
     });
 
-    return Playlist;
+    return data;
   };
 
   /**
    * Creates a new playlist
    * @param name name of the new playlist
    */
-  createPlaylist = async (name: string): Promise<string> => {
+  createPlaylist = async (name: string): Promise<IPlaylistDto> => {
     const { data } = await graphQLClientPlaylists.mutate<
-      CreatePlaylistData,
+      { createPlaylist: IPlaylistDto },
       CreatePlaylistInput
     >({
       mutation: GRAPHQL.MUTATION.CREATE_PLAYLIST,
@@ -115,10 +119,7 @@ class ApiClient {
       },
     });
 
-    if (data) {
-      return data.CreateNewPlaylist.Id;
-    }
-    return '';
+    return data!.createPlaylist;
   };
 
   /**
@@ -128,8 +129,8 @@ class ApiClient {
    */
   createPlaylistWithSongs = async (
     name: string,
-    songs: SongInputType[]
-  ): Promise<string> => {
+    songs: SongInput[]
+  ): Promise<IPlaylistDto> => {
     const { data } = await graphQLClientPlaylists.mutate<
       CreatePlaylistByVideoUrls,
       CreatePlaylistWithSongsInput
@@ -141,10 +142,7 @@ class ApiClient {
       },
     });
 
-    if (data) {
-      return data.CreateNewPlaylistByVideoUrls.Id;
-    }
-    return '';
+    return data!.createPlaylistByVideoUrls;
   };
 
   /**
@@ -172,7 +170,7 @@ class ApiClient {
     skip = 0
   ): Promise<ITrackDto[]> => {
     const {
-      data: { PlaylistSongs },
+      data: { playlistSongs },
     } = await graphQLClientPlaylists.query<
       PlaylistTracks,
       QueryTracksFromPlaylist
@@ -185,7 +183,7 @@ class ApiClient {
       },
     });
 
-    return PlaylistSongs;
+    return playlistSongs;
   };
 
   /**
@@ -210,7 +208,7 @@ class ApiClient {
    * @param id id of the playlist
    * @param songs array of youtube urls to be added to the playlist
    */
-  addTracksToPlaylistByUrls = async (id: string, songs: SongInputType[]) => {
+  addTracksToPlaylistByUrls = async (id: string, songs: SongInput[]) => {
     graphQLClientPlaylists.mutate<void, AddTracksToPlaylistByUrlInput>({
       mutation: GRAPHQL.MUTATION.ADD_TRACKS_TO_PLAYLIST_BY_URLS,
       variables: {
@@ -268,42 +266,17 @@ class ApiClient {
   };
 
   /**
-   * Subscribe to the given Playlist
-   * @param id id of the playlist
-   */
-  subscribePlaylist = async (id: string) => {
-    graphQLClientPlaylists.mutate<void, SubscribePlaylistInpt>({
-      mutation: GRAPHQL.MUTATION.SUBSCRIBE_PLAYLIST,
-      variables: {
-        id,
-      },
-    });
-  };
-
-  /**
-   * Unsubscribe from the given Playlist
-   * @param id id of the playlist
-   */
-  unsubscribePlaylist = async (id: string) => {
-    graphQLClientPlaylists.mutate<void, UnsubscribePlaylistInpt>({
-      mutation: GRAPHQL.MUTATION.UNSUBSCRIBE_PLAYLIST,
-      variables: {
-        id,
-      },
-    });
-  };
-
-  /**
    * Registers a new User
    * @param email email of the user
    * @param password password of the user
    */
   register = async (username: string, email: string, password: string) => {
-    this.ky.post('userIdentity/', {
-      json: {
-        Email: email,
-        Password: password,
-        Username: username,
+    return graphQLClientUserIdentity.mutate<void, RegisterAccountInput>({
+      mutation: GRAPHQL.MUTATION.REGISTER_ACCOUNT,
+      variables: {
+        username,
+        email,
+        password,
       },
     });
   };
@@ -314,14 +287,15 @@ class ApiClient {
    * @param password password of the user
    */
   authenticate = async (email: string, password: string): Promise<string> => {
-    return this.ky
-      .post('auth/', {
-        json: {
-          Email: email,
-          Password: password,
-        },
-      })
-      .json();
+    const { data } = await graphQLClientAuth.mutate<Token, CreateTokenInput>({
+      mutation: GRAPHQL.MUTATION.CREATE_TOKEN,
+      variables: {
+        email,
+        password,
+      },
+    });
+
+    return data!.createToken;
   };
 
   /**
@@ -340,22 +314,26 @@ class ApiClient {
    * Retrieve the userdata of the logged in user
    */
   getUserdata = async (): Promise<IUserInfoDto> => {
-    return this.ky.get('userIdentity/').json();
+    const {
+      data: { getSelf },
+    } = await graphQLClientUserIdentity.query<{ getSelf: User }>({
+      query: GRAPHQL.QUERY.GET_SELF,
+    });
+
+    return getSelf;
   };
 
   /**
    * Update the password of the logged in user
    * @param password new password
    */
-  updatePassword = async (password: string) => {
-    this.ky.patch('userIdentity/', {
-      json: [
-        {
-          op: 'replace',
-          path: '/Password',
-          value: password,
-        },
-      ],
+  updatePassword = async (oldPassword: string, newPassword: string) => {
+    await graphQLClientUserIdentity.mutate<void, UpdatePassword>({
+      mutation: GRAPHQL.MUTATION.UPDATE_PASSWORD,
+      variables: {
+        newPassword,
+        oldPassword,
+      },
     });
   };
 
@@ -363,35 +341,21 @@ class ApiClient {
    * Updates (uploads) the avatar of the logged in user
    * @param data FormData containing the new avatar
    */
-  updateAvatar = async (data: FormData): Promise<string> => {
+  updateAvatar = async (data: FormData): Promise<{ avatar: string }> => {
     return this.ky
-      .post('userIdentity/avatar', {
+      .post('useridentity/avatar', {
         body: data,
       })
       .json();
   };
 
   /**
-   * Updates the userprofile with the new avatar
-   * @param url url of avatar
-   */
-  updateAvatarUrl = async (url: string) => {
-    this.ky.patch('userIdentity/', {
-      json: [
-        {
-          op: 'replace',
-          path: '/Avatar',
-          value: url,
-        },
-      ],
-    });
-  };
-
-  /**
    * Deletes the logged in user
    */
   deleteUser = async () => {
-    return this.ky.delete('userIdentity/');
+    graphQLClientUserIdentity.mutate<void>({
+      mutation: GRAPHQL.MUTATION.DELETE_SELF,
+    });
   };
 
   /**
@@ -400,7 +364,7 @@ class ApiClient {
    */
   searchTrack = async (term: string): Promise<ITrackDto[]> => {
     const {
-      data: { Songs },
+      data: { songs },
     } = await graphQLClientSearch.query<SearchTracks, QuerySearchTrack>({
       query: GRAPHQL.QUERY.SEARCH_TRACK,
       variables: {
@@ -408,7 +372,7 @@ class ApiClient {
       },
     });
 
-    return Songs;
+    return songs;
   };
 
   /**
@@ -417,7 +381,7 @@ class ApiClient {
    */
   getTrackFromUrl = async (url: string): Promise<ITrackDto> => {
     const {
-      data: { Song },
+      data: { song },
     } = await graphQLClientSearch.query<GetTrackFromUrl, QueryTrackFromUrl>({
       query: GRAPHQL.QUERY.TRACK_FROM_URL,
       variables: {
@@ -425,7 +389,7 @@ class ApiClient {
       },
     });
 
-    return Song;
+    return song;
   };
 
   /**
@@ -434,7 +398,7 @@ class ApiClient {
    */
   getRelatedTracks = async (id: string): Promise<ITrackDto[]> => {
     const {
-      data: { Radio },
+      data: { radio },
     } = await graphQLClientSearch.query<RelatedTracks, QueryRelatedTracks>({
       query: GRAPHQL.QUERY.RELATED_TRACKS,
       variables: {
@@ -442,7 +406,7 @@ class ApiClient {
       },
     });
 
-    return Radio;
+    return radio;
   };
 
   /**

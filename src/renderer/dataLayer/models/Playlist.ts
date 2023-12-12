@@ -22,7 +22,6 @@ class Playlist extends Model({
   tracks: prop<Ref<Track>[]>(),
   duration: prop(0),
   trackCount: prop(0),
-  isReadonly: prop(false),
 }) {
   getTrackById(id: string) {
     if (!this.tracks) return null;
@@ -58,7 +57,7 @@ class Playlist extends Model({
   @modelFlow
   addTracksByUrls = _async(function* (
     this: Playlist,
-    songs: { Url: string }[]
+    songs: { url: string }[]
   ) {
     // Add tracks to the playlist
     yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
@@ -67,19 +66,17 @@ class Playlist extends Model({
     const pl = yield* _await(ApiClient.getPlaylist(this.id));
 
     // Get track information of the playlist
-    const tracks = yield* _await(
-      ApiClient.getTracksFromPlaylist(this.id, pl.SongsCount)
-    );
+    const tracks = yield* _await(ApiClient.getTracksFromPlaylist(this.id));
 
     const { trackCache } = getRoot<RootStore>(this);
     for (const track of tracks) {
-      let tr = trackCache.getTrackById(track.Id);
+      let tr = trackCache.getTrackById(track.id);
 
       if (!tr) {
         tr = new Track({
-          id: track.Id,
-          title: track.Title,
-          duration: track.Duration,
+          id: track.id,
+          title: track.title,
+          duration: track.duration,
           isLivestream: false,
         });
         trackCache.add(tr);
@@ -90,8 +87,8 @@ class Playlist extends Model({
       }
     }
 
-    this.duration = pl.Duration;
-    this.trackCount = pl.SongsCount;
+    this.duration = pl.duration;
+    this.trackCount = pl.songCount;
   });
 
   @modelFlow
@@ -128,14 +125,14 @@ class Playlist extends Model({
     yield* _await(
       ApiClient.replaceSong(
         {
-          Id: oldTrack.current.id,
-          Title: oldTrack.current.title,
-          Duration: oldTrack.current.duration,
+          id: oldTrack.current.id,
+          title: oldTrack.current.title,
+          duration: oldTrack.current.duration,
         },
         {
-          Id: newTrack.id,
-          Title: newTrack.title,
-          Duration: newTrack.duration,
+          id: newTrack.id,
+          title: newTrack.title,
+          duration: newTrack.duration,
         }
       )
     );
@@ -153,15 +150,13 @@ class Playlist extends Model({
   getTracks = _async(function* (this: Playlist) {
     const { trackCache } = getRoot<RootStore>(this);
 
-    const tracks = yield* _await(
-      ApiClient.getTracksFromPlaylist(this.id, this.trackCount)
-    );
+    const tracks = yield* _await(ApiClient.getTracksFromPlaylist(this.id));
 
     for (const track of tracks) {
       const tr = new Track({
-        id: track.Id,
-        duration: track.Duration,
-        title: track.Title,
+        id: track.id,
+        duration: track.duration,
+        title: track.title,
       });
       if (!trackCache.tracks.find((tra) => tra.id === tr.id)) {
         trackCache.add(tr);

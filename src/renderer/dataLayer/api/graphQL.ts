@@ -37,7 +37,47 @@ export const graphQLClientPlaylists = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: 'https://api.aye-playr.de/v1/playlists/gql',
+      uri: 'https://api.aye-playr.de/v1/playlists/graphql',
+      fetch,
+    })
+  ),
+  defaultOptions: {
+    query: {
+      fetchPolicy: 'no-cache',
+    },
+    mutate: {
+      fetchPolicy: 'no-cache',
+    },
+  },
+});
+
+export const graphQLClientUserIdentity = new ApolloClient({
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+  link: concat(
+    authMiddleware,
+    new HttpLink({
+      uri: 'https://api.aye-playr.de/v1/useridentity/graphql',
+      fetch,
+    })
+  ),
+  defaultOptions: {
+    query: {
+      fetchPolicy: 'no-cache',
+    },
+    mutate: {
+      fetchPolicy: 'no-cache',
+    },
+  },
+});
+
+export const graphQLClientAuth = new ApolloClient({
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+  link: concat(
+    authMiddleware,
+    new HttpLink({
+      uri: 'https://api.aye-playr.de/v1/auth/graphql',
       fetch,
     })
   ),
@@ -56,7 +96,7 @@ export const graphQLClientSearch = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: 'https://api.aye-playr.de/v1/search/gql',
+      uri: 'https://api.aye-playr.de/v1/search/graphql',
       fetch,
     })
   ),
@@ -98,64 +138,62 @@ export const GRAPHQL = {
   QUERY: {
     PLAYLISTS: gql`
       query {
-        Playlists {
-          Id
-          Name
-          Duration
-          SongsCount
-          IsReadonly
+        playlists {
+          id
+          name
+          duration
+          songCount
         }
       }
     `,
 
     PLAYLIST: gql`
       query ($id: ID!) {
-        Playlist(PlaylistId: $id) {
-          Id
-          Name
-          Duration
-          SongsCount
-          IsReadonly
+        playlist(input: { playlistId: $id }) {
+          id
+          name
+          duration
+          songCount
         }
       }
     `,
 
     TRACKS_FROM_PLAYLIST: gql`
-      query ($id: ID!, $skip: Float!, $amount: Float!) {
-        PlaylistSongs(PlaylistId: $id, Skip: $skip, Take: $amount) {
-          Title
-          Duration
-          Id: YouTubeId
+      query ($id: ID!, $skip: Int!, $amount: Int!) {
+        playlistSongs(input: { playlistId: $id, skip: $skip, take: $amount }) {
+          title
+          duration
+          id
         }
       }
     `,
 
     SEARCH_TRACK: gql`
       query ($term: String!) {
-        Songs(searchTerm: $term) {
-          Title
-          Duration
-          Id
+        songs(searchTerm: $term) {
+          title
+          duration
+          id
         }
       }
     `,
 
     TRACK_FROM_URL: gql`
       query ($url: String!) {
-        Song(songUrl: $url) {
-          Title
-          Duration
-          Id
+        song(songUrl: $url) {
+          title
+          duration
+          id
         }
       }
     `,
 
     RELATED_TRACKS: gql`
-      query ($id: String!) {
-        Radio(startId: $id) {
-          Title
-          Duration
-          Id
+      query ($id: ID!) {
+        radio(startId: $id) {
+          title
+          duration
+          id
         }
       }
     `,
@@ -172,91 +210,130 @@ export const GRAPHQL = {
         songsWithoutAlbum: checkFavorite(songs: $songsWithoutAlbum)
       }
     `,
+
+    GET_USER: gql`
+      query ($userId: ID!) {
+        getUser(id: $userId) {
+          username
+          email
+          avatar
+          roles {
+            name
+          }
+        }
+      }
+    `,
+
+    GET_SELF: gql`
+      query {
+        getSelf {
+          username
+          email
+          avatar
+          roles {
+            name
+          }
+        }
+      }
+    `,
   },
 
   MUTATION: {
     CREATE_PLAYLIST: gql`
       mutation ($name: String!) {
-        CreateNewPlaylist(createNewPlaylistArgs: { Name: $name }) {
-          Id
+        createPlaylist(input: { name: $name }) {
+          id
+          name
+          duration
+          songCount
+          songs {
+            id
+            title
+            duration
+          }
         }
       }
     `,
 
     CREATE_PLAYLIST_WITH_SONGS: gql`
-      mutation ($name: String!, $songs: [SongInputType!]) {
-        CreateNewPlaylistByVideoUrls(
-          createNewPlaylistArgs: { Name: $name, Songs: $songs }
-        ) {
-          Id
+      mutation ($name: String!, $songs: [SongInput!]) {
+        createPlaylistByVideoUrls(input: { name: $name, songs: $songs }) {
+          id
+          name
+          duration
+          songCount
+          songs {
+            id
+            title
+            duration
+          }
         }
       }
     `,
 
     DELETE_PLAYLIST: gql`
       mutation ($id: ID!) {
-        DeletePlaylist(deletePlaylistArgs: { PlaylistId: $id })
+        deletePlaylist(input: { playlistId: $id }) {
+          success
+        }
       }
     `,
 
     ADD_TRACK_TO_PLAYLIST: gql`
-      mutation (
-        $id: ID!
-        $trackId: String!
-        $title: String!
-        $duration: Float!
-      ) {
-        AddSongToPlaylist(
-          addSongArgs: {
-            PlaylistId: $id
-            Id: $trackId
-            Title: $title
-            Duration: $duration
+      mutation ($id: ID!, $trackId: ID!, $title: String!, $duration: Int!) {
+        addSongToPlaylist(
+          input: {
+            playlistId: $id
+            id: $trackId
+            title: $title
+            duration: $duration
           }
-        )
+        ) {
+          id
+          name
+          duration
+          songCount
+          songs {
+            id
+            title
+            duration
+          }
+        }
       }
     `,
 
     ADD_TRACKS_TO_PLAYLIST_BY_URLS: gql`
-      mutation ($id: ID!, $songs: [SongInputType!]) {
-        AddSongsToPlaylistByUrls(
-          addSongArgs: { PlaylistId: $id, Songs: $songs }
-        )
+      mutation ($id: ID!, $songs: [SongInput!]!) {
+        addSongsToPlaylistByUrls(input: { playlistId: $id, songs: $songs }) {
+          id
+          name
+          duration
+          songCount
+          songs {
+            id
+            title
+            duration
+          }
+        }
       }
     `,
 
     REMOVE_TRACK_FROM_PLAYLIST: gql`
       mutation ($id: ID!, $trackId: ID!) {
-        RemoveSongFromPlaylist(
-          removeSongFromPlaylistArgs: { PlaylistId: $id, SongId: $trackId }
+        removeSongFromPlaylist(
+          removeSongFromPlaylistArgs: { playlistId: $id, songId: $trackId }
         )
       }
     `,
 
     MOVE_TRACK_TO: gql`
-      mutation ($id: ID!, $trackId: String!, $position: String!) {
-        PatchSong(
+      mutation ($id: ID!, $trackId: ID!, $position: String!) {
+        patchSong(
           patchSongArgs: {
             PlaylistId: $id
             YtId: $trackId
             Patch: [{ op: "replace", path: "OrderId", value: $position }]
           }
-        )
-      }
-    `,
-
-    SUBSCRIBE_PLAYLIST: gql`
-      mutation ($id: ID!) {
-        AddReadingUserToPlaylist(
-          addReadingUserToPlaylistArgs: { PlaylistId: $id }
-        )
-      }
-    `,
-
-    UNSUBSCRIBE_PLAYLIST: gql`
-      mutation ($id: ID!) {
-        RemoveReadingUserFromPlaylist(
-          removeReadingUserFromPlaylistArgs: { PlaylistId: $id }
         )
       }
     `,
@@ -304,7 +381,37 @@ export const GRAPHQL = {
 
     REPLACE_TRACK: gql`
       mutation ($oldSong: ResolvedSong!, $newSong: ResolvedSong!) {
-        ReplaceSong(replaceSongArgs: { OldSong: $oldSong, NewSong: $newSong })
+        replaceSong(replaceSongArgs: { oldSong: $oldSong, newSong: $newSong })
+      }
+    `,
+
+    REGISTER_ACCOUNT: gql`
+      mutation ($username: String!, $email: String!, $password: String!) {
+        createUser(
+          input: { username: $username, email: $email, password: $password }
+        ) {
+          username
+        }
+      }
+    `,
+
+    CREATE_TOKEN: gql`
+      mutation createToken($email: String!, $password: String!) {
+        createToken(input: { email: $email, password: $password })
+      }
+    `,
+
+    DELETE_SELF: gql`
+      mutation {
+        deleteSelf
+      }
+    `,
+
+    UPDATE_PASSWORD: gql`
+      mutation updatePassword($oldPassword: String!, $newPassword: String!) {
+        updatePassword(
+          input: { oldPassword: $oldPassword, newPassword: $newPassword }
+        )
       }
     `,
   },

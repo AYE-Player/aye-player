@@ -40,6 +40,8 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = (props) => {
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const file = event.target.files![0];
+
+    console.log('FILE', file);
     const fileSize = file.size / 1024 / 1024;
     if (fileSize > 2) {
       enqueueSnackbar('', {

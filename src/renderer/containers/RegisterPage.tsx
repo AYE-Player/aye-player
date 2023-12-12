@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { ApolloError } from '@apollo/client';
 import { Channel } from '../../types/enums';
 import CustomButton from '../components/Customs/CustomButton';
 import CustomTextField from '../components/Customs/CustomTextField';
@@ -34,6 +35,7 @@ const RegisterPage: React.FunctionComponent = () => {
   const handleOnClick = async () => {
     try {
       await user.register(name, email, password);
+
       enqueueSnackbar('', {
         content: (key) => (
           <SnackMessage
@@ -46,17 +48,34 @@ const RegisterPage: React.FunctionComponent = () => {
       });
       navigate(routes.LOGIN);
     } catch (error) {
-      window.electron.ipcRenderer.sendMessage(Channel.LOG, {
-        message: `Error registering User ${error}`,
+      if (error instanceof ApolloError) {
+        enqueueSnackbar('', {
+          content: (key) => (
+            <SnackMessage
+              id={key}
+              variant="error"
+              message={(error as ApolloError).message}
+            />
+          ),
+          disableWindowBlurListener: true,
+        });
+      } else {
+        window.electron.ipcRenderer.sendMessage(Channel.LOG, {
+          message: `Error registering User ${error}`,
 
-        type: 'error',
-      });
-      enqueueSnackbar('', {
-        content: (key) => (
-          <SnackMessage id={key} variant="error" message={t('General.error')} />
-        ),
-        disableWindowBlurListener: true,
-      });
+          type: 'error',
+        });
+        enqueueSnackbar('', {
+          content: (key) => (
+            <SnackMessage
+              id={key}
+              variant="error"
+              message={t('General.error')}
+            />
+          ),
+          disableWindowBlurListener: true,
+        });
+      }
     }
   };
 
@@ -105,7 +124,13 @@ const RegisterPage: React.FunctionComponent = () => {
   };
 
   const disableButton = () => {
-    if (name === '' || password === '' || email === '' || invalidEmail) {
+    if (
+      name === '' ||
+      password === '' ||
+      email === '' ||
+      invalidEmail ||
+      password !== password2
+    ) {
       return true;
     }
     return false;

@@ -1,6 +1,6 @@
 export type Maybe<T> = T | null;
-export type SongInputType = { Url: string };
-export type ResolvedSong = { Id: string; Title: string; Duration: number };
+export type SongInput = { url: string };
+export type ResolvedSong = { id: string; title: string; duration: number };
 
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
@@ -21,8 +21,8 @@ export interface QueryPlaylist {
 
 export interface QueryTracksFromPlaylist {
   id: Scalars['ID'];
-  skip?: Maybe<Scalars['Float']>;
-  amount: Scalars['Float'];
+  skip?: Maybe<Scalars['Int']>;
+  amount: Scalars['Int'];
 }
 
 export interface QuerySearchTrack {
@@ -43,12 +43,12 @@ export interface CreatePlaylistInput {
 
 export interface CreatePlaylistWithSongsInput {
   name: Scalars['String'];
-  songs: SongInputType[];
+  songs: SongInput[];
 }
 
 export interface AddTracksToPlaylistByUrlInput {
   id: Scalars['ID'];
-  songs: SongInputType[];
+  songs: SongInput[];
 }
 
 export interface DeletePlaylistInput {
@@ -69,14 +69,14 @@ export interface RemoveTrackFromPlaylistInput {
 
 export interface ReplaceTrackInput {
   oldSong: {
-    Id: Scalars['ID'];
-    Title: Scalars['String'];
-    Duration: Scalars['Float'];
+    id: Scalars['ID'];
+    title: Scalars['String'];
+    duration: Scalars['Int'];
   };
   newSong: {
-    Id: Scalars['ID'];
-    Title: Scalars['String'];
-    Duration: Scalars['Float'];
+    id: Scalars['ID'];
+    title: Scalars['String'];
+    duration: Scalars['Int'];
   };
 }
 
@@ -94,56 +94,71 @@ export interface UnsubscribePlaylistInpt {
   id: Scalars['ID'];
 }
 
+export interface RegisterAccountInput {
+  username: Scalars['String'];
+  password: Scalars['String'];
+  email: Scalars['String'];
+}
+
+export interface CreateTokenInput {
+  email: Scalars['String'];
+  password: Scalars['String'];
+}
+
+export interface UpdatePassword {
+  oldPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+}
+
+export interface GetUserDataInput {
+  id: Scalars['String'];
+}
+
 // Return types
 export interface IPlaylistDto {
-  Id: Scalars['String'];
-  Name: Scalars['String'];
-  Duration: Scalars['Int'];
-  Tracks?: ITrackDto[];
-  SongsCount: Scalars['Int'];
-  IsReadonly: Scalars['Boolean'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  duration: Scalars['Int'];
+  songs?: ITrackDto[];
+  songCount: Scalars['Int'];
 }
 
 export interface ITrackDto {
-  Id: Scalars['String'];
-  Title: Scalars['String'];
-  Duration: Scalars['Int'];
-}
-
-export interface PlaylistData {
-  Playlist: IPlaylistDto;
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  duration: Scalars['Int'];
 }
 
 export interface PlaylistsData {
-  Playlists: IPlaylistDto[];
+  playlists: IPlaylistDto[];
 }
 
 export interface CreatePlaylist {
-  Id: Scalars['String'];
+  id: Scalars['String'];
 }
 
-export interface CreatePlaylistData {
-  CreateNewPlaylist: CreatePlaylist;
+export interface CreatePlaylistResponse {
+  playlist: IPlaylistDto;
 }
 
 export interface CreatePlaylistByVideoUrls {
-  CreateNewPlaylistByVideoUrls: CreatePlaylist;
+  createPlaylistByVideoUrls: IPlaylistDto;
 }
 
 export interface PlaylistTracks {
-  PlaylistSongs: ITrackDto[];
+  playlistSongs: ITrackDto[];
 }
 
 export interface SearchTracks {
-  Songs: ITrackDto[];
+  songs: ITrackDto[];
 }
 
 export interface RelatedTracks {
-  Radio: ITrackDto[];
+  radio: ITrackDto[];
 }
 
 export interface GetTrackFromUrl {
-  Song: ITrackDto;
+  song: ITrackDto;
 }
 
 export interface ListenMoeLoginInput {
@@ -167,4 +182,20 @@ export interface ListenMoeCheckFavoriteInput {
 
 export interface ListenMoeCheckFavoriteData {
   checkFavorite: Scalars['Int'][];
+}
+
+export interface Token {
+  createToken: Scalars['String'];
+}
+
+export interface IRole {
+  name: Scalars['String'];
+}
+
+export interface User {
+  id: Scalars['ID'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  avatar: Scalars['String'];
+  roles: IRole[];
 }

@@ -110,11 +110,10 @@ const getPlaylists = async () => {
 
       for (const playlist of playlists) {
         const pl = new Playlist({
-          id: playlist.Id,
-          name: playlist.Name,
-          duration: playlist.Duration,
-          trackCount: playlist.SongsCount,
-          isReadonly: playlist.IsReadonly,
+          id: playlist.id,
+          name: playlist.name,
+          duration: playlist.duration,
+          trackCount: playlist.songCount,
           tracks: [],
         });
 
@@ -183,16 +182,13 @@ class Root extends Component {
                 );
                 if (!playlist) return;
                 // eslint-disable-next-line promise/no-nesting
-                ApiClient.getTracksFromPlaylist(
-                  playlist.id,
-                  playlist.trackCount
-                )
+                ApiClient.getTracksFromPlaylist(playlist.id)
                   .then((tracks) => {
                     for (const track of tracks) {
                       const tr = new Track({
-                        id: track.Id,
-                        duration: track.Duration,
-                        title: track.Title,
+                        id: track.id,
+                        duration: track.duration,
+                        title: track.title,
                       });
                       if (
                         !rootStore.trackCache.tracks.find((t) => t.id === tr.id)

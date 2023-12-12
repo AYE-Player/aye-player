@@ -35,11 +35,10 @@ const LoginPage: React.FunctionComponent = () => {
 
     for (const playlist of data) {
       const pl = new Playlist({
-        id: playlist.Id,
-        name: playlist.Name,
-        duration: playlist.Duration,
-        trackCount: playlist.SongsCount,
-        isReadonly: playlist.IsReadonly,
+        id: playlist.id,
+        name: playlist.name,
+        duration: playlist.duration,
+        trackCount: playlist.songCount,
         tracks: [],
       });
 
@@ -53,9 +52,7 @@ const LoginPage: React.FunctionComponent = () => {
       await getPlaylists();
       navigate(routes.SEARCH);
     } catch (error) {
-      const err = error as HTTPError;
-
-      if (err.response.status === 401) {
+      /* if (err.response.status === 401) {
         enqueueSnackbar('', {
           content: (key) => (
             <SnackMessage
@@ -82,7 +79,7 @@ const LoginPage: React.FunctionComponent = () => {
           ),
           disableWindowBlurListener: true,
         });
-      }
+      } */
     }
   };
 

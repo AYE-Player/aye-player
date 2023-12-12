@@ -5,6 +5,7 @@ import CustomTextField from '../Customs/CustomTextField';
 import Divider from '../Divider';
 
 interface INewPasswordProps {
+  handleOldPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange2: (event: React.ChangeEvent<HTMLInputElement>) => void;
   passwordsMatch: string;
@@ -18,10 +19,22 @@ const Aligner = styled.div`
 
 const NewPassword: React.FunctionComponent<INewPasswordProps> = (props) => {
   const { t } = useTranslation();
-  const { handlePasswordChange, handlePasswordChange2, passwordsMatch } = props;
+  const {
+    handleOldPasswordChange,
+    handlePasswordChange,
+    handlePasswordChange2,
+    passwordsMatch,
+  } = props;
 
   return (
     <Aligner>
+      <CustomTextField
+        type="password"
+        id="oldPassword"
+        label={t('AccountPage.oldPassword')}
+        onChange={handleOldPasswordChange}
+      />
+      <Divider size={2} />
       <CustomTextField
         type="password"
         id="password"

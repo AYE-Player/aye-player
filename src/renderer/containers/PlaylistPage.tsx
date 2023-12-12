@@ -50,11 +50,11 @@ const ScrollContainer = styled.div`
 const PlaylistPage: React.FunctionComponent = () => {
   const [newPlaylistName, setNewPlaylistName] = React.useState('');
   const [newPlaylistSongs, setNewPlaylistSongs] = React.useState<
-    { Url: string }[]
+    { url: string }[]
   >([]);
   const [open, setOpen] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
-  const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
+  const [songsToAdd, setSongsToAdd] = React.useState<{ url: string }[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] = React.useState<
     string | undefined
   >(undefined);
@@ -74,26 +74,25 @@ const PlaylistPage: React.FunctionComponent = () => {
           // eslint-disable-next-line promise/always-return
           for (const playlist of data) {
             const oldPl = playlists.lists.find(
-              (list) => list.id === playlist.Id
+              (list) => list.id === playlist.id
             );
             // eslint-disable-next-line no-continue
-            if (oldPl && playlist.Tracks?.length !== oldPl.trackCount) continue;
+            if (oldPl && playlist.songs?.length !== oldPl.trackCount) continue;
             const pl = new Playlist({
-              id: playlist.Id,
-              name: playlist.Name,
-              trackCount: playlist.SongsCount,
-              duration: playlist.Duration,
-              isReadonly: playlist.IsReadonly,
+              id: playlist.id,
+              name: playlist.name,
+              trackCount: playlist.songCount,
+              duration: playlist.duration,
               tracks: [],
             });
-            if (playlist.Tracks) {
-              for (const track of playlist.Tracks) {
+            if (playlist.songs) {
+              for (const track of playlist.songs) {
                 const tr = new Track({
-                  id: track.Id,
-                  title: track.Title,
-                  duration: track.Duration,
+                  id: track.id,
+                  title: track.title,
+                  duration: track.duration,
                 });
-                if (!trackCache.getTrackById(track.Id)) {
+                if (!trackCache.getTrackById(track.id)) {
                   trackCache.add(tr);
                 }
                 pl.addLoadedTrack(tr);
@@ -178,7 +177,7 @@ const PlaylistPage: React.FunctionComponent = () => {
       removeControlCharacters(event.target.value)
         .split(',')
         .map((url) => ({
-          Url: url,
+          url,
         }))
     );
   };
@@ -188,7 +187,7 @@ const PlaylistPage: React.FunctionComponent = () => {
       removeControlCharacters(event.target.value)
         .split(',')
         .map((url) => ({
-          Url: url,
+          url,
         }))
     );
   };

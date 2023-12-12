@@ -1,14 +1,12 @@
 export interface IRole {
-  Id: string;
-  Name: string;
+  name: string;
 }
 
 export interface IUserInfoDto {
-  Id: string;
-  Avatar: string;
-  Email: string;
-  Username: string;
-  Roles: IRole[];
+  avatar: string;
+  email: string;
+  username: string;
+  roles: IRole[];
 }
 
 interface IListenMoeArtist {

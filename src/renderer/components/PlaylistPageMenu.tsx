@@ -109,7 +109,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
   const handleDeleteClick = async () => {
     try {
       setAnchorEl(null);
-      await playlists.remove(playlist!.id, playlist!.isReadonly);
+      await playlists.remove(playlist!.id);
       enqueueSnackbar('', {
         content: (key) => (
           <SnackMessage
@@ -167,10 +167,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
     }
   };
 
-  const handleSharePlaylist = async () => {
-    navigator.clipboard.writeText(`aye://playlist/${id}`);
-  };
-
   return (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
@@ -192,7 +188,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
               setSelectedPlaylist(id);
               handleAddTracksToList();
             }}
-            disabled={playlist!.isReadonly}
           >
             {t('EntityMenu.addTracksToPlaylist')}
           </MenuItem>
@@ -201,12 +196,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
             disabled={playlist!.trackCount === 0}
           >
             {t('EntityMenu.addPlaylistToQueue')}
-          </MenuItem>
-          <MenuItem
-            onClick={handleSharePlaylist}
-            disabled={playlist!.isReadonly}
-          >
-            {t('EntityMenu.sharePlaylist')}
           </MenuItem>
           <MenuItem onClick={handleDeleteClick}>
             {t('EntityMenu.deletePlaylist')}

@@ -23,11 +23,11 @@ class Playlists extends Model({
 
   @modelFlow
   createList = _async(function* (this: Playlists, name: string) {
-    const id = yield* _await(ApiClient.createPlaylist(name));
+    const playlistDTO = yield* _await(ApiClient.createPlaylist(name));
 
     const playlist = new Playlist({
-      name,
-      id,
+      name: playlistDTO.name,
+      id: playlistDTO.id,
       tracks: [],
     });
 
@@ -40,34 +40,30 @@ class Playlists extends Model({
   createListWithSongs = _async(function* (
     this: Playlists,
     name: string,
-    songs: { Url: string }[]
+    songs: { url: string }[]
   ) {
-    const id = yield* _await(ApiClient.createPlaylistWithSongs(name, songs));
-
-    const pl = yield* _await(ApiClient.getPlaylist(id));
+    const playlistDTO = yield* _await(
+      ApiClient.createPlaylistWithSongs(name, songs)
+    );
 
     const playlist = new Playlist({
       name,
-      id,
-      duration: pl.Duration,
-      trackCount: pl.SongsCount,
+      id: playlistDTO.id,
+      duration: playlistDTO.duration,
+      trackCount: playlistDTO.songCount,
       tracks: [],
     });
 
-    const tracks = yield* _await(
-      ApiClient.getTracksFromPlaylist(id, pl.SongsCount)
-    );
-
-    for (const track of tracks) {
+    for (const { id, title, duration } of playlistDTO.songs!) {
       const tr = new Track({
-        id: track.Id,
-        title: track.Title,
-        duration: track.Duration,
+        id,
+        title,
+        duration,
         isLivestream: false,
       });
 
       const { trackCache } = getRoot<RootStore>(this);
-      if (!trackCache.getTrackById(track.Id)) {
+      if (!trackCache.getTrackById(id)) {
         trackCache.add(tr);
       }
 
@@ -85,12 +81,8 @@ class Playlists extends Model({
   }
 
   @modelFlow
-  remove = _async(function* (this: Playlists, id: string, subscribed: boolean) {
-    if (subscribed) {
-      yield* _await(ApiClient.unsubscribePlaylist(id));
-    } else {
-      yield* _await(ApiClient.deletePlaylist(id));
-    }
+  remove = _async(function* (this: Playlists, id: string) {
+    yield* _await(ApiClient.deletePlaylist(id));
 
     this.lists.splice(
       this.lists.findIndex((playlist) => playlist.id === id),

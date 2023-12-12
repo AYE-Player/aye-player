@@ -11,11 +11,6 @@ import { Channel } from '../../../types/enums';
 import { IUserInfoDto } from '../../../types/response';
 import ApiClient from '../api/ApiClient';
 
-interface IRole {
-  Name: string;
-  Id: string;
-}
-
 @model('User')
 class User extends Model({
   id: prop<string | undefined>(),
@@ -31,12 +26,12 @@ class User extends Model({
 
   @modelAction
   setData(userInfo: IUserInfoDto) {
-    this.id = userInfo.Id;
-    this.email = userInfo.Email;
-    this.name = userInfo.Username;
-    this.avatar = userInfo.Avatar ?? undefined;
+    this.email = userInfo.email;
+    this.name = userInfo.username;
+    this.avatar =
+      `https://cdn.aye-playr.de/public/avatars/${userInfo.avatar}` ?? undefined;
     this.isAuthenticated = true;
-    this.roles = userInfo.Roles.map((role: IRole) => role.Name);
+    this.roles = userInfo.roles.map((role) => role.name);
   }
 
   @modelFlow
@@ -54,13 +49,15 @@ class User extends Model({
 
     const userInfo = yield* _await(ApiClient.getUserdata());
 
+    console.log('userinfo', userInfo);
+
     // Save user information
-    this.id = userInfo.Id;
-    this.email = userInfo.Email;
-    this.name = userInfo.Username;
-    this.avatar = userInfo.Avatar ?? undefined;
+    this.email = userInfo.email;
+    this.name = userInfo.username;
+    this.avatar =
+      `https://cdn.aye-playr.de/public/avatars/${userInfo.avatar}` ?? undefined;
     this.isAuthenticated = true;
-    this.roles = userInfo.Roles.map((role: IRole) => role.Name);
+    this.roles = userInfo.roles.map((role) => role.name);
   });
 
   @modelAction
@@ -83,23 +80,24 @@ class User extends Model({
   });
 
   @modelFlow
-  updatePassword = _async(function* (this: User, password: string) {
-    yield* _await(ApiClient.updatePassword(password));
+  updatePassword = _async(function* (
+    this: User,
+    newPassword: string,
+    oldPassword: string
+  ) {
+    yield* _await(ApiClient.updatePassword(oldPassword, newPassword));
   });
 
   @modelFlow
-  updateAvatar = _async(function* (this: User, avatar: File) {
+  updateAvatar = _async(function* (this: User, newAvatar: File) {
     const data = new FormData();
-    data.append('avatar', avatar);
+    data.append('avatar', newAvatar);
 
     // Upload avatar image and get storage URL
-    const avatarURL = yield* _await(ApiClient.updateAvatar(data));
-
-    // Patch userprofile with new URL
-    yield* _await(ApiClient.updateAvatarUrl(avatarURL));
+    const { avatar } = yield* _await(ApiClient.updateAvatar(data));
 
     // set local URL for direct effect
-    this.avatar = avatarURL;
+    this.avatar = `https://cdn.aye-playr.de/public/avatars/${avatar}`;
   });
 
   @modelFlow
@@ -109,7 +107,7 @@ class User extends Model({
     email: string,
     password: string
   ) {
-    yield* _await(ApiClient.register(name, email, password));
+    return yield* _await(ApiClient.register(name, email, password));
   });
 
   @modelFlow

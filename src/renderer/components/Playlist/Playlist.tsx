@@ -155,9 +155,6 @@ const Playlist: React.FunctionComponent<IProps> = (props) => {
                           active={
                             player.currentTrack?.current.id === track.current.id
                           }
-                          isReadonly={
-                            player.currentPlaylist!.current.isReadonly
-                          }
                         />
                       );
                     }

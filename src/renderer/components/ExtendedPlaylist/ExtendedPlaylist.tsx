@@ -45,7 +45,7 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
 
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [addTracksOpen, setAddTracksOpen] = React.useState(false);
-  const [songsToAdd, setSongsToAdd] = React.useState<{ Url: string }[]>([]);
+  const [songsToAdd, setSongsToAdd] = React.useState<{ url: string }[]>([]);
   PlayerInterop.init();
 
   const { queue, player, playlists, app, trackHistory } = useStore();
@@ -130,7 +130,7 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
       removeControlCharacters(event.target.value)
         .split(',')
         .map((url) => ({
-          Url: url,
+          url,
         }))
     );
   };

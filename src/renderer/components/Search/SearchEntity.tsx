@@ -148,7 +148,7 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
     setOpenCreatePlaylistDialog(false);
     try {
       await playlists.createListWithSongs(newPlaylistName, [
-        { Url: `https://www.youtube.com/watch?v${track.current.id}` },
+        { url: `https://www.youtube.com/watch?v${track.current.id}` },
       ]);
 
       enqueueSnackbar('', {
@@ -222,14 +222,12 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
         onSelect={handleClose}
         createListItem={createListItem}
         listItemText={t('SearchEntity.createListText')}
-        options={playlists.lists
-          .filter((list) => !list.isReadonly)
-          .map((list) => {
-            return {
-              name: list.name,
-              id: list.id,
-            };
-          })}
+        options={playlists.lists.map((list) => {
+          return {
+            name: list.name,
+            id: list.id,
+          };
+        })}
       />
       <CustomFormDialog
         id="createPlaylistDialog"

@@ -100,15 +100,15 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
       let track: Track;
-      if (!trackCache.getTrackById(trk.Id)) {
+      if (!trackCache.getTrackById(trk.id)) {
         track = new Track({
-          id: trk.Id,
-          title: trk.Title,
-          duration: trk.Duration,
+          id: trk.id,
+          title: trk.title,
+          duration: trk.duration,
         });
         trackCache.add(track);
       } else {
-        track = trackCache.getTrackById(trk.Id)!;
+        track = trackCache.getTrackById(trk.id)!;
       }
       tracks.push(track);
     }

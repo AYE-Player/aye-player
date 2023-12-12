@@ -20,7 +20,6 @@ interface IProps {
   track: Ref<Track>;
   index: number;
   active: boolean;
-  isReadonly: boolean;
   onClick: (track: Ref<Track>) => void;
 }
 
@@ -74,7 +73,7 @@ const Duration = styled.div`
 const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const { active, duration, index, isReadonly, onClick, track } = props;
+  const { active, duration, index, onClick, track } = props;
 
   const { playlists } = useStore();
 
@@ -147,7 +146,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
     setOpenCreatePlaylistDialog(false);
     try {
       await playlists.createListWithSongs(newPlaylistName, [
-        { Url: `https://www.youtube.com/watch?v${track.current.id}` },
+        { url: `https://www.youtube.com/watch?v${track.current.id}` },
       ]);
 
       enqueueSnackbar('', {
@@ -219,7 +218,6 @@ const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
             <PlaylistEntityMenu
               trackRef={track}
               openListDialog={handleClickOpen}
-              isReadOnly={isReadonly}
             />
           </Container>
         )}
@@ -232,14 +230,12 @@ const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
         onSelect={handleClose}
         createListItem={createListItem}
         listItemText={t('SearchEntity.createListText')}
-        options={playlists.lists
-          .filter((list) => !list.isReadonly)
-          .map((list) => {
-            return {
-              name: list.name,
-              id: list.id,
-            };
-          })}
+        options={playlists.lists.map((list) => {
+          return {
+            name: list.name,
+            id: list.id,
+          };
+        })}
       />
       <CustomFormDialog
         id="createPlaylistDialog"

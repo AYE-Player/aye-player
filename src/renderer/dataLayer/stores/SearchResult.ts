@@ -28,9 +28,9 @@ class SearchResult extends Model({
 
     for (const track of data) {
       tracks.push({
-        id: track.Id,
-        duration: track.Duration,
-        title: decodeHTMLEntities(track.Title),
+        id: track.id,
+        duration: track.duration,
+        title: decodeHTMLEntities(track.title),
       });
     }
 
@@ -42,9 +42,9 @@ class SearchResult extends Model({
     const data = yield* _await(ApiClient.getTrackFromUrl(url));
 
     return {
-      id: data.Id,
-      title: decodeHTMLEntities(data.Title),
-      duration: data.Duration,
+      id: data.id,
+      title: decodeHTMLEntities(data.title),
+      duration: data.duration,
     };
   });
 

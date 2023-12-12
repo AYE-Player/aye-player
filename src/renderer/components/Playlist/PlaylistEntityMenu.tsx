@@ -21,7 +21,6 @@ import { useStore } from '../StoreProvider';
 interface IPlaylistEntityMenuProps {
   trackRef: Ref<Track>;
   openListDialog: () => void;
-  isReadOnly: boolean;
 }
 
 const Container = styled.div`
@@ -63,7 +62,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { queue, player, trackCache } = useStore();
-  const { isReadOnly, openListDialog, trackRef } = props;
+  const { openListDialog, trackRef } = props;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -133,15 +132,15 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
       let track: Track;
-      if (!trackCache.getTrackById(trk.Id)) {
+      if (!trackCache.getTrackById(trk.id)) {
         track = new Track({
-          id: trk.Id,
-          title: trk.Title,
-          duration: trk.Duration,
+          id: trk.id,
+          title: trk.title,
+          duration: trk.duration,
         });
         trackCache.add(track);
       } else {
-        track = trackCache.getTrackById(trk.Id)!;
+        track = trackCache.getTrackById(trk.id)!;
       }
       tracks.push(track);
     }
@@ -194,7 +193,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
             {t('EntityMenu.playNext')}
           </MenuItem>
           <MenuItem onClick={addToQueue}>{t('EntityMenu.addToQueue')}</MenuItem>
-          <MenuItem onClick={handleRemoveTrack} disabled={isReadOnly}>
+          <MenuItem onClick={handleRemoveTrack}>
             {t('EntityMenu.remove')}
           </MenuItem>
           <MenuItem onClick={openListDialog}>

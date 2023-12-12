@@ -40,6 +40,7 @@ const AvatarInfoText = styled.div`
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const { user, player, playlists } = useStore();
+  const [oldPassword, setOldPassword] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [password2, setPassword2] = React.useState('');
   const [passwordsMatch, setPasswordsMatch] = React.useState(false);
@@ -106,6 +107,12 @@ const AccountPage: React.FunctionComponent = () => {
     deleteUser();
   };
 
+  const handleOldPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setOldPassword(event.target.value);
+  };
+
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
     checkPasswordsMatch(event.target.value, password2);
@@ -121,12 +128,13 @@ const AccountPage: React.FunctionComponent = () => {
   const updateUser = async () => {
     try {
       if (passwordsMatch && avatar) {
-        await user.updatePassword(password);
+        await user.updatePassword(password, oldPassword);
         await user.updateAvatar(avatarFile!);
       } else if (avatar) {
         await user.updateAvatar(avatarFile!);
       } else if (passwordsMatch) {
-        await user.updatePassword(password);
+        await user.updatePassword(password, oldPassword);
+        user.logout();
       }
 
       if (password || password2) {
@@ -181,6 +189,7 @@ const AccountPage: React.FunctionComponent = () => {
         <Divider size={2} />
         <SettingsAligner>
           <NewPassword
+            handleOldPasswordChange={handleOldPasswordChange}
             handlePasswordChange={handlePasswordChange}
             handlePasswordChange2={handlePasswordChange2}
             passwordsMatch={passwordsMatchText}
