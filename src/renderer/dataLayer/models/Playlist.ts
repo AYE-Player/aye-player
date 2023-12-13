@@ -60,10 +60,9 @@ class Playlist extends Model({
     songs: { url: string }[]
   ) {
     // Add tracks to the playlist
-    yield* _await(ApiClient.addTracksToPlaylistByUrls(this.id, songs));
-
-    // get new Playlist information
-    const pl = yield* _await(ApiClient.getPlaylist(this.id));
+    const pl = yield* _await(
+      ApiClient.addTracksToPlaylistByUrls(this.id, songs)
+    );
 
     // Get track information of the playlist
     const tracks = yield* _await(ApiClient.getTracksFromPlaylist(this.id));

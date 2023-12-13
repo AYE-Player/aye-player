@@ -180,7 +180,7 @@ export const GRAPHQL = {
 
     TRACK_FROM_URL: gql`
       query ($url: String!) {
-        song(songUrl: $url) {
+        song(input: { songUrl: $url }) {
           title
           duration
           id

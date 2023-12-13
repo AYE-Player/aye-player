@@ -209,13 +209,18 @@ class ApiClient {
    * @param songs array of youtube urls to be added to the playlist
    */
   addTracksToPlaylistByUrls = async (id: string, songs: SongInput[]) => {
-    graphQLClientPlaylists.mutate<void, AddTracksToPlaylistByUrlInput>({
+    const { data } = await graphQLClientPlaylists.mutate<
+      { addSongsToPlaylistByUrls: IPlaylistDto },
+      AddTracksToPlaylistByUrlInput
+    >({
       mutation: GRAPHQL.MUTATION.ADD_TRACKS_TO_PLAYLIST_BY_URLS,
       variables: {
         id,
         songs,
       },
     });
+
+    return data!.addSongsToPlaylistByUrls;
   };
 
   /**

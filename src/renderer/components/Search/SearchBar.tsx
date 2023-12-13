@@ -36,20 +36,7 @@ const SearchBar: React.FunctionComponent = () => {
 
   const search = async (searchTerm: string) => {
     try {
-      // TODO: Retrieve songs of the subscribed playlist
-      if (searchTerm.includes('aye://playlist/')) {
-        await ApiClient.subscribePlaylist(searchTerm.split('//playlist/')[1]);
-        enqueueSnackbar('', {
-          content: (key) => (
-            <SnackMessage
-              id={key}
-              variant="success"
-              message={t('Playlist.subscribed')}
-            />
-          ),
-          disableWindowBlurListener: true,
-        });
-      } else if (detectLink(searchTerm)) {
+      if (detectLink(searchTerm)) {
         const trackInfo = await searchResult.getTrackFromUrl(searchTerm);
         let track: Track;
         if (trackInfo.duration === 0) {
