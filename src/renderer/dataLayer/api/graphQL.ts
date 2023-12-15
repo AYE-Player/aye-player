@@ -170,7 +170,7 @@ export const GRAPHQL = {
 
     SEARCH_TRACK: gql`
       query ($term: String!) {
-        songs(searchTerm: $term) {
+        songs(input: { searchTerm: $term }) {
           title
           duration
           id
