@@ -10100,10 +10100,10 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-ytsr@^3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/ytsr/-/ytsr-3.8.0.tgz#49a8e5dc413f41515fc3d79d93ee3e073d10e772"
-  integrity sha512-R+RfYXvBBMAr2e4OxrQ5SBv5x/Mdhmcj1Q8TH0f2HK5d2jbhHOtK4BdzPvLriA6MDoMwqqX04GD8Rpf9UNtSTg==
+ytsr@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/ytsr/-/ytsr-3.8.4.tgz#f279eb5a50a72a1135816ea69220f76030f62358"
+  integrity sha512-rrJo59vDDf98mz/Cuw7Y2YiuTwSm3cs4XsXrP6yjYDXYup/aE0lRxY6XMKR3mGOHKwgLouZqFq8QRllVVVN88w==
   dependencies:
     miniget "^4.2.2"
 
