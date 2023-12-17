@@ -148,7 +148,8 @@
     "Menu": {
       "profile": "Profil",
       "settings": "Einstellungen",
-      "logout": "Ausloggen"
+      "logout": "Ausloggen",
+      "admin": "Admin"
     }
   },
   "Queue": {

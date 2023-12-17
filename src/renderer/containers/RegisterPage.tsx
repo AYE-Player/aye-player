@@ -27,6 +27,7 @@ const RegisterPage: React.FunctionComponent = () => {
   const [password, setPassword] = React.useState('');
   const [password2, setPassword2] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [inviteCode, setInviteCode] = React.useState('');
   const [invalidEmail, setInvalidEmail] = React.useState(false);
 
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ const RegisterPage: React.FunctionComponent = () => {
 
   const handleOnClick = async () => {
     try {
-      await user.register(name, email, password);
+      await user.register(name, email, password, inviteCode);
 
       enqueueSnackbar('', {
         content: (key) => (
@@ -113,6 +114,12 @@ const RegisterPage: React.FunctionComponent = () => {
     setInvalidEmail(!validateEmail(event.target.value));
   };
 
+  const handleInviteCodeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInviteCode(event.target.value);
+  };
+
   const passwordsMatch = () => {
     if (password.length < 8) {
       return t('RegisterPage.minLengthPassword');
@@ -187,6 +194,15 @@ const RegisterPage: React.FunctionComponent = () => {
           password2 !== password
         }
         required
+      />
+      <Divider size={2} />
+      <CustomTextField
+        label={t('RegisterPage.inviteCode.label')}
+        id="inviteCode"
+        onChange={handleInviteCodeChange}
+        key="inviteCode"
+        type="text"
+        helperText={t('RegisterPage.initeCode.helperText')}
       />
       <Divider size={3} />
       <CustomButton

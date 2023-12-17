@@ -98,6 +98,7 @@ export interface RegisterAccountInput {
   username: Scalars['String'];
   password: Scalars['String'];
   email: Scalars['String'];
+  inviteCode?: Scalars['String'];
 }
 
 export interface CreateTokenInput {

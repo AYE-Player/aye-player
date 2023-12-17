@@ -8,7 +8,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ISpotifyPlaylist } from 'types/response';
-import CustomButton from 'renderer/components/Customs/CustomButton';
 import { Channel } from '../../types/enums';
 import CustomDropDown from '../components/Customs/CustomDropDown';
 import CustomListDialog from '../components/Customs/CustomListDialog';
@@ -24,7 +23,7 @@ const SpotifyLogo = require('../../images/Spotify_Logo_CMYK_Green.png');
 
 const Header = styled.div`
   font-size: 24px;
-  margin-bottom: 16px;
+  margin-bottom: 6rem;
 `;
 
 const Container = styled.div``;
@@ -32,24 +31,22 @@ const Container = styled.div``;
 const SettingsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-items: center;
-  padding: 40px;
-  gap: 64px;
+  gap: 10rem;
 `;
 
 const InfoText = styled.div`
   font-size: 12px;
 `;
-
 const SettingsColumn = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 `;
 
 const AccountPage: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const { app, user, playlists, trackCache, player } = useStore();
+  const { app, playlists, trackCache, player } = useStore();
 
   const [spotifyListnames, setSpotifyListNames] = React.useState<
     { id: string; name: string }[]
@@ -81,11 +78,6 @@ const AccountPage: React.FunctionComponent = () => {
 
   const switchMinToTray = () => {
     app.toggleMinimizeToTray();
-  };
-
-  const activateDevMode = () => {
-    app.toggleDevMode();
-    window.electron.ipcRenderer.sendMessage(Channel.RELOAD_MAIN_WINDOW);
   };
 
   const [language, setLanguage] = React.useState(app.language);
@@ -156,87 +148,57 @@ const AccountPage: React.FunctionComponent = () => {
     }
   };
 
-  const deselectTrack = () => {
-    player.setCurrentTrack();
-  };
-
-  const deselectPlaylist = () => {
-    player.setCurrentPlaylist();
-  };
-
   return (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container>
         <Header>{t('AppSettingsPage.header')}</Header>
         <SettingsContainer>
-          <CustomSwitch
-            label={t('AppSettingsPage.discord')}
-            onChange={switchRPCStatus}
-            checked={app.rpcEnabled}
-          />
-          <Divider size={2} />
-          <CustomSwitch
-            label={t('AppSettingsPage.tray')}
-            onChange={switchMinToTray}
-            checked={app.minimizeToTray}
-          />
-          <Divider size={2} />
-          <CustomSwitch
-            label={t('AppSettingsPage.autoRadio')}
-            onChange={switchAutoRadio}
-            checked={app.autoRadio}
-          />
-          <Divider size={2} />
-          <CustomSwitch
-            label={t('AppSettingsPage.showNotifications')}
-            onChange={switchShowNotifications}
-            checked={app.showNotifications}
-          />
-          <Divider size={2} />
-          <CustomDropDown
-            name={t('AppSettingsPage.language')}
-            id="language-select"
-            options={[
-              { value: 'en', text: 'English' },
-              { value: 'de', text: 'Deutsch' },
-            ]}
-            selected={language}
-            handleChange={handleChange}
-          />
-          <Divider size={4} />
-          {t('AppSettingsPage.connectTo')}
-          <Divider size={2} />
-          <img
-            src={SpotifyLogo}
-            width={150}
-            style={{ cursor: 'pointer' }}
-            onClick={createSpotifyAuth}
-          />
-          <Divider size={2} />
-          {user.roles.find((role: string) => role === 'Admin') && (
-            <>
-              <Divider size={4} />
-              Developer Tools:
-              <Divider size={2} />
-              <CustomSwitch
-                label={t('AppSettingsPage.devMode')}
-                onChange={activateDevMode}
-                checked={app.devMode}
-              />
-              <Divider size={2} />
-              <CustomButton
-                key="deselectTrack"
-                onClick={deselectTrack}
-                name="Deselect Track"
-              />
-              <Divider size={2} />
-              <CustomButton
-                key="deselectPlaylist"
-                onClick={deselectPlaylist}
-                name="Deselect Playlist"
-              />
-            </>
-          )}
+          <SettingsColumn>
+            <CustomSwitch
+              label={t('AppSettingsPage.discord')}
+              onChange={switchRPCStatus}
+              checked={app.rpcEnabled}
+            />
+            <Divider size={2} />
+            <CustomSwitch
+              label={t('AppSettingsPage.tray')}
+              onChange={switchMinToTray}
+              checked={app.minimizeToTray}
+            />
+            <Divider size={2} />
+            <CustomSwitch
+              label={t('AppSettingsPage.autoRadio')}
+              onChange={switchAutoRadio}
+              checked={app.autoRadio}
+            />
+            <Divider size={2} />
+            <CustomSwitch
+              label={t('AppSettingsPage.showNotifications')}
+              onChange={switchShowNotifications}
+              checked={app.showNotifications}
+            />
+            <Divider size={2} />
+            <CustomDropDown
+              name={t('AppSettingsPage.language')}
+              id="language-select"
+              options={[
+                { value: 'en', text: 'English' },
+                { value: 'de', text: 'Deutsch' },
+              ]}
+              selected={language}
+              handleChange={handleChange}
+            />
+            <Divider size={4} />
+            {t('AppSettingsPage.connectTo')}
+            <Divider size={2} />
+            <img
+              src={SpotifyLogo}
+              width={150}
+              style={{ cursor: 'pointer' }}
+              onClick={createSpotifyAuth}
+            />
+            <Divider size={2} />
+          </SettingsColumn>
         </SettingsContainer>
         <CustomListDialog
           createListItem={() => {}}

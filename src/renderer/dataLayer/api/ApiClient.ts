@@ -275,13 +275,19 @@ class ApiClient {
    * @param email email of the user
    * @param password password of the user
    */
-  register = async (username: string, email: string, password: string) => {
+  register = async (
+    username: string,
+    email: string,
+    password: string,
+    inviteCode?: string
+  ) => {
     return graphQLClientUserIdentity.mutate<void, RegisterAccountInput>({
       mutation: GRAPHQL.MUTATION.REGISTER_ACCOUNT,
       variables: {
         username,
         email,
         password,
+        inviteCode,
       },
     });
   };
@@ -430,6 +436,16 @@ class ApiClient {
         newSong: newTrack,
       },
     });
+  };
+
+  generateInviteCode = async (): Promise<string> => {
+    const { data } = await graphQLClientUserIdentity.mutate<{
+      generateInviteCode: string;
+    }>({
+      mutation: GRAPHQL.MUTATION.GENERATE_INVITE_CODE,
+    });
+
+    return data!.generateInviteCode;
   };
 }
 

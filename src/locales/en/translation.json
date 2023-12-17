@@ -114,6 +114,11 @@
     "connectTo": "Connect to:",
     "devTools": "Developer tools:"
   },
+  "AdminPage": {
+    "header": "Admin Menu",
+    "devMode": "Development Mode",
+    "devTools": "Developer tools:"
+  },
   "LoginPage": {
     "header": "Login",
     "username": "E-Mail",
@@ -147,7 +152,8 @@
     "Menu": {
       "profile": "Profile",
       "settings": "Settings",
-      "logout": "Logout"
+      "logout": "Logout",
+      "admin": "Admin"
     }
   },
   "Queue": {

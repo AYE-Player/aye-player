@@ -25,7 +25,7 @@ export const graphQLClientPlaylists = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: 'https://api.aye-playr.de/v1/playlists/graphql',
+      uri: 'https://api.aye-playr.de/v2/playlists/graphql',
       fetch,
     })
   ),
@@ -45,7 +45,7 @@ export const graphQLClientUserIdentity = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: 'https://api.aye-playr.de/v1/useridentity/graphql',
+      uri: 'https://api.aye-playr.de/v2/useridentity/graphql',
       fetch,
     })
   ),
@@ -65,7 +65,7 @@ export const graphQLClientAuth = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: 'https://api.aye-playr.de/v1/auth/graphql',
+      uri: 'https://api.aye-playr.de/v2/auth/graphql',
       fetch,
     })
   ),
@@ -84,7 +84,7 @@ export const graphQLClientSearch = new ApolloClient({
   link: concat(
     authMiddleware,
     new HttpLink({
-      uri: 'https://api.aye-playr.de/v1/search/graphql',
+      uri: 'https://api.aye-playr.de/v2/search/graphql',
       fetch,
     })
   ),
@@ -99,7 +99,7 @@ export const graphQLClientSearch = new ApolloClient({
 });
 
 export const GRAPHQL = {
-  ENDPOINT: 'https://api.aye-playr.de/v1/playlists/gql',
+  ENDPOINT: 'https://api.aye-playr.de/v2/playlists/gql',
 
   QUERY: {
     PLAYLISTS: gql`
@@ -298,9 +298,19 @@ export const GRAPHQL = {
     `,
 
     REGISTER_ACCOUNT: gql`
-      mutation ($username: String!, $email: String!, $password: String!) {
+      mutation (
+        $username: String!
+        $email: String!
+        $password: String!
+        $inviteCode: String
+      ) {
         createUser(
-          input: { username: $username, email: $email, password: $password }
+          input: {
+            username: $username
+            email: $email
+            password: $password
+            inviteCode: $inviteCode
+          }
         ) {
           username
         }
@@ -324,6 +334,12 @@ export const GRAPHQL = {
         updatePassword(
           input: { oldPassword: $oldPassword, newPassword: $newPassword }
         )
+      }
+    `,
+
+    GENERATE_INVITE_CODE: gql`
+      mutation grabInviteCode {
+        generateInviteCode
       }
     `,
   },

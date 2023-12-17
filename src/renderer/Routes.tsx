@@ -8,6 +8,7 @@ import PasswordForgotPage from './containers/ForgotPasswordPage';
 import ExtendedPlaylist from './components/ExtendedPlaylist/ExtendedPlaylist';
 import AppSettingsPage from './containers/AppSettingsPage';
 import LoginPage from './containers/LoginPage';
+import AdminPage from './containers/AdminPage';
 
 export default () => (
   <Routes>
@@ -17,6 +18,7 @@ export default () => (
     <Route path={routes.REGISTER} element={<RegisterPage />} />
     <Route path={routes.FORGOTPASSWORD} element={<PasswordForgotPage />} />
     <Route path={routes.APPSETTINGS} element={<AppSettingsPage />} />
+    <Route path={routes.ADMIN} element={<AdminPage />} />
     <Route path={routes.LOGIN} element={<LoginPage />} />
     <Route path="/playlist/:id" element={<ExtendedPlaylist />} />
   </Routes>

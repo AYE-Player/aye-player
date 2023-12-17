@@ -84,6 +84,11 @@ const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = (
     navigate(routes.APPSETTINGS);
   };
 
+  const handleAdminClick = () => {
+    setAnchorEl(null);
+    navigate(routes.ADMIN);
+  };
+
   return (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
@@ -100,6 +105,11 @@ const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = (
           <MenuItem onClick={handleSettingsClick}>
             {t('AccountDisplay.Menu.settings')}
           </MenuItem>
+          {user.roles.includes('Admin') && (
+            <MenuItem onClick={handleAdminClick}>
+              {t('AccountDisplay.Menu.admin')}
+            </MenuItem>
+          )}
           <Divider />
           <MenuItem onClick={handleLogoutClick}>
             {t('AccountDisplay.Menu.logout')}

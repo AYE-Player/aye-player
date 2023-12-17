@@ -49,8 +49,6 @@ class User extends Model({
 
     const userInfo = yield* _await(ApiClient.getUserdata());
 
-    console.log('userinfo', userInfo);
-
     // Save user information
     this.email = userInfo.email;
     this.name = userInfo.username;
@@ -105,9 +103,10 @@ class User extends Model({
     this: User,
     name: string,
     email: string,
-    password: string
+    password: string,
+    inviteCode?: string
   ) {
-    return yield* _await(ApiClient.register(name, email, password));
+    return yield* _await(ApiClient.register(name, email, password, inviteCode));
   });
 
   @modelFlow
