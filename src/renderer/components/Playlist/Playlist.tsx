@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import Radio from '@material-ui/icons/Radio';
 import { Ref } from 'mobx-keystone';
 import { Observer, observer } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
@@ -15,10 +14,6 @@ import Track from '../../dataLayer/models/Track';
 import SnackMessage from '../Customs/SnackMessage';
 import { useStore } from '../StoreProvider';
 import PlaylistEntity from './PlaylistEntity';
-
-interface IProps {
-  toggleExternalRadio: () => void;
-}
 
 const Container = styled.div`
   margin: 8px 5px;
@@ -54,10 +49,9 @@ const ButtonAligner = styled.div`
   align-items: center;
 `;
 
-const Playlist: React.FunctionComponent<IProps> = (props) => {
+const Playlist: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const { toggleExternalRadio } = props;
   PlayerInterop.init();
 
   const { app, queue, player, trackHistory } = useStore();
@@ -127,9 +121,6 @@ const Playlist: React.FunctionComponent<IProps> = (props) => {
         <Header>
           Playlist
           <ButtonAligner>
-            <Control onClick={toggleExternalRadio}>
-              <Radio />
-            </Control>
             <Control>
               <QueueMusicIcon onClick={() => showQueue()} />
             </Control>
@@ -176,9 +167,6 @@ const Playlist: React.FunctionComponent<IProps> = (props) => {
       <Header>
         Playlist
         <ButtonAligner>
-          <Control onClick={toggleExternalRadio}>
-            <Radio />
-          </Control>
           <Control>
             <QueueMusicIcon onClick={showQueue} />
           </Control>

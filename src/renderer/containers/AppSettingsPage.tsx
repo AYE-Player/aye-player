@@ -18,12 +18,9 @@ import Divider from '../components/Divider';
 import Track from '../dataLayer/models/Track';
 import { getSpotifyPlaylists } from '../../helpers';
 import spotifyPlaylistToLocalTracks from '../../helpers/spotify/spotifyPlaylistToLocalTracks';
-import ListenMoeLoginDialog from '../components/ListenMoeLoginDialog';
-import ListenMoeApiClient from '../dataLayer/api/ListenMoeApiClient';
 import { useStore } from '../components/StoreProvider';
 
 const SpotifyLogo = require('../../images/Spotify_Logo_CMYK_Green.png');
-const ListenMoeLogo = require('../../images/listenmoe.svg');
 
 const Header = styled.div`
   font-size: 24px;
@@ -61,10 +58,6 @@ const AccountPage: React.FunctionComponent = () => {
     []
   );
   const [spotifyPlaylistsOpen, setSpotifyPlaylistsOpen] = React.useState(false);
-
-  const [listenMoeOpen, setListenMoeOpen] = React.useState(false);
-  const [listenMoeUsername, setListenMoeUsername] = React.useState('');
-  const [listenMoePassword, setListenMoePassword] = React.useState('');
 
   window.electron.ipcRenderer.on(
     Channel.GOT_SPOTIFY_TOKEN,
@@ -163,38 +156,6 @@ const AccountPage: React.FunctionComponent = () => {
     }
   };
 
-  const handleLoginClick = async () => {
-    try {
-      const token = await ListenMoeApiClient.login(
-        listenMoeUsername,
-        listenMoePassword
-      );
-
-      localStorage.setItem('listenMoetoken', token);
-      app.setListenMoeLogin(true);
-
-      setListenMoeUsername('');
-      setListenMoePassword('');
-      setListenMoeOpen(false);
-    } catch (error) {
-      enqueueSnackbar('', {
-        content: (key) => (
-          <SnackMessage
-            id={key}
-            variant="error"
-            message={`${t('AppSettingsPage.ListenMoeLoginError')}`}
-          />
-        ),
-      });
-    }
-  };
-
-  const handleCancelClick = () => {
-    setListenMoeUsername('');
-    setListenMoePassword('');
-    setListenMoeOpen(false);
-  };
-
   const deselectTrack = () => {
     player.setCurrentTrack();
   };
@@ -252,14 +213,6 @@ const AccountPage: React.FunctionComponent = () => {
             onClick={createSpotifyAuth}
           />
           <Divider size={2} />
-          <img
-            src={ListenMoeLogo}
-            width={150}
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              setListenMoeOpen(true);
-            }}
-          />
           {user.roles.find((role: string) => role === 'Admin') && (
             <>
               <Divider size={4} />
@@ -297,14 +250,6 @@ const AccountPage: React.FunctionComponent = () => {
               id,
             };
           })}
-        />
-        <ListenMoeLoginDialog
-          open={listenMoeOpen}
-          handleClose={handleClose}
-          setUsername={setListenMoeUsername}
-          setPassword={setListenMoePassword}
-          handleLoginClick={handleLoginClick}
-          handleCancelClick={handleCancelClick}
         />
 
         <div

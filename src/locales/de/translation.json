@@ -112,8 +112,7 @@
     "autoRadio": "Autoradio",
     "showNotifications": "Systembenachrichtigungen anzeigen",
     "connectTo": "Verknüpfen mit:",
-    "devTools": "Entwickler tools:",
-    "ListenMoeLoginError": "ListenMoe login fehlgeschlagen"
+    "devTools": "Entwickler tools:"
   },
   "LoginPage": {
     "header": "Einloggen",

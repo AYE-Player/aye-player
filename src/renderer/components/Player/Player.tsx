@@ -2,23 +2,17 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import styled from 'styled-components';
-import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ytsr from 'ytsr';
 import ApiClient from '../../dataLayer/api/ApiClient';
-import ListenMoeWebsocket from '../../dataLayer/api/ListenMoeWebsocket';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
 import { Channel, IncomingMessageType, Repeat } from '../../../types/enums';
-import { IListenMoeSongUpdate } from '../../../types/response';
 import PlayerControlsContainer from './PlayerControlsContainer';
-import ListenMoeApiClient from '../../dataLayer/api/ListenMoeApiClient';
 import { timestringToSeconds } from '../../../helpers';
 import { useStore } from '../StoreProvider';
 import './PlayerListeners';
 
 const AyeLogo = require('../../../images/aye_temp_logo.png');
-const ListenMoe = require('../../../images/listenmoe.svg');
 
 const Container = styled.div`
   width: 320px;
@@ -200,14 +194,6 @@ const Player: React.FunctionComponent = () => {
     player.notifyRPC();
   };
 
-  const favoriteSong = () => {
-    player.favoriteSong();
-  };
-
-  const deFavoriteSong = () => {
-    player.deFavoriteSong();
-  };
-
   window.onmessage = async (message: { origin: string; data: any }) => {
     const { data, origin } = message;
     const playerUrl = app.devMode
@@ -240,9 +226,6 @@ const Player: React.FunctionComponent = () => {
         case IncomingMessageType.PAUSE:
           if (player.isPlaying) {
             player.togglePlayingState();
-            if (player.websocketConnected) {
-              window.electron.ipcRenderer.sendMessage(Channel.STREAM_PAUSED);
-            }
           }
           break;
         case IncomingMessageType.ERROR:
@@ -300,89 +283,6 @@ const Player: React.FunctionComponent = () => {
     }
   };
 
-  // Handle listenmoe websocket song updates
-  if (player.websocketConnected) {
-    ListenMoeWebsocket.ws!.onmessage = async (message) => {
-      if (!message.data.length) return;
-      let response: IListenMoeSongUpdate;
-      try {
-        response = JSON.parse(message.data);
-      } catch (error) {
-        return;
-      }
-      switch (response.op) {
-        case 0:
-          ListenMoeWebsocket.ws!.send(JSON.stringify({ op: 9 }));
-          ListenMoeWebsocket.sendHeartbeat(response.d.heartbeat);
-          break;
-        case 1:
-          if (
-            response.t !== 'TRACK_UPDATE' &&
-            response.t !== 'TRACK_UPDATE_REQUEST' &&
-            response.t !== 'QUEUE_UPDATE' &&
-            response.t !== 'NOTIFICATION'
-          )
-            break;
-
-          // eslint-disable-next-line no-case-declarations
-          let favorite: number[] = [];
-          if (app.listenMoeLoggedIn) {
-            favorite = await ListenMoeApiClient.checkFavorite([
-              response.d.song.id,
-            ]).catch((err) => {
-              window.electron.ipcRenderer.sendMessage(Channel.LOG, {
-                message: `[ListenMoe] Error checking for favorite entry ${JSON.stringify(
-                  err
-                )}`,
-
-                type: 'error',
-              });
-              return [];
-            });
-          }
-
-          if (player.currentTrack) {
-            player.setCurrentTrack();
-          }
-
-          player.setListenMoeData({
-            id: response.d.song.id,
-            startTime: response.d.startTime,
-            artists:
-              response.d.song.artists
-                ?.map((artist) => artist.name)
-                .toString() ?? '<no artist>',
-            title: response.d.song.title ?? '<no title>',
-            duration: response.d.song.duration ?? 0,
-            favorite: favorite.includes(response.d.song.id),
-          });
-          player.notifyRPC();
-          break;
-        default:
-          break;
-      }
-    };
-
-    // listen for errors / disconnects
-    ListenMoeWebsocket.ws!.onclose = () => {
-      clearInterval(ListenMoeWebsocket.heartbeatInterval);
-      ListenMoeWebsocket.heartbeatInterval = undefined;
-      if (ListenMoeWebsocket.ws) {
-        ListenMoeWebsocket.ws.close();
-        ListenMoeWebsocket.ws = undefined;
-        player.setWebsocketConnected(false);
-      }
-      /* if (!error.wasClean) {
-        console.log("%c> [ListenMoe] Reconnecting...", "color: #008000;");
-        setTimeout(() => {
-          player.setLivestreamSource("listen.moe");
-        }, 5000);
-        player.setWebsocketConnected(false);
-        player.setListenMoeData(undefined);
-      } */
-    };
-  }
-
   return (
     <Container>
       <PlayerControlsContainer
@@ -408,69 +308,6 @@ const Player: React.FunctionComponent = () => {
           }}
           alt="aye-logo"
         />
-      ) : null}
-      {player.livestreamSource === 'listen.moe' ? (
-        <>
-          <img
-            src={ListenMoe}
-            style={{
-              width: '320px',
-              height: '200px',
-              position: 'absolute',
-              marginTop: '35px',
-              borderColor: 'none',
-              backgroundColor: '#161618',
-              zIndex: 999,
-            }}
-            alt="listenmoe-logo"
-          />
-          {player.listenMoeTrackData && (
-            <div
-              style={{
-                zIndex: 1000,
-                position: 'absolute',
-                bottom: '32px',
-                width: '264px',
-                height: '48px',
-              }}
-            >
-              {player.listenMoeTrackData.title}{' '}
-              {player.listenMoeTrackData.artists
-                ? `- ${
-                    player.listenMoeTrackData.artists.length >= 20
-                      ? `${player.listenMoeTrackData.artists.substring(
-                          0,
-                          20
-                        )}...`
-                      : player.listenMoeTrackData.artists
-                  }`
-                : ''}
-            </div>
-          )}
-          {app.listenMoeLoggedIn ? (
-            player.listenMoeTrackData && player.listenMoeTrackData.favorite ? (
-              <FavoriteIcon
-                style={{
-                  position: 'absolute',
-                  zIndex: 1000,
-                  bottom: '0px',
-                  right: '5px',
-                }}
-                onClick={deFavoriteSong}
-              />
-            ) : (
-              <FavoriteBorderOutlinedIcon
-                style={{
-                  position: 'absolute',
-                  zIndex: 1000,
-                  bottom: '0px',
-                  right: '5px',
-                }}
-                onClick={favoriteSong}
-              />
-            )
-          ) : null}
-        </>
       ) : null}
       <div
         style={{

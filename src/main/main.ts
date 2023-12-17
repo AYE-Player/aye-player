@@ -278,13 +278,6 @@ const createAppScreen = async () => {
     return { action: 'deny' };
   });
 
-  mainWindow.webContents.session.webRequest.onErrorOccurred(
-    { urls: ['https://listen.moe/stream'] },
-    () => {
-      mainWindow!.webContents.send('reconnect-stream');
-    }
-  );
-
   mainWindow.webContents.setWindowOpenHandler(() => {
     return {
       action: 'allow',
@@ -377,14 +370,12 @@ app
           duration,
           endTimestamp,
           playbackPosition,
-          startTimestamp,
           state,
         }: IDiscordActivity
       ) => {
         if (!rpc?.isConnected) return;
         rpc.setActivity(
           playbackPosition,
-          startTimestamp,
           endTimestamp,
           state,
           details,

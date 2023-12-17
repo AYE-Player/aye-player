@@ -19,18 +19,6 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const authMiddlewareListenMoe = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem('listenMoe_token') || null;
-  // add authorization header
-  operation.setContext({
-    headers: {
-      Authorization: token ? `Bearer ${token}` : null,
-    },
-  });
-
-  return forward(operation);
-});
-
 export const graphQLClientPlaylists = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true,
@@ -110,28 +98,6 @@ export const graphQLClientSearch = new ApolloClient({
   },
 });
 
-export const graphQLListenMoe = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: concat(
-    authMiddlewareListenMoe,
-    new HttpLink({
-      uri: 'https://listen.moe/graphql',
-      fetch,
-      fetchOptions: {
-        mode: 'no-cors',
-      },
-    })
-  ),
-  defaultOptions: {
-    query: {
-      fetchPolicy: 'no-cache',
-    },
-    mutate: {
-      fetchPolicy: 'no-cache',
-    },
-  },
-});
-
 export const GRAPHQL = {
   ENDPOINT: 'https://api.aye-playr.de/v1/playlists/gql',
 
@@ -195,19 +161,6 @@ export const GRAPHQL = {
           duration
           id
         }
-      }
-    `,
-
-    LISTEN_MOE_CHECK_FAVORITE: gql`
-      query checkFavorite($songs: [Int!]!) {
-        checkFavorite(songs: $songs)
-      }
-    `,
-
-    LISTEN_MOE_CHECK_FAVORITES: gql`
-      query ($songs: [Int!]!, $songsWithoutAlbum: [Int!]!) {
-        songs: checkFavorite(songs: $songs)
-        songsWithoutAlbum: checkFavorite(songs: $songsWithoutAlbum)
       }
     `,
 
@@ -335,47 +288,6 @@ export const GRAPHQL = {
             Patch: [{ op: "replace", path: "OrderId", value: $position }]
           }
         )
-      }
-    `,
-
-    LISTEN_MOE_FAVORITE_SONG: gql`
-      mutation ($id: Int!) {
-        favoriteSong(id: $id) {
-          id
-        }
-      }
-    `,
-
-    LISTEN_MOE_LOGIN: gql`
-      mutation ($username: String!, $password: String!) {
-        login(username: $username, password: $password) {
-          user {
-            uuid
-            username
-            displayName
-            avatarImage
-            bannerImage
-            bio
-            roles {
-              name
-              slug
-              color
-              songRequests
-            }
-            additionalSongRequests
-            uploadLimit
-          }
-          token
-          mfa
-        }
-      }
-    `,
-
-    LISTEN_MOE_FAVORITE: gql`
-      mutation ($id: Int!) {
-        favoriteSong(id: $id) {
-          id
-        }
       }
     `,
 

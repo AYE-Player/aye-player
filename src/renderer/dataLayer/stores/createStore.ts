@@ -34,9 +34,7 @@ const createStore = (): RootStore => {
       currentPlaylist: undefined,
       externalPlayerVersion: '',
       radioActive: false,
-      listenMoeTrackData: undefined,
       livestreamSource: undefined,
-      websocketConnected: undefined,
     }),
     playlists: new Playlists({
       lists: [],

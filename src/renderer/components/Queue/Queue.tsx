@@ -1,5 +1,4 @@
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import Radio from '@material-ui/icons/Radio';
 import { Observer } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
 import React from 'react';
@@ -9,10 +8,6 @@ import styled from 'styled-components';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import { useStore } from '../StoreProvider';
 import QueueEntity from './QueueEntity';
-
-interface IProps {
-  toggleExternalRadio: () => void;
-}
 
 const Container = styled.div`
   margin: 8px 5px;
@@ -48,12 +43,11 @@ const ButtonAligner = styled.div`
   align-items: center;
 `;
 
-const Queue: React.FunctionComponent<IProps> = (props) => {
+const Queue: React.FunctionComponent = () => {
   const { t } = useTranslation();
 
   const [value, setValue] = React.useState(true); // boolean state
   const { app, queue, player, trackHistory } = useStore();
-  const { toggleExternalRadio } = props;
 
   const handleClick = (index: number) => {
     if (player.currentTrack) {
@@ -80,9 +74,6 @@ const Queue: React.FunctionComponent<IProps> = (props) => {
         <Header>
           Queue
           <ButtonAligner>
-            <Control onClick={toggleExternalRadio}>
-              <Radio />
-            </Control>
             <Control>
               <QueueMusicIcon onClick={showQueue} />
             </Control>
@@ -126,9 +117,6 @@ const Queue: React.FunctionComponent<IProps> = (props) => {
       <Header>
         Queue
         <ButtonAligner>
-          <Control onClick={toggleExternalRadio}>
-            <Radio />
-          </Control>
           <Control>
             <QueueMusicIcon onClick={showQueue} />
           </Control>

@@ -11,12 +11,7 @@ class AppStore extends Model({
   selectedPlaylist: prop<string>(),
   autoRadio: prop(false),
   showNotifications: prop(true),
-  listenMoeLoggedIn: prop(false),
 }) {
-  onInit() {
-    this.listenMoeLoggedIn = !!localStorage.getItem('listenMoe_token');
-  }
-
   @modelAction
   toggleQueueDisplay() {
     this.showQueue = !this.showQueue;
@@ -71,11 +66,6 @@ class AppStore extends Model({
   toggleShowNotifications() {
     this.showNotifications = !this.showNotifications;
     window.electron.settings.set('showNotifications', this.showNotifications);
-  }
-
-  @modelAction
-  setListenMoeLogin(value: boolean) {
-    this.listenMoeLoggedIn = value;
   }
 }
 

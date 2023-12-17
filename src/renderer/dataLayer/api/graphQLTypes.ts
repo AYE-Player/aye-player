@@ -161,29 +161,6 @@ export interface GetTrackFromUrl {
   song: ITrackDto;
 }
 
-export interface ListenMoeLoginInput {
-  username: Scalars['String'];
-  password: Scalars['String'];
-}
-
-export interface ListenMoeLoginData {
-  login: {
-    token: Scalars['String'];
-  };
-}
-
-export interface ListenMoeFavoriteInput {
-  id: Scalars['Int'];
-}
-
-export interface ListenMoeCheckFavoriteInput {
-  songs: Scalars['Int'][];
-}
-
-export interface ListenMoeCheckFavoriteData {
-  checkFavorite: Scalars['Int'][];
-}
-
 export interface Token {
   createToken: Scalars['String'];
 }

@@ -7,31 +7,18 @@ import {
   prop,
   Ref,
   getRoot,
-  modelFlow,
-  _async,
-  _await,
 } from 'mobx-keystone';
+import { IDiscordActivity } from 'types/response';
 import { Channel, Repeat } from '../../../types/enums';
 import playlistRef from '../references/PlaylistRef';
 import trackRef from '../references/TrackRef';
 import Playlist from './Playlist';
 import Track from './Track';
-import ListenMoeWebsocket from '../api/ListenMoeWebsocket';
 import RootStore from '../stores/RootStore';
-import ListenMoeApiClient from '../api/ListenMoeApiClient';
 
 interface IRPCState {
   track?: Track;
   state?: string;
-}
-
-interface IListenMoeTrackData {
-  id: number;
-  title: string;
-  artists: string;
-  duration: number;
-  favorite: boolean;
-  startTime: string;
 }
 
 @model('Player')
@@ -48,8 +35,6 @@ class Player extends Model({
   currentTrack: prop<Ref<Track> | undefined>(),
   currentPlaylist: prop<Ref<Playlist> | undefined>(),
   livestreamSource: prop<string | undefined>(),
-  websocketConnected: prop(false),
-  listenMoeTrackData: prop<IListenMoeTrackData | undefined>(),
   externalPlayerVersion: prop<string>(),
 }) {
   @modelAction
@@ -66,10 +51,6 @@ class Player extends Model({
     );
 
     this.livestreamSource = undefined;
-    if (this.websocketConnected) {
-      ListenMoeWebsocket.disconnect();
-      this.websocketConnected = false;
-    }
 
     if (!this.isPlaying) this.isPlaying = true;
 
@@ -105,14 +86,14 @@ class Player extends Model({
 
       window.electron.ipcRenderer.sendMessage(Channel.SET_DISCORD_ACTIVITY, {
         playbackPosition: this.playbackPosition,
-        endTime: state ? null : this.currentTrack.current.duration,
+        endTimestamp: state ? null : this.currentTrack.current.duration,
         details:
           this.currentTrack.current.title.length >= 128
             ? `${this.currentTrack.current.title.substring(0, 123)}...`
             : this.currentTrack.current.title,
         state: state ?? null,
         duration: this.currentTrack.current.duration,
-      });
+      } as IDiscordActivity);
 
       window.electron.ipcRenderer.sendMessage(Channel.PLAYER_2_WIN, {
         type: 'trackInfo',
@@ -120,34 +101,6 @@ class Player extends Model({
           id: this.currentTrack.current.id || 0,
           title: this.currentTrack.current.title,
           duration: this.currentTrack.current.duration || 0,
-        },
-      });
-    } else if (this.listenMoeTrackData) {
-      window.electron.ipcRenderer.sendMessage(Channel.PLAYER_2_WIN, {
-        type: 'isRadio',
-      });
-
-      const details = `${this.listenMoeTrackData.artists} - ${this.listenMoeTrackData.title} (Listen.moe)`;
-
-      window.electron.ipcRenderer.sendMessage(Channel.SET_DISCORD_ACTIVITY, {
-        playbackPosition: this.playbackPosition,
-        endTime: this.listenMoeTrackData.duration,
-        startTimestamp: this.listenMoeTrackData.startTime,
-        details:
-          details.length >= 128 ? `${details.substring(0, 123)}...` : details,
-        state: null,
-        duration: this.listenMoeTrackData.duration,
-      });
-
-      window.electron.ipcRenderer.sendMessage(Channel.PLAYER_2_WIN, {
-        type: 'trackInfo',
-        data: {
-          id: 0,
-          title:
-            this.listenMoeTrackData.title.length >= 50
-              ? this.listenMoeTrackData.title.substring(0, 50)
-              : this.listenMoeTrackData.title,
-          duration: this.listenMoeTrackData.duration || 0,
         },
       });
     }
@@ -280,46 +233,10 @@ class Player extends Model({
   }
 
   @modelAction
-  setWebsocketConnected(val: boolean) {
-    this.websocketConnected = val;
-  }
-
-  @modelAction
   setLivestreamSource(source: string) {
-    if (source === 'listen.moe') {
-      if (!this.websocketConnected) {
-        // Connect to listenMoe websocket
-        ListenMoeWebsocket.connect();
-        // Listen for successfull connection
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ListenMoeWebsocket.ws!.onopen = () => {
-          clearInterval(ListenMoeWebsocket.heartbeatInterval);
-          ListenMoeWebsocket.heartbeatInterval = undefined;
-          this.setWebsocketConnected(true);
-        };
-      }
-    }
-
     this.currentTrack = undefined;
     this.livestreamSource = source;
   }
-
-  @modelAction
-  setListenMoeData(data: IListenMoeTrackData) {
-    this.listenMoeTrackData = data;
-  }
-
-  @modelFlow
-  favoriteSong = _async(function* (this: Player) {
-    yield* _await(ListenMoeApiClient.favorite(this.listenMoeTrackData!.id));
-    this.listenMoeTrackData!.favorite = true;
-  });
-
-  @modelFlow
-  deFavoriteSong = _async(function* (this: Player) {
-    yield* _await(ListenMoeApiClient.favorite(this.listenMoeTrackData!.id));
-    this.listenMoeTrackData!.favorite = false;
-  });
 
   @modelAction
   setExternalPlayerVersion(version: string) {

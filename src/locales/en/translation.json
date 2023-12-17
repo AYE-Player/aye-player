@@ -112,8 +112,7 @@
     "autoRadio": "Autoradio",
     "showNotifications": "Show Notifications",
     "connectTo": "Connect to:",
-    "devTools": "Developer tools:",
-    "ListenMoeLoginError": "Couldn't login to ListenMoe"
+    "devTools": "Developer tools:"
   },
   "LoginPage": {
     "header": "Login",
