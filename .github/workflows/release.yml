@@ -42,7 +42,7 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: Build/release Electron app
-        uses: coparse-inc/action-electron-builder@v1.0.0
+        uses: aye-player/action-electron-builder@master
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
