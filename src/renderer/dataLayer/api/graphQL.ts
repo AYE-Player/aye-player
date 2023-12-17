@@ -342,5 +342,11 @@ export const GRAPHQL = {
         generateInviteCode
       }
     `,
+
+    FORGOT_PASSWORD: gql`
+      mutation forgotPassword($email: String!) {
+        forgotPassword(email: $email)
+      }
+    `,
   },
 };

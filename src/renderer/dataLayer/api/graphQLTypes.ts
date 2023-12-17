@@ -115,6 +115,10 @@ export interface GetUserDataInput {
   id: Scalars['String'];
 }
 
+export interface ForgotPasswordInput {
+  email: Scalars['String'];
+}
+
 // Return types
 export interface IPlaylistDto {
   id: Scalars['String'];

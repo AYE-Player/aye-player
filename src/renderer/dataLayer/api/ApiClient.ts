@@ -41,6 +41,7 @@ import {
   Token,
   UpdatePassword,
   User,
+  ForgotPasswordInput,
 } from './graphQLTypes';
 
 /**
@@ -314,9 +315,10 @@ class ApiClient {
    * @param email email of the account
    */
   forgotPassword = async (email: string) => {
-    this.ky.put('userIdentity/password', {
-      json: {
-        Email: email,
+    await graphQLClientUserIdentity.mutate<void, ForgotPasswordInput>({
+      mutation: GRAPHQL.MUTATION.FORGOT_PASSWORD,
+      variables: {
+        email,
       },
     });
   };
@@ -438,6 +440,10 @@ class ApiClient {
     });
   };
 
+  /**
+   * Generate an invite code
+   * @returns invite code
+   */
   generateInviteCode = async (): Promise<string> => {
     const { data } = await graphQLClientUserIdentity.mutate<{
       generateInviteCode: string;
