@@ -1,60 +1,47 @@
-const Store = require('electron-store');
+import Store from 'electron-store';
 
-const schema = {
-  rpcEnabled: {
-    type: 'boolean',
-    default: true,
-  },
-  minimizeToTray: {
-    type: 'boolean',
-    default: false,
-  },
-  showNotifications: {
-    type: 'boolean',
-    default: true,
-  },
-  devMode: {
-    type: 'boolean',
-    default: false,
-  },
-  autoRadio: {
-    type: 'boolean',
-    default: false,
-  },
-  language: {
-    type: 'string',
-    default: 'en',
-  },
+type StoreType = {
+  rpcEnabled: boolean;
+  minimizeToTray: boolean;
+  showNotifications: boolean;
+  devMode: boolean;
+  autoRadio: boolean;
+  language: string;
   playerSettings: {
-    volume: {
-      type: 'number',
-      default: 0.2,
-    },
-    playbackPosition: {
-      type: 'number',
-      default: 0,
-    },
-    currentTrack: {
-      type: 'object',
-    },
-    currentPlaylist: {
-      type: 'object',
-    },
-    repeat: {
-      type: 'number',
-      default: 0,
-    },
-    isShuffling: {
-      type: 'boolean',
-      default: false,
-    },
-    isMuted: {
-      type: 'boolean',
-      default: false,
-    },
-  },
+    volumne: number;
+    playbackPosition: number;
+    currentTrack?: object;
+    currentPlaylist?: object;
+    repeat: number;
+    isShuffling: boolean;
+    isMuted: boolean;
+  };
+  windowSize?: {
+    width: number;
+    height: number;
+  }
+  windowPosition?: {
+    x: number;
+    y: number;
+  }
 };
 
-export default new Store({
-  schema,
+const store = new Store<StoreType>({
+  defaults: {
+    rpcEnabled: true,
+    autoRadio: false,
+    minimizeToTray: false,
+    showNotifications: true,
+    devMode: false,
+    language: 'en',
+    playerSettings: {
+      volumne: 0.2,
+      repeat: 0,
+      isMuted: false,
+      isShuffling: false,
+      playbackPosition: 0
+    },
+  },
 });
+
+export default store;

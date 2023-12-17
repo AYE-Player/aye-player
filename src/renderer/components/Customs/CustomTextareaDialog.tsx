@@ -73,8 +73,8 @@ const CustomTextareaDialog: React.FunctionComponent<
             placeholder={placeholder}
             multiline
             autoFocus
-            rows={4}
-            rowsMax={4}
+            minRows={4}
+            maxRows={4}
             className={classes.textField}
             margin="dense"
             variant="outlined"

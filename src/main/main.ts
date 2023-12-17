@@ -84,10 +84,10 @@ const createLoadingScreen = () => {
   /// create a browser window
   loadingScreen = new BrowserWindow({
     /// define width and height for the window
-    width: Settings.has('windowSize') ? Settings.get('windowSize').width : 1390,
+    width: Settings.has('windowSize') ? Settings.get('windowSize')!.width : 1390,
     minWidth: 1390,
     height: Settings.has('windowSize')
-      ? Settings.get('windowSize').height
+      ? Settings.get('windowSize')!.height
       : 728,
     minHeight: 728,
     /// remove the window frame, so it will become a frameless window
@@ -103,7 +103,7 @@ const createLoadingScreen = () => {
   loadingScreen.loadURL(`file://${__dirname}/loading.html`);
 
   if (Settings.has('windowPosition')) {
-    const { x, y } = Settings.get('windowPosition');
+    const { x, y } = Settings.get('windowPosition')!;
     loadingScreen.setPosition(x, y);
   } else {
     loadingScreen.center();
@@ -127,10 +127,10 @@ const createAppScreen = async () => {
   mainWindow = new BrowserWindow({
     title: 'AYE-Player',
     show: true,
-    width: Settings.has('windowSize') ? Settings.get('windowSize').width : 1390,
+    width: Settings.has('windowSize') ? Settings.get('windowSize')!.width : 1390,
     minWidth: 1390,
     height: Settings.has('windowSize')
-      ? Settings.get('windowSize').height
+      ? Settings.get('windowSize')!.height
       : 728,
     minHeight: 728,
     frame: process.platform !== 'win32',
@@ -139,6 +139,7 @@ const createAppScreen = async () => {
     webPreferences: {
       backgroundThrottling: false,
       nodeIntegration: false,
+      sandbox: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -156,7 +157,7 @@ const createAppScreen = async () => {
   }
 
   if (Settings.has('windowPosition')) {
-    const { x, y } = Settings.get('windowPosition');
+    const { x, y } = Settings.get('windowPosition')!;
     mainWindow.setPosition(x, y);
   } else {
     mainWindow.center();

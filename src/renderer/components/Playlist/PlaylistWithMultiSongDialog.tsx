@@ -83,8 +83,8 @@ const PlaylistWithMultiSongDialog: React.FunctionComponent<
             label={textField.label}
             placeholder={textField.placeholder}
             multiline
-            rows={4}
-            rowsMax={4}
+            minRows={4}
+            maxRows={4}
             className={classes.textField}
             margin="dense"
             variant="outlined"

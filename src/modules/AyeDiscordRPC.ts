@@ -30,9 +30,9 @@ class AyeDiscordRPC {
 
   private readonly clientId: string;
 
-  private activityTimer: NodeJS.Timer;
+  private activityTimer: NodeJS.Timeout;
 
-  private activityBlocker: NodeJS.Timer | undefined;
+  private activityBlocker: NodeJS.Timeout | undefined;
 
   private activity: IActivityParameters | undefined;
 

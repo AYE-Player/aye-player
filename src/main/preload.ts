@@ -1,4 +1,4 @@
-import { Color, Titlebar } from 'custom-electron-titlebar';
+import { Titlebar, TitlebarColor } from 'custom-electron-titlebar';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import ytsr from 'ytsr';
 
@@ -12,7 +12,7 @@ window.addEventListener(
     if (process.platform === 'darwin' || process.platform === 'win32') {
       // eslint-disable-next-line no-new
       new Titlebar({
-        backgroundColor: Color.fromHex('#3D4653'),
+        backgroundColor: TitlebarColor.fromHex('#3D4653'),
         shadow: false,
         maximizable: false,
         icon: '../images/icons/png/24x24_w.png',
