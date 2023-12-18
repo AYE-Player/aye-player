@@ -206,7 +206,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
           >
             <DragHandle fontSize="small" />
             <TrackInfoContainer
-              active={active || false}
+              active={active}
               onClick={() => onClick(track)}
               id={`track${track.current.id}-${index}`}
             >

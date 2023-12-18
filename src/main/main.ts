@@ -95,7 +95,7 @@ const createLoadingScreen = () => {
     /// and set the transparency, to remove any window background color
     transparent: true,
     webPreferences: {
-      contextIsolation: true,
+      contextIsolation: false,
     },
     icon: `${__dirname}/images/icons/png/256x256_w.png`,
   });
@@ -138,6 +138,7 @@ const createAppScreen = async () => {
     maximizable: false,
     webPreferences: {
       backgroundThrottling: false,
+      contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
       preload: app.isPackaged

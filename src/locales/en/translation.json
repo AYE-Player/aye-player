@@ -139,6 +139,7 @@
     "deleteButton": "Delete",
     "password": "Password",
     "repeatPassword": "Repeat Password",
+    "oldPassword": "Old Password",
     "changeAvatarButton": "Change",
     "avatarToBig": "Your avatar is to big. (max size 2MB)",
     "deleteDialog": {

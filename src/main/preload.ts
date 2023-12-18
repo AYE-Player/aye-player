@@ -42,6 +42,7 @@ contextBridge.exposeInMainWorld('electron', {
     env: {
       HOT: process.env.HOT,
       NODE_ENV: process.env.NODE_ENV,
+      version: require("../../package.json").version
     },
     platform: process.platform,
   },

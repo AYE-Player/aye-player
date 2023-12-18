@@ -225,7 +225,7 @@ const AccountPage: React.FunctionComponent = () => {
             width: '184px',
           }}
         >
-          <InfoText>App v{process.env.version}</InfoText>
+          <InfoText>App v{window.electron.process.env.version}</InfoText>
           <InfoText>externalPlayer v{player.externalPlayerVersion}</InfoText>
         </div>
       </Container>

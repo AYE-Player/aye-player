@@ -3,6 +3,7 @@
  */
 
 import webpack from 'webpack';
+import TsconfigPathsPlugins from 'tsconfig-paths-webpack-plugin';
 import webpackPaths from './webpack.paths';
 import { dependencies as externals } from '../../release/app/package.json';
 
@@ -21,6 +22,9 @@ const configuration: webpack.Configuration = {
           options: {
             // Remove this line to enable type checking in webpack builds
             transpileOnly: true,
+            compilerOptions: {
+              module: 'esnext',
+            },
           },
         },
       },
@@ -41,22 +45,9 @@ const configuration: webpack.Configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     modules: [webpackPaths.srcPath, 'node_modules'],
-    fallback: {
-      fs: false,
-      tls: false,
-      net: false,
-      path: false,
-      zlib: false,
-      http: false,
-      https: false,
-      stream: false,
-      querystring: false,
-      os: false,
-      url: false,
-      util: false,
-      assert: false,
-      crypto: false,
-    },
+    // There is no need to add aliases here, the paths in tsconfig get mirrored
+    plugins: [new TsconfigPathsPlugins()],
+    fallback: { "path": require.resolve("path-browserify"), "url": false}
   },
 
   plugins: [
