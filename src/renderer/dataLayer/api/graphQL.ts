@@ -27,7 +27,7 @@ export const graphQLClientPlaylists = new ApolloClient({
     new HttpLink({
       uri: 'https://api.aye-playr.de/v2/playlists/graphql',
       fetch,
-    })
+    }),
   ),
   defaultOptions: {
     query: {
@@ -47,7 +47,7 @@ export const graphQLClientUserIdentity = new ApolloClient({
     new HttpLink({
       uri: 'https://api.aye-playr.de/v2/useridentity/graphql',
       fetch,
-    })
+    }),
   ),
   defaultOptions: {
     query: {
@@ -67,7 +67,7 @@ export const graphQLClientAuth = new ApolloClient({
     new HttpLink({
       uri: 'https://api.aye-playr.de/v2/auth/graphql',
       fetch,
-    })
+    }),
   ),
   defaultOptions: {
     query: {
@@ -86,7 +86,7 @@ export const graphQLClientSearch = new ApolloClient({
     new HttpLink({
       uri: 'https://api.aye-playr.de/v2/search/graphql',
       fetch,
-    })
+    }),
   ),
   defaultOptions: {
     query: {

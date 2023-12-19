@@ -40,10 +40,10 @@ class Playlists extends Model({
   createListWithSongs = _async(function* (
     this: Playlists,
     name: string,
-    songs: { url: string }[]
+    songs: { url: string }[],
   ) {
     const playlistDTO = yield* _await(
-      ApiClient.createPlaylistWithSongs(name, songs)
+      ApiClient.createPlaylistWithSongs(name, songs),
     );
 
     const playlist = new Playlist({
@@ -86,7 +86,7 @@ class Playlists extends Model({
 
     this.lists.splice(
       this.lists.findIndex((playlist) => playlist.id === id),
-      1
+      1,
     );
   });
 

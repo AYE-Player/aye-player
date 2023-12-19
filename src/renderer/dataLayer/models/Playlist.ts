@@ -57,11 +57,11 @@ class Playlist extends Model({
   @modelFlow
   addTracksByUrls = _async(function* (
     this: Playlist,
-    songs: { url: string }[]
+    songs: { url: string }[],
   ) {
     // Add tracks to the playlist
     const pl = yield* _await(
-      ApiClient.addTracksToPlaylistByUrls(this.id, songs)
+      ApiClient.addTracksToPlaylistByUrls(this.id, songs),
     );
 
     // Get track information of the playlist
@@ -105,7 +105,7 @@ class Playlist extends Model({
   moveTrackTo = _async(function* (
     this: Playlist,
     oldIndex: number,
-    newIndex: number
+    newIndex: number,
   ) {
     const track = this.tracks[oldIndex].current;
 
@@ -119,7 +119,7 @@ class Playlist extends Model({
   replaceTrack = _async(function* (
     this: Playlist,
     oldTrack: Ref<Track>,
-    newTrack: Track
+    newTrack: Track,
   ) {
     yield* _await(
       ApiClient.replaceSong(
@@ -132,16 +132,16 @@ class Playlist extends Model({
           id: newTrack.id,
           title: newTrack.title,
           duration: newTrack.duration,
-        }
-      )
+        },
+      ),
     );
 
     this.tracks.splice(
       this.tracks.findIndex(
-        (track) => track.current.id === oldTrack.current.id
+        (track) => track.current.id === oldTrack.current.id,
       ),
       1,
-      trackRef(newTrack)
+      trackRef(newTrack),
     );
   });
 

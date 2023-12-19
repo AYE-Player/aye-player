@@ -108,7 +108,7 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   const handleOldPasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setOldPassword(event.target.value);
   };
@@ -119,7 +119,7 @@ const AccountPage: React.FunctionComponent = () => {
   };
 
   const handlePasswordChange2 = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPassword2(event.target.value);
     checkPasswordsMatch(password, event.target.value);

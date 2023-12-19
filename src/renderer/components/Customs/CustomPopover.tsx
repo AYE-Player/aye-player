@@ -11,17 +11,17 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(1),
     },
-  })
+  }),
 );
 
 const CustomPopover = (props: any) => {
   const classes = useStyles(props);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | undefined>(
-    undefined
+    undefined,
   );
 
   const handlePopoverOpen = (
-    event: React.MouseEvent<HTMLElement, MouseEvent>
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
   ) => {
     setAnchorEl(event.currentTarget);
   };

@@ -38,7 +38,7 @@ class User extends Model({
   authenticate = _async(function* (
     this: User,
     username: string,
-    password: string
+    password: string,
   ) {
     window.electron.ipcRenderer.sendMessage(Channel.LOG, {
       message: `Trying to log in with: ${username}`,
@@ -81,7 +81,7 @@ class User extends Model({
   updatePassword = _async(function* (
     this: User,
     newPassword: string,
-    oldPassword: string
+    oldPassword: string,
   ) {
     yield* _await(ApiClient.updatePassword(oldPassword, newPassword));
   });
@@ -104,7 +104,7 @@ class User extends Model({
     name: string,
     email: string,
     password: string,
-    inviteCode?: string
+    inviteCode?: string,
   ) {
     return yield* _await(ApiClient.register(name, email, password, inviteCode));
   });

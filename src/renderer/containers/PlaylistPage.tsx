@@ -74,7 +74,7 @@ const PlaylistPage: React.FunctionComponent = () => {
           // eslint-disable-next-line promise/always-return
           for (const playlist of data) {
             const oldPl = playlists.lists.find(
-              (list) => list.id === playlist.id
+              (list) => list.id === playlist.id,
             );
             // eslint-disable-next-line no-continue
             if (oldPl && playlist.songs?.length !== oldPl.trackCount) continue;
@@ -171,14 +171,14 @@ const PlaylistPage: React.FunctionComponent = () => {
   };
 
   const onPlaylistSongsChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewPlaylistSongs(
       removeControlCharacters(event.target.value)
         .split(',')
         .map((url) => ({
           url,
-        }))
+        })),
     );
   };
 
@@ -188,7 +188,7 @@ const PlaylistPage: React.FunctionComponent = () => {
         .split(',')
         .map((url) => ({
           url,
-        }))
+        })),
     );
   };
 

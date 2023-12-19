@@ -103,7 +103,7 @@ const RegisterPage: React.FunctionComponent = () => {
   };
 
   const handlePassword2Change = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPassword2(event.target.value);
   };
@@ -115,7 +115,7 @@ const RegisterPage: React.FunctionComponent = () => {
   };
 
   const handleInviteCodeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setInviteCode(event.target.value);
   };

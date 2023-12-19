@@ -6,7 +6,7 @@ interface ICustomSwitchProps {
   onChange: (
     checked: boolean,
     event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
-    id: string
+    id: string,
   ) => void;
   label: string;
   checked: boolean;

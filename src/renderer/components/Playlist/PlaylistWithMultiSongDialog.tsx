@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       width: 400,
     },
-  })
+  }),
 );
 
 const PlaylistWithMultiSongDialog: React.FunctionComponent<

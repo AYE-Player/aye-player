@@ -47,7 +47,7 @@ const StyledMenu = withStyles({
 ));
 
 const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
   const navigate = useNavigate();

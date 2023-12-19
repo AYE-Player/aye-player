@@ -92,7 +92,7 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
     }
     queue.clear();
     queue.addTracks(
-      playlist!.getTracksStartingFrom(idx).map((pTrack) => pTrack.current)
+      playlist!.getTracksStartingFrom(idx).map((pTrack) => pTrack.current),
     );
     player.setCurrentPlaylist(playlist);
     player.playTrack(queue.currentTrack!.current);
@@ -103,7 +103,7 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
     try {
       await playlist!.moveTrackTo(
         result.source.index,
-        result.destination!.index
+        result.destination!.index,
       );
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -131,7 +131,7 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
         .split(',')
         .map((url) => ({
           url,
-        }))
+        })),
     );
   };
 

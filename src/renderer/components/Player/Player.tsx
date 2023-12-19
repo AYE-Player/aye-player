@@ -43,7 +43,7 @@ const Player: React.FunctionComponent = () => {
 
   const getNextRadioTracks = async (prevTrack?: Track) => {
     const relatedTracks = await ApiClient.getRelatedTracks(
-      player.currentTrack?.current.id || prevTrack!.id
+      player.currentTrack?.current.id || prevTrack!.id,
     );
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
@@ -70,7 +70,7 @@ const Player: React.FunctionComponent = () => {
 
     if (!track) {
       const idx = player.currentPlaylist!.current.getIndexOfTrack(
-        prevTrackRef!
+        prevTrackRef!,
       );
 
       if (
@@ -80,24 +80,24 @@ const Player: React.FunctionComponent = () => {
         queue.addTracks(
           player
             .currentPlaylist!.current.getTracksStartingFrom(idx + 1)
-            .map((t) => t.current)
+            .map((t) => t.current),
         );
         player.playTrack(queue.currentTrack!.current);
         PlayerInterop.playTrack(queue.currentTrack!.current);
       } else if (player.repeat === Repeat.PLAYLIST && player.isShuffling) {
         queue.addTracks(
-          player.currentPlaylist!.current.tracks.map((t) => t.current)
+          player.currentPlaylist!.current.tracks.map((t) => t.current),
         );
         queue.shuffel();
         player.playTrack(queue.currentTrack!.current);
         PlayerInterop.setTrack(queue.currentTrack!.current);
       } else if (player.repeat === Repeat.PLAYLIST) {
         queue.addTracks(
-          player.currentPlaylist!.current.tracks.map((t) => t.current)
+          player.currentPlaylist!.current.tracks.map((t) => t.current),
         );
         player.playTrack(player.currentPlaylist!.current.tracks[0].current);
         PlayerInterop.setTrack(
-          player.currentPlaylist!.current.tracks[0].current
+          player.currentPlaylist!.current.tracks[0].current,
         );
       } else if (app.autoRadio) {
         await getNextRadioTracks(prevTrack);
@@ -143,19 +143,19 @@ const Player: React.FunctionComponent = () => {
     if (player.isShuffling) {
       queue.clear();
       queue.addTracks(
-        player.currentPlaylist!.current.tracks.map((track) => track.current)
+        player.currentPlaylist!.current.tracks.map((track) => track.current),
       );
       queue.shuffel();
     } else {
       const idx = player.currentPlaylist!.current.getIndexOfTrack(
-        player.currentTrack!
+        player.currentTrack!,
       );
 
       queue.clear();
       queue.addTracks(
         player
           .currentPlaylist!.current.getTracksStartingFrom(idx)
-          .map((track) => track.current)
+          .map((track) => track.current),
       );
     }
   };
@@ -176,7 +176,7 @@ const Player: React.FunctionComponent = () => {
       queue.addTracks(
         player.currentPlaylist.current
           .getTracksStartingFrom(currentTrackPlaylistIdx + 1)
-          .map((trackRef) => trackRef.current)
+          .map((trackRef) => trackRef.current),
       );
     } else if (trackHistory.tracks.length) {
       track = trackHistory.removeAndGetTrack();
@@ -241,7 +241,7 @@ const Player: React.FunctionComponent = () => {
 
             // Search youtube for new track
             const replacementTracks = await window.electron.youtube.search(
-              player.currentTrack!.current.title
+              player.currentTrack!.current.title,
             );
 
             const replacementTrack = replacementTracks.items[
@@ -261,7 +261,7 @@ const Player: React.FunctionComponent = () => {
             // replace track in playlist
             player.currentPlaylist!.current.replaceTrack(
               player.currentTrack!,
-              track
+              track,
             );
 
             // play the track

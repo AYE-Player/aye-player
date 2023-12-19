@@ -43,7 +43,7 @@ const PasswordForgotPage: React.FunctionComponent = () => {
         message: `Failed to start password reset process ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
 
         type: 'error',

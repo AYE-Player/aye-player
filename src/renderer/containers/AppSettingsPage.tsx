@@ -52,7 +52,7 @@ const AccountPage: React.FunctionComponent = () => {
     { id: string; name: string }[]
   >([]);
   const [spotifyLists, setSpotifyLists] = React.useState<ISpotifyPlaylist[]>(
-    []
+    [],
   );
   const [spotifyPlaylistsOpen, setSpotifyPlaylistsOpen] = React.useState(false);
 
@@ -69,7 +69,7 @@ const AccountPage: React.FunctionComponent = () => {
       setSpotifyListNames(playlistNames);
       setSpotifyLists(importedPlaylists);
       setSpotifyPlaylistsOpen(true);
-    }
+    },
   );
 
   const switchRPCStatus = () => {

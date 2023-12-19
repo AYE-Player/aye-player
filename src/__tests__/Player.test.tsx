@@ -11,8 +11,8 @@ describe('Player tests', () => {
       render(
         <StoreProvider value={store}>
           <Player />
-        </StoreProvider>
-      )
+        </StoreProvider>,
+      ),
     ).toBeTruthy();
   });
 });

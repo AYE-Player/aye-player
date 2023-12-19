@@ -47,7 +47,7 @@ class Player extends Model({
     this.currentTrack = trackRef(track);
     window.electron.settings.set(
       'playerSettings.currentTrack',
-      getSnapshot(track)
+      getSnapshot(track),
     );
 
     this.livestreamSource = undefined;
@@ -136,7 +136,7 @@ class Player extends Model({
       this.currentTrack = trackRef(track);
       window.electron.settings.set(
         'playerSettings.currentTrack',
-        getSnapshot(track)
+        getSnapshot(track),
       );
     } else {
       this.currentTrack = undefined;
@@ -149,7 +149,7 @@ class Player extends Model({
       this.currentPlaylist = playlistRef(playlist);
       window.electron.settings.set(
         'playerSettings.currentPlaylist.id',
-        playlist.id
+        playlist.id,
       );
     } else {
       this.currentPlaylist = undefined;
@@ -191,7 +191,7 @@ class Player extends Model({
     this.isShuffling = !this.isShuffling;
     window.electron.settings.set(
       'playerSettings.isShuffling',
-      this.isShuffling
+      this.isShuffling,
     );
   }
 

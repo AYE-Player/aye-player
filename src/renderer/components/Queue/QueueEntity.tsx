@@ -125,7 +125,7 @@ const QueueEntity: React.FunctionComponent<IProps> = (props) => {
         message: `Error adding Track to playlist. Error: ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
 
         type: 'error',
@@ -170,7 +170,7 @@ const QueueEntity: React.FunctionComponent<IProps> = (props) => {
         message: `[createListWithSongs] Error creating playlist ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
 
         type: 'error',

@@ -66,7 +66,7 @@ const Playlist: React.FunctionComponent = () => {
     queue.addTracks(
       player
         .currentPlaylist!.current.getTracksStartingFrom(idx)
-        .map((cpTrack) => cpTrack.current)
+        .map((cpTrack) => cpTrack.current),
     );
     player.playTrack(queue.currentTrack!.current);
     PlayerInterop.playTrack(queue.currentTrack!.current);
@@ -81,7 +81,7 @@ const Playlist: React.FunctionComponent = () => {
       const playlist = player.currentPlaylist!.current;
       await playlist.moveTrackTo(
         result.source.index,
-        result.destination!.index
+        result.destination!.index,
       );
 
       const idx = playlist.getIndexOfTrack(player.currentTrack!);
@@ -89,7 +89,7 @@ const Playlist: React.FunctionComponent = () => {
       if (result.destination!.index > idx) {
         queue.clear();
         queue.addTracks(
-          playlist.getTracksStartingFrom(idx).map((track) => track.current)
+          playlist.getTracksStartingFrom(idx).map((track) => track.current),
         );
       }
     } catch (error) {
@@ -148,7 +148,7 @@ const Playlist: React.FunctionComponent = () => {
                           }
                         />
                       );
-                    }
+                    },
                   )}
                   {provided.placeholder}
                 </ScrollContainer>

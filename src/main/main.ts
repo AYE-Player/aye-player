@@ -75,7 +75,7 @@ const installExtensions = async () => {
   return installer
     .default(
       extensions.map((name) => installer[name]),
-      forceDownload
+      forceDownload,
     )
     .catch(console.log);
 };
@@ -84,7 +84,9 @@ const createLoadingScreen = () => {
   /// create a browser window
   loadingScreen = new BrowserWindow({
     /// define width and height for the window
-    width: Settings.has('windowSize') ? Settings.get('windowSize')!.width : 1390,
+    width: Settings.has('windowSize')
+      ? Settings.get('windowSize')!.width
+      : 1390,
     minWidth: 1390,
     height: Settings.has('windowSize')
       ? Settings.get('windowSize')!.height
@@ -127,7 +129,9 @@ const createAppScreen = async () => {
   mainWindow = new BrowserWindow({
     title: 'AYE-Player',
     show: true,
-    width: Settings.has('windowSize') ? Settings.get('windowSize')!.width : 1390,
+    width: Settings.has('windowSize')
+      ? Settings.get('windowSize')!.width
+      : 1390,
     minWidth: 1390,
     height: Settings.has('windowSize')
       ? Settings.get('windowSize')!.height
@@ -195,7 +199,7 @@ const createAppScreen = async () => {
         mpris = new AyeMpris(mainWindow!);
       } catch (error) {
         AyeLogger.main(
-          `Error registering Mpris ${JSON.stringify(error, null, 2)}`
+          `Error registering Mpris ${JSON.stringify(error, null, 2)}`,
         );
       }
     }
@@ -373,7 +377,7 @@ app
           endTimestamp,
           playbackPosition,
           state,
-        }: IDiscordActivity
+        }: IDiscordActivity,
       ) => {
         if (!rpc?.isConnected) return;
         rpc.setActivity(
@@ -381,9 +385,9 @@ app
           endTimestamp,
           state,
           details,
-          duration
+          duration,
         );
-      }
+      },
     );
 
     ipcMain.on(Channel.DISABLE_RPC, async () => {
@@ -412,7 +416,7 @@ app
       (_event: any, arg: { lang: string | undefined }) => {
         menu.i18n.changeLanguage(arg.lang);
         tray.i18n.changeLanguage(arg.lang);
-      }
+      },
     );
 
     ipcMain.on(Channel.RELOAD_MAIN_WINDOW, (_event) => {
@@ -439,7 +443,7 @@ app
         const scopes = 'playlist-read-private playlist-read-collaborative';
         const link = 'https://accounts.spotify.com/authorize';
         return `${link}?response_type=token&client_id=${SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(
-          scopes
+          scopes,
         )}&redirect_uri=${encodeURIComponent(SPOTIFY_CALLBACK_URL)}`;
       };
 
@@ -467,10 +471,10 @@ app
         ({ url }, _callback) => {
           mainWindow?.webContents.send(
             Channel.GOT_SPOTIFY_TOKEN,
-            parseURL(url)
+            parseURL(url),
           );
           destroyAuthWin();
-        }
+        },
       );
 
       spotifyWin.on('closed', () => {
@@ -485,10 +489,10 @@ app
         {
           message,
           type = 'info',
-        }: { message: string; service: string; type: string }
+        }: { message: string; service: string; type: string },
       ) => {
         AyeLogger.player(message, type);
-      }
+      },
     );
 
     ipcMain.on(Channel.SETTING_GET, (event, val) => {

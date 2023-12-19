@@ -62,7 +62,7 @@ const AdminPage: React.FunctionComponent = () => {
         message: `Error creating invite token ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
         type: 'error',
       });

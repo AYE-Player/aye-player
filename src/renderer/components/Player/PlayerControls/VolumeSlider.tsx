@@ -22,7 +22,7 @@ const VolumeSlider: React.FunctionComponent = () => {
   const handleVolumeChange = (
     // eslint-disable-next-line @typescript-eslint/ban-types
     _event: React.ChangeEvent<{}> | null,
-    newValue: number | number[]
+    newValue: number | number[],
   ) => {
     if (Array.isArray(newValue)) {
       const [value] = newValue;

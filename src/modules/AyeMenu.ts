@@ -192,7 +192,7 @@ class AyeMenu extends BaseModule {
           label: this.i18n.t('menu.Documentation'),
           click() {
             shell.openExternal(
-              'https://github.com/atom/electron/tree/master/docs#readme'
+              'https://github.com/atom/electron/tree/master/docs#readme',
             );
           },
         },
@@ -245,7 +245,7 @@ class AyeMenu extends BaseModule {
             label: this.i18n.t('menu.Documentation'),
             click() {
               shell.openExternal(
-                'https://github.com/atom/electron/tree/master/docs#readme'
+                'https://github.com/atom/electron/tree/master/docs#readme',
               );
             },
           },

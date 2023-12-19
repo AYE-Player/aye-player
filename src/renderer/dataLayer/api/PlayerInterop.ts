@@ -19,7 +19,7 @@ class PlayerInterop {
   init() {
     if (!this.player) {
       this.player = document.querySelector(
-        '#embedded-player'
+        '#embedded-player',
       ) as HTMLIFrameElement;
       this.apiUrl = Root.stores.app.devMode
         ? 'http://localhost:3000'
@@ -60,7 +60,7 @@ class PlayerInterop {
           volume: this.volume,
           muted: this.isMuted,
         },
-        this.apiUrl
+        this.apiUrl,
       );
       this.initTrack = undefined;
       this.startAt = undefined;
@@ -79,7 +79,7 @@ class PlayerInterop {
         type: OutgoingMessageType.SET_TRACK,
         track: track ? getSnapshot(track) : undefined,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -89,7 +89,7 @@ class PlayerInterop {
         type: OutgoingMessageType.PLAY_TRACK,
         track: getSnapshot(track),
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -103,7 +103,7 @@ class PlayerInterop {
           isLivestream: true,
         },
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -112,7 +112,7 @@ class PlayerInterop {
       {
         type: OutgoingMessageType.RECONNECT_STREAM,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -122,7 +122,7 @@ class PlayerInterop {
         type: OutgoingMessageType.SEEK,
         time,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -132,7 +132,7 @@ class PlayerInterop {
         type: OutgoingMessageType.VOLUME,
         volume: newVolume / 100,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -141,7 +141,7 @@ class PlayerInterop {
       {
         type: OutgoingMessageType.TOGGLE_PLAYING_STATE,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -151,7 +151,7 @@ class PlayerInterop {
         type: OutgoingMessageType.SET_LOOPING,
         state,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 
@@ -161,7 +161,7 @@ class PlayerInterop {
         type: OutgoingMessageType.MUTE,
         state,
       },
-      this.apiUrl
+      this.apiUrl,
     );
   }
 }

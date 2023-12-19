@@ -39,8 +39,8 @@ class AyeTray extends BaseModule {
       if (process.platform === 'darwin') {
         this.icon = nativeImage.createFromPath(
           path.resolve(
-            path.join(__dirname, `${basePath}${'16x16_Template.png'}`)
-          )
+            path.join(__dirname, `${basePath}${'16x16_Template.png'}`),
+          ),
         );
       } else if (process.platform === 'win32') {
         const winPath =
@@ -50,7 +50,7 @@ class AyeTray extends BaseModule {
         this.icon = path.resolve(path.join(__dirname, `${winPath}icon_w.ico`));
       } else {
         this.icon = path.resolve(
-          path.join(__dirname, `${basePath}16x16_w.png`)
+          path.join(__dirname, `${basePath}16x16_w.png`),
         );
       }
       this.tray = new Tray(this.icon);

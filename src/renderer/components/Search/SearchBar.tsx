@@ -69,7 +69,7 @@ const SearchBar: React.FunctionComponent = () => {
           }
           if (
             !trackCache.tracks.find(
-              (cachedTrack) => cachedTrack.id === track.id
+              (cachedTrack) => cachedTrack.id === track.id,
             )
           ) {
             trackCache.add(track);

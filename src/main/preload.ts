@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable global-require */
 import { Titlebar, TitlebarColor } from 'custom-electron-titlebar';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import ytsr from 'ytsr';
@@ -19,7 +21,7 @@ window.addEventListener(
       });
     }
   },
-  { once: true }
+  { once: true },
 );
 
 contextBridge.exposeInMainWorld('electron', {
@@ -42,7 +44,7 @@ contextBridge.exposeInMainWorld('electron', {
     env: {
       HOT: process.env.HOT,
       NODE_ENV: process.env.NODE_ENV,
-      version: require("../../package.json").version
+      version: require('../../package.json').version,
     },
     platform: process.platform,
   },

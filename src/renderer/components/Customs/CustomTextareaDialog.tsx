@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       width: 400,
     },
-  })
+  }),
 );
 
 // TODO: Style this accordingly to theme

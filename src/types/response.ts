@@ -34,7 +34,7 @@ export interface ISpotifyArtist {
       url: string;
       height: number;
       width: number;
-    }
+    },
   ];
   name: string;
   popularity: number;
@@ -64,7 +64,7 @@ export interface ISpotifyPlaylist {
       url: string;
       height: number;
       width: number;
-    }
+    },
   ];
   name: string;
   owner: {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 
@@ -38,7 +37,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = (props) => {
         if (animationFrame) return;
         scrollingTextEffect();
       },
-      true
+      true,
     );
 
     marquee!.addEventListener(
@@ -47,7 +46,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = (props) => {
         if (animationFrame) return;
         scrollingTextEffect();
       },
-      true
+      true,
     );
 
     // eslint-disable-next-line consistent-return
@@ -58,7 +57,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = (props) => {
           if (animationFrame) return;
           scrollingTextEffect();
         },
-        true
+        true,
       );
       marquee!.removeEventListener(
         'mouseover',
@@ -66,7 +65,7 @@ const ScrollingText: React.FunctionComponent<IScrollingTextProps> = (props) => {
           if (animationFrame) return;
           scrollingTextEffect();
         },
-        true
+        true,
       );
     };
   });

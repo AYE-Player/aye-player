@@ -10,7 +10,7 @@ window.electron.ipcRenderer.on(Channel.LANGUAGE_CHANGED, (message) => {
     i18n.addResourceBundle(
       message.language,
       message.namespace,
-      message.resource
+      message.resource,
     );
   }
 
@@ -23,5 +23,5 @@ const root = createRoot(container);
 root.render(
   <Suspense fallback={<div>Loading...</div>}>
     <Root />
-  </Suspense>
+  </Suspense>,
 );

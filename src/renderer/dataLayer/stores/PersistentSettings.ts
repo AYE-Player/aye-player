@@ -19,11 +19,11 @@ type StoreType = {
   windowSize?: {
     width: number;
     height: number;
-  }
+  };
   windowPosition?: {
     x: number;
     y: number;
-  }
+  };
 };
 
 const store = new Store<StoreType>({
@@ -39,7 +39,7 @@ const store = new Store<StoreType>({
       repeat: 0,
       isMuted: false,
       isShuffling: false,
-      playbackPosition: 0
+      playbackPosition: 0,
     },
   },
 });

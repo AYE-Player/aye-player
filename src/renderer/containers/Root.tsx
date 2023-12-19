@@ -38,27 +38,27 @@ registerRootStore(rootStore);
 window.electron.ipcRenderer.on(Channel.APP_CLOSE, () => {
   window.electron.settings.set(
     'playerSettings.volume',
-    rootStore.player.volume
+    rootStore.player.volume,
   );
 
   if (rootStore.player.currentTrack) {
     window.electron.settings.set(
       'playerSettings.playbackPosition',
-      rootStore.player.playbackPosition
+      rootStore.player.playbackPosition,
     );
     window.electron.settings.set(
       'playerSettings.repeat',
-      rootStore.player.repeat
+      rootStore.player.repeat,
     );
     window.electron.settings.set(
       'playerSettings.isShuffling',
-      rootStore.player.isShuffling
+      rootStore.player.isShuffling,
     );
   }
 
   window.electron.settings.set(
     'playerSettings.isMuted',
-    rootStore.player.isMuted
+    rootStore.player.isMuted,
   );
 
   if (rootStore.player.currentPlaylist) {
@@ -75,7 +75,7 @@ window.electron.ipcRenderer.on(Channel.APP_CLOSE, () => {
   ) {
     window.electron.settings.set(
       'playerSettings.currentTrack',
-      getSnapshot(rootStore.player.currentTrack!.current)
+      getSnapshot(rootStore.player.currentTrack!.current),
     );
   }
 });
@@ -125,7 +125,7 @@ const getPlaylists = async () => {
       message: `[Root] Error retrieving Playlists ${JSON.stringify(
         error,
         null,
-        2
+        2,
       )}`,
       type: 'error',
     });
@@ -154,7 +154,7 @@ class Root extends Component {
                 !playerSettings.currentTrack?.isLivestream
               ) {
                 rootStore.player.setPlaybackPosition(
-                  playerSettings.playbackPosition
+                  playerSettings.playbackPosition,
                 );
                 PlayerInterop.setStartTime(playerSettings.playbackPosition);
               }
@@ -164,7 +164,7 @@ class Root extends Component {
                 const currentTrack = new Track(playerSettings.currentTrack);
                 if (
                   !rootStore.trackCache.tracks.find(
-                    (t) => t.id === playerSettings.currentTrack.id
+                    (t) => t.id === playerSettings.currentTrack.id,
                   )
                 ) {
                   rootStore.trackCache.add(currentTrack);
@@ -178,7 +178,7 @@ class Root extends Component {
               // Check for last active playlist
               if (playerSettings.currentPlaylist) {
                 const playlist = rootStore.playlists.getListById(
-                  playerSettings.currentPlaylist.id
+                  playerSettings.currentPlaylist.id,
                 );
                 if (!playlist) return;
                 // eslint-disable-next-line promise/no-nesting

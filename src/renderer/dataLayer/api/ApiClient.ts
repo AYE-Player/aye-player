@@ -130,7 +130,7 @@ class ApiClient {
    */
   createPlaylistWithSongs = async (
     name: string,
-    songs: SongInput[]
+    songs: SongInput[],
   ): Promise<IPlaylistDto> => {
     const { data } = await graphQLClientPlaylists.mutate<
       CreatePlaylistByVideoUrls,
@@ -168,7 +168,7 @@ class ApiClient {
   getTracksFromPlaylist = async (
     id: string,
     amount = 20,
-    skip = 0
+    skip = 0,
   ): Promise<ITrackDto[]> => {
     const {
       data: { playlistSongs },
@@ -280,7 +280,7 @@ class ApiClient {
     username: string,
     email: string,
     password: string,
-    inviteCode?: string
+    inviteCode?: string,
   ) => {
     return graphQLClientUserIdentity.mutate<void, RegisterAccountInput>({
       mutation: GRAPHQL.MUTATION.REGISTER_ACCOUNT,
@@ -429,7 +429,7 @@ class ApiClient {
    */
   replaceSong = async (
     oldTrack: ITrackDto,
-    newTrack: ITrackDto
+    newTrack: ITrackDto,
   ): Promise<void> => {
     await graphQLClientPlaylists.mutate<void, ReplaceTrackInput>({
       mutation: GRAPHQL.MUTATION.REPLACE_TRACK,

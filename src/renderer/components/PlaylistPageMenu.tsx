@@ -51,7 +51,7 @@ const StyledMenu = withStyles({
 ));
 
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -89,7 +89,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
         message: `Error loading PlaylistTracks ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
         type: 'error',
       });
@@ -150,7 +150,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
         message: `Error loading PlaylistTracks ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
         type: 'error',
       });

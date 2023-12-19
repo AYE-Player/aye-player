@@ -65,7 +65,7 @@ class AyeDiscordRPC {
     endTimestamp: number,
     state: string | null,
     details: string,
-    duration: number
+    duration: number,
   ) {
     if (!this.rpc) return;
 
@@ -75,7 +75,7 @@ class AyeDiscordRPC {
       activityParameters = {
         details,
         endTimestamp: Math.floor(
-          Date.now() / 1000 + (endTimestamp - playbackPosition)
+          Date.now() / 1000 + (endTimestamp - playbackPosition),
         ),
         largeImageKey: 'aye',
         smallImageKey: 'play',

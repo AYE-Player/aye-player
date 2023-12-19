@@ -33,7 +33,7 @@ const Avatar = styled.img`
 const Text = styled.div``;
 
 const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
 

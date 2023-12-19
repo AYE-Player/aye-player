@@ -57,7 +57,7 @@ const StyledMenu = withStyles({
 ));
 
 const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -77,7 +77,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
   const handleRemoveTrack = async () => {
     try {
       await player.currentPlaylist!.current.removeTrackById(
-        trackRef.current.id
+        trackRef.current.id,
       );
       setAnchorEl(null);
     } catch (error) {
@@ -108,7 +108,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${trackRef.current.id}`
+      `https://www.youtube.com/watch?v=${trackRef.current.id}`,
     );
   };
 
@@ -155,7 +155,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
 
   const replaceTrack = async (trackToReplace: Ref<Track>) => {
     const replacementTracks = await window.electron.youtube.search(
-      trackToReplace.current.title
+      trackToReplace.current.title,
     );
 
     const replacementTrack = replacementTracks.items[0] as ytsr.Video;

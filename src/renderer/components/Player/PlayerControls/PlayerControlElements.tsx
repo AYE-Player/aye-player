@@ -41,7 +41,7 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
 
   const checkTrackIndexBiggerAs = (
     compareValue: number,
-    indexAmplifier = 0
+    indexAmplifier = 0,
   ) => {
     if (!player.currentTrack) return -1;
     return (
@@ -94,7 +94,7 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
             (player.currentPlaylist &&
               checkTrackIndexBiggerAs(
                 player.currentPlaylist.current.tracks.length,
-                1
+                1,
               ))
               ? ''
               : '#606060'

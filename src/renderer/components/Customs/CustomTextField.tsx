@@ -50,7 +50,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 const CustomTextField: React.FunctionComponent<ICustomTextFieldProps> = (
-  props
+  props,
 ) => {
   const { autoFocus, id, label, type, helperText, onChange, required, error } =
     props;

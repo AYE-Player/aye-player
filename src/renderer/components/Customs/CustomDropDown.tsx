@@ -18,7 +18,7 @@ interface ICustomDropDownProps {
   handleChange: (
     event: React.ChangeEvent<{
       value: unknown;
-    }>
+    }>,
   ) => Promise<void>;
   selected: string;
 }
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
-  })
+  }),
 );
 
 const StyledSelect = styled(Select)`
@@ -40,7 +40,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const CustomDropDown: React.FunctionComponent<ICustomDropDownProps> = (
-  props
+  props,
 ) => {
   const classes = useStyles(props);
   const { name, id, selected, options, handleChange } = props;

@@ -1,7 +1,7 @@
 import { ISpotifyPlaylist, ISpotifyPlaylists } from 'types/response';
 
 const loadPlaylists = async (
-  accessToken: string
+  accessToken: string,
 ): Promise<ISpotifyPlaylist[]> => {
   const rawPlaylists: ISpotifyPlaylists = await fetch(
     `https://api.spotify.com/v1/me/playlists?limit=50`,
@@ -10,7 +10,7 @@ const loadPlaylists = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   ).then((res) => res.json());
 
   if (rawPlaylists == null) Error('failed to retrieve playlists');
@@ -24,7 +24,7 @@ const loadPlaylists = async (
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }).then((res) => res.json())
+      }).then((res) => res.json()),
     );
   }
 

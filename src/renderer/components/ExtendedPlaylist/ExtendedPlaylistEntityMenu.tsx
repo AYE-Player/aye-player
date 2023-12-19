@@ -107,7 +107,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${trackRef.current.id}`
+      `https://www.youtube.com/watch?v=${trackRef.current.id}`,
     );
   };
 
@@ -154,7 +154,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
 
   const replaceTrack = async (trackToReplace: Ref<Track>) => {
     const replacementTracks = await window.electron.youtube.search(
-      trackToReplace.current.title
+      trackToReplace.current.title,
     );
 
     const replacementTrack = replacementTracks.items[0] as ytsr.Video;

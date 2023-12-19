@@ -176,7 +176,7 @@ class AyeMpris extends BaseModule {
             break;
           default:
         }
-      }
+      },
     );
 
     ipcMain.on(
@@ -209,7 +209,7 @@ class AyeMpris extends BaseModule {
           default:
             break;
         }
-      }
+      },
     );
   }
 

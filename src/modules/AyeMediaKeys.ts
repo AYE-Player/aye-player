@@ -41,7 +41,7 @@ class AyeMediaKeys extends BaseModule {
       this.registerBindings('mate');
     } catch (error) {
       AyeLogger.main(
-        `Error registering mediakeys ${JSON.stringify(error, null, 2)}`
+        `Error registering mediakeys ${JSON.stringify(error, null, 2)}`,
       );
     }
   };
@@ -60,7 +60,7 @@ class AyeMediaKeys extends BaseModule {
     try {
       const dbusPlayer = await this.bus!.getProxyObject(
         serviceName,
-        objectPath
+        objectPath,
       );
       const mediaKeys = dbusPlayer.getInterface(interfaceName);
 

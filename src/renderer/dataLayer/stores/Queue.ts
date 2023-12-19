@@ -36,7 +36,7 @@ class Queue extends Model({
   removeTrack(id: string) {
     this.tracks.splice(
       this.tracks.findIndex((track) => track.current.id === id),
-      1
+      1,
     );
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/jsx-props-no-spreading */
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { Ref } from 'mobx-keystone';
@@ -179,7 +180,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
         message: `[createListWithSongs] Error creating playlist ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
 
         type: 'error',
@@ -219,10 +220,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
             {...provided.dragHandleProps}
           >
             <DragHandle fontSize="small" />
-            <TrackInfoContainer
-              active={active}
-              onClick={() => onClick(track)}
-            >
+            <TrackInfoContainer active={active} onClick={() => onClick(track)}>
               <TrackImageContainer>
                 <TrackImage
                   src={`https://img.youtube.com/vi/${track.current.id}/default.jpg`}

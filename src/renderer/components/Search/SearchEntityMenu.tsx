@@ -51,7 +51,7 @@ const StyledMenu = withStyles({
 ));
 
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
   const { queue, trackCache, player } = useStore();
@@ -78,7 +78,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${trackRef.current.id}`
+      `https://www.youtube.com/watch?v=${trackRef.current.id}`,
     );
   };
 

@@ -52,7 +52,7 @@ const StyledMenu = withStyles({
 ));
 
 const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
   const { queue, player, trackCache } = useStore();
@@ -79,7 +79,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(
-      `https://www.youtube.com/watch?v=${trackRef.current.id}`
+      `https://www.youtube.com/watch?v=${trackRef.current.id}`,
     );
   };
 

@@ -22,7 +22,7 @@ export interface SimpleDialogProps {
 }
 
 const CustomListDialog: React.FunctionComponent<SimpleDialogProps> = (
-  props
+  props,
 ) => {
   const {
     dialogTitle,

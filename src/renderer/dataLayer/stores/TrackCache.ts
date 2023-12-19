@@ -18,7 +18,7 @@ class TrackCache extends Model({
   removeTrack(id: string) {
     this.tracks.splice(
       this.tracks.findIndex((track) => track.id === id),
-      1
+      1,
     );
   }
 }

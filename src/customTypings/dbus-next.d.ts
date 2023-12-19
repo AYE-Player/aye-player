@@ -68,7 +68,7 @@ declare module 'dbus-next' {
     getProxyObject(
       name: string,
       path: string,
-      xml: string
+      xml: string,
     ): Promise<ProxyObject>;
     disconnect(): void;
 

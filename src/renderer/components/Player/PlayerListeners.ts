@@ -9,7 +9,7 @@ window.electron.ipcRenderer.on(Channel.PLAY_PAUSE, () => {
 
   if (queue.isEmpty) {
     queue.addTracks(
-      player.currentPlaylist!.current.tracks.map((track) => track.current)
+      player.currentPlaylist!.current.tracks.map((track) => track.current),
     );
     player.playTrack(queue.currentTrack!.current);
     PlayerInterop.playTrack(queue.currentTrack!.current);
@@ -27,18 +27,22 @@ window.electron.ipcRenderer.on(Channel.PLAY_NEXT, () => {
   if (!track) {
     if (player.repeat === Repeat.PLAYLIST && player.isShuffling) {
       queue.addTracks(
-        player.currentPlaylist!.current.tracks.map((cpTrack) => cpTrack.current)
+        player.currentPlaylist!.current.tracks.map(
+          (cpTrack) => cpTrack.current,
+        ),
       );
       queue.shuffel();
       player.playTrack(queue.currentTrack!.current);
       PlayerInterop.playTrack(queue.currentTrack!.current);
     } else if (player.repeat === Repeat.PLAYLIST) {
       queue.addTracks(
-        player.currentPlaylist!.current.tracks.map((cpTrack) => cpTrack.current)
+        player.currentPlaylist!.current.tracks.map(
+          (cpTrack) => cpTrack.current,
+        ),
       );
       player.playTrack(player.currentPlaylist!.current.tracks[0].current);
       PlayerInterop.playTrack(
-        player.currentPlaylist!.current.tracks[0].current
+        player.currentPlaylist!.current.tracks[0].current,
       );
     } else {
       player.togglePlayingState();
@@ -61,7 +65,7 @@ window.electron.ipcRenderer.on(Channel.PLAY_SONG, async (message) => {
     const prevTrack = player.currentTrack;
 
     const trackInfo = await searchResult.getTrackFromUrl(
-      `https://www.youtube.com/watch?v=${message.id}`
+      `https://www.youtube.com/watch?v=${message.id}`,
     );
 
     let track: Track;
@@ -106,7 +110,7 @@ window.electron.ipcRenderer.on(
   Channel.POSITION,
   (_event: any, message: { pos: number }) => {
     PlayerInterop.seekTo(message.pos);
-  }
+  },
 );
 
 window.electron.ipcRenderer.on(Channel.RECONNECT_STREAM, () => {

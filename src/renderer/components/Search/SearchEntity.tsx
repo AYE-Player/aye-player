@@ -166,7 +166,7 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
         message: `[createListWithSongs] Error creating playlist ${JSON.stringify(
           error,
           null,
-          2
+          2,
         )}`,
 
         type: 'error',
