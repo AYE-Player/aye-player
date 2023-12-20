@@ -155,8 +155,8 @@ export const GRAPHQL = {
     `,
 
     RELATED_TRACKS: gql`
-      query ($id: ID!) {
-        radio(startId: $id) {
+      query ($id: String!) {
+        radio(input: { startId: $id }) {
           title
           duration
           id
