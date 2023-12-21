@@ -17,7 +17,7 @@ window.addEventListener(
         backgroundColor: TitlebarColor.fromHex('#3D4653'),
         shadow: false,
         maximizable: false,
-        icon: '../images/icons/png/24x24_w.png',
+        icon: '../../assets/icons/24x24_w.png',
       });
     }
   },

@@ -34,8 +34,8 @@ class AyeTray extends BaseModule {
       this.appName = 'AYE - Player';
       const basePath =
         process.env.NODE_ENV === 'development'
-          ? '../images/icons/png/'
-          : 'images/icons/png/';
+          ? '../assets/icons/'
+          : 'assets/icons/';
       if (process.platform === 'darwin') {
         this.icon = nativeImage.createFromPath(
           path.resolve(
@@ -45,8 +45,8 @@ class AyeTray extends BaseModule {
       } else if (process.platform === 'win32') {
         const winPath =
           process.env.NODE_ENV === 'development'
-            ? '../images/icons/win/'
-            : 'images/icons/win/';
+            ? '../assets/'
+            : 'assets/';
         this.icon = path.resolve(path.join(__dirname, `${winPath}icon_w.ico`));
       } else {
         this.icon = path.resolve(
