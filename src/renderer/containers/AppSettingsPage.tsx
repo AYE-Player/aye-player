@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { observer } from 'mobx-react-lite';
 import { useSnackbar } from 'notistack';
 import React from 'react';

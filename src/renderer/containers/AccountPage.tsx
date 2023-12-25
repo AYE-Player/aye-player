@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useSnackbar } from 'notistack';
 import React from 'react';

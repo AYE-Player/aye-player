@@ -1,5 +1,5 @@
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import React from 'react';
 
 interface ICustomButtonProps {

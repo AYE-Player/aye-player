@@ -1,11 +1,13 @@
-import { Grid } from '@material-ui/core';
-import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
-import RepeatIcon from '@material-ui/icons/Repeat';
-import RepeatOneIcon from '@material-ui/icons/RepeatOne';
-import ShuffleIcon from '@material-ui/icons/Shuffle';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import { Grid } from '@mui/material';
+import {
+  PauseCircleOutline,
+  PlayCircleOutline,
+  Repeat as RepeatIcon,
+  RepeatOne,
+  Shuffle,
+  SkipNext,
+  SkipPrevious,
+} from '@mui/icons-material';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import styled from 'styled-components';
@@ -56,7 +58,7 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
     <Grid container justifyContent="center" alignItems="center" spacing={2}>
       {player.repeat === Repeat.ONE ? (
         <Control onClick={toggleRepeat}>
-          <RepeatOneIcon htmlColor="#f0ad4e" />
+          <RepeatOne htmlColor="#f0ad4e" />
         </Control>
       ) : (
         <Control onClick={toggleRepeat}>
@@ -68,7 +70,7 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
         </Control>
       )}
       <Control onClick={previous}>
-        <SkipPreviousIcon
+        <SkipPrevious
           htmlColor={
             trackHistory.tracks.length > 0 || checkTrackIndexBiggerAs(0)
               ? ''
@@ -78,17 +80,17 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
       </Control>
       {player.isPlaying ? (
         <PlayControl onClick={pause}>
-          <PauseCircleOutlineIcon fontSize="large" />
+          <PauseCircleOutline fontSize="large" />
         </PlayControl>
       ) : (
         <PlayControl onClick={play}>
-          <PlayCircleOutlineIcon fontSize="large" />
+          <PlayCircleOutline fontSize="large" />
         </PlayControl>
       )}
       <Control
         onClick={queue.tracks.length > 1 || app.autoRadio ? skip : () => {}}
       >
-        <SkipNextIcon
+        <SkipNext
           htmlColor={
             (queue.tracks.length > 1 && !app.autoRadio) ||
             (player.currentPlaylist &&
@@ -102,11 +104,7 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
         />
       </Control>
       <Control onClick={shuffle}>
-        {player.isShuffling ? (
-          <ShuffleIcon htmlColor="#f0ad4e" />
-        ) : (
-          <ShuffleIcon />
-        )}
+        {player.isShuffling ? <Shuffle htmlColor="#f0ad4e" /> : <Shuffle />}
       </Control>
     </Grid>
   );

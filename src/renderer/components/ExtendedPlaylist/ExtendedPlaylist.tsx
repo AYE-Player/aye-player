@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable promise/always-return */
-import ControlPoint from '@material-ui/icons/ControlPoint';
+import ControlPoint from '@mui/icons-material/ControlPoint';
 import { Ref } from 'mobx-keystone';
 import { Observer } from 'mobx-react-lite';
 import { useSnackbar } from 'notistack';

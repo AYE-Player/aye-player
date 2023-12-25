@@ -21,7 +21,10 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "release/app/dist",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "paths": {
+      "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
+    }
   },
   "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
 }

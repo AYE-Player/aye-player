@@ -1,8 +1,8 @@
-import { Grid } from '@material-ui/core';
-import Slider from '@material-ui/core/Slider';
-import { withStyles } from '@material-ui/core/styles';
-import VolumeDown from '@material-ui/icons/VolumeDown';
-import VolumeUp from '@material-ui/icons/VolumeUp';
+import { Grid } from '@mui/material';
+import Slider from '@mui/material/Slider';
+import { withStyles } from '@mui/styles';
+import VolumeDown from '@mui/icons-material/VolumeDown';
+import VolumeUp from '@mui/icons-material/VolumeUp';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import PlayerInterop from '../../../dataLayer/api/PlayerInterop';
@@ -21,7 +21,7 @@ const VolumeSlider: React.FunctionComponent = () => {
 
   const handleVolumeChange = (
     // eslint-disable-next-line @typescript-eslint/ban-types
-    _event: React.ChangeEvent<{}> | null,
+    _event: Event | null,
     newValue: number | number[],
   ) => {
     if (Array.isArray(newValue)) {

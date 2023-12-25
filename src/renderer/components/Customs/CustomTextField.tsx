@@ -1,4 +1,5 @@
-import { TextField, withStyles } from '@material-ui/core';
+import { TextField } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import React from 'react';
 
 interface ICustomTextFieldProps {

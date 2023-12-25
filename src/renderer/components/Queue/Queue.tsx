@@ -1,4 +1,4 @@
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
+import { QueueMusic } from '@mui/icons-material';
 import { Observer } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
 import React from 'react';
@@ -75,7 +75,7 @@ const Queue: React.FunctionComponent = () => {
           Queue
           <ButtonAligner>
             <Control>
-              <QueueMusicIcon onClick={showQueue} />
+              <QueueMusic onClick={showQueue} />
             </Control>
           </ButtonAligner>
         </Header>
@@ -118,7 +118,7 @@ const Queue: React.FunctionComponent = () => {
         Queue
         <ButtonAligner>
           <Control>
-            <QueueMusicIcon onClick={showQueue} />
+            <QueueMusic onClick={showQueue} />
           </Control>
         </ButtonAligner>
       </Header>

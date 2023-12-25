@@ -1,5 +1,5 @@
-import { InputBase } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import { InputBase } from '@mui/material';
+import { Search } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,10 +9,9 @@ import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
 import { detectLink } from '../../../helpers';
 import SnackMessage from '../Customs/SnackMessage';
-import ApiClient from '../../dataLayer/api/ApiClient';
 import { useStore } from '../StoreProvider';
 
-const Search = styled.div`
+const SearchWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
@@ -108,7 +107,7 @@ const SearchBar: React.FunctionComponent = () => {
   };
 
   return (
-    <Search>
+    <SearchWrapper>
       <InputBase
         onKeyPress={handleKeyPress}
         onChange={handleChange}
@@ -116,7 +115,7 @@ const SearchBar: React.FunctionComponent = () => {
         inputProps={{ 'aria-label': t('SearchPage.title') }}
         style={{ color: '#f2f5f4', marginLeft: '16px', width: '100%' }}
       />
-      <SearchIcon
+      <Search
         style={{
           padding: '0px 8px',
           backgroundColor: '#3d4653',
@@ -126,7 +125,7 @@ const SearchBar: React.FunctionComponent = () => {
         }}
         onClick={handleSearchIconClick}
       />
-    </Search>
+    </SearchWrapper>
   );
 };
 

@@ -1,12 +1,16 @@
 import React from 'react';
-import { TextField, makeStyles, Theme, createStyles } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  useTheme,
+} from '@mui/material';
 import Divider from '../Divider';
+import { createStyles, makeStyles } from '@mui/styles';
 
 interface ICustomFormDialogProps {
   id: string;
@@ -25,11 +29,11 @@ interface ICustomFormDialogProps {
   textField: any;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
+      marginLeft: useTheme().spacing(1),
+      marginRight: useTheme().spacing(1),
       width: 400,
     },
   }),

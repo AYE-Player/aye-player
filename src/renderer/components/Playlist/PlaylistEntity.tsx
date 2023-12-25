@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import DragHandleIcon from '@material-ui/icons/DragHandle';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { Ref } from 'mobx-keystone';
 import { useSnackbar } from 'notistack';
 import React from 'react';

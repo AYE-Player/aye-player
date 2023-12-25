@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import DragHandleIcon from '@material-ui/icons/DragHandle';
+import { DragHandle } from '@mui/icons-material';
 import { Ref } from 'mobx-keystone';
 import { observer } from 'mobx-react-lite';
 import { useSnackbar } from 'notistack';
@@ -24,7 +24,7 @@ interface IProps {
   dragId: string;
 }
 
-const DragHandle = styled(DragHandleIcon)`
+const DragHandleIcon = styled(DragHandle)`
   opacity: 0;
   cursor: grab;
   z-index: 10;
@@ -41,7 +41,7 @@ const Container = styled.div`
   &:last-child {
     border-bottom: none;
   }
-  &:hover ${DragHandle} {
+  &:hover ${DragHandleIcon} {
     opacity: 1;
   }
   &:hover > div {
@@ -209,7 +209,7 @@ const QueueEntity: React.FunctionComponent<IProps> = (props) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <DragHandle fontSize="small" />
+            <DragHandleIcon fontSize="small" />
             <TrackInfoContainer
               onClick={() => onClick(index)}
               id={`queue${track.current.id}-${index}`}

@@ -1,15 +1,14 @@
-import Popover from '@material-ui/core/Popover';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { Popover, Typography, useTheme } from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import React from 'react';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     popover: {
       pointerEvents: 'none',
     },
     paper: {
-      padding: theme.spacing(1),
+      padding: useTheme().spacing(1),
     },
   }),
 );

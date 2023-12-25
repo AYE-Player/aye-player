@@ -1,8 +1,12 @@
-import { MenuItem } from '@material-ui/core';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+  useTheme,
+} from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -16,21 +20,20 @@ interface ICustomDropDownProps {
   name: string;
   id: string;
   handleChange: (
-    event: React.ChangeEvent<{
-      value: unknown;
-    }>,
-  ) => Promise<void>;
+    event: SelectChangeEvent<unknown>,
+    child: React.ReactNode,
+  ) => {};
   selected: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     formControl: {
-      margin: theme.spacing(1),
+      margin: useTheme().spacing(1),
       minWidth: 120,
     },
     selectEmpty: {
-      marginTop: theme.spacing(2),
+      marginTop: useTheme().spacing(2),
     },
   }),
 );

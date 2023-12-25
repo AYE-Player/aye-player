@@ -1,7 +1,5 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Menu, { MenuProps } from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import withStyles from '@material-ui/core/styles/withStyles';
+import { ClickAwayListener, Menu, MenuItem, MenuProps } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +30,6 @@ const StyledMenu = withStyles({
 })((props: MenuProps) => (
   <Menu
     elevation={0}
-    getContentAnchorEl={null}
     anchorOrigin={{
       vertical: 'top',
       horizontal: 'center',

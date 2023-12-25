@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import Slider from '@material-ui/core/Slider';
-import { withStyles } from '@material-ui/core/styles';
+import { Slider } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import styled from 'styled-components';

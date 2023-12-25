@@ -1,5 +1,5 @@
-import ListIcon from '@material-ui/icons/List';
-import SearchIcon from '@material-ui/icons/Search';
+import ListIcon from '@mui/icons-material/List';
+import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';

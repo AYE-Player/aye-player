@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

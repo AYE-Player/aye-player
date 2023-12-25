@@ -1,8 +1,6 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Menu, { MenuProps } from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import withStyles from '@material-ui/core/styles/withStyles';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
+import { withStyles } from '@mui/styles';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +34,6 @@ const StyledMenu = withStyles({
 })((props: MenuProps) => (
   <Menu
     elevation={0}
-    getContentAnchorEl={null}
     anchorOrigin={{
       vertical: 'top',
       horizontal: 'center',

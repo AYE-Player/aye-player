@@ -1,8 +1,6 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Menu, { MenuProps } from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import withStyles from '@material-ui/core/styles/withStyles';
+import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
+import { MoreHoriz } from '@mui/icons-material';
+import withStyles from '@mui/styles/withStyles';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -37,7 +35,6 @@ const StyledMenu = withStyles({
 })((props: MenuProps) => (
   <Menu
     elevation={0}
-    getContentAnchorEl={null}
     anchorOrigin={{
       vertical: 'top',
       horizontal: 'left',
@@ -124,7 +121,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
   return (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
-        <MoreHorizIcon />
+        <MoreHoriz />
         <StyledMenu
           id="queue-menu"
           anchorEl={anchorEl}

@@ -1,6 +1,6 @@
 /* eslint-disable promise/no-nesting */
 /* eslint-disable promise/always-return */
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { getSnapshot, registerRootStore } from 'mobx-keystone';
 import { SnackbarProvider } from 'notistack';
 import { Component } from 'react';

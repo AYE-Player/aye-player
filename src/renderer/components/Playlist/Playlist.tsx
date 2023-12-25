@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import { Ref } from 'mobx-keystone';
 import { Observer, observer } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';

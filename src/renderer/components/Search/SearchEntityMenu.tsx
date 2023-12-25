@@ -1,9 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Menu, { MenuProps } from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import withStyles from '@material-ui/core/styles/withStyles';
+import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { withStyles } from '@mui/styles';
 import { Ref } from 'mobx-keystone';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +35,6 @@ const StyledMenu = withStyles({
 })((props: MenuProps) => (
   <Menu
     elevation={0}
-    getContentAnchorEl={null}
     anchorOrigin={{
       vertical: 'top',
       horizontal: 'left',

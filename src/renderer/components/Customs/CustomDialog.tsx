@@ -1,17 +1,15 @@
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
 import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 interface ICustomDialogProps {
@@ -26,17 +24,17 @@ interface ICustomDialogProps {
   children: JSX.Element | JSX.Element[];
 }
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {
       margin: 0,
-      padding: theme.spacing(2),
+      padding: useTheme().spacing(2),
     },
     closeButton: {
       position: 'absolute',
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500],
+      right: useTheme().spacing(1),
+      top: useTheme().spacing(1),
+      color: useTheme().palette.grey[500],
     },
   });
 
@@ -46,37 +44,38 @@ export interface DialogTitleProps extends WithStyles<typeof styles> {
   onClose: () => void;
 }
 
-const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
+const StyledDialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   const { children, classes, onClose, ...other } = props;
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+    <DialogTitle className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
+          size="large"
         >
           <CloseIcon />
         </IconButton>
       ) : null}
-    </MuiDialogTitle>
+    </DialogTitle>
   );
 });
 
-const DialogContent = withStyles((theme: Theme) => ({
+const StyledDialogContent = withStyles(() => ({
   root: {
-    padding: theme.spacing(2),
+    padding: useTheme().spacing(2),
   },
-}))(MuiDialogContent);
+}))(DialogContent);
 
-const DialogActions = withStyles((theme: Theme) => ({
+const StyledDialogActions = withStyles(() => ({
   root: {
     margin: 0,
-    padding: theme.spacing(1),
+    padding: useTheme().spacing(1),
   },
-}))(MuiDialogActions);
+}))(DialogActions);
 
 const CustomDialog: React.FunctionComponent<ICustomDialogProps> = (props) => {
   const {
@@ -104,17 +103,17 @@ const CustomDialog: React.FunctionComponent<ICustomDialogProps> = (props) => {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+        <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
           {title}
-        </DialogTitle>
-        <DialogContent dividers>
+        </StyledDialogTitle>
+        <StyledDialogContent dividers>
           <Typography gutterBottom>{text}</Typography>
-        </DialogContent>
-        <DialogActions>
+        </StyledDialogContent>
+        <StyledDialogActions>
           <Button onClick={handleConfirmClose} color="secondary">
             {confirmButtonText}
           </Button>
-        </DialogActions>
+        </StyledDialogActions>
       </Dialog>
     </>
   );

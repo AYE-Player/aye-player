@@ -1,12 +1,15 @@
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  useTheme,
+} from '@mui/material';
+import { createStyles, makeStyles } from '@mui/styles';
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 interface ICustomTextareaDialogProps {
   id: string;
@@ -24,11 +27,11 @@ interface ICustomTextareaDialogProps {
   type: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
+      marginLeft: useTheme().spacing(1),
+      marginRight: useTheme().spacing(1),
       width: 400,
     },
   }),

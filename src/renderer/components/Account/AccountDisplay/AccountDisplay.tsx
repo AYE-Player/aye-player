@@ -1,5 +1,4 @@
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { AccountCircle, ExpandMore } from '@mui/icons-material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -46,17 +45,17 @@ const AccountDisplay: React.FunctionComponent<IAccountDisplayProps> = (
           {avatar ? (
             <Avatar src={avatar} />
           ) : (
-            <AccountCircleIcon style={{ marginRight: '8px' }} />
+            <AccountCircle style={{ marginRight: '8px' }} />
           )}
           <Text>{username || email}</Text>
-          <ExpandMoreIcon />
+          <ExpandMore />
         </AccountDisplayMenu>
       ) : (
         <Link
           to={routes.LOGIN}
           style={{ display: 'flex', alignItems: 'center' }}
         >
-          <AccountCircleIcon style={{ marginRight: '8px' }} />
+          <AccountCircle style={{ marginRight: '8px' }} />
           {t('AccountDisplay.loginButton')}
         </Link>
       )}
