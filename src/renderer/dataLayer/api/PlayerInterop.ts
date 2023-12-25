@@ -22,7 +22,7 @@ class PlayerInterop {
         '#embedded-player',
       ) as HTMLIFrameElement;
       this.apiUrl = Root.stores.app.devMode
-        ? 'http://localhost:3000'
+        ? 'http://localhost:5173'
         : 'https://player.aye-playr.de';
       if (this.initTrack && this.player) {
         this.setInitState();

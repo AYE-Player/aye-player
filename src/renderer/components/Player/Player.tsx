@@ -197,7 +197,7 @@ const Player: React.FunctionComponent = () => {
   window.onmessage = async (message: { origin: string; data: any }) => {
     const { data, origin } = message;
     const playerUrl = app.devMode
-      ? 'http://localhost:3000'
+      ? 'http://localhost:5173'
       : 'https://player.aye-playr.de';
     if (origin === playerUrl) {
       switch (data.type) {
@@ -319,7 +319,7 @@ const Player: React.FunctionComponent = () => {
         {app.devMode ? (
           <iframe
             id="embedded-player"
-            src="http://localhost:3000"
+            src="http://localhost:5173"
             style={{
               width: '320px',
               height: '290px',

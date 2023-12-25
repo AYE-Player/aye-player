@@ -42,7 +42,6 @@ const PlayerControls: React.FunctionComponent<IProps> = (props) => {
         skip={skip}
         toggleRepeat={toggleRepeat}
       />
-      <Divider size={2} />
       <VolumeSlider />
       <PlaybackControl seekingStop={seekingStop} />
     </Container>
