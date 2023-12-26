@@ -14,7 +14,7 @@ interface IAccountDisplayProps {
 
 const Container = styled.div`
   position: absolute;
-  top: 24px;
+  top: 8px;
   right: 16px;
   height: 32px;
   display: flex;
