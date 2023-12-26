@@ -7,12 +7,20 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import PlayerInterop from '../../../dataLayer/api/PlayerInterop';
 import { useStore } from '../../StoreProvider';
+import styled from 'styled-components';
 
 const StyledSlider = withStyles({
   root: {
     color: '#f0ad4e',
   },
 })(Slider);
+
+const IconWrapper = styled.span`
+  &:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+  }
+`;
 
 const VolumeSlider: React.FunctionComponent = () => {
   PlayerInterop.init();
@@ -43,7 +51,9 @@ const VolumeSlider: React.FunctionComponent = () => {
   return (
     <Grid container justifyContent="center" alignItems="center" spacing={1}>
       <Grid item>
-        <VolumeDown onClick={() => handleVolumeChange(null, 0)} />
+        <IconWrapper>
+          <VolumeDown onClick={() => handleVolumeChange(null, 0)} />
+        </IconWrapper>
       </Grid>
       <Grid item xs>
         <StyledSlider
@@ -51,11 +61,14 @@ const VolumeSlider: React.FunctionComponent = () => {
           max={100}
           value={player.volume * 100}
           onChange={handleVolumeChange}
+          size='small'
           aria-labelledby="continuous-slider"
         />
       </Grid>
       <Grid item>
-        <VolumeUp onClick={() => handleVolumeChange(null, 100)} />
+        <IconWrapper>
+          <VolumeUp onClick={() => handleVolumeChange(null, 100)} />
+        </IconWrapper>
       </Grid>
     </Grid>
   );

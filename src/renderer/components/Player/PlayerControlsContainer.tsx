@@ -4,6 +4,7 @@ import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import PlayerControlElements from './PlayerControls/PlayerControlElements';
 import VolumeSlider from './PlayerControls/VolumeSlider';
 import PlaybackControl from './PlayerControls/PlaybackControl';
+import Divider from '../Divider';
 
 interface IProps {
   play: () => void;
@@ -41,6 +42,7 @@ const PlayerControls: React.FunctionComponent<IProps> = (props) => {
         skip={skip}
         toggleRepeat={toggleRepeat}
       />
+      <Divider size={1} />
       <VolumeSlider />
       <PlaybackControl seekingStop={seekingStop} />
     </Container>

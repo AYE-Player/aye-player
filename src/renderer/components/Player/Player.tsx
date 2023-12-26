@@ -197,9 +197,7 @@ const Player: React.FunctionComponent = () => {
 
   window.onmessage = async (message: { origin: string; data: any }) => {
     const { data, origin } = message;
-    const playerOrDebugUrl = app.devMode
-      ? debugUrl
-      : playerUrl;
+    const playerOrDebugUrl = app.devMode ? debugUrl : playerUrl;
     if (origin === playerOrDebugUrl) {
       switch (data.type) {
         case IncomingMessageType.SET_PLAYBACK_POSITION:

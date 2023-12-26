@@ -261,7 +261,7 @@ class Root extends Component {
             container
             direction="row"
             data-tid="container"
-            style={{ height: '100%' }}
+            style={{ height: '100%', paddingTop: '16px' }}
           >
             <div
               style={{

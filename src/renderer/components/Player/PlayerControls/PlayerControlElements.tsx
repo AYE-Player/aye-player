@@ -28,6 +28,10 @@ const Control = styled.div`
   margin: 0 8px;
   width: 24px;
   height: 24px;
+  &:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+  }
 `;
 
 const PlayControl = styled.div`
@@ -35,6 +39,10 @@ const PlayControl = styled.div`
   margin: 0 8px;
   width: 32px;
   height: 32px;
+  &:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+  }
 `;
 
 const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
