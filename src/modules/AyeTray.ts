@@ -34,8 +34,8 @@ class AyeTray extends BaseModule {
       this.appName = 'AYE - Player';
       const basePath =
         process.env.NODE_ENV === 'development'
-          ? '../assets/icons-material/'
-          : 'assets/icons-material/';
+          ? '../assets/icons/'
+          : 'assets/icons/';
       if (process.platform === 'darwin') {
         this.icon = nativeImage.createFromPath(
           path.resolve(

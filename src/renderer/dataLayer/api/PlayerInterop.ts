@@ -2,6 +2,7 @@ import { getSnapshot, SnapshotOutOfModel } from 'mobx-keystone';
 import Root from '../../containers/Root';
 import { OutgoingMessageType } from '../../../types/enums';
 import Track from '../models/Track';
+import { debugUrl, playerUrl } from 'renderer/constants';
 
 class PlayerInterop {
   private player!: HTMLIFrameElement;
@@ -22,8 +23,8 @@ class PlayerInterop {
         '#embedded-player',
       ) as HTMLIFrameElement;
       this.apiUrl = Root.stores.app.devMode
-        ? 'http://localhost:5173'
-        : 'https://player.aye-playr.de';
+        ? debugUrl
+        : playerUrl;
       if (this.initTrack && this.player) {
         this.setInitState();
       }

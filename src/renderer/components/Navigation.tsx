@@ -3,8 +3,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
+import { routes } from 'renderer/constants';
 import styled from 'styled-components';
-import routes from '../constants/routes.json';
 
 const Container = styled.div`
   width: calc(100% - 335px);
@@ -37,23 +37,6 @@ const Navigation: React.FunctionComponent = () => {
     <Container>
       <MenuItem>
         <NavLink
-          to={routes.SEARCH}
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <>
-            <SearchIcon style={{ paddingRight: '8px' }} />
-            {t('Navigation.search')}
-          </>
-        </NavLink>
-      </MenuItem>
-      <MenuItem>
-        <NavLink
           to={routes.PLAYLIST}
           style={{
             width: '100%',
@@ -66,6 +49,23 @@ const Navigation: React.FunctionComponent = () => {
           <>
             <ListIcon style={{ paddingRight: '8px' }} />
             {t('Navigation.playlists')}
+          </>
+        </NavLink>
+      </MenuItem>
+      <MenuItem>
+        <NavLink
+          to={routes.SEARCH}
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <>
+            <SearchIcon style={{ paddingRight: '8px' }} />
+            {t('Navigation.search')}
           </>
         </NavLink>
       </MenuItem>

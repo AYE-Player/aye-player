@@ -3,8 +3,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import routes from '../../../constants/routes.json';
 import AccountDisplayMenu from './AccountDisplayMenu';
+import { routes } from 'renderer/constants';
 
 interface IAccountDisplayProps {
   username?: string;

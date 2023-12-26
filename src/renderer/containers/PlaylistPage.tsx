@@ -18,11 +18,11 @@ import Divider from '../components/Divider';
 import PlaylistWithMultiSongDialog from '../components/Playlist/PlaylistWithMultiSongDialog';
 import PlaylistPageMenu from '../components/PlaylistPageMenu';
 import { useStore } from '../components/StoreProvider';
-import routes from '../constants/routes.json';
 import ApiClient from '../dataLayer/api/ApiClient';
 import Playlist from '../dataLayer/models/Playlist';
 import Track from '../dataLayer/models/Track';
 import { formattedDuration, removeControlCharacters } from '../../helpers';
+import { routes } from 'renderer/constants';
 
 const Header = styled.div`
   font-size: 24px;

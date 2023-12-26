@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router';
-import routes from './constants/routes.json';
 import SearchPage from './containers/SearchPage';
 import AccountPage from './containers/AccountPage';
 import PlaylistPage from './containers/PlaylistPage';
@@ -9,6 +8,7 @@ import ExtendedPlaylist from './components/ExtendedPlaylist/ExtendedPlaylist';
 import AppSettingsPage from './containers/AppSettingsPage';
 import LoginPage from './containers/LoginPage';
 import AdminPage from './containers/AdminPage';
+import { routes } from './constants';
 
 export default () => (
   <Routes>

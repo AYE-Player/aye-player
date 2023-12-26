@@ -299,7 +299,7 @@ class ApiClient {
    * @param password password of the user
    */
   authenticate = async (email: string, password: string): Promise<string> => {
-    const { data } = await graphQLClientAuth.mutate<Token, CreateTokenInput>({
+    const { data, errors } = await graphQLClientAuth.mutate<Token, CreateTokenInput>({
       mutation: GRAPHQL.MUTATION.CREATE_TOKEN,
       variables: {
         email,
@@ -307,7 +307,12 @@ class ApiClient {
       },
     });
 
-    return data!.createToken;
+    if (data) {
+      return data.createToken;
+    } else {
+      console.log("a", errors?.map(er => er.extensions["originalError"]))
+      throw errors?.map(er => er.extensions["originalError"])
+    }
   };
 
   /**

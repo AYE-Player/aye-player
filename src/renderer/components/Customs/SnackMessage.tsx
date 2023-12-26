@@ -23,6 +23,7 @@ const Container = styled.div<IContainerProps>`
     }
     return 'width: 256px;';
   }}
+  margin-top: 16px;
   height: 32px;
   display: flex;
   align-items: center;

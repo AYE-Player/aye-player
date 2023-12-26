@@ -11,10 +11,11 @@ import CustomTextField from '../components/Customs/CustomTextField';
 import SnackMessage from '../components/Customs/SnackMessage';
 import Divider from '../components/Divider';
 import SmallLink from '../components/Link/SmallLink';
-import routes from '../constants/routes.json';
 import ApiClient from '../dataLayer/api/ApiClient';
 import Playlist from '../dataLayer/models/Playlist';
 import { useStore } from '../components/StoreProvider';
+import { routes } from 'renderer/constants';
+import { ApolloError } from '@apollo/client';
 
 const Header = styled.div`
   font-size: 24px;
@@ -52,7 +53,10 @@ const LoginPage: React.FunctionComponent = () => {
       await getPlaylists();
       navigate(routes.SEARCH);
     } catch (error) {
-      /* if (err.response.status === 401) {
+      if (
+        error instanceof ApolloError &&
+        error.graphQLErrors[0].extensions['code'] === 'UNAUTHENTICATED'
+      ) {
         enqueueSnackbar('', {
           content: (key) => (
             <SnackMessage
@@ -79,7 +83,7 @@ const LoginPage: React.FunctionComponent = () => {
           ),
           disableWindowBlurListener: true,
         });
-      } */
+      }
     }
   };
 

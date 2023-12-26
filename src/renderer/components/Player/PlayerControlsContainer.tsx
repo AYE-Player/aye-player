@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
-import Divider from '../Divider';
 import PlayerControlElements from './PlayerControls/PlayerControlElements';
 import VolumeSlider from './PlayerControls/VolumeSlider';
 import PlaybackControl from './PlayerControls/PlaybackControl';

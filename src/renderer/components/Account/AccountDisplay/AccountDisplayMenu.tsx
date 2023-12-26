@@ -4,9 +4,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import routes from '../../../constants/routes.json';
 import Divider from '../../Divider';
 import { useStore } from '../../StoreProvider';
+import { routes } from 'renderer/constants';
 
 interface IAccountDisplayMenuProps {
   children?: any;

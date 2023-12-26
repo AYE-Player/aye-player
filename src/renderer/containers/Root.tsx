@@ -255,6 +255,7 @@ class Root extends Component {
             vertical: 'top',
             horizontal: 'center',
           }}
+          preventDuplicate
         >
           <Grid
             container

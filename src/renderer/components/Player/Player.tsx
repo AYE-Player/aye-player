@@ -11,6 +11,7 @@ import PlayerControlsContainer from './PlayerControlsContainer';
 import { timestringToSeconds } from '../../../helpers';
 import { useStore } from '../StoreProvider';
 import './PlayerListeners';
+import { debugUrl, playerUrl } from 'renderer/constants';
 
 const AyeLogo = require('../../../images/aye_temp_logo.png');
 
@@ -196,10 +197,10 @@ const Player: React.FunctionComponent = () => {
 
   window.onmessage = async (message: { origin: string; data: any }) => {
     const { data, origin } = message;
-    const playerUrl = app.devMode
-      ? 'http://localhost:5173'
-      : 'https://player.aye-playr.de';
-    if (origin === playerUrl) {
+    const playerOrDebugUrl = app.devMode
+      ? debugUrl
+      : playerUrl;
+    if (origin === playerOrDebugUrl) {
       switch (data.type) {
         case IncomingMessageType.SET_PLAYBACK_POSITION:
           if (data.playbackPosition === 0 && data.isLooping) {
@@ -319,7 +320,7 @@ const Player: React.FunctionComponent = () => {
         {app.devMode ? (
           <iframe
             id="embedded-player"
-            src="http://localhost:5173"
+            src={debugUrl}
             style={{
               width: '320px',
               height: '290px',
@@ -331,7 +332,7 @@ const Player: React.FunctionComponent = () => {
         ) : (
           <iframe
             id="embedded-player"
-            src="https://player.aye-playr.de"
+            src={playerUrl}
             style={{
               width: '320px',
               height: '290px',

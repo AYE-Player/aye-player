@@ -11,8 +11,8 @@ import CustomTextField from '../components/Customs/CustomTextField';
 import SnackMessage from '../components/Customs/SnackMessage';
 import Divider from '../components/Divider';
 import { useStore } from '../components/StoreProvider';
-import routes from '../constants/routes.json';
 import { validateEmail } from '../../helpers';
+import { routes } from 'renderer/constants';
 
 const Header = styled.div`
   font-size: 24px;
