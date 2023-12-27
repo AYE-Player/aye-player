@@ -3,7 +3,8 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import styled from 'styled-components';
 import ytsr from 'ytsr';
-import ApiClient from '../../dataLayer/api/ApiClient';
+import { debugUrl, playerUrl } from 'renderer/constants';
+import { getRelatedTracks } from 'renderer/dataLayer/api/fetchers';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
 import { Channel, IncomingMessageType, Repeat } from '../../../types/enums';
@@ -11,7 +12,6 @@ import PlayerControlsContainer from './PlayerControlsContainer';
 import { timestringToSeconds } from '../../../helpers';
 import { useStore } from '../StoreProvider';
 import './PlayerListeners';
-import { debugUrl, playerUrl } from 'renderer/constants';
 
 const AyeLogo = require('../../../images/aye_temp_logo.png');
 
@@ -43,7 +43,7 @@ const Player: React.FunctionComponent = () => {
   };
 
   const getNextRadioTracks = async (prevTrack?: Track) => {
-    const relatedTracks = await ApiClient.getRelatedTracks(
+    const relatedTracks = await getRelatedTracks(
       player.currentTrack?.current.id || prevTrack!.id,
     );
     const tracks: Track[] = [];

@@ -6,7 +6,7 @@ module.exports = {
     'import/no-unresolved': 'error',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
-    'react/no-unstable-nested-components': 'off'.
+    'react/no-unstable-nested-components': 'off',
     // Since React 17 and typescript 4.1 you can safely disable the rule
     'react/react-in-jsx-scope': 'off',
     'func-names': [
@@ -26,7 +26,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'react/function-component-definition': [
       2,
-      { namedComponents: 'arrow-function' },
+      { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
     ],
     'import/extensions': [
       'error',

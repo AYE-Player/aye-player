@@ -5,8 +5,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Ref } from 'mobx-keystone';
+import { getRelatedTracks } from 'renderer/dataLayer/api/fetchers';
 import Track from '../../dataLayer/models/Track';
-import ApiClient from '../../dataLayer/api/ApiClient';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import { useStore } from '../StoreProvider';
 
@@ -93,7 +93,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
     PlayerInterop.setTrack(trackCopy);
 
     // get related tracks
-    const relatedTracks = await ApiClient.getRelatedTracks(trackCopy.id);
+    const relatedTracks = await getRelatedTracks(trackCopy.id);
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
       let track: Track;

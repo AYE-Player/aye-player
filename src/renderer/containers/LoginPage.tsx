@@ -3,19 +3,18 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { HTTPError } from 'ky';
 import { useNavigate } from 'react-router-dom';
+import { routes } from 'renderer/constants';
+import { ApolloError } from '@apollo/client';
+import { getPlaylists } from 'renderer/dataLayer/api/fetchers';
 import { Channel } from '../../types/enums';
 import CustomButton from '../components/Customs/CustomButton';
 import CustomTextField from '../components/Customs/CustomTextField';
 import SnackMessage from '../components/Customs/SnackMessage';
 import Divider from '../components/Divider';
 import SmallLink from '../components/Link/SmallLink';
-import ApiClient from '../dataLayer/api/ApiClient';
 import Playlist from '../dataLayer/models/Playlist';
 import { useStore } from '../components/StoreProvider';
-import { routes } from 'renderer/constants';
-import { ApolloError } from '@apollo/client';
 
 const Header = styled.div`
   font-size: 24px;
@@ -31,8 +30,8 @@ const LoginPage: React.FunctionComponent = () => {
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const getPlaylists = async () => {
-    const data = await ApiClient.getPlaylists();
+  const getMappedPlaylists = async () => {
+    const data = await getPlaylists();
 
     for (const playlist of data) {
       const pl = new Playlist({
@@ -50,12 +49,12 @@ const LoginPage: React.FunctionComponent = () => {
   const handleOnClick = async () => {
     try {
       await user.authenticate(name, password);
-      await getPlaylists();
+      await getMappedPlaylists();
       navigate(routes.SEARCH);
     } catch (error) {
       if (
         error instanceof ApolloError &&
-        error.graphQLErrors[0].extensions['code'] === 'UNAUTHENTICATED'
+        error.graphQLErrors[0].extensions.code === 'UNAUTHENTICATED'
       ) {
         enqueueSnackbar('', {
           content: (key) => (

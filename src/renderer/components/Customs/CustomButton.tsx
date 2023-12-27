@@ -33,16 +33,14 @@ const CssButton = withStyles({
 const CustomButton: React.FunctionComponent<ICustomButtonProps> = (props) => {
   const { onClick, disabled, style, children, name } = props;
   return (
-    <>
-      <CssButton
-        variant="outlined"
-        disabled={disabled}
-        onClick={onClick}
-        style={{ ...style }}
-      >
-        {name || children}
-      </CssButton>
-    </>
+    <CssButton
+      variant="outlined"
+      disabled={disabled}
+      onClick={onClick}
+      style={{ ...style }}
+    >
+      {name || children}
+    </CssButton>
   );
 };
 

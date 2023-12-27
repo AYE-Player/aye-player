@@ -9,7 +9,15 @@ import {
 } from 'mobx-keystone';
 import { Channel } from '../../../types/enums';
 import { IUserInfoDto } from '../../../types/response';
-import ApiClient from '../api/ApiClient';
+import {
+  authenticate,
+  getUserdata,
+  deleteUser,
+  updatePassword,
+  updateAvatar,
+  register,
+  forgotPassword,
+} from '../api/fetchers';
 
 @model('User')
 class User extends Model({
@@ -43,11 +51,11 @@ class User extends Model({
     window.electron.ipcRenderer.sendMessage(Channel.LOG, {
       message: `Trying to log in with: ${username}`,
     });
-    const token = yield* _await(ApiClient.authenticate(username, password));
+    const token = yield* _await(authenticate(username, password));
 
     localStorage.setItem('token', token);
 
-    const userInfo = yield* _await(ApiClient.getUserdata());
+    const userInfo = yield* _await(getUserdata());
 
     // Save user information
     this.email = userInfo.email;
@@ -73,7 +81,7 @@ class User extends Model({
     window.electron.ipcRenderer.sendMessage(Channel.LOG, {
       message: `Deleting User ${this.id}`,
     });
-    yield* _await(ApiClient.deleteUser());
+    yield* _await(deleteUser());
     this.logout();
   });
 
@@ -83,7 +91,7 @@ class User extends Model({
     newPassword: string,
     oldPassword: string,
   ) {
-    yield* _await(ApiClient.updatePassword(oldPassword, newPassword));
+    yield* _await(updatePassword(oldPassword, newPassword));
   });
 
   @modelFlow
@@ -92,7 +100,7 @@ class User extends Model({
     data.append('avatar', newAvatar);
 
     // Upload avatar image and get storage URL
-    const { avatar } = yield* _await(ApiClient.updateAvatar(data));
+    const { avatar } = yield* _await(updateAvatar(data));
 
     // set local URL for direct effect
     this.avatar = `https://cdn.aye-playr.de/public/avatars/${avatar}`;
@@ -106,12 +114,12 @@ class User extends Model({
     password: string,
     inviteCode?: string,
   ) {
-    return yield* _await(ApiClient.register(name, email, password, inviteCode));
+    return yield* _await(register(name, email, password, inviteCode));
   });
 
   @modelFlow
   forgotPassword = _async(function* (this: User, email: string) {
-    yield* _await(ApiClient.forgotPassword(email));
+    yield* _await(forgotPassword(email));
   });
 }
 

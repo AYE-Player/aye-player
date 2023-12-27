@@ -10,6 +10,8 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { routes } from 'renderer/constants';
+import { getPlaylists } from 'renderer/dataLayer/api/fetchers';
 import { Channel } from '../../types/enums';
 import CustomButton from '../components/Customs/CustomButton';
 import CustomTextareaDialog from '../components/Customs/CustomTextareaDialog';
@@ -18,11 +20,9 @@ import Divider from '../components/Divider';
 import PlaylistWithMultiSongDialog from '../components/Playlist/PlaylistWithMultiSongDialog';
 import PlaylistPageMenu from '../components/PlaylistPageMenu';
 import { useStore } from '../components/StoreProvider';
-import ApiClient from '../dataLayer/api/ApiClient';
 import Playlist from '../dataLayer/models/Playlist';
 import Track from '../dataLayer/models/Track';
 import { formattedDuration, removeControlCharacters } from '../../helpers';
-import { routes } from 'renderer/constants';
 
 const Header = styled.div`
   font-size: 24px;
@@ -69,7 +69,7 @@ const PlaylistPage: React.FunctionComponent = () => {
 
     const token = localStorage.getItem('token');
     if (token) {
-      ApiClient.getPlaylists()
+      getPlaylists()
         .then((data) => {
           // eslint-disable-next-line promise/always-return
           for (const playlist of data) {
@@ -334,6 +334,7 @@ const PlaylistPage: React.FunctionComponent = () => {
         />
         <CustomTextareaDialog
           id="addTracksDialog"
+          // eslint-disable-next-line react/jsx-no-useless-fragment
           button={<></>}
           title={t('PlaylistPage.addTracks.title')}
           label={t('PlaylistPage.addTracks.label')}

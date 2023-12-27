@@ -6,10 +6,14 @@ import { SnackbarProvider } from 'notistack';
 import { Component } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import {
+  getPlaylists,
+  getTracksFromPlaylist,
+  getUserdata,
+} from 'renderer/dataLayer/api/fetchers';
 import Player from '../components/Player/Player';
 import QueuePlaylistSwitch from '../components/QueuePlaylistSwitch';
 import { StoreProvider } from '../components/StoreProvider';
-import ApiClient from '../dataLayer/api/ApiClient';
 import PlayerInterop from '../dataLayer/api/PlayerInterop';
 import Playlist from '../dataLayer/models/Playlist';
 import Track from '../dataLayer/models/Track';
@@ -90,7 +94,7 @@ const authenticate = async () => {
   const token = localStorage.getItem('token');
   if (token) {
     try {
-      const userInfo = await ApiClient.getUserdata();
+      const userInfo = await getUserdata();
       rootStore.user.setData(userInfo);
     } catch (error) {
       localStorage.removeItem('token');
@@ -102,11 +106,11 @@ const authenticate = async () => {
   }
 };
 
-const getPlaylists = async () => {
+const getMappedPlaylists = async () => {
   try {
     const token = localStorage.getItem('token');
     if (token) {
-      const playlists = await ApiClient.getPlaylists();
+      const playlists = await getPlaylists();
 
       for (const playlist of playlists) {
         const pl = new Playlist({
@@ -142,7 +146,7 @@ class Root extends Component {
     super(props);
     authenticate()
       .then(() => {
-        getPlaylists()
+        getMappedPlaylists()
           .then(() => {
             if (window.electron.settings.has('playerSettings')) {
               const playerSettings: IPlayerSettings =
@@ -182,7 +186,7 @@ class Root extends Component {
                 );
                 if (!playlist) return;
                 // eslint-disable-next-line promise/no-nesting
-                ApiClient.getTracksFromPlaylist(playlist.id)
+                getTracksFromPlaylist(playlist.id)
                   .then((tracks) => {
                     for (const track of tracks) {
                       const tr = new Track({

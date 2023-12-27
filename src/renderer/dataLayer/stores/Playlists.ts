@@ -8,10 +8,14 @@ import {
   _async,
   _await,
 } from 'mobx-keystone';
-import ApiClient from '../api/ApiClient';
 import Playlist from '../models/Playlist';
 import Track from '../models/Track';
 import RootStore from './RootStore';
+import {
+  createPlaylist,
+  createPlaylistWithSongs,
+  deletePlaylist,
+} from '../api/fetchers';
 
 @model('Playlists')
 class Playlists extends Model({
@@ -23,7 +27,7 @@ class Playlists extends Model({
 
   @modelFlow
   createList = _async(function* (this: Playlists, name: string) {
-    const playlistDTO = yield* _await(ApiClient.createPlaylist(name));
+    const playlistDTO = yield* _await(createPlaylist(name));
 
     const playlist = new Playlist({
       name: playlistDTO.name,
@@ -42,9 +46,7 @@ class Playlists extends Model({
     name: string,
     songs: { url: string }[],
   ) {
-    const playlistDTO = yield* _await(
-      ApiClient.createPlaylistWithSongs(name, songs),
-    );
+    const playlistDTO = yield* _await(createPlaylistWithSongs(name, songs));
 
     const playlist = new Playlist({
       name,
@@ -82,7 +84,7 @@ class Playlists extends Model({
 
   @modelFlow
   remove = _async(function* (this: Playlists, id: string) {
-    yield* _await(ApiClient.deletePlaylist(id));
+    yield* _await(deletePlaylist(id));
 
     this.lists.splice(
       this.lists.findIndex((playlist) => playlist.id === id),

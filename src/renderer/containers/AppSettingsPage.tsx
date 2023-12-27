@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { observer } from 'mobx-react-lite';
 import { useSnackbar } from 'notistack';
@@ -8,6 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ISpotifyPlaylist } from 'types/response';
+import { SelectChangeEvent } from '@mui/material';
 import { Channel } from '../../types/enums';
 import CustomDropDown from '../components/Customs/CustomDropDown';
 import CustomListDialog from '../components/Customs/CustomListDialog';
@@ -82,7 +80,10 @@ const AccountPage: React.FunctionComponent = () => {
 
   const [language, setLanguage] = React.useState(app.language);
 
-  const handleChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = async (
+    event: SelectChangeEvent<unknown>,
+    child: React.ReactNode,
+  ) => {
     setLanguage(event.target.value as string);
     app.setLanguage(event.target.value as string);
   };
@@ -193,9 +194,11 @@ const AccountPage: React.FunctionComponent = () => {
             <Divider size={2} />
             <img
               src={SpotifyLogo}
+              alt="SpotifyLogo"
               width={150}
               style={{ cursor: 'pointer' }}
               onClick={createSpotifyAuth}
+              role="presentation"
             />
             <Divider size={2} />
           </SettingsColumn>

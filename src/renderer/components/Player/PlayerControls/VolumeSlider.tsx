@@ -5,9 +5,9 @@ import VolumeDown from '@mui/icons-material/VolumeDown';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import styled from 'styled-components';
 import PlayerInterop from '../../../dataLayer/api/PlayerInterop';
 import { useStore } from '../../StoreProvider';
-import styled from 'styled-components';
 
 const StyledSlider = withStyles({
   root: {
@@ -28,7 +28,6 @@ const VolumeSlider: React.FunctionComponent = () => {
   const { player } = useStore();
 
   const handleVolumeChange = (
-    // eslint-disable-next-line @typescript-eslint/ban-types
     _event: Event | null,
     newValue: number | number[],
   ) => {
@@ -61,7 +60,7 @@ const VolumeSlider: React.FunctionComponent = () => {
           max={100}
           value={player.volume * 100}
           onChange={handleVolumeChange}
-          size='small'
+          size="small"
           aria-labelledby="continuous-slider"
         />
       </Grid>

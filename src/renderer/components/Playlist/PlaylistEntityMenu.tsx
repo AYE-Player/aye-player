@@ -8,9 +8,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ytsr from 'ytsr';
+import { getRelatedTracks } from 'renderer/dataLayer/api/fetchers';
 import { Channel } from '../../../types/enums';
 import { timestringToSeconds } from '../../../helpers';
-import ApiClient from '../../dataLayer/api/ApiClient';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
 import SnackMessage from '../Customs/SnackMessage';
@@ -125,7 +125,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
     PlayerInterop.setTrack(trackRef.current);
 
     // get related tracks
-    const relatedTracks = await ApiClient.getRelatedTracks(trackRef.current.id);
+    const relatedTracks = await getRelatedTracks(trackRef.current.id);
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
       let track: Track;

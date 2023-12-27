@@ -6,7 +6,7 @@ import { Ref } from 'mobx-keystone';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import ApiClient from '../../dataLayer/api/ApiClient';
+import { getRelatedTracks } from '../../dataLayer/api/fetchers';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
 import { useStore } from '../StoreProvider';
@@ -90,7 +90,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
     PlayerInterop.setTrack(trackRef.current);
 
     // get related tracks
-    const relatedTracks = await ApiClient.getRelatedTracks(trackRef.current.id);
+    const relatedTracks = await getRelatedTracks(trackRef.current.id);
     const tracks: Track[] = [];
     for (const trk of relatedTracks) {
       let track: Track;

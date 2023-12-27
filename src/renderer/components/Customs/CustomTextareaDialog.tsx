@@ -15,7 +15,7 @@ interface ICustomTextareaDialogProps {
   id: string;
   title: string;
   label: string;
-  button: JSX.Element;
+  button: React.JSX.Element;
   dialogText: string;
   open: boolean;
   handleClose: () => void;

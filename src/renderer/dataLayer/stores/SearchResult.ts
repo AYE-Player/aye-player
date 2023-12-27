@@ -9,7 +9,7 @@ import {
   _await,
 } from 'mobx-keystone';
 import { decodeHTMLEntities } from '../../../helpers';
-import ApiClient from '../api/ApiClient';
+import { getTrackFromUrl, searchTrack } from '../api/fetchers';
 import Track from '../models/Track';
 import trackRef from '../references/TrackRef';
 
@@ -23,7 +23,7 @@ class SearchResult extends Model({
 
   @modelFlow
   getTracks = _async(function* (term: string) {
-    const data = yield* _await(ApiClient.searchTrack(term));
+    const data = yield* _await(searchTrack(term));
     const tracks = [];
 
     for (const track of data) {
@@ -39,7 +39,7 @@ class SearchResult extends Model({
 
   @modelFlow
   getTrackFromUrl = _async(function* (this: SearchResult, url: string) {
-    const data = yield* _await(ApiClient.getTrackFromUrl(url));
+    const data = yield* _await(getTrackFromUrl(url));
 
     return {
       id: data.id,

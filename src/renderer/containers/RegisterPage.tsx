@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ApolloError } from '@apollo/client';
+import { routes } from 'renderer/constants';
 import { Channel } from '../../types/enums';
 import CustomButton from '../components/Customs/CustomButton';
 import CustomTextField from '../components/Customs/CustomTextField';
@@ -12,7 +13,6 @@ import SnackMessage from '../components/Customs/SnackMessage';
 import Divider from '../components/Divider';
 import { useStore } from '../components/StoreProvider';
 import { validateEmail } from '../../helpers';
-import { routes } from 'renderer/constants';
 
 const Header = styled.div`
   font-size: 24px;

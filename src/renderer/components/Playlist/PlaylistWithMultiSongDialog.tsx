@@ -9,14 +9,14 @@ import {
   DialogTitle,
   useTheme,
 } from '@mui/material';
-import Divider from '../Divider';
 import { createStyles, makeStyles } from '@mui/styles';
+import Divider from '../Divider';
 
 interface ICustomFormDialogProps {
   id: string;
   title: string;
   label: string;
-  button?: JSX.Element;
+  button?: React.JSX.Element;
   dialogText: string;
   open: boolean;
   handleClose: () => void;

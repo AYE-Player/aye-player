@@ -10,10 +10,17 @@ import {
   _async,
   _await,
 } from 'mobx-keystone';
-import ApiClient from '../api/ApiClient';
 import trackRef from '../references/TrackRef';
 import RootStore from '../stores/RootStore';
 import Track from './Track';
+import {
+  addTrackToPlaylist,
+  addTracksToPlaylistByUrls,
+  getTracksFromPlaylist,
+  removeTrackFromPlaylistById,
+  moveTrackTo,
+  replaceSong,
+} from '../api/fetchers';
 
 @model('Playlist')
 class Playlist extends Model({
@@ -38,7 +45,7 @@ class Playlist extends Model({
 
   @modelFlow
   addTrack = _async(function* (this: Playlist, track: Track) {
-    yield* _await(ApiClient.addTrackToPlaylist(this.id, track));
+    yield* _await(addTrackToPlaylist(this.id, track));
 
     this.trackCount += 1;
     this.duration += track.duration;
@@ -60,12 +67,10 @@ class Playlist extends Model({
     songs: { url: string }[],
   ) {
     // Add tracks to the playlist
-    const pl = yield* _await(
-      ApiClient.addTracksToPlaylistByUrls(this.id, songs),
-    );
+    const pl = yield* _await(addTracksToPlaylistByUrls(this.id, songs));
 
     // Get track information of the playlist
-    const tracks = yield* _await(ApiClient.getTracksFromPlaylist(this.id));
+    const tracks = yield* _await(getTracksFromPlaylist(this.id));
 
     const { trackCache } = getRoot<RootStore>(this);
     for (const track of tracks) {
@@ -92,7 +97,7 @@ class Playlist extends Model({
 
   @modelFlow
   removeTrackById = _async(function* (this: Playlist, id: string) {
-    yield* _await(ApiClient.removeTrackFromPlaylistById(this.id, id));
+    yield* _await(removeTrackFromPlaylistById(this.id, id));
 
     const idx = this.tracks.findIndex((trk) => trk.current.id === id);
 
@@ -112,7 +117,7 @@ class Playlist extends Model({
     this.tracks.splice(oldIndex, 1);
     this.tracks.splice(newIndex, 0, trackRef(track));
 
-    yield* _await(ApiClient.moveTrackTo(this.id, track.id, newIndex));
+    yield* _await(moveTrackTo(this.id, track.id, newIndex));
   });
 
   @modelFlow
@@ -122,7 +127,7 @@ class Playlist extends Model({
     newTrack: Track,
   ) {
     yield* _await(
-      ApiClient.replaceSong(
+      replaceSong(
         {
           id: oldTrack.current.id,
           title: oldTrack.current.title,
@@ -149,7 +154,7 @@ class Playlist extends Model({
   getTracks = _async(function* (this: Playlist) {
     const { trackCache } = getRoot<RootStore>(this);
 
-    const tracks = yield* _await(ApiClient.getTracksFromPlaylist(this.id));
+    const tracks = yield* _await(getTracksFromPlaylist(this.id));
 
     for (const track of tracks) {
       const tr = new Track({

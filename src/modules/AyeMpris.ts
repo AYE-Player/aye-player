@@ -1,5 +1,4 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import mpris from 'mpris-service';
 import { Channel } from '../types/enums';
@@ -49,7 +48,7 @@ class AyeMpris extends BaseModule {
         this.player.playbackStatus === 'Playing' ||
         this.player.playbackStatus === 'Paused'
       ) {
-        this.executeMediaKey(this.window, 'play-pause');
+        AyeMpris.executeMediaKey(this.window, 'play-pause');
       }
     });
 
@@ -59,14 +58,14 @@ class AyeMpris extends BaseModule {
         this.player.playbackStatus === 'Paused' ||
         this.player.playbackStatus === 'Stopped'
       ) {
-        this.executeMediaKey(this.window, 'play-pause');
+        AyeMpris.executeMediaKey(this.window, 'play-pause');
       }
     });
 
     this.player.on('pause', () => {
       AyeLogger.media('Pause received');
       if (this.player.playbackStatus === 'Playing') {
-        this.executeMediaKey(this.window, 'play-pause');
+        AyeMpris.executeMediaKey(this.window, 'play-pause');
       }
     });
 
@@ -76,7 +75,7 @@ class AyeMpris extends BaseModule {
         this.player.playbackStatus === 'Playing' ||
         this.player.playbackStatus === 'Paused'
       ) {
-        this.executeMediaKey(this.window, 'play-next');
+        AyeMpris.executeMediaKey(this.window, 'play-next');
       }
     });
 
@@ -86,7 +85,7 @@ class AyeMpris extends BaseModule {
         this.player.playbackStatus === 'Playing' ||
         this.player.playbackStatus === 'Paused'
       ) {
-        this.executeMediaKey(this.window, 'play-previous');
+        AyeMpris.executeMediaKey(this.window, 'play-previous');
       }
     });
 
@@ -101,7 +100,7 @@ class AyeMpris extends BaseModule {
         }
 
         AyeLogger.media(`Volume received, set to: ${volume}`);
-        this.changeVolumeState(this.window, volume * 100);
+        AyeMpris.changeVolumeState(this.window, volume * 100);
         this.window.webContents.send('win2Player', {
           type: 'setVolume',
           info: volume * 100,
@@ -213,12 +212,12 @@ class AyeMpris extends BaseModule {
     );
   }
 
-  executeMediaKey = (win: BrowserWindow, key: string) => {
+  static executeMediaKey = (win: BrowserWindow, key: string) => {
     AyeLogger.info(`Sending key: ${key}`);
     win.webContents.send(key);
   };
 
-  changeVolumeState = (win: BrowserWindow, volume: number) => {
+  static changeVolumeState = (win: BrowserWindow, volume: number) => {
     win.webContents.executeJavaScript(`
       window.changeVolumeSate(${volume})
     `);

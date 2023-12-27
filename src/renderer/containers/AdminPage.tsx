@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CustomButton from 'renderer/components/Customs/CustomButton';
-import ApiClient from 'renderer/dataLayer/api/ApiClient';
+import { generateInviteCode } from 'renderer/dataLayer/api/fetchers';
 import { Channel } from '../../types/enums';
 import CustomSwitch from '../components/Customs/CustomSwitch';
 import Divider from '../components/Divider';
@@ -53,9 +53,9 @@ const AdminPage: React.FunctionComponent = () => {
     player.setCurrentPlaylist();
   };
 
-  const generateInviteCode = async () => {
+  const generateInviteCodeHandler = async () => {
     try {
-      const token = await ApiClient.generateInviteCode();
+      const token = await generateInviteCode();
       setInviteCode(token);
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -93,7 +93,7 @@ const AdminPage: React.FunctionComponent = () => {
           />
           <Divider size={2} />
           <CustomButton
-            onClick={generateInviteCode}
+            onClick={generateInviteCodeHandler}
             name="Generate Invite Code"
           />
           {inviteCode && (
