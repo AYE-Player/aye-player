@@ -44,8 +44,13 @@ const Container = styled.div`
   &:last-child {
     border-bottom: none;
   }
+  &:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+  }
   &:hover ${DragHandle} {
     opacity: 1;
+    color: #ffffff;
   }
 `;
 const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
