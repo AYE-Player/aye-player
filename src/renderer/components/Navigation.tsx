@@ -2,7 +2,7 @@ import ListIcon from '@mui/icons-material/List';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { routes } from 'renderer/constants';
 import styled from 'styled-components';
 
@@ -28,10 +28,15 @@ const MenuItem = styled.div`
   &:nth-child(2n) {
     border-left: 1px solid #565f6c;
   }
+  &:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+  }
 `;
 
 const Navigation: React.FunctionComponent = () => {
   const { t } = useTranslation();
+  const location = useLocation();
 
   return (
     <Container>
@@ -44,6 +49,9 @@ const Navigation: React.FunctionComponent = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            color: location.pathname.includes('playlist')
+              ? '#f0ad4e'
+              : '#ffffff',
           }}
         >
           <>
@@ -61,6 +69,9 @@ const Navigation: React.FunctionComponent = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            color: !location.pathname.includes('playlist')
+              ? '#f0ad4e'
+              : '#ffffff',
           }}
         >
           <>
