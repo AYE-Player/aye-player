@@ -267,7 +267,7 @@ export const moveTrackTo = async (
     variables: {
       id,
       trackId,
-      position: position.toString(),
+      position,
     },
   });
 };

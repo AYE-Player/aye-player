@@ -273,21 +273,19 @@ export const GRAPHQL = {
 
     REMOVE_TRACK_FROM_PLAYLIST: gql`
       mutation ($id: ID!, $trackId: ID!) {
-        removeSongFromPlaylist(
-          removeSongFromPlaylistArgs: { playlistId: $id, songId: $trackId }
-        )
+        removeSongFromPlaylist(input: { playlistId: $id, songId: $trackId }) {
+          success
+        }
       }
     `,
 
     MOVE_TRACK_TO: gql`
-      mutation ($id: ID!, $trackId: ID!, $position: String!) {
-        patchSong(
-          patchSongArgs: {
-            PlaylistId: $id
-            YtId: $trackId
-            Patch: [{ op: "replace", path: "OrderId", value: $position }]
-          }
-        )
+      mutation ($id: ID!, $trackId: ID!, $position: Int!) {
+        moveTrack(
+          input: { PlaylistId: $id, trackId: $trackId, position: $position }
+        ) {
+          success
+        }
       }
     `,
 
