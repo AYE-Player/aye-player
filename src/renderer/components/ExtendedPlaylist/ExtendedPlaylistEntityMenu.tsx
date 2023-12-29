@@ -1,17 +1,17 @@
-import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { ClickAwayListener, MenuItem } from '@mui/material';
 import { Ref } from 'mobx-keystone';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { getRelatedTracks } from 'renderer/dataLayer/api/fetchers';
 import styled from 'styled-components';
 import ytsr from 'ytsr';
-import { getRelatedTracks } from 'renderer/dataLayer/api/fetchers';
 import { timestringToSeconds } from '../../../helpers';
 import { Channel } from '../../../types/enums';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
+import AyeMenu from '../Customs/AyeMenu';
 import SnackMessage from '../Customs/SnackMessage';
 import { useStore } from '../StoreProvider';
 
@@ -28,29 +28,6 @@ const Container = styled.div`
   right: 0;
   cursor: pointer;
 `;
-
-const StyledMenu = withStyles({
-  paper: {
-    backgroundColor: '#3D4653',
-    boxShadow:
-      '0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)',
-    color: '#f2f5f4',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'left',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    {...props}
-  />
-));
 
 const ExtendedPlaylistEntityMenu: React.FunctionComponent<
   IPlaylistEntityMenuProps
@@ -178,7 +155,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
         <MoreHorizIcon />
-        <StyledMenu
+        <AyeMenu
           id="extended-playlist-menu"
           anchorEl={anchorEl}
           keepMounted
@@ -202,7 +179,7 @@ const ExtendedPlaylistEntityMenu: React.FunctionComponent<
             {t('EntityMenu.replaceTrack')}
           </MenuItem>
           <MenuItem onClick={handleCopyUrl}>{t('EntityMenu.copyURL')}</MenuItem>
-        </StyledMenu>
+        </AyeMenu>
       </Container>
     </ClickAwayListener>
   );

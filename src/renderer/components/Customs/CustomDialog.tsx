@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Button,
   Dialog,
@@ -21,7 +22,7 @@ interface ICustomDialogProps {
   handleClickOpen: () => void;
   handleConfirmClose: () => void;
   open: boolean;
-  children: JSX.Element | JSX.Element[];
+  children: React.JSX.Element | React.JSX.Element[];
 }
 
 const styles = () =>

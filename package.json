@@ -283,7 +283,6 @@
     "logLevel": "quiet"
   },
   "resolutions": {
-    "open": "7.4.2",
      "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   }
 }

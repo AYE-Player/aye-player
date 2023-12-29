@@ -1,12 +1,12 @@
-import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { ClickAwayListener, MenuItem } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Channel } from '../../types/enums';
 import PlayerInterop from '../dataLayer/api/PlayerInterop';
+import AyeMenu from './Customs/AyeMenu';
 import SnackMessage from './Customs/SnackMessage';
 import { useStore } from './StoreProvider';
 
@@ -23,29 +23,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 `;
-
-const StyledMenu = withStyles({
-  paper: {
-    backgroundColor: '#3D4653',
-    boxShadow:
-      '0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)',
-    color: '#f2f5f4',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    {...props}
-  />
-));
 
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
   props,
@@ -168,7 +145,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
         <MoreHorizIcon />
-        <StyledMenu
+        <AyeMenu
           id="account-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -197,7 +174,7 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
           <MenuItem onClick={handleDeleteClick}>
             {t('EntityMenu.deletePlaylist')}
           </MenuItem>
-        </StyledMenu>
+        </AyeMenu>
       </Container>
     </ClickAwayListener>
   );

@@ -24,7 +24,7 @@ interface IProps {
 }
 
 interface ITrackInfoContainerProps {
-  active: boolean;
+  $active: boolean;
 }
 
 const DragHandle = styled(DragHandleIcon)`
@@ -57,7 +57,7 @@ const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   width: 224px;
   padding: 8px 0;
   padding-left: 8px;
-  color: ${({ active }) => (active ? '#f0ad4e' : '')};
+  color: ${({ $active }) => ($active ? '#f0ad4e' : '')};
 `;
 
 const Title = styled.div`
@@ -206,7 +206,7 @@ const PlaylistEntity: React.FunctionComponent<IProps> = (props) => {
           >
             <DragHandle fontSize="small" />
             <TrackInfoContainer
-              active={active}
+              $active={active}
               onClick={() => onClick(track)}
               id={`track${track.current.id}-${index}`}
             >

@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { withStyles } from '@mui/styles';
+import { ClickAwayListener, MenuItem } from '@mui/material';
 import { Ref } from 'mobx-keystone';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { getRelatedTracks } from '../../dataLayer/api/fetchers';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
+import { getRelatedTracks } from '../../dataLayer/api/fetchers';
 import Track from '../../dataLayer/models/Track';
+import AyeMenu from '../Customs/AyeMenu';
 import { useStore } from '../StoreProvider';
 
 interface ISearchEntityMenuProps {
@@ -24,28 +24,6 @@ const Container = styled.div`
   right: 0;
   cursor: pointer;
 `;
-
-const StyledMenu = withStyles({
-  paper: {
-    backgroundColor: '#3D4653',
-    boxShadow:
-      '0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)',
-    color: '#f2f5f4',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'left',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
 
 const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
   props,
@@ -119,7 +97,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
         <MoreHorizIcon />
-        <StyledMenu
+        <AyeMenu
           id="playlist-menu"
           anchorEl={anchorEl}
           keepMounted
@@ -149,7 +127,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
               </MenuItem>
             </span>
           )}
-        </StyledMenu>
+        </AyeMenu>
       </Container>
     </ClickAwayListener>
   );

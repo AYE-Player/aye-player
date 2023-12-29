@@ -1,10 +1,10 @@
-import { ClickAwayListener, Menu, MenuItem, MenuProps } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
+import { ClickAwayListener, MenuItem } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import AyeMenu from 'renderer/components/Customs/AyeMenu';
 import { routes } from 'renderer/constants';
+import styled from 'styled-components';
 import Divider from '../../Divider';
 import { useStore } from '../../StoreProvider';
 
@@ -19,29 +19,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 `;
-
-const StyledMenu = withStyles({
-  paper: {
-    backgroundColor: '#3D4653',
-    boxShadow:
-      '0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)',
-    color: '#f2f5f4',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    {...props}
-  />
-));
 
 const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = (
   props,
@@ -90,7 +67,7 @@ const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
         {children}
-        <StyledMenu
+        <AyeMenu
           id="account-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -111,7 +88,7 @@ const AccountDisplayMenu: React.FunctionComponent<IAccountDisplayMenuProps> = (
           <MenuItem onClick={handleLogoutClick}>
             {t('AccountDisplay.Menu.logout')}
           </MenuItem>
-        </StyledMenu>
+        </AyeMenu>
       </Container>
     </ClickAwayListener>
   );

@@ -1,13 +1,13 @@
-import { ClickAwayListener, Menu, MenuProps, MenuItem } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
-import withStyles from '@mui/styles/withStyles';
+import { ClickAwayListener, MenuItem } from '@mui/material';
+import { Ref } from 'mobx-keystone';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Ref } from 'mobx-keystone';
 import { getRelatedTracks } from 'renderer/dataLayer/api/fetchers';
-import Track from '../../dataLayer/models/Track';
+import styled from 'styled-components';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
+import Track from '../../dataLayer/models/Track';
+import AyeMenu from '../Customs/AyeMenu';
 import { useStore } from '../StoreProvider';
 
 interface IQueueEntityMenuProps {
@@ -24,29 +24,6 @@ const Container = styled.div`
   right: 0;
   cursor: pointer;
 `;
-
-const StyledMenu = withStyles({
-  paper: {
-    backgroundColor: '#3D4653',
-    boxShadow:
-      '0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19)',
-    color: '#f2f5f4',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'left',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    {...props}
-  />
-));
 
 const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
   props,
@@ -122,7 +99,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
     <ClickAwayListener onClickAway={handleClose} disableReactTree>
       <Container onClick={handleClick}>
         <MoreHoriz />
-        <StyledMenu
+        <AyeMenu
           id="queue-menu"
           anchorEl={anchorEl}
           keepMounted
@@ -157,7 +134,7 @@ const QueueEntityMenu: React.FunctionComponent<IQueueEntityMenuProps> = (
               </MenuItem>
             </span>
           )}
-        </StyledMenu>
+        </AyeMenu>
       </Container>
     </ClickAwayListener>
   );

@@ -25,7 +25,7 @@ interface IProps {
 }
 
 interface ITrackInfoContainerProps {
-  active: boolean;
+  $active: boolean;
 }
 
 const DragHandle = styled(DragHandleIcon)`
@@ -60,7 +60,7 @@ const TrackInfoContainer = styled.div<ITrackInfoContainerProps>`
   padding: 8px;
   padding-left: 8px;
   width: calc(100% - 200px);
-  color: ${({ active }) => (active ? '#f0ad4e' : '')};
+  color: ${({ $active }) => ($active ? '#f0ad4e' : '')};
 `;
 
 const TitleWrapper = styled.div`
@@ -225,7 +225,7 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
             {...provided.dragHandleProps}
           >
             <DragHandle fontSize="small" />
-            <TrackInfoContainer active={active} onClick={() => onClick(track)}>
+            <TrackInfoContainer $active={active} onClick={() => onClick(track)}>
               <TrackImageContainer>
                 <TrackImage
                   src={`https://img.youtube.com/vi/${track.current.id}/default.jpg`}
@@ -251,12 +251,10 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
         onSelect={handleClose}
         createListItem={createListItem}
         listItemText={t('SearchEntity.createListText')}
-        options={playlists.lists.map((list) => {
-          return {
-            name: list.name,
-            id: list.id,
-          };
-        })}
+        options={playlists.lists.map((list) => ({
+          name: list.name,
+          id: list.id,
+        }))}
       />
       <CustomFormDialog
         id="createPlaylistDialog"
