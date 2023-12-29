@@ -36,8 +36,9 @@ class User extends Model({
   setData(userInfo: IUserInfoDto) {
     this.email = userInfo.email;
     this.name = userInfo.username;
-    this.avatar =
-      `https://cdn.aye-playr.de/public/avatars/${userInfo.avatar}` ?? undefined;
+    this.avatar = userInfo.avatar
+      ? `https://cdn.aye-playr.de/public/avatars/${userInfo.avatar}`
+      : undefined;
     this.isAuthenticated = true;
     this.roles = userInfo.roles.map((role) => role.name);
   }
@@ -60,8 +61,9 @@ class User extends Model({
     // Save user information
     this.email = userInfo.email;
     this.name = userInfo.username;
-    this.avatar =
-      `https://cdn.aye-playr.de/public/avatars/${userInfo.avatar}` ?? undefined;
+    this.avatar = userInfo.avatar
+      ? `https://cdn.aye-playr.de/public/avatars/${userInfo.avatar}`
+      : undefined;
     this.isAuthenticated = true;
     this.roles = userInfo.roles.map((role) => role.name);
   });

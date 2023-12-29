@@ -3,7 +3,7 @@ export interface IRole {
 }
 
 export interface IUserInfoDto {
-  avatar: string;
+  avatar?: string;
   email: string;
   username: string;
   roles: IRole[];
