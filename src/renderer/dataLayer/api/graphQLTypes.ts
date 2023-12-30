@@ -81,8 +81,8 @@ export interface ReplaceTrackInput {
 }
 
 export interface MoveTrackToInput {
-  id: Scalars['ID'];
-  trackId: Scalars['String'];
+  playlistId: Scalars['ID'];
+  trackId: Scalars['ID'];
   position: Scalars['Int'];
 }
 

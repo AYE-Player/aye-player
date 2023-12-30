@@ -258,16 +258,16 @@ export const removeTrackFromPlaylistById = async (
  * @param position position to move to
  */
 export const moveTrackTo = async (
-  id: string,
+  playlistId: string,
   trackId: string,
   position: number,
 ) => {
   graphQLClientPlaylists.mutate<void, MoveTrackToInput>({
     mutation: GRAPHQL.MUTATION.MOVE_TRACK_TO,
     variables: {
-      id,
       trackId,
       position,
+      playlistId,
     },
   });
 };

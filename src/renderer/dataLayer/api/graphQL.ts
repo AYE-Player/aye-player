@@ -280,9 +280,13 @@ export const GRAPHQL = {
     `,
 
     MOVE_TRACK_TO: gql`
-      mutation ($id: ID!, $trackId: ID!, $position: Int!) {
+      mutation ($trackId: ID!, $position: Int!, $playlistId: ID!) {
         moveTrack(
-          input: { PlaylistId: $id, trackId: $trackId, position: $position }
+          input: {
+            trackId: $trackId
+            position: $position
+            playlistId: $playlistId
+          }
         ) {
           success
         }
