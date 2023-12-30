@@ -28,9 +28,11 @@ const Control = styled.div`
   margin: 0 8px;
   width: 24px;
   height: 24px;
+  opacity: 0.75;
   &:hover {
     cursor: pointer;
-    color: #f0ad4e;
+    color: #1db954;
+    opacity: 1;
   }
 `;
 
@@ -39,9 +41,11 @@ const PlayControl = styled.div`
   margin: 0 8px;
   width: 32px;
   height: 32px;
+  opacity: 0.75;
   &:hover {
     cursor: pointer;
-    color: #f0ad4e;
+    color: #1db954;
+    opacity: 1;
   }
 `;
 
@@ -66,12 +70,12 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
     <Grid container justifyContent="center" alignItems="center" spacing={2}>
       {player.repeat === Repeat.ONE ? (
         <Control onClick={toggleRepeat}>
-          <RepeatOne htmlColor="#f0ad4e" />
+          <RepeatOne htmlColor="#1db954" />
         </Control>
       ) : (
         <Control onClick={toggleRepeat}>
           {player.repeat === Repeat.PLAYLIST ? (
-            <RepeatIcon htmlColor="#f0ad4e" />
+            <RepeatIcon htmlColor="#1db954" />
           ) : (
             <RepeatIcon />
           )}
@@ -112,7 +116,7 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
         />
       </Control>
       <Control onClick={shuffle}>
-        {player.isShuffling ? <Shuffle htmlColor="#f0ad4e" /> : <Shuffle />}
+        {player.isShuffling ? <Shuffle htmlColor="#1db954bf" /> : <Shuffle />}
       </Control>
     </Grid>
   );
