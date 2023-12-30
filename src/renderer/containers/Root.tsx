@@ -3,7 +3,7 @@
 import { Grid } from '@mui/material';
 import { getSnapshot, registerRootStore } from 'mobx-keystone';
 import { SnackbarProvider } from 'notistack';
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import {
@@ -35,7 +35,7 @@ interface IPlayerSettings {
   };
 }
 
-const rootStore = createStore();
+export const rootStore = createStore();
 
 registerRootStore(rootStore);
 
@@ -136,14 +136,11 @@ const getMappedPlaylists = async () => {
   }
 };
 
-class Root extends Component {
-  public static stores = rootStore;
-
+const Root = () => {
   /**
    *  Fill stores with cached information and sync with server (maybe do this in afterCreate?)
    */
-  constructor(props: any) {
-    super(props);
+  useEffect(() => {
     authenticate()
       .then(() => {
         getMappedPlaylists()
@@ -249,47 +246,45 @@ class Root extends Component {
           type: 'error',
         });
       });
-  }
+  }, []);
 
-  render() {
-    return (
-      <StoreProvider value={rootStore}>
-        <SnackbarProvider
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          preventDuplicate
+  return (
+    <StoreProvider value={rootStore}>
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        preventDuplicate
+      >
+        <Grid
+          container
+          direction="row"
+          data-tid="container"
+          style={{ height: '100%' }}
         >
-          <Grid
-            container
-            direction="row"
-            data-tid="container"
-            style={{ height: '100%' }}
+          <div
+            style={{
+              height: '100%',
+              padding: '0 0 0 8px',
+              borderRight: '1px solid #565f6c',
+              width: '336px',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
           >
-            <div
-              style={{
-                height: '100%',
-                padding: '0 0 0 8px',
-                borderRight: '1px solid #565f6c',
-                width: '336px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <QueuePlaylistSwitch />
-              <Player />
-            </div>
-            <MainGrid>
-              <MemoryRouter>
-                <MainPage />
-              </MemoryRouter>
-            </MainGrid>
-          </Grid>
-        </SnackbarProvider>
-      </StoreProvider>
-    );
-  }
-}
+            <QueuePlaylistSwitch />
+            <Player />
+          </div>
+          <MainGrid>
+            <MemoryRouter>
+              <MainPage />
+            </MemoryRouter>
+          </MainGrid>
+        </Grid>
+      </SnackbarProvider>
+    </StoreProvider>
+  );
+};
 
 export default Root;

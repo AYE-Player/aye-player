@@ -1,6 +1,6 @@
 import { getSnapshot, SnapshotOutOfModel } from 'mobx-keystone';
 import { debugUrl, playerUrl } from 'renderer/constants';
-import Root from '../../containers/Root';
+import { rootStore } from '../../containers/Root';
 import { OutgoingMessageType } from '../../../types/enums';
 import Track from '../models/Track';
 
@@ -22,7 +22,7 @@ class PlayerInterop {
       this.player = document.querySelector(
         '#embedded-player',
       ) as HTMLIFrameElement;
-      this.apiUrl = Root.stores.app.devMode ? debugUrl : playerUrl;
+      this.apiUrl = rootStore.app.devMode ? debugUrl : playerUrl;
       if (this.initTrack && this.player) {
         this.setInitState();
       }
