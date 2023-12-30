@@ -16,13 +16,15 @@ import trackRef from '../references/TrackRef';
 @model('SearchResult')
 class SearchResult extends Model({
   tracks: prop<Ref<Track>[]>(() => []),
+  searching: prop(false),
 }) {
   get isEmpty() {
     return this.tracks.length === 0;
   }
 
   @modelFlow
-  getTracks = _async(function* (term: string) {
+  getTracks = _async(function* (this: SearchResult, term: string) {
+    this.searching = true;
     const data = yield* _await(searchTrack(term));
     const tracks = [];
 
@@ -33,6 +35,8 @@ class SearchResult extends Model({
         title: decodeHTMLEntities(track.title),
       });
     }
+
+    this.searching = false;
 
     return tracks;
   });

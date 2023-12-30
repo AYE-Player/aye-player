@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Ref } from 'mobx-keystone';
 import { nanoid } from 'nanoid';
+import { CircularProgress } from '@mui/material';
 import SearchBar from '../components/Search/SearchBar';
 import SearchEntity from '../components/Search/SearchEntity';
 import PlayerInterop from '../dataLayer/api/PlayerInterop';
@@ -26,9 +27,15 @@ const PlaylistContainer = styled.div`
   height: 100%;
 `;
 
-const ScrollContainer = styled.div`
+const ScrollContainer = styled.div<{ $searching: boolean }>`
   overflow: auto;
   height: calc(100% - 150px);
+  ${({ $searching }) =>
+    $searching
+      ? `display: flex;
+    justify-content: center;
+    align-items: center;`
+      : ''}
 `;
 
 const SearchPage: React.FunctionComponent = () => {
@@ -45,29 +52,38 @@ const SearchPage: React.FunctionComponent = () => {
     PlayerInterop.playTrack(track.current);
   };
 
+  const showLoadingOrResult = () => {
+    if (searchResult.searching) {
+      return <CircularProgress color="success" size="3rem" />;
+    }
+    if (!searchResult.searching && searchResult.isEmpty) {
+      return [];
+    }
+
+    return searchResult.tracks.map((track, index) => {
+      return (
+        <SearchEntity
+          duration={
+            track.current.duration === 0
+              ? 'LIVE'
+              : track.current.formattedDuration
+          }
+          track={track}
+          key={`{${track.current.id}-${nanoid()}`}
+          index={index}
+          onDoubleClick={handleDoubleClick}
+        />
+      );
+    });
+  };
+
   return (
     <Container>
       <Header>{t('SearchPage.title')}</Header>
       <PlaylistContainer>
         <SearchBar />
-        <ScrollContainer>
-          {searchResult.isEmpty
-            ? []
-            : searchResult.tracks.map((track, index) => {
-                return (
-                  <SearchEntity
-                    duration={
-                      track.current.duration === 0
-                        ? 'LIVE'
-                        : track.current.formattedDuration
-                    }
-                    track={track}
-                    key={`{${track.current.id}-${nanoid()}`}
-                    index={index}
-                    onDoubleClick={handleDoubleClick}
-                  />
-                );
-              })}
+        <ScrollContainer $searching={searchResult.searching}>
+          {showLoadingOrResult()}
         </ScrollContainer>
       </PlaylistContainer>
     </Container>

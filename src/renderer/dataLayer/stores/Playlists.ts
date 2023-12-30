@@ -16,6 +16,7 @@ import {
   createPlaylistWithSongs,
   deletePlaylist,
 } from '../api/fetchers';
+import { IPlaylistDto } from '../api/graphQLTypes';
 
 @model('Playlists')
 class Playlists extends Model({
@@ -27,7 +28,7 @@ class Playlists extends Model({
 
   @modelFlow
   createList = _async(function* (this: Playlists, name: string) {
-    const playlistDTO = yield* _await(createPlaylist(name));
+    const playlistDTO: IPlaylistDto = yield* _await(createPlaylist(name));
 
     const playlist = new Playlist({
       name: playlistDTO.name,
