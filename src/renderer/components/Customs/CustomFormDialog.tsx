@@ -24,7 +24,6 @@ interface ICustomFormDialogProps {
   type: string;
 }
 
-// TODO: Style this accordingly to theme
 const CustomFormDialog: React.FunctionComponent<ICustomFormDialogProps> = (
   props,
 ) => {

@@ -1,6 +1,5 @@
 import { Grid } from '@mui/material';
-import Slider from '@mui/material/Slider';
-import { withStyles } from '@mui/styles';
+import Slider from '@mui/material/Slider'
 import VolumeDown from '@mui/icons-material/VolumeDown';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import { observer } from 'mobx-react-lite';
@@ -8,12 +7,6 @@ import React from 'react';
 import styled from 'styled-components';
 import PlayerInterop from '../../../dataLayer/api/PlayerInterop';
 import { useStore } from '../../StoreProvider';
-
-const StyledSlider = withStyles({
-  root: {
-    color: '#f0ad4e',
-  },
-})(Slider);
 
 const IconWrapper = styled.span`
   &:hover {
@@ -55,7 +48,7 @@ const VolumeSlider: React.FunctionComponent = () => {
         </IconWrapper>
       </Grid>
       <Grid item xs>
-        <StyledSlider
+        <Slider
           min={0}
           max={100}
           value={player.volume * 100}

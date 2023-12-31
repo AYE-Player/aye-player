@@ -37,7 +37,6 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-// TODO: Style this accordingly to theme
 const CustomTextareaDialog: React.FunctionComponent<
   ICustomTextareaDialogProps
 > = (props) => {
@@ -64,10 +63,10 @@ const CustomTextareaDialog: React.FunctionComponent<
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="textarea-dialog-title"
         id={id}
       >
-        <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+        <DialogTitle id="textarea-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogText}</DialogContentText>
           <TextField

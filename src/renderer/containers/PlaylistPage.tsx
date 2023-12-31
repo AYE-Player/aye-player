@@ -394,7 +394,7 @@ const PlaylistPage: React.FunctionComponent = () => {
                 dialogText: t('PlaylistPage.dialog.textField.dialogText'),
               }}
               handleSongsChange={onPlaylistSongsChange}
-            />{' '}
+            />
           </>
         ) : (
           <>

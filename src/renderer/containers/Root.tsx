@@ -1,6 +1,6 @@
 /* eslint-disable promise/no-nesting */
 /* eslint-disable promise/always-return */
-import { Grid } from '@mui/material';
+import { Grid, ThemeProvider } from '@mui/material';
 import { getSnapshot, registerRootStore } from 'mobx-keystone';
 import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import {
   getTracksFromPlaylist,
   getUserdata,
 } from 'renderer/dataLayer/api/fetchers';
+import { createTheme } from '@mui/material/styles';
 import Player from '../components/Player/Player';
 import QueuePlaylistSwitch from '../components/QueuePlaylistSwitch';
 import { StoreProvider } from '../components/StoreProvider';
@@ -38,6 +39,27 @@ interface IPlayerSettings {
 export const rootStore = createStore();
 
 registerRootStore(rootStore);
+
+export const themeOptions = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#f0ad4e',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+    error: {
+      main: '#f44336',
+    },
+    success: {
+      main: '#f0ad4e',
+    },
+    warning: {
+      main: '#ef6c00',
+    },
+  },
+});
 
 window.electron.ipcRenderer.on(Channel.APP_CLOSE, () => {
   window.electron.settings.set(
@@ -257,31 +279,33 @@ const Root = () => {
         }}
         preventDuplicate
       >
-        <Grid
-          container
-          direction="row"
-          data-tid="container"
-          style={{ height: '100%' }}
-        >
-          <div
-            style={{
-              height: '100%',
-              padding: '0 0 0 8px',
-              borderRight: '1px solid #565f6c',
-              width: '336px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
+        <ThemeProvider theme={themeOptions}>
+          <Grid
+            container
+            direction="row"
+            data-tid="container"
+            style={{ height: '100%' }}
           >
-            <QueuePlaylistSwitch />
-            <Player />
-          </div>
-          <MainGrid>
-            <MemoryRouter>
-              <MainPage />
-            </MemoryRouter>
-          </MainGrid>
-        </Grid>
+            <div
+              style={{
+                height: '100%',
+                padding: '0 0 0 8px',
+                borderRight: '1px solid #565f6c',
+                width: '336px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <QueuePlaylistSwitch />
+              <Player />
+            </div>
+            <MainGrid>
+              <MemoryRouter>
+                <MainPage />
+              </MemoryRouter>
+            </MainGrid>
+          </Grid>
+        </ThemeProvider>
       </SnackbarProvider>
     </StoreProvider>
   );
