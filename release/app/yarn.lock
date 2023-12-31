@@ -92,7 +92,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bindings@^1.2.1, bindings@^1.3.0, bindings@^1.5.0:
+bindings@^1.2.1, bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
@@ -229,15 +229,12 @@ delegates@^1.0.0:
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==
 
-discord-rpc@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.npmjs.org/discord-rpc/-/discord-rpc-4.0.1.tgz"
-  integrity sha512-HOvHpbq5STRZJjQIBzwoKnQ0jHplbEWFWlPDwXXKm/bILh4nzjcg7mNqll0UY7RsjFoaXA7e/oYb/4lvpda2zA==
+"discord-rpc@git+ssh://git@github.com/AYE-Player/discord-rpc.git":
+  version "4.0.2"
+  resolved "git+ssh://git@github.com/AYE-Player/discord-rpc.git#1392eec986cd5e0547f0a6da05ef75aa473f7de2"
   dependencies:
     node-fetch "^2.6.1"
     ws "^7.3.1"
-  optionalDependencies:
-    register-scheme "github:devsnek/node-register-scheme"
 
 duplexer@~0.1.1:
   version "0.1.2"
@@ -629,11 +626,6 @@ nan@^2.12.1, nan@^2.14.2:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.18.0.tgz#26a6faae7ffbeb293a39660e88a76b82e30b7554"
   integrity sha512-W7tfG7vMOGtD30sHoZSSc/JVYiyDPEyQVso/Zz+/uQd0B0L46gtC+pHha5FFMRpil6fm/AoEcRWyOVi4+E/f8w==
 
-node-addon-api@^1.3.0:
-  version "1.7.2"
-  resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-1.7.2.tgz"
-  integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
-
 node-fetch@^2.6.1:
   version "2.6.7"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
@@ -767,13 +759,6 @@ regexp.prototype.flags@^1.2.0:
     call-bind "^1.0.2"
     define-properties "^1.1.3"
     functions-have-names "^1.2.2"
-
-"register-scheme@github:devsnek/node-register-scheme":
-  version "0.0.2"
-  resolved "git+ssh://git@github.com/devsnek/node-register-scheme.git#e7cc9a63a1f512565da44cb57316d9fb10750e17"
-  dependencies:
-    bindings "^1.3.0"
-    node-addon-api "^1.3.0"
 
 request@^2.88.2:
   version "2.88.2"
@@ -994,10 +979,10 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-v8-compile-cache@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz"
-  integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
+v8-compile-cache@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.4.0.tgz#cdada8bec61e15865f05d097c5f4fd30e94dc128"
+  integrity sha512-ocyWc3bAHBB/guyqJQVI5o4BZkPhznPYUG2ea80Gond/BgNWpap8TOmLSeeQG7bnh2KMISxskdADG59j7zruhw==
 
 verror@1.10.0:
   version "1.10.0"
