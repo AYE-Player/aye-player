@@ -21,12 +21,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Setup SSH
-        uses: MrSquaare/ssh-setup-action@v1
-        with:
-            host: github.com
-            private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Build/release Electron app
         uses: aye-player/action-electron-builder@master
         with:

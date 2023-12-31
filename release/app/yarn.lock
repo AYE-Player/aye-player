@@ -229,9 +229,9 @@ delegates@^1.0.0:
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==
 
-"discord-rpc@git+ssh://git@github.com/AYE-Player/discord-rpc.git":
+"discord-rpc@git+https://github.com/AYE-Player/discord-rpc.git":
   version "4.0.2"
-  resolved "git+ssh://git@github.com/AYE-Player/discord-rpc.git#1392eec986cd5e0547f0a6da05ef75aa473f7de2"
+  resolved "git+https://github.com/AYE-Player/discord-rpc.git#1392eec986cd5e0547f0a6da05ef75aa473f7de2"
   dependencies:
     node-fetch "^2.6.1"
     ws "^7.3.1"
