@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Tooltip } from '@mui/material';
 import {
   PauseCircleOutline,
   PlayCircleOutline,
@@ -116,7 +116,15 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
         />
       </Control>
       <Control onClick={shuffle}>
-        {player.isShuffling ? <Shuffle htmlColor="#1db954bf" /> : <Shuffle />}
+        {player.isShuffling ? (
+          <Tooltip title="Disable Shuffle">
+            <Shuffle htmlColor="#1db954bf" />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Shuffle">
+            <Shuffle />
+          </Tooltip>
+        )}
       </Control>
     </Grid>
   );

@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
-import Slider from '@mui/material/Slider'
+import { Grid, Tooltip } from '@mui/material';
+import Slider from '@mui/material/Slider';
 import VolumeDown from '@mui/icons-material/VolumeDown';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import { observer } from 'mobx-react-lite';
@@ -44,7 +44,9 @@ const VolumeSlider: React.FunctionComponent = () => {
     <Grid container justifyContent="center" alignItems="center" spacing={1}>
       <Grid item>
         <IconWrapper>
-          <VolumeDown onClick={() => handleVolumeChange(null, 0)} />
+          <Tooltip title="Mute">
+            <VolumeDown onClick={() => handleVolumeChange(null, 0)} />
+          </Tooltip>
         </IconWrapper>
       </Grid>
       <Grid item xs>

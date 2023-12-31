@@ -8,6 +8,7 @@ import React from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { Tooltip } from '@mui/material';
 import { Channel } from '../../../types/enums';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
@@ -122,7 +123,9 @@ const Playlist: React.FunctionComponent = () => {
           Playlist
           <ButtonAligner>
             <Control>
-              <QueueMusicIcon onClick={() => showQueue()} />
+              <Tooltip title="Queue">
+                <QueueMusicIcon onClick={() => showQueue()} />
+              </Tooltip>
             </Control>
           </ButtonAligner>
         </Header>

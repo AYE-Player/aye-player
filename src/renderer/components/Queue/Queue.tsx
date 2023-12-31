@@ -1,10 +1,11 @@
-import { QueueMusic } from '@mui/icons-material';
+import { PlaylistPlay } from '@mui/icons-material';
 import { Observer } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
 import React from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { Tooltip } from '@mui/material';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import { useStore } from '../StoreProvider';
 import QueueEntity from './QueueEntity';
@@ -75,7 +76,9 @@ const Queue: React.FunctionComponent = () => {
           Queue
           <ButtonAligner>
             <Control>
-              <QueueMusic onClick={showQueue} />
+              <Tooltip title="Playlist">
+                <PlaylistPlay onClick={showQueue} />
+              </Tooltip>
             </Control>
           </ButtonAligner>
         </Header>
@@ -118,7 +121,7 @@ const Queue: React.FunctionComponent = () => {
         Queue
         <ButtonAligner>
           <Control>
-            <QueueMusic onClick={showQueue} />
+            <PlaylistPlay onClick={showQueue} />
           </Control>
         </ButtonAligner>
       </Header>
