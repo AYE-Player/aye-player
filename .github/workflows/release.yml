@@ -21,24 +21,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Add authToken to linux os
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        if: matrix.os == 'ubuntu-latest'
-
-      - name: Add authToken to macOS
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-          echo "_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
-        if: matrix.os == 'macos-latest'
-
-      - name: Add authToken to windows
-        run: |
-          Add-Content -Path .\.npmrc -Value '//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}'
-          Add-Content -Path .\.npmrc -Value  '_authToken=${{ secrets.PACKAGE_TOKEN }}'
-        if: matrix.os == 'windows-latest'
-
       - name: Build/release Electron app
         uses: aye-player/action-electron-builder@master
         with:

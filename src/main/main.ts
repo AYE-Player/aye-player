@@ -510,4 +510,4 @@ app
       event.returnValue = Settings.has(key);
     });
   })
-  .catch(console.log);
+  .catch(console.error);
