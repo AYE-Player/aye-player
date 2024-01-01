@@ -4,13 +4,13 @@
 
 ## Feature Ideas (or already available)
 
-- Electron basierter YouTube Musik Player ✓
+- Electron based YouTube Musik Player ✓
 - React, TypeScript, MobX-Keystone ✓
 - i18n ✓
 - Features
-  - Sync für Likes und Playlists
+  - Playlist sync to different devices (only available when logged in)
   - Discord RPC ✓
     - Is listening to XXX on AYE Player ✓
-    - Listen on YouTube Knopf - TODO
+    - Listen on YouTube Button ✓
 
 ![Planung](./.github/aye.png)
