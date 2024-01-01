@@ -78,8 +78,6 @@ class AyeDiscordRPC {
 
     let activityParameters: IActivityParameters;
 
-    console.log('track', trackId);
-
     if (endTimestamp) {
       activityParameters = {
         details,
@@ -108,6 +106,12 @@ class AyeDiscordRPC {
         smallImageKey: state === 'Paused' ? 'pause' : undefined,
         smallImageText: state === 'Paused' ? 'Paused' : undefined,
         instance: false,
+        buttons: [
+          {
+            label: 'Play on YouTube',
+            url: `https://www.youtube.com/watch?v=${trackId}`,
+          },
+        ],
       };
     } else {
       activityParameters = {
