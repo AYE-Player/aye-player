@@ -16,6 +16,7 @@ export interface IDiscordActivity {
   state: string | null;
   details: string;
   duration: number;
+  trackId: string;
 }
 
 export interface ISpotifyArtist {

@@ -376,6 +376,7 @@ app
           endTimestamp,
           playbackPosition,
           state,
+          trackId,
         }: IDiscordActivity,
       ) => {
         if (!rpc?.isConnected) return;
@@ -385,6 +386,7 @@ app
           state,
           details,
           duration,
+          trackId,
         );
       },
     );

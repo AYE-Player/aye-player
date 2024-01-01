@@ -78,6 +78,7 @@ class Player extends Model({
             ? `${this.currentTrack.current.title.substring(0, 123)}...`
             : this.currentTrack.current.title,
         state: state ?? null,
+        trackId: this.currentTrack.id,
       });
     } else if (this.currentTrack) {
       window.electron.ipcRenderer.sendMessage(Channel.PLAYER_2_WIN, {
@@ -93,6 +94,7 @@ class Player extends Model({
             : this.currentTrack.current.title,
         state: state ?? null,
         duration: this.currentTrack.current.duration,
+        trackId: this.currentTrack.id,
       } as IDiscordActivity);
 
       window.electron.ipcRenderer.sendMessage(Channel.PLAYER_2_WIN, {

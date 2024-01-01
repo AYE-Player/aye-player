@@ -5,6 +5,11 @@ import formattedDuration from '../helpers/formattedDuration';
 
 const { Client } = require('discord-rpc');
 
+interface IButton {
+  label: string;
+  url: string;
+}
+
 interface IActivityParameters {
   details?: string;
   state?: string;
@@ -21,6 +26,7 @@ interface IActivityParameters {
   joinSecret?: string;
   spectateSecret?: string;
   instance?: boolean;
+  buttons?: IButton[];
 }
 
 class AyeDiscordRPC {
@@ -66,10 +72,13 @@ class AyeDiscordRPC {
     state: string | null,
     details: string,
     duration: number,
+    trackId?: string,
   ) {
     if (!this.rpc) return;
 
     let activityParameters: IActivityParameters;
+
+    console.log('track', trackId);
 
     if (endTimestamp) {
       activityParameters = {
@@ -81,6 +90,12 @@ class AyeDiscordRPC {
         smallImageKey: 'play',
         smallImageText: 'Playing',
         instance: false,
+        buttons: [
+          {
+            label: 'Play on YouTube',
+            url: `https://www.youtube.com/watch?v=${trackId}`,
+          },
+        ],
       };
     } else if (!endTimestamp && state) {
       activityParameters = {

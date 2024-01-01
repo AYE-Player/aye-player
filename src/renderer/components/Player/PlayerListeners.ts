@@ -1,11 +1,11 @@
-import Root from 'renderer/containers/Root';
+import { rootStore } from 'renderer/containers/Root';
 import PlayerInterop from 'renderer/dataLayer/api/PlayerInterop';
 import Track from 'renderer/dataLayer/models/Track';
 import { Channel, Repeat } from 'types/enums';
 
 // Listeners
 window.electron.ipcRenderer.on(Channel.PLAY_PAUSE, () => {
-  const { queue, player } = Root.stores;
+  const { queue, player } = rootStore;
 
   if (queue.isEmpty) {
     queue.addTracks(
@@ -20,7 +20,7 @@ window.electron.ipcRenderer.on(Channel.PLAY_PAUSE, () => {
 });
 
 window.electron.ipcRenderer.on(Channel.PLAY_NEXT, () => {
-  const { queue, player, trackHistory } = Root.stores;
+  const { queue, player, trackHistory } = rootStore;
   const prevTrack = player.currentTrack;
   const track = queue.nextTrack();
 
@@ -60,8 +60,7 @@ window.electron.ipcRenderer.on(Channel.PLAY_NEXT, () => {
 
 window.electron.ipcRenderer.on(Channel.PLAY_SONG, async (message) => {
   try {
-    const { queue, player, trackHistory, trackCache, searchResult } =
-      Root.stores;
+    const { queue, player, trackHistory, trackCache, searchResult } = rootStore;
     const prevTrack = player.currentTrack;
 
     const trackInfo = await searchResult.getTrackFromUrl(
@@ -96,7 +95,7 @@ window.electron.ipcRenderer.on(Channel.PLAY_SONG, async (message) => {
 });
 
 window.electron.ipcRenderer.on(Channel.PLAY_PREVIOUS, () => {
-  const { player, queue, trackHistory } = Root.stores;
+  const { player, queue, trackHistory } = rootStore;
   const track = trackHistory.removeAndGetTrack();
   if (!track) return;
 
@@ -114,7 +113,7 @@ window.electron.ipcRenderer.on(
 );
 
 window.electron.ipcRenderer.on(Channel.RECONNECT_STREAM, () => {
-  const { player } = Root.stores;
+  const { player } = rootStore;
   player.setPlaying(false);
   setTimeout(() => player.setPlaying(true), 3000);
   PlayerInterop.reconnectLivestream();

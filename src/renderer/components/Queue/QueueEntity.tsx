@@ -152,7 +152,7 @@ const QueueEntity: React.FunctionComponent<IProps> = (props) => {
     setOpenCreatePlaylistDialog(false);
     try {
       await playlists.createListWithSongs(newPlaylistName, [
-        { url: `https://www.youtube.com/watch?v${track.current.id}` },
+        { url: `https://www.youtube.com/watch?v=${track.current.id}` },
       ]);
 
       enqueueSnackbar('', {
