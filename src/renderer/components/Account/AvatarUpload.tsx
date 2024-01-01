@@ -38,7 +38,6 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = (props) => {
   const { setAvatar, setAvatarFile, user, avatar } = props;
 
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const file = event.target.files![0];
 
     const fileSize = file.size / 1024 / 1024;

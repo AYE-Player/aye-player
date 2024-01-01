@@ -44,12 +44,8 @@ const CustomFormDialog: React.FunctionComponent<ICustomFormDialogProps> = (
   return (
     <>
       {button}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle sx={{ color: 'text.primary' }}>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogText}</DialogContentText>
           <TextField

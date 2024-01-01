@@ -3,8 +3,8 @@ import {
   Dialog,
   DialogTitle,
   List,
-  ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemText,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -37,31 +37,26 @@ const CustomListDialog: React.FunctionComponent<SimpleDialogProps> = (
     track,
   } = props;
   return (
-    <Dialog
-      aria-labelledby="custom-dialog-title"
-      open={open}
-      onClose={handleClose}
-    >
-      <DialogTitle id="custom-dialog-title">{dialogTitle}</DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle sx={{ color: 'text.primary' }}>{dialogTitle}</DialogTitle>
       <List>
         {options.map((option) => (
-          <ListItem
-            button
+          <ListItemButton
             onClick={() => onSelect(option.id, track?.current)}
             key={option.id}
           >
             <ListItemText primary={option.name} />
-          </ListItem>
+          </ListItemButton>
         ))}
         {listItemText && (
-          <ListItem button onClick={() => createListItem('createPlaylist')}>
+          <ListItemButton onClick={() => createListItem('createPlaylist')}>
             <ListItemAvatar>
               <Avatar>
                 <AddIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={listItemText} />
-          </ListItem>
+          </ListItemButton>
         )}
       </List>
     </Dialog>

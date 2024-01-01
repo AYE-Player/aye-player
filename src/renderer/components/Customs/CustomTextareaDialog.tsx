@@ -60,13 +60,8 @@ const CustomTextareaDialog: React.FunctionComponent<
   return (
     <>
       {button}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="textarea-dialog-title"
-        id={id}
-      >
-        <DialogTitle id="textarea-dialog-title">{title}</DialogTitle>
+      <Dialog open={open} onClose={handleClose} id={id}>
+        <DialogTitle sx={{ color: 'text.primary' }}>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogText}</DialogContentText>
           <TextField
