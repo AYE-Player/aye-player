@@ -42,26 +42,6 @@ const Navigation: React.FunctionComponent = () => {
     <Container>
       <MenuItem>
         <NavLink
-          to={routes.PLAYLIST}
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: location.pathname.includes('playlist')
-              ? '#f0ad4e'
-              : '#ffffff',
-          }}
-        >
-          <>
-            <ListIcon style={{ paddingRight: '8px' }} />
-            {t('Navigation.playlists')}
-          </>
-        </NavLink>
-      </MenuItem>
-      <MenuItem>
-        <NavLink
           to={routes.SEARCH}
           style={{
             width: '100%',
@@ -77,6 +57,26 @@ const Navigation: React.FunctionComponent = () => {
           <>
             <SearchIcon style={{ paddingRight: '8px' }} />
             {t('Navigation.search')}
+          </>
+        </NavLink>
+      </MenuItem>
+      <MenuItem>
+        <NavLink
+          to={routes.PLAYLIST}
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: location.pathname.includes('playlist')
+              ? '#f0ad4e'
+              : '#ffffff',
+          }}
+        >
+          <>
+            <ListIcon style={{ paddingRight: '8px' }} />
+            {t('Navigation.playlists')}
           </>
         </NavLink>
       </MenuItem>

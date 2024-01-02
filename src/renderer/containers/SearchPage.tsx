@@ -54,7 +54,7 @@ const SearchPage: React.FunctionComponent = () => {
 
   const showLoadingOrResult = () => {
     if (searchResult.searching) {
-      return <CircularProgress color="success" size="3rem" />;
+      return <CircularProgress color="success" size="4rem" />;
     }
     if (!searchResult.searching && searchResult.isEmpty) {
       return [];
