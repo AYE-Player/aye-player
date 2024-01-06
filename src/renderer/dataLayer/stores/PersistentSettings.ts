@@ -1,4 +1,7 @@
 import Store from 'electron-store';
+import { ModelData } from 'mobx-keystone';
+import Track from '../models/Track';
+import Playlist from '../models/Playlist';
 
 type StoreType = {
   rpcEnabled: boolean;
@@ -8,10 +11,10 @@ type StoreType = {
   autoRadio: boolean;
   language: string;
   playerSettings: {
-    volumne: number;
+    volume: number;
     playbackPosition: number;
-    currentTrack?: object;
-    currentPlaylist?: object;
+    currentTrack?: ModelData<Track>;
+    currentPlaylist?: ModelData<Playlist>;
     repeat: number;
     isShuffling: boolean;
     isMuted: boolean;
@@ -35,7 +38,7 @@ const store = new Store<StoreType>({
     devMode: false,
     language: 'en',
     playerSettings: {
-      volumne: 0.2,
+      volume: 0.2,
       repeat: 0,
       isMuted: false,
       isShuffling: false,

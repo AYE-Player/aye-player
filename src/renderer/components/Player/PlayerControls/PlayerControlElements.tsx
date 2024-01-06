@@ -11,6 +11,7 @@ import {
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { Repeat } from '../../../../types/enums';
 import { useStore } from '../../StoreProvider';
 
@@ -51,6 +52,7 @@ const PlayControl = styled.div`
 
 const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
   const { app, player, queue, trackHistory } = useStore();
+  const { t } = useTranslation();
   const { pause, play, previous, shuffle, skip, toggleRepeat } = props;
 
   const checkTrackIndexBiggerAs = (
@@ -117,11 +119,11 @@ const PlayerControlElements: React.FunctionComponent<IProps> = (props) => {
       </Control>
       <Control onClick={shuffle}>
         {player.isShuffling ? (
-          <Tooltip title="Disable Shuffle">
+          <Tooltip title={t('PlayerControlElements.disableShuffle')}>
             <Shuffle htmlColor="#1db954bf" />
           </Tooltip>
         ) : (
-          <Tooltip title="Shuffle">
+          <Tooltip title={t('PlayerControlElements.enableShuffle')}>
             <Shuffle />
           </Tooltip>
         )}

@@ -187,5 +187,9 @@
     "show": "Show",
     "quit": "Quit"
   },
-  "createdAndAdded": "Created Playlist and added Track"
+  "createdAndAdded": "Created Playlist and added Track",
+  "PlayerControlElements": {
+    "enableShuffle": "Shuffle",
+    "disableShuffle": "Disable Shuffle"
+  }
 }

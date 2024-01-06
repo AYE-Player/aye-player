@@ -16,6 +16,14 @@ interface IProps {
   seekingStop: (value: number) => void;
 }
 
+const ControlDivider = styled.div`
+  position: absolute;
+  top: 0px;
+  left: -12px;
+  border-top: 1px solid #565f6c;
+  width: 340px;
+`;
+
 const Container = styled.div`
   width: 320px;
   height: 90px;
@@ -33,19 +41,23 @@ const PlayerControls: React.FunctionComponent<IProps> = (props) => {
   PlayerInterop.init();
 
   return (
-    <Container>
-      <PlayerControlElements
-        play={play}
-        pause={pause}
-        shuffle={shuffle}
-        previous={previous}
-        skip={skip}
-        toggleRepeat={toggleRepeat}
-      />
-      <Divider size={1} />
-      <VolumeSlider />
-      <PlaybackControl seekingStop={seekingStop} />
-    </Container>
+    <>
+      <ControlDivider />
+      <Container>
+        <Divider size={2} />
+        <PlayerControlElements
+          play={play}
+          pause={pause}
+          shuffle={shuffle}
+          previous={previous}
+          skip={skip}
+          toggleRepeat={toggleRepeat}
+        />
+        <Divider size={1} />
+        <VolumeSlider />
+        <PlaybackControl seekingStop={seekingStop} />
+      </Container>
+    </>
   );
 };
 

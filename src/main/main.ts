@@ -115,8 +115,10 @@ const createLoadingScreen = () => {
   });
 
   loadingScreen.webContents.on('did-finish-load', () => {
-    loadingScreen!.show();
-    loadingScreen!.focus();
+    if (process.env.NODE_ENV !== 'development') {
+      loadingScreen!.show();
+      loadingScreen!.focus();
+    }
   });
 };
 
@@ -188,7 +190,7 @@ const createAppScreen = async () => {
   mainWindow.on('ready-to-show', () => {
     if (process.env.START_MINIMIZED) {
       mainWindow!.minimize();
-    } else {
+    } else if (process.env.NODE_ENV !== 'development') {
       mainWindow!.show();
     }
 

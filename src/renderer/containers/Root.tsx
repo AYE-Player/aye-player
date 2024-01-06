@@ -1,7 +1,7 @@
 /* eslint-disable promise/no-nesting */
 /* eslint-disable promise/always-return */
 import { Grid, ThemeProvider } from '@mui/material';
-import { getSnapshot, registerRootStore } from 'mobx-keystone';
+import { ModelData, getSnapshot, registerRootStore } from 'mobx-keystone';
 import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -28,12 +28,8 @@ interface IPlayerSettings {
   repeat: Repeat;
   isMuted: boolean;
   isShuffling: boolean;
-  currentTrack: Track;
-  currentPlaylist: {
-    id: string;
-    trackCount: number;
-    duration: number;
-  };
+  currentTrack: ModelData<Track>;
+  currentPlaylist: ModelData<Playlist>;
 }
 
 export const rootStore = createStore();
@@ -148,7 +144,7 @@ const getMappedPlaylists = async () => {
     }
   } catch (error) {
     window.electron.ipcRenderer.sendMessage(Channel.LOG, {
-      message: `[Root] Error retrieving Playlists ${JSON.stringify(
+      message: `[Root] Error retrieving mapped Playlists ${JSON.stringify(
         error,
         null,
         2,
@@ -183,7 +179,7 @@ const Root = () => {
               }
 
               // Check for currentTrack and if it was a liveStream or not
-              if (playerSettings.currentTrack?.isLivestream === false) {
+              if (!playerSettings.currentTrack?.isLivestream) {
                 const currentTrack = new Track(playerSettings.currentTrack);
                 if (
                   !rootStore.trackCache.tracks.find(
@@ -201,7 +197,7 @@ const Root = () => {
               // Check for last active playlist
               if (playerSettings.currentPlaylist) {
                 const playlist = rootStore.playlists.getListById(
-                  playerSettings.currentPlaylist.id,
+                  playerSettings.currentPlaylist.id!,
                 );
                 if (!playlist) return;
                 // eslint-disable-next-line promise/no-nesting
@@ -230,27 +226,6 @@ const Root = () => {
                   });
               }
 
-              // TODO: Remove these checks, whenever the electron-store package fixes it,
-              // these should have an default setting, but sometimes the defaults are not saved/returned
-              if (playerSettings.repeat) {
-                rootStore.player.setRepeat(playerSettings.repeat);
-                if (playerSettings.repeat === Repeat.ONE) {
-                  PlayerInterop.setLooping(true);
-                }
-              }
-              if (playerSettings.volume) {
-                rootStore.player.setVolume(playerSettings.volume);
-                PlayerInterop.setInitValues({ volume: playerSettings.volume });
-              }
-              if (playerSettings.isShuffling) {
-                rootStore.player.setShuffling(playerSettings.isShuffling);
-              }
-              if (playerSettings.isMuted) {
-                rootStore.player.setMute(playerSettings.isMuted);
-                PlayerInterop.setInitValues({
-                  isMuted: playerSettings.isMuted,
-                });
-              }
               PlayerInterop.setInitState();
             }
           })

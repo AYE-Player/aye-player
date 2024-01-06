@@ -182,5 +182,9 @@
     "show": "Anzeigen",
     "quit": "Beenden"
   },
-  "createdAndAdded": "Playlist erstellt und Track hinzugefügt"
+  "createdAndAdded": "Playlist erstellt und Track hinzugefügt",
+  "PlayerControlElements": {
+    "enableShuffle": "Shuffle",
+    "disableShuffle": "Shuffle deaktivieren"
+  }
 }
