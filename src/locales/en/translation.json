@@ -188,6 +188,7 @@
     "quit": "Quit"
   },
   "createdAndAdded": "Created Playlist and added Track",
+  "addedTracksToPlaylist": "Added tracks to playlist",
   "PlayerControlElements": {
     "enableShuffle": "Shuffle",
     "disableShuffle": "Disable Shuffle"

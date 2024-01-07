@@ -253,6 +253,7 @@ const Root = () => {
           horizontal: 'center',
         }}
         preventDuplicate
+        disableWindowBlurListener
       >
         <ThemeProvider theme={themeOptions}>
           <Grid

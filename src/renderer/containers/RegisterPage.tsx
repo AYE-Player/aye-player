@@ -45,7 +45,6 @@ const RegisterPage: React.FunctionComponent = () => {
             message={t('RegisterPage.success')}
           />
         ),
-        disableWindowBlurListener: true,
       });
       navigate(routes.LOGIN);
     } catch (error) {
@@ -58,7 +57,6 @@ const RegisterPage: React.FunctionComponent = () => {
               message={(error as ApolloError).message}
             />
           ),
-          disableWindowBlurListener: true,
         });
       } else {
         window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -74,7 +72,6 @@ const RegisterPage: React.FunctionComponent = () => {
               message={t('General.error')}
             />
           ),
-          disableWindowBlurListener: true,
         });
       }
     }

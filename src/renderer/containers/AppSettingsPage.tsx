@@ -144,7 +144,6 @@ const AccountPage: React.FunctionComponent = () => {
             message={`${t('Playlist.couldNotCreate')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

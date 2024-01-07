@@ -50,7 +50,6 @@ const AvatarUpload: React.FunctionComponent<IAvatarUploadProps> = (props) => {
             message={t('AccountPage.avatarToBig')}
           />
         ),
-        disableWindowBlurListener: true,
       });
       return;
     }

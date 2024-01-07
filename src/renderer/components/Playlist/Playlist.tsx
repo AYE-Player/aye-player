@@ -111,7 +111,6 @@ const Playlist: React.FunctionComponent = () => {
             message={t('Error.couldNotMoveTrack')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

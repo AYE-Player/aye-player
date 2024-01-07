@@ -75,7 +75,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
             message={t('Error.getPlaylists')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -92,7 +91,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
             message={t('Playlist.deleted')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -107,7 +105,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
             message={t('Playlist.couldNotDelete')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -136,7 +133,6 @@ const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
             message={t('Error.getPlaylists')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

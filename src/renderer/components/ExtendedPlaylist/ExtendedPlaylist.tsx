@@ -120,7 +120,6 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
             message={t('Error.couldNotMoveTrack')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -139,6 +138,15 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
     try {
       setAddTracksOpen(false);
       await playlist!.addTracksByUrls(songsToAdd);
+      enqueueSnackbar('', {
+        content: (key) => (
+          <SnackMessage
+            id={key}
+            variant="success"
+            message={t('addedTracksToPlaylist')}
+          />
+        ),
+      });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
         message: `Error adding tracks to playlist ${
@@ -155,7 +163,6 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
             message={`${t('Error.couldNotAddTrack')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

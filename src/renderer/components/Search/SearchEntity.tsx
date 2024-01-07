@@ -103,7 +103,6 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
               message={t('SearchEntity.trackExists')}
             />
           ),
-          disableWindowBlurListener: true,
         });
       } else {
         await playlist!.addTrack(givenTrack);
@@ -115,7 +114,6 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
               message={`${t('SearchEntity.trackAdded')} ${playlist!.name}`}
             />
           ),
-          disableWindowBlurListener: true,
         });
       }
     } catch (error) {
@@ -134,7 +132,6 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
             message={t('Error.couldNotAddTrack')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -159,7 +156,6 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
             message={`${t('createdAndAdded')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -179,7 +175,6 @@ const SearchEntity: React.FunctionComponent<IProps> = (props) => {
             message={`${t('Playlist.couldNotCreate')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

@@ -64,7 +64,6 @@ const LoginPage: React.FunctionComponent = () => {
               message={t('LoginPage.error.invalidCredentials')}
             />
           ),
-          disableWindowBlurListener: true,
         });
       } else {
         window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -80,7 +79,6 @@ const LoginPage: React.FunctionComponent = () => {
               message={t('General.error')}
             />
           ),
-          disableWindowBlurListener: true,
         });
       }
     }

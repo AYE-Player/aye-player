@@ -89,7 +89,6 @@ const SearchBar: React.FunctionComponent = () => {
         content: (key) => (
           <SnackMessage id={key} variant="error" message={t('General.error')} />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

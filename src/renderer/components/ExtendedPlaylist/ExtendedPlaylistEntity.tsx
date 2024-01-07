@@ -122,7 +122,6 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
               message={t('SearchEntity.trackExists')}
             />
           ),
-          disableWindowBlurListener: true,
         });
       } else {
         await playlist!.addTrack(trackToAdd);
@@ -134,7 +133,6 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
               message={`${t('SearchEntity.trackAdded')} ${playlist!.name}`}
             />
           ),
-          disableWindowBlurListener: true,
         });
       }
     } catch (error) {
@@ -153,7 +151,6 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
             message={t('Error.couldNotAddTrack')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -178,7 +175,6 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
             message={`${t('createdAndAdded')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -198,7 +194,6 @@ const ExtendedPlaylistEntity: React.FunctionComponent<IProps> = (props) => {
             message={`${t('Playlist.couldNotCreate')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

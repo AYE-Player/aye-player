@@ -66,7 +66,6 @@ const AccountPage: React.FunctionComponent = () => {
             message={t('AccountPage.deleteSuccess')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -78,7 +77,6 @@ const AccountPage: React.FunctionComponent = () => {
         content: (key) => (
           <SnackMessage id={key} variant="error" message={t('General.error')} />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -150,7 +148,6 @@ const AccountPage: React.FunctionComponent = () => {
             message={t('AccountPage.updateSuccessMessage')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -162,7 +159,6 @@ const AccountPage: React.FunctionComponent = () => {
         content: (key) => (
           <SnackMessage id={key} variant="error" message={t('General.error')} />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

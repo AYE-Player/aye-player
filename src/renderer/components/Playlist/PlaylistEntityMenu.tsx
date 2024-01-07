@@ -71,7 +71,6 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
             message={`${t('Error.couldNotDeleteTrack')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

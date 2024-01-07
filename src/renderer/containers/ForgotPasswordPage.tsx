@@ -36,7 +36,6 @@ const PasswordForgotPage: React.FunctionComponent = () => {
             message={t('PasswordForgotPage.success')}
           />
         ),
-        disableWindowBlurListener: true,
       });
     } catch (error) {
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
@@ -52,7 +51,6 @@ const PasswordForgotPage: React.FunctionComponent = () => {
         content: (key) => (
           <SnackMessage id={key} variant="error" message={t('General.error')} />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };

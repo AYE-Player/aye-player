@@ -116,7 +116,6 @@ const PlaylistPage: React.FunctionComponent = () => {
                 message={`${t('Error.getPlaylists')}`}
               />
             ),
-            disableWindowBlurListener: true,
           });
         });
     }
@@ -149,7 +148,6 @@ const PlaylistPage: React.FunctionComponent = () => {
             message={`${t('Playlist.couldNotCreate')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
@@ -213,7 +211,6 @@ const PlaylistPage: React.FunctionComponent = () => {
             message={`${t('Error.couldNotAddTrack')}`}
           />
         ),
-        disableWindowBlurListener: true,
       });
     }
   };
