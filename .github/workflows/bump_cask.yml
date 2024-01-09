@@ -2,6 +2,7 @@ name: Bump Cask
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   bump_cask:
