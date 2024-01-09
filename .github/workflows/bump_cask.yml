@@ -1,0 +1,21 @@
+name: Bump Cask
+on:
+  release:
+    types: [published]
+
+jobs:
+  bump_cask:
+    name: Update Homebrew Cask
+    runs-on: macos-13
+    steps:
+      - name: Bump Cask
+        uses: macauley/action-homebrew-bump-cask@v1
+        with:
+          # Required, custom GitHub access token with only the 'public_repo' scope enabled
+          token: ${{secrets.BUMP_CASK_TOKEN}}
+          # Bump all outdated casks in this tap
+          tap: AYE-Player/homebrew-aye-player
+          # Bump only these casks if outdated
+          cask: aye-player-develop
+          livecheck: true
+          dryrun: true
