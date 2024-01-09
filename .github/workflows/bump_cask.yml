@@ -19,4 +19,4 @@ jobs:
           # Bump only these casks if outdated
           cask: aye-player-develop
           livecheck: true
-          dryrun: true
+          dryrun: false
