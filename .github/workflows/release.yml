@@ -32,6 +32,7 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
   bump_cask:
+    name: Update Homebrew Cask
     runs-on: macos-13
     needs: build_and_release_artifacts
     steps:
