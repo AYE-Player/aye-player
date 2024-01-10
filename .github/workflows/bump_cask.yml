@@ -15,8 +15,8 @@ jobs:
           # Required, custom GitHub access token with only the 'public_repo' scope enabled
           token: ${{secrets.BUMP_CASK_TOKEN}}
           # Bump all outdated casks in this tap
-          tap: AYE-Player/homebrew-aye-player
+          tap: AYE-Player/homebrew-tap
           # Bump only these casks if outdated
-          cask: aye-player-develop
+          cask: aye-player
           livecheck: true
           dryrun: false
