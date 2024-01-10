@@ -22,6 +22,11 @@ const Container = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    color: #f0ad4e;
+  }
 `;
 
 const PlaylistPageMenu: React.FunctionComponent<IPlaylistPageMenuProps> = (
