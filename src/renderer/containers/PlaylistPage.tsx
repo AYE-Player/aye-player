@@ -331,8 +331,6 @@ const PlaylistPage: React.FunctionComponent = () => {
         />
         <CustomTextareaDialog
           id="addTracksDialog"
-          // eslint-disable-next-line react/jsx-no-useless-fragment
-          button={<></>}
           title={t('PlaylistPage.addTracks.title')}
           label={t('PlaylistPage.addTracks.label')}
           dialogText={t('PlaylistPage.addTracks.text')}

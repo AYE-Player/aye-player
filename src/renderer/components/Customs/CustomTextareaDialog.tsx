@@ -15,7 +15,7 @@ interface ICustomTextareaDialogProps {
   id: string;
   title: string;
   label: string;
-  button: React.JSX.Element;
+  button?: React.JSX.Element;
   dialogText: string;
   open: boolean;
   handleClose: () => void;
@@ -90,6 +90,10 @@ const CustomTextareaDialog: React.FunctionComponent<
       </Dialog>
     </>
   );
+};
+
+CustomTextareaDialog.defaultProps = {
+  button: undefined,
 };
 
 export default CustomTextareaDialog;
