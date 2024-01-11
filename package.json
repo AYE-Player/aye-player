@@ -1,7 +1,7 @@
 {
   "name": "aye-player",
   "productName": "AYE Player",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "A new Youtube Music Player to deliver you the best experience possible.",
   "private": true,
   "keywords": [
