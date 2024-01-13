@@ -21,7 +21,7 @@ const SpotifyLogo = require('../../images/Spotify_Logo_CMYK_Green.png');
 
 const Header = styled.div`
   font-size: 24px;
-  margin-bottom: 6rem;
+  margin-bottom: 3rem;
 `;
 
 const Container = styled.div``;

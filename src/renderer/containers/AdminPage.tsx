@@ -14,7 +14,7 @@ import { useStore } from '../components/StoreProvider';
 
 const Header = styled.div`
   font-size: 24px;
-  margin-bottom: 6rem;
+  margin-bottom: 3rem;
 `;
 
 const Container = styled.div``;
