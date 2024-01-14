@@ -1,7 +1,7 @@
 /* eslint-disable promise/no-nesting */
 /* eslint-disable promise/always-return */
 import { Grid, ThemeProvider } from '@mui/material';
-import { ModelData, getSnapshot, registerRootStore } from 'mobx-keystone';
+import { getSnapshot, registerRootStore } from 'mobx-keystone';
 import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -12,6 +12,7 @@ import {
   getUserdata,
 } from 'renderer/dataLayer/api/fetchers';
 import { createTheme } from '@mui/material/styles';
+import { IPlayerSettings } from 'types';
 import Player from '../components/Player/Player';
 import QueuePlaylistSwitch from '../components/QueuePlaylistSwitch';
 import { StoreProvider } from '../components/StoreProvider';
@@ -19,18 +20,8 @@ import PlayerInterop from '../dataLayer/api/PlayerInterop';
 import Playlist from '../dataLayer/models/Playlist';
 import Track from '../dataLayer/models/Track';
 import createStore from '../dataLayer/stores/createStore';
-import { Channel, Repeat } from '../../types/enums';
+import { Channel } from '../../types/enums';
 import MainPage from './MainPage';
-
-interface IPlayerSettings {
-  volume: number;
-  playbackPosition: number;
-  repeat: Repeat;
-  isMuted: boolean;
-  isShuffling: boolean;
-  currentTrack: ModelData<Track>;
-  currentPlaylist: ModelData<Playlist>;
-}
 
 export const rootStore = createStore();
 
@@ -63,6 +54,11 @@ window.electron.ipcRenderer.on(Channel.APP_CLOSE, () => {
     rootStore.player.volume,
   );
 
+  window.electron.settings.set(
+    'playerSettings.isMuted',
+    rootStore.player.isMuted,
+  );
+
   if (rootStore.player.currentTrack) {
     window.electron.settings.set(
       'playerSettings.playbackPosition',
@@ -77,11 +73,6 @@ window.electron.ipcRenderer.on(Channel.APP_CLOSE, () => {
       rootStore.player.isShuffling,
     );
   }
-
-  window.electron.settings.set(
-    'playerSettings.isMuted',
-    rootStore.player.isMuted,
-  );
 
   if (rootStore.player.currentPlaylist) {
     window.electron.settings.set('playerSettings.currentPlaylist', {
@@ -117,7 +108,7 @@ const authenticate = async () => {
     } catch (error) {
       localStorage.removeItem('token');
       window.electron.ipcRenderer.sendMessage(Channel.LOG, {
-        message: `Error logging in ${JSON.stringify(error, null, 2)}`,
+        message: `[Root] Error logging in ${JSON.stringify(error, null, 2)}`,
         type: 'error',
       });
     }
@@ -167,16 +158,7 @@ const Root = () => {
               const playerSettings: IPlayerSettings =
                 window.electron.settings.get('playerSettings');
 
-              // Check for playbackPosition
-              if (
-                playerSettings.playbackPosition &&
-                !playerSettings.currentTrack?.isLivestream
-              ) {
-                rootStore.player.setPlaybackPosition(
-                  playerSettings.playbackPosition,
-                );
-                PlayerInterop.setStartTime(playerSettings.playbackPosition);
-              }
+              rootStore.player.initialize(playerSettings);
 
               // Check for currentTrack and if it was a liveStream or not
               if (!playerSettings.currentTrack?.isLivestream) {
@@ -238,7 +220,7 @@ const Root = () => {
       })
       .catch((error) => {
         window.electron.ipcRenderer.sendMessage(Channel.LOG, {
-          message: `Error loading settings ${error}`,
+          message: `[Root] Error loading settings ${error}`,
 
           type: 'error',
         });

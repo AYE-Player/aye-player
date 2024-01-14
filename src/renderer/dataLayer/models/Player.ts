@@ -9,12 +9,14 @@ import {
   getRoot,
 } from 'mobx-keystone';
 import { IDiscordActivity } from 'types/response';
+import { IPlayerSettings } from 'types';
 import { Channel, Repeat } from '../../../types/enums';
 import playlistRef from '../references/PlaylistRef';
 import trackRef from '../references/TrackRef';
 import Playlist from './Playlist';
 import Track from './Track';
 import RootStore from '../stores/RootStore';
+import PlayerInterop from '../api/PlayerInterop';
 
 interface IRPCState {
   track?: Track;
@@ -243,6 +245,23 @@ class Player extends Model({
   @modelAction
   setExternalPlayerVersion(version: string) {
     this.externalPlayerVersion = version;
+  }
+
+  @modelAction
+  initialize(playerSettings: IPlayerSettings) {
+    if (playerSettings.volume) this.volume = playerSettings.volume;
+    if (playerSettings.isMuted) this.isMuted = true;
+    if (playerSettings.isShuffling) this.isShuffling = true;
+    if (playerSettings.repeat) this.repeat = playerSettings.repeat;
+
+    // Check for playbackPosition
+    if (
+      playerSettings.playbackPosition &&
+      !playerSettings.currentTrack?.isLivestream
+    ) {
+      this.playbackPosition = playerSettings.playbackPosition;
+      PlayerInterop.setStartTime(playerSettings.playbackPosition);
+    }
   }
 }
 
