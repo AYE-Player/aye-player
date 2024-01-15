@@ -1,22 +1,21 @@
-name: Bump Cask
+name: Bump Homebrew Cask — aye-player
 on:
+  workflow_dispatch:                      # allow manual trigger
   release:
     types: [published]
-  workflow_dispatch:
 
 jobs:
-  bump_cask:
-    name: Update Homebrew Cask
+  bump-homebrew-cask:
     runs-on: macos-13
+
     steps:
-      - name: Bump Cask
-        uses: macauley/action-homebrew-bump-cask@v1
-        with:
-          # Required, custom GitHub access token with only the 'public_repo' scope enabled
-          token: ${{secrets.BUMP_CASK_TOKEN}}
-          # Bump all outdated casks in this tap
-          tap: AYE-Player/homebrew-tap
-          # Bump only these casks if outdated
-          cask: aye-player
-          livecheck: true
-          dryrun: false
+    - name: Bump Homebrew Cask
+      uses: eugenesvk/action-homebrew-bump-cask@3.8.4
+      with:
+        tap       	: AYE-Player/homebrew-tap	# [opt] |homebrew/core|
+        cask      	: aye-player          	# [req] Cask name
+        token     	: ${{secrets.BUMP_CASK_TOKEN}}	# [req] Custom GitHub access token with the 'public_repo'
+        # org     	: ORG               	# [opt] Create tap repo fork in organization
+        # tag     	: ${{github.ref}}   	# [opt] Determined automatically
+        # revision	: ${{github.sha}}   	# [opt] Determined automatically
+        # force   	: false             	# [opt] Don't check for already open PR
