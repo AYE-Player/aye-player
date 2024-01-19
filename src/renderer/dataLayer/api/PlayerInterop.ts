@@ -17,6 +17,8 @@ class PlayerInterop {
 
   private isMuted: boolean | undefined;
 
+  private looping: boolean | undefined;
+
   init() {
     if (!this.player) {
       this.player = document.querySelector(
@@ -33,10 +35,12 @@ class PlayerInterop {
     track,
     volume,
     isMuted,
+    looping,
   }: {
     track?: Track;
     volume?: number;
     isMuted?: boolean;
+    looping?: boolean;
   }) {
     if (track) {
       this.initTrack = getSnapshot(track);
@@ -46,6 +50,9 @@ class PlayerInterop {
     }
     if (isMuted !== undefined) {
       this.isMuted = isMuted;
+    }
+    if (looping) {
+      this.looping = looping;
     }
   }
 
@@ -61,10 +68,13 @@ class PlayerInterop {
         },
         this.apiUrl,
       );
+      this.setLooping(!!this.looping);
+
       this.initTrack = undefined;
       this.startAt = undefined;
       this.volume = undefined;
       this.isMuted = undefined;
+      this.looping = undefined;
     }
   }
 

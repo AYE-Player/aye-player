@@ -20,7 +20,7 @@ import PlayerInterop from '../dataLayer/api/PlayerInterop';
 import Playlist from '../dataLayer/models/Playlist';
 import Track from '../dataLayer/models/Track';
 import createStore from '../dataLayer/stores/createStore';
-import { Channel } from '../../types/enums';
+import { Channel, Repeat } from '../../types/enums';
 import MainPage from './MainPage';
 
 export const rootStore = createStore();
@@ -173,7 +173,12 @@ const Root = () => {
                 rootStore.queue.addTrack(currentTrack);
                 rootStore.player.setCurrentTrack(currentTrack);
                 rootStore.player.notifyRPC({ state: 'Paused' });
-                PlayerInterop.setInitValues({ track: currentTrack });
+                PlayerInterop.setInitValues({
+                  track: currentTrack,
+                  isMuted: playerSettings.isMuted,
+                  volume: playerSettings.volume,
+                  looping: playerSettings.repeat === Repeat.ONE,
+                });
               }
 
               // Check for last active playlist
