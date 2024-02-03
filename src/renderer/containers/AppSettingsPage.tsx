@@ -5,7 +5,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ISpotifyPlaylist } from 'types/response';
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, Tooltip } from '@mui/material';
+import { InfoOutlined } from '@mui/icons-material';
 import { Channel } from '../../types/enums';
 import CustomDropDown from '../components/Customs/CustomDropDown';
 import CustomListDialog from '../components/Customs/CustomListDialog';
@@ -35,10 +36,19 @@ const SettingsContainer = styled.div`
 const InfoText = styled.div`
   font-size: 12px;
 `;
+
 const SettingsColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+`;
+
+const SettingsEntry = styled.div`
+  display: flex;
+`;
+
+const Info = styled(InfoOutlined)`
+  margin-left: 16px;
 `;
 
 const AccountPage: React.FunctionComponent = () => {
@@ -154,29 +164,49 @@ const AccountPage: React.FunctionComponent = () => {
         <Header>{t('AppSettingsPage.header')}</Header>
         <SettingsContainer>
           <SettingsColumn>
-            <CustomSwitch
-              label={t('AppSettingsPage.discord')}
-              onChange={switchRPCStatus}
-              checked={app.rpcEnabled}
-            />
+            <SettingsEntry>
+              <CustomSwitch
+                label={t('AppSettingsPage.discord.label')}
+                onChange={switchRPCStatus}
+                checked={app.rpcEnabled}
+              />
+              <Tooltip title={t('AppSettingsPage.discord.helperText')}>
+                <Info />
+              </Tooltip>
+            </SettingsEntry>
             <Divider size={2} />
-            <CustomSwitch
-              label={t('AppSettingsPage.tray')}
-              onChange={switchMinToTray}
-              checked={app.minimizeToTray}
-            />
+            <SettingsEntry>
+              <CustomSwitch
+                label={t('AppSettingsPage.tray.label')}
+                onChange={switchMinToTray}
+                checked={app.minimizeToTray}
+              />
+              <Tooltip title={t('AppSettingsPage.tray.helperText')}>
+                <Info />
+              </Tooltip>
+            </SettingsEntry>
             <Divider size={2} />
-            <CustomSwitch
-              label={t('AppSettingsPage.autoRadio')}
-              onChange={switchAutoRadio}
-              checked={app.autoRadio}
-            />
+            <SettingsEntry>
+              <CustomSwitch
+                label={t('AppSettingsPage.autoRadio.label')}
+                onChange={switchAutoRadio}
+                checked={app.autoRadio}
+              />
+              <Tooltip title={t('AppSettingsPage.autoRadio.helperText')}>
+                <Info />
+              </Tooltip>
+            </SettingsEntry>
             <Divider size={2} />
-            <CustomSwitch
-              label={t('AppSettingsPage.showNotifications')}
-              onChange={switchShowNotifications}
-              checked={app.showNotifications}
-            />
+            <SettingsEntry>
+              <CustomSwitch
+                label={t('AppSettingsPage.notifications.label')}
+                onChange={switchShowNotifications}
+                checked={app.showNotifications}
+              />
+              <Tooltip title={t('AppSettingsPage.notifications.helperText')}>
+                <Info />
+              </Tooltip>
+            </SettingsEntry>
             <Divider size={2} />
             <CustomDropDown
               name={t('AppSettingsPage.language')}

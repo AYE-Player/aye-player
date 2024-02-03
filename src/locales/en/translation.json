@@ -104,13 +104,25 @@
   },
   "AppSettingsPage": {
     "header": "App Settings",
-    "discord": "Show Discord Presence",
-    "tray": "Minimize to Tray",
+    "discord": {
+      "label": "Show Discord Presence",
+      "helperText": "Display a rich presence in discord"
+    },
+    "tray": {
+      "label": "Minimize to Tray",
+      "helperText": "Clicking X will minize app to tray instead of closing it"
+    },
+    "autoRadio": {
+      "label": "Autoradio",
+      "helperText": "Automatically search related/similar songs and add them to queue"
+    },
+    "notifications": {
+      "label": "Show Notifications",
+      "helperText": "Displays desktop notifications when next song starts playing"
+    },
     "language": "Language",
     "infoText": "* App will be restarted",
     "devMode": "Development Mode",
-    "autoRadio": "Autoradio",
-    "showNotifications": "Show Notifications",
     "connectTo": "Connect to:",
     "devTools": "Developer tools:"
   },
