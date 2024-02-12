@@ -170,7 +170,10 @@ const AccountPage: React.FunctionComponent = () => {
                 onChange={switchRPCStatus}
                 checked={app.rpcEnabled}
               />
-              <Tooltip title={t('AppSettingsPage.discord.helperText')}>
+              <Tooltip
+                title={t('AppSettingsPage.discord.helperText')}
+                placement="right-start"
+              >
                 <Info />
               </Tooltip>
             </SettingsEntry>
@@ -181,7 +184,10 @@ const AccountPage: React.FunctionComponent = () => {
                 onChange={switchMinToTray}
                 checked={app.minimizeToTray}
               />
-              <Tooltip title={t('AppSettingsPage.tray.helperText')}>
+              <Tooltip
+                title={t('AppSettingsPage.tray.helperText')}
+                placement="right-start"
+              >
                 <Info />
               </Tooltip>
             </SettingsEntry>
@@ -192,7 +198,10 @@ const AccountPage: React.FunctionComponent = () => {
                 onChange={switchAutoRadio}
                 checked={app.autoRadio}
               />
-              <Tooltip title={t('AppSettingsPage.autoRadio.helperText')}>
+              <Tooltip
+                title={t('AppSettingsPage.autoRadio.helperText')}
+                placement="right-start"
+              >
                 <Info />
               </Tooltip>
             </SettingsEntry>
@@ -203,7 +212,10 @@ const AccountPage: React.FunctionComponent = () => {
                 onChange={switchShowNotifications}
                 checked={app.showNotifications}
               />
-              <Tooltip title={t('AppSettingsPage.notifications.helperText')}>
+              <Tooltip
+                title={t('AppSettingsPage.notifications.helperText')}
+                placement="right-start"
+              >
                 <Info />
               </Tooltip>
             </SettingsEntry>
