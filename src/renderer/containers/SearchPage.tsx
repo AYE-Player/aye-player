@@ -21,7 +21,7 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const PlaylistContainer = styled.div`
+const SearchResultContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -80,12 +80,12 @@ const SearchPage: React.FunctionComponent = () => {
   return (
     <Container>
       <Header>{t('SearchPage.title')}</Header>
-      <PlaylistContainer>
+      <SearchResultContainer>
         <SearchBar />
         <ScrollContainer $searching={searchResult.searching}>
           {showLoadingOrResult()}
         </ScrollContainer>
-      </PlaylistContainer>
+      </SearchResultContainer>
     </Container>
   );
 };

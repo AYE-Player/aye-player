@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 import { nanoid } from 'nanoid';
+import { CircularProgress } from '@mui/material';
 import { resolveHtmlPath } from '../../../main/util';
 import PlayerInterop from '../../dataLayer/api/PlayerInterop';
 import Track from '../../dataLayer/models/Track';
@@ -21,14 +22,20 @@ import SnackMessage from '../Customs/SnackMessage';
 import { useStore } from '../StoreProvider';
 import ExtendedPlaylistEntity from './ExtendedPlaylistEntity';
 
-const Container = styled.div`
+const Container = styled.div<{ $loading: boolean }>`
   height: calc(100% - 48px);
   width: 100%;
   top: 0;
+  ${({ $loading }) =>
+    $loading
+      ? `display: flex;
+  justify-content: center;
+  align-items: center;`
+      : ''}
 `;
 
 const ScrollContainer = styled.div`
-  overflow-y: auto;
+  overflow: auto;
   width: 100%;
   height: calc(100% - 64px);
 `;
@@ -171,11 +178,11 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
     setAddTracksOpen(false);
   };
 
-  return (
+  return isLoaded ? (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
         <Header>{playlist!.name}</Header>
-        <Container>
+        <Container $loading={!isLoaded}>
           <Droppable droppableId="droppable">
             {(provided) => (
               <Observer>
@@ -237,6 +244,10 @@ const ExtendedPlaylist: React.FunctionComponent = () => {
         placeholder="https://www.youtube.com/watch?v=A3rvyaZFCN4"
       />
     </>
+  ) : (
+    <Container $loading={!isLoaded}>
+      <CircularProgress color="success" size="4rem" />
+    </Container>
   );
 };
 
