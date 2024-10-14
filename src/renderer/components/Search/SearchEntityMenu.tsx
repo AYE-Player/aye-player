@@ -119,7 +119,7 @@ const SearchEntityMenu: React.FunctionComponent<ISearchEntityMenuProps> = (
               <MenuItem onClick={openListDialog}>
                 {t('EntityMenu.addToPlaylist')}
               </MenuItem>
-              <MenuItem onClick={startRadioMode}>
+              <MenuItem onClick={startRadioMode} disabled>
                 {t('EntityMenu.startRadioMode')}
               </MenuItem>
               <MenuItem onClick={handleCopyUrl}>

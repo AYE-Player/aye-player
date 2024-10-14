@@ -197,6 +197,7 @@ const AccountPage: React.FunctionComponent = () => {
                 label={t('AppSettingsPage.autoRadio.label')}
                 onChange={switchAutoRadio}
                 checked={app.autoRadio}
+                disabled
               />
               <Tooltip
                 title={t('AppSettingsPage.autoRadio.helperText')}

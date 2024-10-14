@@ -10,10 +10,11 @@ interface ICustomSwitchProps {
   ) => void;
   label: string;
   checked: boolean;
+  disabled?: boolean;
 }
 
 const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = (props) => {
-  const { checked, label, onChange } = props;
+  const { checked, label, onChange, disabled } = props;
   return (
     <label style={{ display: 'flex', alignItems: 'center' }}>
       <Switch
@@ -28,10 +29,15 @@ const CustomSwitch: React.FunctionComponent<ICustomSwitchProps> = (props) => {
         activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
         height={16}
         width={48}
+        disabled={disabled}
       />
       <span style={{ marginLeft: '16px', width: '100%' }}>{label}</span>
     </label>
   );
+};
+
+CustomSwitch.defaultProps = {
+  disabled: false,
 };
 
 export default CustomSwitch;

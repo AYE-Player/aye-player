@@ -173,7 +173,7 @@ const PlaylistEntityMenu: React.FunctionComponent<IPlaylistEntityMenuProps> = (
           <MenuItem onClick={openListDialog}>
             {t('EntityMenu.addToPlaylist')}
           </MenuItem>
-          <MenuItem onClick={startRadioMode}>
+          <MenuItem onClick={startRadioMode} disabled>
             {t('EntityMenu.startRadioMode')}
           </MenuItem>
           <MenuItem onClick={() => replaceTrack(trackRef)}>
